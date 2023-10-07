@@ -1,0 +1,132 @@
+\documentclass{beamer}
+\usetheme{Boadilla}
+\usecolortheme{seahorse}
+\usepackage{pifont}
+
+\title{On-the-fly relációs adatbázis mockoláshoz}
+\author{Horváth Dávid}
+\institute{ELTE Informatikai Kar}
+\date{2023}
+
+\newcommand{\condpause}{\pause}
+%\newcommand{\condpause}{}
+
+\newcommand{\slidetitle}[2]{\frametitle{{\small #1 ~ \ding{226} ~ } #2}}
+
+\begin{document}
+\beamertemplatenavigationsymbolsempty
+
+\frame{\titlepage}
+
+\AtBeginSection[]
+{
+	\begin{frame}
+		\frametitle{Tartalom}
+		\tableofcontents[currentsection]
+	\end{frame}
+}
+
+\def\sectiontitle{Motiváció}
+\section{\sectiontitle}
+
+\def\motintro{A nem élesben futó szoftvernél az adatbázissal csak a baj van.}
+\newif\ifmotfirst
+\newcommand{\motcommcont}{
+	\item \textbf{Mockolás, fejlesztés} \par ~ ~ csak legyen ott valami, hogy fusson \ifmotfirst \condpause \fi
+	\item \textbf{Tesztelés} \par ~ ~ kellenének adatok a tesztfuttatáshoz \ifmotfirst \condpause \fi
+	\item \textbf{Kísérletezés, db-tervezés} \par ~ ~ szeretnénk folyamatosan újragondolni \ifmotfirst \condpause \fi
+	\item \textbf{Demonstrálás} \par ~ ~ jól jönne egy értelmes fake adathalmaz \ifmotfirst \condpause \fi
+	\item \textbf{Oktatás} \par ~ ~ egységes, instant db a tanulóknak \ifmotfirst \condpause \fi
+	\item \textbf{Anonimizálás} \par ~ ~ csak valami mást rakjon oda \ifmotfirst \condpause \fi
+}
+\newcommand{\motaftercont}{
+	\item \textbf{Adatbázis-dokumentáció} \par ~ ~ jó lenne látni, mi és miért szerepel a schemában
+}
+
+
+\begin{frame}
+\slidetitle{\sectiontitle}{Néhány frusztráló szituáció}
+
+\motintro \smallskip \condpause
+
+\motfirsttrue
+\begin{itemize}
+	\motcommcont
+	\smallskip
+	\motaftercont
+\end{itemize}
+
+\end{frame}
+
+
+\begin{frame}
+\slidetitle{\sectiontitle}{Néhány frusztráló szituáció}
+
+\motintro \smallskip
+
+\def\motboxpercent{58}
+\motfirstfalse
+\begin{itemize}
+	\smallskip\noindent\makebox[\dimexpr \textwidth * \motboxpercent / 100 \relax][l]{$\left.
+		\begin{minipage}{\dimexpr \textwidth * \motboxpercent / 100 \relax}
+			\motcommcont
+		\end{minipage}
+	\right\}$\text{$\rightarrow$ ad hoc kellene egy db}\nulldelimiterspace=0pt}\par\smallskip
+    \smallskip
+    \motaftercont
+\end{itemize}
+
+\end{frame}
+
+
+\begin{frame}
+	\slidetitle{\sectiontitle}{Problémák}
+	
+	Egy adatbázisszerver ad hoc odateremtése nem egyszerű. \par
+	{\small (Általában csak néhány adatra van szükség, de potenciálisan az összesre.)} \smallskip \condpause
+	
+	\begin{itemize}
+		\item \textbf{Definíció} \par ~ ~ definiálni kell, milyen schemát és adatokat szeretnénk látni \condpause
+		\item \textbf{Telepítés} \par ~ ~ az adatbázisszerver konfigurálása, rendelkezésre állása nem triviális \condpause
+		\item \textbf{Startup} \par ~ ~ el kell indítani az adatbázisszervert (kivéve: beágyazott db) \condpause
+		\item \textbf{Schema-építés} \par ~ ~  a schema felépítése is overheadet jelent \condpause
+		\item \textbf{Populálás} \par ~ ~ az összes adat generálása és lementése idő- és erőforrásigényes \condpause
+		\item \textbf{Memória, tárhely kezelése} \par ~ ~ az adatok sok helyet foglalnak (főleg párhuzamosítva) \condpause
+		\item \textbf{Tisztítás} \par ~ ~ a végén törölni kell az elhasznált adatbázist
+	\end{itemize}
+	
+\end{frame}
+
+
+\begin{frame}
+	\slidetitle{\sectiontitle}{Követelmények egy jobb megoldással szemben}
+	
+	\begin{itemize}
+		\item \textbf{Deklaratív konfiguráció} \par ~ ~ {\small barátságos, de nagy kontrollt biztosító konfiguráció lehetősége} \condpause
+		\item \textbf{Gyors elindulás} \par ~ ~ {\small lehetőleg közel zero indulási idő} \condpause
+		\item \textbf{Kis memóriaigény} \par ~ ~ {\small óriás adatbázis esetén is legyen szolid} \condpause
+		\item \textbf{Lekérdezések} \par ~ ~ {\small lehessen SQL lekérdezéseket futtatni (akár többféle nyelvjárással)} \condpause
+		\item \textbf{Konzisztencia} \par ~ ~ {\small a független lekérdezések konzisztensek legyenek egymással} \condpause
+		\item \textbf{Írási műveletek} \par ~ ~ {\small az adatokat lehessen módosítani (legalább CRUD műveletek)} \condpause
+		\item \textbf{Elfogadható run-time sebesség} \par ~ ~ {\small a query-k futtatása is legyen viszonylag gyors} \condpause
+		\item \textbf{Skálázhatóság} \par ~ ~ {\small az adatminőség legyen paraméterezhető; akárhány példány futhasson}
+	\end{itemize}
+	
+\end{frame}
+
+
+\def\sectiontitle{A megoldás váza}
+\section{\sectiontitle}
+
+
+\begin{frame}
+	\slidetitle{\sectiontitle}{TODO}
+	TODO
+\end{frame}
+
+
+\section{ETC.}
+\section{ETC.}
+\section{ETC.}
+
+\end{document}

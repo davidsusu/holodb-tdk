@@ -1,0 +1,399 @@
+\documentclass[
+    parspace, % Add vertical space between paragraphs
+    noindent, % No indentation of first lines in each paragraph
+    %nohyp, % No hypenation of words
+    %twoside, % Double sided format
+    %draft, % Quicker draft compilation without rendering images
+    %final, % Set final to hide todos
+]{elteiktdk}[2023/10/30]
+
+\usepackage{xcolor}
+\newcommand{\guessvalue}{}
+%\newcommand{\guessvalue}{\color{red} \textbf{$_{?}$}}
+
+\usepackage{tabularx}
+\usepackage{booktabs}
+\newcolumntype{Y}{>{\centering\arraybackslash}X}
+
+\usepackage{graphicx}
+
+\usepackage{svg}
+
+\usepackage{todonotes}
+
+\newcommand{\rhpad}{\vspace{0.6\baselineskip}}
+
+% The minted package is also supported for source highlighting
+%\usepackage[newfloat]{minted}
+
+
+
+\title{TDK-dolgozat címe}
+\date{2023}
+\author{Horváth Dávid}
+\degree{Programtervező Informatikus BSc}
+\period{2. évfolyam}
+
+% Superivsor(s)' metadata
+\supervisor{Témavezető Tamás}
+\affiliation{egyetemi tanársegéd}
+\cosupervisor{Témavezető Teréz}
+\coaffiliation{egyetemi adjunktus}
+
+\university{Eötvös Loránd Tudományegyetem}
+\faculty{Informatikai Kar}
+\department{XXXXXXXXXXX Tanszék}
+\city{Budapest}
+\logo{elte_cimer_szines}
+
+\addbibresource{references.bib}
+
+\begin{document}
+\documentlang{hungarian}
+%\cleardoublepage
+
+
+\listoftodos
+\cleardoublepage
+
+\makecover
+\cleardoublepage
+
+\maketitle
+
+\tableofcontents
+\cleardoublepage
+
+
+\todo[inline, color=blue]{általános célúság, nem csak SQL, hanem egyéb (NoSQL, GraphQL? etc.)}
+\todo[inline, color=blue]{deklaratív jelleg, adaptáció különféle tesztekhez}
+\todo[inline, color=blue]{értékenként csatolható gyakoriság az eloszláshoz}
+
+
+\begin{abstract}
+Lorem ipsum.
+\end{abstract}
+
+\chapter{Motiváció}
+
+\section{Bevezetés}
+
+\todo[inline]{section: Bevezetés}
+
+\begin{itemize}
+    \item Relational data as a serverless function
+    \item TODO
+\end{itemize}
+
+\section{Végtelenített virtuális világok}
+
+\todo[inline]{section: Végtelenített virtuális világok}
+
+\section{A fakerek limitációi}
+
+\todo[inline]{section: A fakerek limitációi}
+
+\section{Néhány visszatérő probléma közös nevezője}
+
+\todo[inline]{section: Néhány visszatérő probléma közös nevezője}
+
+\section{Virtuális mockolás: hézag jelei új termék számára?}
+
+\todo[inline]{section: Virtuális mockolás: hézag jelei új termék számára?}
+
+\chapter{Architektúra}
+
+\section{Felépítés}
+
+\todo[inline]{section: Felépítés}
+
+\begin{figure}
+\centering
+\includesvg{diagram/simplearch}
+\caption{A virtuális adatbázis vázlatos architektúrája}
+\label{A virtuális adatbázis vázlatos architektúrája}
+\end{figure}
+
+\section{Konfiguráció}
+
+\todo[inline]{section: Konfiguráció}
+
+\section{Kiegészítő eszközök és alkalmazások}
+
+\todo[inline]{section: Kiegészítő eszközök és alkalmazások}
+
+\chapter{A virtuális adattár}
+
+\section{A TreeRandom és kapcsolódó API-k}
+
+\todo[inline]{section: A TreeRandom és kapcsolódó API-k}
+
+\section{A storage API}
+
+\todo[inline]{section: A storage API}
+
+\section{A csak-olvasható alapréteg}
+
+Bármilyen imlementáció legyen is mögötte, a storage API egy relációs adatbázist ír le.
+Tehát ahhoz, hogy a virtuális adatok funkcionálisan egy valódi (csak-olvasható) relációs adathalmaz képét adják,
+tulajdonképpen nem kell más, mint hogy konzisztens módon elérhetők legyenek a storage API-n keresztül.
+A konzisztencia ez esetben két dolgot jelent:
+
+\begin{enumerate}
+  \item Felépíthető egy olyan tényleges immutábilis relációs adatbázis ($M$),
+        hogy minden lehetséges relációs lekérdezés esetében, amely a közös schemára ($S$) értelmes,
+        a virtuális és a tényleges adatbázis esetében visszaadott eredménytábla megegyezik.
+  \item Az $S$ schema telesíti a virtuális adatbázis felhasználói konfigurációját ($C$),
+        valamint az $M$-ben szereplő adatok tulajdonságai illeszkednek a $C$-ben leírt megkötésekre.
+\end{enumerate}
+
+A virtuális adatokhoz a legalsó szinten a storage API megfelelő hívásaival férünk hozzá.
+Ezek a speciális hívások szűk keresztmetszetet képeznek,
+hiszen ezek szimulálják például a közvetlen adatelérést is.
+Ha ezen hívások performanciája nagyságrendileg (de legalább aszimptotikusan) összemérhető a tényleges adatbázisokéval,
+akkor az erre épülő lekérdezésfuttató és egyéb rétegek már a tényleges adatbázisoknál megszokott módon tudnak működni.
+
+A lekérdező műveletek esetében két különösen fontos hozzáférési módot kell kiemelni:
+
+\begin{enumerate}
+  \item rekordok véletlen elérése (random access)
+  \item adott érték előfordulásainak keresése egy oszlopban (reverse index)
+\end{enumerate}
+
+Ha e két hozzáférési mód hatékony, akkor már a lekérdezések jelentős részénél
+elérhető a tényleges adatbázisokéval összemérhető performancia.
+
+A storage API-ban úgy definiáltuk a megfelelő interfészt,
+hogy a keresésen kívül még néhány további funkciót támogatnia kelljen,
+például a rendezést és a $NULL$ értékek kezelését.
+A következőkben leírt értékkiosztási módszerek többéségénél természetes módon következik,
+hogy ezeket a további elvárásokat is teljesítik.
+Az e szempontból problémás esetekre külön ki fogok térni.
+
+\todo[inline]{A csak-olvasható alapréteg további dolgai}
+
+\section{Megoldások a hatékony értékkiosztásra}
+
+Ha a virtuális adatokról beszélünk, elsősorban az egy-egy oszlop alá besorakozó,
+közös típussal rendelkező mezőértékekről beszélünk.
+Úgy is fogalmazhatunk, hogy az adatokat alapvetően oszlop-orientáltan fogjuk előállítani.
+Minden oszlophoz tartozik majd egy virtuális adatlista,
+melynek hossza egyenlő az adott oszlopot tartalmazó tábla hosszával,
+opcionálisan szerepelhetnek benne $NULL$ értékek,
+a többi érték típusának pedig kompatibilisnak kell lennie az oszlophoz megadott típussal.
+
+Bár ez legjobban az oszloponként független adatlistákhoz illeszkedik,
+valójában más jellegű értékkiosztási módszer lehet mögötte,
+ilyen esetben természetesen csak annyi a teendő,
+hogy az egy-egy oszlophoz tartozó listanézetet kell az oszlophoz rendelni.
+A több oszlopot érintő megkötések esetében is ez lesz a helyzet.
+De lássuk először az egyoszlopos értékkiosztások lehetséges módszereit.
+
+\subsection{Egyoszlopos értékkiosztások}
+
+\todo[inline, color=red]{subsection: Egyoszlopos értékkiosztások (bevezetés)}
+
+\subsubsection{Egyszerű értékkiosztások}
+
+Sok esetben az oszlopban egészen triviális módon szerepelnek az értékek az oszlop értéklistájában.
+
+Triviális eset, ha egy oszlop mezői egy közös konstans értéket tartalmaznak.
+
+Ha olyan adathalmazt szimulálunk, melyre megengedhető a feltevés,
+hogy sem törlés, sem releváns értelemben problémás felülírás nem történt még,
+úgy némely oszlop egyszerű szekvenciális alapon generálható.
+A legegyszerűbb esetben az érték megegyezik a rekord 1-től indított sorszámával.
+Időbélyegeket is generálhatunk hasonló módon,
+amennyiben megengedhető, hogy a szimulált időadatok között egyenletes időközök legyenek.
+
+Az ilyen esetekben az $n$-edik érték lekérése egyszerűen
+egy alapműveletekkel transzformált identitásfüggvénnyel számolható.
+Az érték keresése hasonló, fordított transzformáció mellett.
+
+\todo[inline, color=red]{További egyszerű értékkiosztások}
+
+\subsubsection{Értékkiosztás reguláris kifejezés alapján}
+
+\todo[inline, color=red]{subsubsection: Értékkiosztás reguláris kifejezés alapján}
+
+\subsubsection{Kétfázisú értékkiosztás}
+
+\todo[inline, color=red]{subsubsection: Kétfázisú értékkiosztás}
+
+\begin{figure}
+\centering
+\includesvg{diagram/distribution}
+\caption{A kétfázisú értékkiosztás alapelve: egymás után végrehajtott visszafejthető disztribúció és permutáció}
+\label{A kétfázisú értékkiosztás alapelve}
+\end{figure}
+
+\begin{figure}
+\centering
+\includesvg{diagram/getvalue}
+\caption{Adatlekérés a kétfázisú értékkiosztásból}
+\label{Adatlekérés a kétfázisú értékkiosztásból}
+\end{figure}
+
+\begin{figure}
+\centering
+\includesvg{diagram/findvalue}
+\caption{Keresés a kétfázisú értékkiosztásban: a rendezett értékkészlet és a vetítések megfordíthatósága biztosítja a gyors kereshetőséget az virtuális listában}
+\label{Keresés a kétfázisú értékkiosztásban}
+\end{figure}
+
+\subsubsection{Értékkiosztás oszlopok közötti megkötésekkel}
+
+\todo[inline]{subsubsection: Értékkiosztás oszlopok közötti megkötésekkel}
+
+\subsubsection{Egyéb számított értékek}
+
+\todo[inline]{subsubsection: Egyéb számított értékek}
+
+
+
+
+
+
+\section{Az írhatósági réteg}
+
+\todo[inline]{section: Az írhatósági réteg}
+
+\section{Továbbfejlesztési tervek}
+
+\todo[inline]{section: Továbbfejlesztési tervek}
+
+\subsection{Megkötések oszlopok között}
+
+\todo[inline]{subsection: Megkötések oszlopok között}
+
+\chapter{Lekérdezések futtatása}
+
+\section{A beépített SQL-futtató}
+
+\todo[inline]{section: A beépített SQL-futtató}
+
+\section{Használat az Apache Calcite keretrendszerrel}
+
+\todo[inline]{section: Használat az Apache Calcite keretrendszerrel}
+
+\section{Munkamenetek}
+
+\todo[inline]{section: Munkamenetek}
+
+\chapter{Kiegészítő eszközök és alkalmazások}
+
+\section{Hálózati protokollok}
+
+\todo[inline]{section: Hálózati protokollok}
+
+\section{JDBC}
+
+\todo[inline, color=red]{section: JDBC}
+
+\section{REPL}
+
+\todo[inline]{section: REPL}
+
+\todo[inline]{További kiegészítő eszközök?}
+
+\chapter{Összehasonlítás az elterjedt tipikus megoldásokkal}
+
+\section{Megközelítések}
+
+\todo[inline]{section: Megközelítések}
+
+\section{A jelen megoldás sajátos fókuszai}
+
+\todo[inline]{section: A jelen megoldás sajátos fókuszai}
+
+\section{Empirikus tesztek}
+
+\todo[inline]{section: Empirikus tesztek}
+
+\begin{table}
+\settowidth\rotheadsize{mmmmmmm}
+\begin{tabularx}{\textwidth}{l| c *{8}{|Y} c}
+  \toprule
+  \parbox{2cm}{Fázis / \\ aspektus} &
+    \rothead{MySQL \\ (fájlmásolással)} &
+    \rothead{MySQL \\ (SQL dumppal)} &
+    \rothead{MySQL + anon. \\ (fájlmásolással)} &
+    \rothead{MySQL + anon. \\ (SQL dumppal)} &
+    \rothead{MySQL + faker} &
+    \rothead{H2 + faker \\ (embedded)} &
+    \rothead{H2 Views \\ (embedded)} &
+    \rothead{HoloDB \\ (default exec.)} &
+    \rothead{HoloDB \\ (Calcite exec.)} 
+    \\
+  \midrule
+  \parbox{2cm}{\rhpad Projekt \\ előfeltétele \rhpad} &
+    \multicolumn{2}{c|}{ \begin{tabular}{@{}c@{}}létező \\ adatbázis\end{tabular} } & % MySQL
+    \multicolumn{2}{c|}{ \begin{tabular}{@{}c@{}}kész \\ schema\end{tabular} } & % MySQL + anon.
+    \multicolumn{5}{c|}{ \begin{tabular}{@{}c@{}}vázlatos \\ schema\end{tabular} } \\ % MySQL + anon.
+  \parbox{2cm}{\rhpad Mockolás \\ előfeltétele \rhpad} &
+    \multicolumn{2}{c|}{ \begin{tabular}{@{}c@{}}létező \\ adatbázis\end{tabular} } & % MySQL
+    \multicolumn{2}{c|}{ \begin{tabular}{@{}c@{}}kész \\ schema\end{tabular} } & % MySQL + anon.
+    \multicolumn{3}{c|}{ \begin{tabular}{@{}c@{}}vázlatos \\ schema\end{tabular} } & % MySQL + anon.
+    \multicolumn{2}{c}{ \begin{tabular}{@{}c@{}}deklaratív \\ konfiguráció\end{tabular} } \\ % HoloDB
+  \parbox{2cm}{\rhpad Data dump \\ (seconds) \rhpad} &
+    0.05\guessvalue & % MySQL \\ (fájlmásolással)
+    0.94\guessvalue & % MySQL \\ (SQL dumppal)
+    0.32\guessvalue & % MySQL + anon. \\ (fájlmásolással)
+    1.23\guessvalue & % MySQL + anon. \\ (SQL dumppal)
+    0.12\guessvalue & % MySQL + faker
+    0.11\guessvalue & % H2 + faker \\ (embedded)
+    0 & % H2 Views \\ (embedded)
+    0 & % HoloDB \\ (default exec.)
+    0 \\ % HoloDB \\ (Calcite exec.)
+  \parbox{2cm}{\rhpad Klónozás \\ tesztenként \\ (seconds) \rhpad} &
+    \multicolumn{5}{c|}{ \begin{tabular}{@{}c@{}}0.05\guessvalue\end{tabular} } & % MySQL
+    0.11\guessvalue & % H2 + faker \\ (embedded)
+    0 & % H2 Views \\ (embedded)
+    0 & % HoloDB \\ (default exec.)
+    0 \\ % HoloDB \\ (Calcite exec.)
+  \parbox{2cm}{\rhpad Alap \\ tesztszvit \\ (seconds) \rhpad} &
+    \multicolumn{5}{c|}{ \begin{tabular}{@{}c@{}}0.02\guessvalue\end{tabular} } & % MySQL
+    0.03\guessvalue & % H2 + faker \\ (embedded)
+    0.68\guessvalue & % H2 Views \\ (embedded)
+    0.11\guessvalue & % HoloDB \\ (default exec.)
+    0.23\guessvalue \\ % HoloDB \\ (Calcite exec.)
+  \parbox{2cm}{\rhpad Haladó \\ tesztszvit \\ (seconds) \rhpad} &
+    \multicolumn{5}{c|}{ \begin{tabular}{@{}c@{}}1.72\guessvalue\end{tabular} } & % MySQL
+    0.96\guessvalue & % H2 + faker \\ (embedded)
+    12.7\guessvalue & % H2 Views \\ (embedded)
+    3.1\guessvalue & % HoloDB \\ (default exec.)
+    3.5\guessvalue \\ % HoloDB \\ (Calcite exec.)
+  \parbox{2cm}{\rhpad Tear down \\ (seconds) \rhpad} &
+    0.05\guessvalue & % MySQL \\ (fájlmásolással)
+    0.94\guessvalue & % MySQL \\ (SQL dumppal)
+    0.32\guessvalue & % MySQL + anon. \\ (fájlmásolással)
+    1.23\guessvalue & % MySQL + anon. \\ (SQL dumppal)
+    0.12\guessvalue & % MySQL + faker
+    0.05\guessvalue & % H2 + faker \\ (embedded)
+    0.05\guessvalue & % H2 Views \\ (embedded)
+    0.01\guessvalue & % HoloDB \\ (default exec.)
+    0.01\guessvalue \\ % HoloDB \\ (Calcite exec.)
+  \parbox{2cm}{\rhpad Össztárhely \\ (bytes) \rhpad} &
+    370M\guessvalue & % MySQL \\ (fájlmásolással)
+    510M\guessvalue & % MySQL \\ (SQL dumppal)
+    380M\guessvalue & % MySQL + anon. \\ (fájlmásolással)
+    520M\guessvalue & % MySQL + anon. \\ (SQL dumppal)
+    350M\guessvalue & % MySQL + faker
+    360M\guessvalue & % H2 + faker \\ (embedded)
+    1M\guessvalue & % H2 Views \\ (embedded)
+    1M\guessvalue & % HoloDB \\ (default exec.)
+    1M\guessvalue \\ % HoloDB \\ (Calcite exec.)
+    
+    
+  \bottomrule
+\end{tabularx}
+\caption{Az \texttt{imdb\_ijs} dataset mockolásának performanciája a vizsgált megközelítésekkel, azonos tesztforgatókönyv mellett}
+\label{tab:comp_table}
+\end{table}
+
+
+\chapter{Konklúzió}
+
+\todo[inline]{section: Konklúzió}
+
+\end{document}

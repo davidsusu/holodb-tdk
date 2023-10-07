@@ -1,0 +1,83 @@
+seed: 42
+tableDefaults:
+  writeable: true
+columnDefaults:
+  distributionQuality: HIGH
+  shuffleQuality: VERY_HIGH
+schemas:
+  - name: imdb_ijs
+    tables:
+      - name: actors
+        size: 825000
+        columns:
+          - name: id
+            mode: COUNTER
+          - name: firstname
+            valuesBundle: forenames
+          - name: lastname
+            valuesBundle: surnames
+      - name: directors
+        size: 87000
+        columns:
+          - name: id
+            mode: COUNTER
+          - name: firstname
+            valuesBundle: forenames
+          - name: lastname
+            valuesBundle: surnames
+      - name: movies
+        size: 385000
+        columns:
+          - name: id
+            mode: COUNTER
+          - name: name
+            valuesPattern: '[BRS][aei][bdt] [A-Z][a-z]{5}'
+          - name: year
+            type: java.lang.Integer
+            valuesRange: [1900, 2020]
+          - name: rank
+            valuesRange: [2, 9]
+      - name: movies_directors
+        size: 371000
+        columns:
+          - name: director_id
+            valuesForeignColumn: [directors, id]
+          - name: movie_id
+            valuesForeignColumn: [movies, id]
+      - name: movies_genres
+        size: 395000
+        columns:
+          - name: movie_id
+            valuesForeignColumn: [movies, id]
+          - name: genre
+            values:
+              - Action
+              - Adult
+              - Adventure
+              - Animation
+              - Comedy
+              - Crime
+              - Documentary
+              - Drama
+              - Family
+              - Fantasy
+              - Film-Noir
+              - Horror
+              - Music
+              - Musical
+              - Mystery
+              - Romance
+              - Sci-Fi
+              - Short
+              - Thriller
+              - War
+              - Western
+      - name: roles
+        size: 3276000
+        columns:
+          - name: actor_id
+            valuesForeignColumn: [actors, id]
+          - name: movie_id
+            valuesForeignColumn: [movies, id]
+          - name: role
+            valuesBundle: lorem

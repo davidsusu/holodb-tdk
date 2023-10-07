@@ -1,0 +1,73 @@
+seed: 2346237
+tableDefaults:
+  writeable: true
+columnDefaults:
+  distributionQuality: HIGH
+  shuffleQuality: VERY_HIGH
+schemas:
+  - name: economy
+    tables:
+      - name: companies
+        columnDefaults:
+          shuffleQuality: MEDIUM
+        size: 5
+        columns:
+          - name: id
+            mode: COUNTER
+          - name: name
+            mode: FIXED
+            values:
+              - Fav Fruits Inc.
+              - Fru-fru Sales Inc.
+              - Fructose Palace Inc.
+              - Vega Veterans Inc.
+              - Goods of Nature Inc.
+          - name: headquarters
+            valuesBundle: cities
+          - name: contact_phone
+            nullCount: 2
+            valuesPattern: '\+1 \d{3}-\d{3}-\d{4}'
+      - name: employees
+        size: 100
+        columns:
+          - name: id
+            mode: COUNTER
+          - name: company_id
+            valuesForeignColumn: [companies, id]
+            shuffleQuality: LOW
+          - name: firstname
+            valuesBundle: forenames
+          - name: lastname
+            valuesBundle: surnames
+          - name: birth_year
+            type: java.lang.Integer
+            valuesRange: [1950, 2000]
+          - name: birth_country
+            valuesBundle: countries
+      - name: sales
+        size: 50
+        columns:
+          - name: id
+            mode: COUNTER
+          - name: company_id
+            valuesForeignColumn: [companies, id]
+            shuffleQuality: LOW
+          - name: product
+            valuesBundle: fruits
+          - name: color
+            valuesBundle: colors
+          - name: quantity
+            type: java.lang.Integer
+            valuesRange: [100, 500]
+            shuffleQuality: MEDIUM
+          - name: quality
+            mode: ENUM
+            values:
+              - POOR
+              - AVERAGE
+              - GOOD
+              - EXCELLENT
+            defaultValue: AVERAGE
+          - name: comment
+            nullCount: 20
+            valuesDynamicPattern: '(Lorem|Dolor|Amet)( (lorem|ipsum|dolor|sit|amet|consectetur|adipisicing)){2,6}\.'
