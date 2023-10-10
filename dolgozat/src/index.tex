@@ -136,7 +136,7 @@ Lorem ipsum.
 
 Bármilyen imlementáció legyen is mögötte, a storage API egy relációs adatbázist ír le.
 Tehát ahhoz, hogy a virtuális adatok funkcionálisan egy valódi (csak-olvasható) relációs adathalmaz képét adják,
-tulajdonképpen nem kell más, mint hogy konzisztens módon elérhetők legyenek a storage API-n keresztül.
+nem kell más, mint hogy konzisztens módon elérhetők legyenek a storage API-n keresztül.
 A konzisztencia ez esetben két dolgot jelent:
 
 \begin{enumerate}
@@ -175,8 +175,8 @@ Az e szempontból problémás esetekre külön ki fogok térni.
 
 \section{Megoldások a hatékony értékkiosztásra}
 
-Ha a virtuális adatokról beszélünk, elsősorban az egy-egy oszlop alá besorakozó,
-közös típussal rendelkező mezőértékekről beszélünk.
+Virtuális adatok alatt elsősorban az egy-egy oszlop alá besorakozó,
+közös típussal rendelkező mezőértékeket értem.
 Úgy is fogalmazhatunk, hogy az adatokat alapvetően oszlop-orientáltan fogjuk előállítani.
 Minden oszlophoz tartozik majd egy virtuális adatlista,
 melynek hossza egyenlő az adott oszlopot tartalmazó tábla hosszával,
@@ -184,19 +184,25 @@ opcionálisan szerepelhetnek benne $NULL$ értékek,
 a többi érték típusának pedig kompatibilisnak kell lennie az oszlophoz megadott típussal.
 
 Bár ez legjobban az oszloponként független adatlistákhoz illeszkedik,
-valójában más jellegű értékkiosztási módszer lehet mögötte,
-ilyen esetben természetesen csak annyi a teendő,
-hogy az egy-egy oszlophoz tartozó listanézetet kell az oszlophoz rendelni.
-A több oszlopot érintő megkötések esetében is ez lesz a helyzet.
+valójában más jellegű értékkiosztási módszer is lehet mögötte,
+amennyiben az egy-egy oszlophoz tartozó listanézetek biztosítottak.
+Majd a több oszlopot érintő megkötések esetében ez lesz a helyzet.
 De lássuk először az egyoszlopos értékkiosztások lehetséges módszereit.
 
 \subsection{Egyoszlopos értékkiosztások}
 
-\todo[inline, color=red]{subsection: Egyoszlopos értékkiosztások (bevezetés)}
+\subsubsection{Előzetes megfontolások}
+
+\todo[inline, color=red]{subsubsection: Egyoszlopos értékkiosztások / Előzetes megfontolások (fő szempontok: a TreeRandom használata, értékelérés, keresés, rendezés)}
+
+\subsubsection{$NULL$ értékek kezelése}
+
+\todo[inline, color=red]{subsubsection: Egyoszlopos értékkiosztások / $NULL$ értékek kezelése}
 
 \subsubsection{Egyszerű értékkiosztások}
 
-Tényleges adatbázisokban némely esetben az oszlopban egészen triviális módon szerepelnek az értékek az oszlop értéklistájában.
+Tényleges adatbázisokban némely esetben meglehetősen következetes módon
+szerepelnek az értékek az oszlop értéklistájában.
 Természetesen az ilyen esetek szimulálása a legegyszerűbb.
 
 Triviális eset, ha egy oszlop mezői egy közös konstans értéket tartalmaznak.
@@ -205,32 +211,17 @@ Ha olyan adathalmazt szimulálunk, melyre megengedhető a feltevés,
 hogy sem törlés, sem releváns értelemben problémás felülírás nem történt még,
 úgy egyes oszlopok szekvenciális alapon generálhatók.
 Az ilyen esetekben az $n$-edik érték lekérése
-egy aritmetikai alapműveletekkel transzformált identitásfüggvénnyel számolható.
-Az érték keresése hasonló, az transzformációkat visszafelé alkalmazva megkapjuk az inverz függvényt.
+egy egyszerű lineáris függvénnyel számolható.
+Az érték keresése hasonló, lényegileg az inverz függvényt kell alkalmazni.
 
 A szekvenciális oszlopoknál az érték megegyezik a rekord 1-től indított sorszámával.
 
 Időbélyegeket is generálhatunk hasonló módon,
 amennyiben megengedhető, hogy a szimulált időadatok között egyenletes időközök legyenek.
 
-\subsubsection{Értékkiosztás reguláris kifejezés alapján}
-
-\todo[inline, color=red]{subsubsection: Értékkiosztás reguláris kifejezés alapján}
-
 \subsubsection{Kétfázisú értékkiosztás}
 
 \todo[inline, color=red]{subsubsection: Kétfázisú értékkiosztás}
-
-\subsubsection{Zajosan monoton értékkiosztások}
-
-\todo[inline, color=red]{Zajosan monoton 1}
-
-A fenti monoton-generálás variánsa, nem engedünk üres range-et (elég széles superrange-ek),
-és kvázi-random választunk egy végső értéket a range-ből, az alapindex alapján seed-elve.
-
-\todo[inline, color=red]{Zajosan monoton 2}
-
-Warping function with constrained tangent (inverse???) + local noise function with constrained delta.
 
 \begin{figure}
 \centering
@@ -252,6 +243,149 @@ Warping function with constrained tangent (inverse???) + local noise function wi
 \caption{Keresés a kétfázisú értékkiosztásban: a rendezett értékkészlet és a vetítések megfordíthatósága biztosítja a gyors kereshetőséget az virtuális listában}
 \label{Keresés a kétfázisú értékkiosztásban}
 \end{figure}
+
+\subsubsection{Kétfázisú értékkiosztás gyakoriságtáblázattal}
+
+\todo[inline, color=red]{subsubsection: Kétfázisú értékkiosztás gyakoriságtáblázattal}
+
+\subsubsection{Zajosan monoton értékkiosztások}
+
+A rányújtásnak az előzőleg monoton függvény előállításához használt elve
+másféle értékkiosztáshoz is felhasználható,
+nevezetesen olyan (szigorúan vagy nem szigorúan) monoton adatsor előállításához,
+melynek egyes értékei összességében egy adott sűrűség szerint növekednek
+(vagy csökkennek; az egyszerűség kedvéért most csak a növekedő esetről lesz szó),
+de lokálisan nagy az egyenetlenség.
+Ezt is két lépésben fogjuk megvalósítani.
+
+Az első lépés alapelve tehát hasonló az előbbi megoldás első fázisához.
+Ám itt nem lehetséges értékeket vetítünk ki a tábla hosszára,
+hanem a táblahossznyi alaphalmazt vetítjük majd ki egy diszkrét lehetséges értékkészletre.
+Minden sorindexhez hozzárendelődik egy (a szigorú monotonitás elvárása esetén nemüres)
+dedikált sáv az értékkészletből.
+
+A második lépés választ egy értéket a sávból.
+Nem szigoróan monoton értéksor esetén megengedjük az üres sávot is,
+és ilyen esetekben mindig a rákövetkező elemet választjuk.\footnote{
+  Ebben az esetben explicite ki kell zárni, hogy az utolsó sáv üres legyen.
+  Ez legtermészetesebben egy logikai paraméter beiktatásával érthető el,
+  amelyet a rekurzió során mindig a csak felsőbb sávra küldünk tovább \texttt{true} értékkel
+  (a többire \texttt{false} értékkel),
+  alapértelmezett értéke \texttt{true}.
+  Ha \texttt{true} értéket kaptunk, biztosítani kell, hogy az aktuális felsőbb sáv ne legyen üres.
+}
+
+Az érték elérése ekkor úgy történik, hogy először lekérjük az értéksávot a rányújtó függvénytől,
+majd meghívjuk az értékválasztó függvényt,
+melynek paraméterei az értéksáv, a sorindex és a \texttt{TreeRandom}-ból vett seed lesznek.
+Egy kézenfekvő megvalósítás,
+hogy a sorindex és a seed alapján inicializált randomgenerátorral
+generáltatunk egy véletlen értéket, ami a sávba esik.
+
+Az értéksávra való keresés úgy történik, hogy a vesszük a minimális és a maximális keresett értéket,
+és az inverz rányújtást használva megkeressük a megfelelő sorindexeket, amelyek sávjához az érté tartozik.
+Ezen sorindexek feszítik ki majd a találati sorindexsávot.
+Hogy az alsó érték beletartozik-e, annak eldöntéséhez le kell generálni
+az alső sorindexhez a konkrét értéket, és ellenőrizni, hogy nagyobbegyenlő-e,
+mint a keresett alsó érték.
+A felső érték esetében hasonlóan kell eljárni.
+
+A rendezés triviális, mivel az értékek eleve rendezettek.
+
+Ezzel az eljárással nem csak zajossá tudtuk tenni az eloszlást,
+de a monotonitás garantálása mellett megengedtük,
+hogy az értékek esetlegesen csomósodhassanak,
+illetve elméletben tetszőlegesen eltávolodhassanak attól a helytől,
+amit egy egyszerű, szigorúan egyenletes kiosztás esetén vettek volna föl.
+
+Ez az értékkiosztás különösen alkalmas időbélyegek szimulálására,
+amikor az események általános sűrűsége adott,
+de véletlenszerű, zajos kiemenetet szeretnénk látni.
+
+\subsubsection{Értékkiosztás reguláris kifejezés alapján}
+
+Ha elengedjük a gyors keresés kritériumát,
+akkor a reguláris kifejezés alapján történő értékkiosztást nagyon könnyen megvalósíthatjuk
+egy véges automatával történő véletlenszerű inverz mintaillesztéssel\footnote{
+  A jelenlegi implementáció a \textit{generex} könyvtárat használja erre.
+},
+(a sorindex és a \texttt{TreeRandom}-ból vett seed figyelembevételével).
+
+Ha azonban fenn szeretnénk tartani a gyors keresés lehetőségét,
+szükséges lesz, hogy képezni tudjuk az adott reguláris kifejezésre illeszkedő összes string virtuális listáját.
+Azaz bármely $n$ sorindexre elő kell tudnunk állítani az $n$-edik illeszkedő stringet
+(méghozzá abc-rendben, nem pedig a reguláris kifejezés szerkezete alapján).
+És fordítva, tetszőleges stringre meg kell tudni mondani,
+hányadik illeszkedő stringgel azonos vagy melyikhez van közel, ha nem illeszkedik.
+Ha már van egy ilyen virtuális listánk, azt a kétfázisú értékkiosztással könnyen a kívánt oszloppá alakíthatjuk.
+
+A megoldás a reguláris kifejezések lehetőségeinek csak valamilyen (erősen limitált) részhalmazát fogja támogatna.
+De még így is bőven lefedi az olyan egyszerű eseteket, mint például a telefonszámok, email-címek stb.
+
+Az ilyen típusú szöveggenerálás részletes bemutatása kimutat a jelen dolgozat keretei közül,
+így ennek ismertetését itt mellőzöm\footnote{
+  Egy egyszerű erre készült prototípus a \texttt{strex} könyvtár.
+}.
+
+\subsubsection{Full-text indexelt értékkiosztás}
+
+A full-text indexelés legegyszerűbb formáját fogjuk támogatni:
+tudunk majd keresni a szövegben előforduló szavakra,
+azaz vissza tudjuk adni azon sorindexeket,
+amelyekhez tartozó szövegekben szerepel a keresett szó.
+
+Most egy kicsit egyszerűsített modellt mutatok be,
+melyben a szavak betűkarakterek sorozatai,
+és ezeket szóközök választják el.
+Az egyéb szövegjellemzők (például központozás) hozzáadása nehézség nélkül kivitelezhető,
+az áttekinthetőség kedvéért ezekkel most nem foglalkozom.
+
+A módszert két generálási szakaszra bontjuk, a prefix és a fennamaradó rész generálására.
+
+Kezdjük a prefix kiosztásával.
+Legyen a szavak minimális száma $L$ ($L > 0$).
+Vegyük $L$ darab szólistát, melyek rendre az $n$-edik szó lehetséges értékeit tartalmazzák.\footnote{
+  Legegyszerűbb esetben ezek azonosak, és egy szótár szavai vagy generált értékek.
+  De egy szofisztikáltabb változatban figyelembe vehetjük a valós szövegek jellemzőit.
+}
+Vegyük most azt a virtuális listát, melyen keresztül ezek Descartes-szorzatát érjük el.
+Nem kell mást tennünk, mint ezt a listát a kétfázisú értékkiosztással alkalmazni.
+Ha jó nekünk, hogy minden érték $L$ szóból áll, készen is vagyunk.
+
+Ha viszont változó szószámot szeretnénk,
+akkor még gondoskodni kell a szövegek fennmaradó részének előállításáról.
+Ehhez állítsunk elő egy-egy függvényt a szótár minden egyes szavára\footnote{
+  Feltételezzük, hogy a szótár nem túl nagy (például lorem ipsum szavak).
+  De nagy szótár esetén is van egy egyszerű kerülőmegoldás:
+  a függvényt több szinten valósítjuk meg,
+  először a szótár nagy szeleteit osztjuk ki,
+  majd azon belül kisebb szeleteket, és így tovább, végül az egyes szavakat.
+  Így a szó ellenőrzése az adott sorindexre még mindig logaritmikus számítási igényű.
+}, mely lényegileg a két logikai érték rányújtása:
+bármely sorindexre megadja, hogy az adott szó szerepel-e a hozzá tartozó szövegben,
+illetve bármely szóra megadja a sorindexeket, ahol a szó szerepel.
+
+Már csak annyi feladatunk van, hogy bármely sorindexre következetesen visszaadjunk egy olyan szöveget,
+mely megfelel ennek a két kritériumnak:
+
+\begin{enumerate}
+  \item Az első $L$ szó egyezik az első szakaszban meghatározott prefixszel.
+  \item A fennmaradó rész pontosan azokat a szavakat tartalmazza,
+        amely a fennmaradó rész kiosztásánál leírt szóválasztásnak megfelel.
+        Ugyanaz a szó többször is szerepelhet.
+\end{enumerate}
+
+A második kritérium természetesen legegyszerűbben úgy teljesíthető,
+hogy a kiválasztott szavakat abc-rendben felsoroljuk.
+De mivel teljes szabadságunk van (az index már biztosított),
+tetszőlegesen szofisztikált módszereket alkalmazhatunk a minél életszerűbb szöveg kialakítására
+(ez egy skálázható opció).
+
+A rendezésnél kihasználjuk, hogy az első $L$ szóra már van egy hagyományos indexünk,
+így a prefixek egymáshoz képesti rendezése már megoldott.
+Mivel a Descartes-szorzat miatt a lehetséges prefixek listája igen nagy,
+feltehetjük, hogy jellemzően nem nagyon lesznek ismétlődő prefixek,
+de ha igen, csak azokon belül kell tényleges összehasonlításos rendezést végezni.
 
 \subsubsection{Értékkiosztás oszlopok közötti megkötésekkel}
 
