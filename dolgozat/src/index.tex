@@ -151,7 +151,8 @@ A virtuális adatokhoz a legalsó szinten a storage API megfelelő hívásaival 
 Ezek a speciális hívások szűk keresztmetszetet képeznek,
 hiszen ezek szimulálják például a közvetlen adatelérést is.
 Ha ezen hívások performanciája nagyságrendileg (de legalább aszimptotikusan) összemérhető a tényleges adatbázisokéval,
-akkor az erre épülő lekérdezésfuttató és egyéb rétegek már a tényleges adatbázisoknál megszokott módon tudnak működni.
+akkor az erre épülő lekérdezésfuttató és egyéb rétegek már
+a tényleges adatbázisoknál megszokott módon és nagyságrendi teljesítménnyel tudnak működni.
 
 A lekérdező műveletek esetében két különösen fontos hozzáférési módot kell kiemelni:
 
@@ -164,7 +165,7 @@ Ha e két hozzáférési mód hatékony, akkor már a lekérdezések jelentős r
 elérhető a tényleges adatbázisokéval összemérhető performancia.
 
 A storage API-ban úgy definiáltuk a megfelelő interfészt,
-hogy a keresésen kívül még néhány további funkciót támogatnia kelljen,
+hogy a keresésen kívül még néhány további funkciót is támogatnia kelljen,
 például a rendezést és a $NULL$ értékek kezelését.
 A következőkben leírt értékkiosztási módszerek többéségénél természetes módon következik,
 hogy ezeket a további elvárásokat is teljesítik.
@@ -195,7 +196,7 @@ De lássuk először az egyoszlopos értékkiosztások lehetséges módszereit.
 
 \subsubsection{Egyszerű értékkiosztások}
 
-Némely tényleges esetben az oszlopban egészen triviális módon szerepelnek az értékek az oszlop értéklistájában.
+Tényleges adatbázisokban némely esetben az oszlopban egészen triviális módon szerepelnek az értékek az oszlop értéklistájában.
 Természetesen az ilyen esetek szimulálása a legegyszerűbb.
 
 Triviális eset, ha egy oszlop mezői egy közös konstans értéket tartalmaznak.
