@@ -195,22 +195,22 @@ De lássuk először az egyoszlopos értékkiosztások lehetséges módszereit.
 
 \subsubsection{Egyszerű értékkiosztások}
 
-Sok esetben az oszlopban egészen triviális módon szerepelnek az értékek az oszlop értéklistájában.
+Némely tényleges esetben az oszlopban egészen triviális módon szerepelnek az értékek az oszlop értéklistájában.
+Természetesen az ilyen esetek szimulálása a legegyszerűbb.
 
 Triviális eset, ha egy oszlop mezői egy közös konstans értéket tartalmaznak.
 
 Ha olyan adathalmazt szimulálunk, melyre megengedhető a feltevés,
 hogy sem törlés, sem releváns értelemben problémás felülírás nem történt még,
-úgy némely oszlop egyszerű szekvenciális alapon generálható.
-A legegyszerűbb esetben az érték megegyezik a rekord 1-től indított sorszámával.
+úgy egyes oszlopok szekvenciális alapon generálhatók.
+Az ilyen esetekben az $n$-edik érték lekérése
+egy aritmetikai alapműveletekkel transzformált identitásfüggvénnyel számolható.
+Az érték keresése hasonló, az transzformációkat visszafelé alkalmazva megkapjuk az inverz függvényt.
+
+A szekvenciális oszlopoknál az érték megegyezik a rekord 1-től indított sorszámával.
+
 Időbélyegeket is generálhatunk hasonló módon,
 amennyiben megengedhető, hogy a szimulált időadatok között egyenletes időközök legyenek.
-
-Az ilyen esetekben az $n$-edik érték lekérése egyszerűen
-egy alapműveletekkel transzformált identitásfüggvénnyel számolható.
-Az érték keresése hasonló, fordított transzformáció mellett.
-
-\todo[inline, color=red]{További egyszerű értékkiosztások}
 
 \subsubsection{Értékkiosztás reguláris kifejezés alapján}
 
@@ -219,6 +219,17 @@ Az érték keresése hasonló, fordított transzformáció mellett.
 \subsubsection{Kétfázisú értékkiosztás}
 
 \todo[inline, color=red]{subsubsection: Kétfázisú értékkiosztás}
+
+\subsubsection{Zajosan monoton értékkiosztások}
+
+\todo[inline, color=red]{Zajosan monoton 1}
+
+A fenti monoton-generálás variánsa, nem engedünk üres range-et (elég széles superrange-ek),
+és kvázi-random választunk egy végső értéket a range-ből, az alapindex alapján seed-elve.
+
+\todo[inline, color=red]{Zajosan monoton 2}
+
+Warping function with constrained tangent (inverse???) + local noise function with constrained delta.
 
 \begin{figure}
 \centering
