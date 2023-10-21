@@ -22,6 +22,8 @@
 
 \newcommand{\rhpad}{\vspace{0.6\baselineskip}}
 
+\newcommand{\longcomment}[2]{\todo[inline]{Long comment: #1}}
+
 % The minted package is also supported for source highlighting
 %\usepackage[newfloat]{minted}
 
@@ -90,5 +92,176 @@
     \item Felépítés
     \item Konfiguráció
 \end{itemize}
+
+\section{Ömlesztett megjegyzések}
+
+\longcomment{Ömlesztett megjegyzések}{
+Vincellér:
+-----------------
+Néhány visszatérő szituáció:
+- prototyping
+    - nem feltétlenül végleges
+- mocking
+    - csak legyen ott
+- tesztelés
+    - megbízhatóan kerüljön oda, akár zsinórban többször
+- gyors anonimizálás
+    - körülbelül tudjuk, minek kell látszódnia
+- 
+
+--> ez mind egyetlen probléma
+
+A problémák valódi adatbázis használatával
+- erőforrásigény
+    - el kell induljon a szerver
+    - le kell generálni és fizikailag letárolni az összes adatot
+    - ez rengeteg helyet is foglal, pedig általában kevés adatot használunk
+    - 
+- egyéb (színnel is lehet jelezni)
+    - tudni kell, mi a schema
+    - tudni kell mifélék az adatok
+--> az egyéb kategóriába tartozók:
+- dokumentáció jellegűek (nem kell minden indításkor végrehajtani őket)
+    (az adatbázis alternatívái: full dependency mock (unit test))
+
+docker: bemutatni, hogy mit tud, elindítani egy szervert
+ebből az adatrengetegből egy szemernyi nem létezik valójában
+
+Vincellér: 
+nagyon a gyakorlat felől lezdtünk neki
+de nekem csak annyit kell bizonyítanom, hogy **érdemes** ezzel foglalkozni, a hangsúly az ötlet/tézis megvalósíthatóságán van
+maga a szoftver egy PoC, ami már nagy előrelépés a teljesen elméleti dolgozatok tömegéhez képest
+a fő fókusz a storage on-the-fly implementálhatóságán van
+különösen az adatgenerálásra fogok koncentrálniáll
+grátisz, hogy ez egy eladható szoftver, de azért ebbe is belemehetûnk
+fő altézis: milyen módokon hatékony read-only kereshető (reverse-indexelt), on-the-fly adatlistákat vagy ezek csoportját implementálni (ez a kutatandó elméleti szűk keresztmetszet, az alkalmazás kontextusára rámutatva)
+nem innovatíve szedtem-hordtam össze megoldásokat, hogy valamit pusztán mindenáron létrehozzak
+érdekel a dolog anatómiája, a főprobléma, és hogy miért nincs még ilyen
+mindenre ráfókuszáltunk, csak pont az adalisták generálására nem (a többi megoldott probléma)
+
+Vincellérnek:
+------------------------
+előzmény, motiváció, nagyon régóta érik
+inspirációk
+  - faker
+  - seed alapú nyílt világ
+  - relációs schema
+a gyakorlati probléma
+  - prototype, mock
+  - teszt
+  - szimuláció (akkurátusság, performancia)
+  - oktatás
+a keresztmetszeti storage interfész
+már van egy viszonylag tűrhetően működő prototípus
+az elméleti problémák
+  - read-only + diff layer
+  - adatgenerálás
+     - a monolithic+permutation megoldás, ezek külön-külön
+     - egyéb módok
+         - egyszerűek (counter, egysz. regex)
+         - kereshető regex
+         - speciális constrained
+         - struct schema
+         - binary gen (pl. kép)
+  - később: profilozás
+interfészek, erőteljes bővíthetőség
+tesztek
+  - unit
+  - performance (junit)
+  - demonstrációs
+  - egyéb
+saját és külső sql planner (saját, calcite), runtime döntés?
+a kutatni- és mérnivalók
+kiegészítő témák (miniconnect api, jdbc bridge, repl, stb.)
+egyéb (a másik i rány):
+   - generálás meglévő adatbázisból
+      - és vica versa
+      - column szemantikájának detektálása
+   - AI által generált schema, szöveg vagy constraintek alapján
+     "please provide a medium sized database for a book library"
+        (az egész read-only adatbázis maga a schema, azáltal meghatározott)
+
+TDK-hoz:
+---------------
+a prototípus teljes docker+holodb-s változata
+mysql-változat éles adatbázissal
+mysql-változat anonimizálással
+mysql-változat adatgenerálással
+measurement
+eredmények táblázata
+módszertani leírás (a tdk-s latex keretben)
+holodb szerkezeti diagramja
+
+A1: mysql létező adatbázissal, file copy
+A2: mysql létező adatbázissal, SQL dump
+B1: mysql anonimizálással, file copy
+B2: mysql anonimizálással, SQL dump
+C: mysql generálással
+D: h2 generálással
+E: holodb
+
+projekt előfeltétele
+- A: feltöltött adatbázis
+- B: feltöltött adatbázis
+- C: kész schema
+- D: kész schema
+- E: schema-vázlat
+mock előfeltétele
+- A: ---
+- B: anonimizáló szkript
+- C: generáló szkript
+- D: generáló szkript
+- E: deklaratív konfiguráció
+data dump
+- A: copy / dump
+- B: copy / dump
+- C: ---
+- D: ---
+- E: ---
+adatbázis indítása
+- A-E: start
+adatbázis inicializációja
+- A: ---
+- B: másolás + anonimizáció
+- C: adatgenerálás
+- D: adatgenerálás
+- E: ---
+tesztfuttatás
+- A-E: teszt(1..n)
+adatbázis lebontása és zárása
+- A-D: drop, (...?), stop
+- E: stop
+
+join-hibához:
+pontosan akkor kell meghagyni a távolis sorokkal nem rendelkező rekordot left joinnál, ha a távoli táblára nincs szűrés (ha nem a szűrés miatt üres); de ezzel empirikusan is kísérletezni kellene mysql-en
+
+fejlesztendő:
+- generális where (konjunktív normálforma? oszlopokra csoportosított? joinok? nagyon nem triviális)
+- egyszerű group by
+- allekérdezés a SELECT részben
+- 
+
+isCommittable
+a diff layer a tranzakcióbeli módosításokhoz hasonló
+
+holodb vs. materializált nézettáblák
+(read-only tesztnél azt is ki lehetne próbálni)
+
+killer feature: middleware
+sql extensions (e.g. jdbc methods, possibly like sqlline)
+holodb/minibase api: fulltext index?
+
+funkcionálisan nincs különbség fizikai elérés és on-the-fly generálás között, ha a generálás:
+1.) gyors
+2.) konzisztens/szisztematikus
+3.) valószerű eredményt ad
+
+vertical composition: 
+- compound data structures (vector, complex, geospatial etc.)
+- compound short text (full names, addresses, email etc.)
+horizontal composition:
+- use union of data sources
+- possibly track their source for multi-column constraints
+}
 
 \end{document}
