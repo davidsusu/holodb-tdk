@@ -5,7 +5,7 @@
     %twoside, % Double sided format
     %draft, % Quicker draft compilation without rendering images
     %final, % Set final to hide todos
-]{elteiktdk}[2023/10/30]
+]{elteiktdk}[2023/04/10]
 
 \usepackage{xcolor}
 \newcommand{\guessvalue}{}
@@ -24,24 +24,22 @@
 
 \newcommand{\longcomment}[2]{\todo[inline]{Long comment: #1}}
 
-% The minted package is also supported for source highlighting
-%\usepackage[newfloat]{minted}
-
+\usepackage[newfloat]{minted}
+\AtBeginEnvironment{minted}{\singlespacing}
 
 
 \title{TDK-dolgozat címe}
 \date{2023}
 \author{Horváth Dávid}
 \degree{Programtervező Informatikus BSc}
-\period{2. évfolyam}
+%\period{XXX. évfolyam}
 
-% Superivsor(s)' metadata
 \supervisor{Vincellér Zoltán}
 \affiliation{egyetemi tanársegéd}
 
 \university{Eötvös Loránd Tudományegyetem}
 \faculty{Informatikai Kar}
-\department{XXXXXXXXXXX Tanszék}
+\department{Információs Rendszerek Tanszék}
 \city{Budapest}
 \logo{elte_cimer_szines}
 
@@ -49,9 +47,8 @@
 \addbibresource{references.bib}
 
 \begin{document}
-\documentlang{hungarian}
-%\cleardoublepage
 
+\documentlang{hungarian}
 
 \listoftodos
 \cleardoublepage
@@ -66,12 +63,35 @@
 
 
 \begin{abstract}
-\todo[inline]{Absztrakt}
+A szofisztikált tesztelés és a gyors prototípusgyártás
+a modern szoftvertechnológia két elengedhetetlen alapköve.
+Mégis, ezek egyik fő függőségének, a teszt- illetve demóadatoknak
+a rendelkezésre állása manapság is komoly kihívást jelent.
+Általában két megközelítési móddal találkozunk:
+vagy az adatok on-the-fly generálával, mely ugyan kisköltségű,
+de teljesen inkonzisztens az egyes üzenetváltások között;
+vagy valamilyen tesztadatbázis odahelyezésével,
+mely nem csak hogy hordozza a tényleges adatbázis minden költségigényét,
+de jellemzően számos további nehézséggel bővíti, például adatgenerálással vagy anonimizálással.
+Dolgozatomban egy olyan megoldás alapjait mutatom be,
+mely további előnyök mellett ötvözi az előbbi kettő erősségeit,
+míg kikerüli azok fő hátrányait.
+Az előterjesztett megoldás egy akár közel zéró erőforrásigényű virtuális relációs adattár,
+melynek szerkezete és adattartalma konfigurációs fájlon keresztül rugalmasan paraméterezhető,
+és a lekérdezéseket on-the-fly hajtja végre konzisztensen
+(legyen az SQL, NoSQL, GraphQL vagy egyéb),
+és performanciája legalábbis összemérhető a valódi adatbázisokéval.
+Ez a performancia akkor érthető el, ha a virtuális adatokhoz virtuális indexek is tartoznak,
+aminek implementációbeli kulcsát többek között a rendezett értékkészletek,
+a diszkrét monoton függvények
+illetve a kriptográfiában is használatos megfordítható permutációk adják.
 \end{abstract}
 
 \chapter{Motiváció}
 
 \section{Bevezetés}
+
+% TODO
 
 \todo[inline]{section: Bevezetés}
 
@@ -79,6 +99,11 @@
     \item Relational data as a serverless function
     \item TODO
 \end{itemize}
+
+\begin{minted}{python}
+def alma(x):
+  print("Hello")
+\end{minted}
 
 \section{Előző változat bevezető fejezetei}
 
@@ -88,7 +113,7 @@
     \item Néhány visszatérő probléma közös nevezője
     \item A fakerek limitációi
     \item Virtuális mockolás: hézag jelei új termék számára?
-    \item \,
+    \item \dots
     \item Felépítés
     \item Konfiguráció
 \end{itemize}

@@ -324,7 +324,8 @@
 \RequirePackage{color}
 \RequirePackage{xcolor}
 % Predefined colors
-\definecolor{codebackg}{rgb}{0.95,0.95,0.95}
+\definecolor{codebackg}{rgb}{1,1,1}
+\definecolor{codeline}{rgb}{0.9,0.85,0.8}
 \definecolor{codecomment}{rgb}{0,0.6,0}
 \definecolor{codestring}{rgb}{0.58,0,0.82}
 \colorlet{todobackg}{orange!10}
@@ -543,7 +544,7 @@
 	% and set the labels for the listings 
 	\@ifpackageloaded{minted}{
 		\setminted{
-			style=tango,
+			style=friendly,
 			numbers=left,
 			stepnumber=1,
 			firstnumber=1,
@@ -552,7 +553,10 @@
 			showtabs=false,
 			tabsize=2,
 			breaklines=true,
-			frame=lines,
+			frame=leftline,
+			framesep=1em,
+			framerule=2pt,
+			rulecolor=codeline,
 			bgcolor=codebackg,
 		}
 		\SetupFloatingEnvironment{listing}{
