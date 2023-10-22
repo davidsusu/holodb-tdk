@@ -82,7 +82,7 @@ melynek szerkezete és adattartalma konfigurációs fájlon keresztül rugalmasa
 (legyen az SQL, NoSQL, GraphQL vagy egyéb),
 és performanciája legalábbis összemérhető a valódi adatbázisokéval.
 Ez a performancia akkor érhető el, ha a virtuális adatokhoz virtuális indexek is tartoznak,
-aminek implementációbeli kulcsát többek között a rendezett értékkészletek,
+aminek implementációbeli magját többek között a rendezett értékkészletek,
 a diszkrét monoton függvények
 illetve a kriptográfiában is használatos megfordítható permutációk adják.
 \end{abstract}
@@ -148,6 +148,15 @@ Egyéb:
 \section{A storage API}
 
 \todo[inline]{section: A storage API}
+
+\longcomment{Storage API ötletelés}{
+schemák, táblák és oszlopok
+indexek
+   normál
+   rendezetlen (optimalizálás-egyszerűsítés, kezelhető normál indexek halmazaként is)
+   full-text
+   spatial???
+}
 
 \section{A csak-olvasható alapréteg}
 
