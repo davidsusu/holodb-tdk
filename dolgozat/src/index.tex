@@ -28,7 +28,7 @@
 \AtBeginEnvironment{minted}{\singlespacing}
 
 
-\title{TDK-dolgozat címe}
+\title{}
 \date{2023}
 \author{Horváth Dávid}
 \degree{Programtervező Informatikus BSc}
@@ -89,11 +89,56 @@ illetve a kriptográfiában is használatos megfordítható permutációk adják
 
 \todo[inline]{összetett adatok, valós címek, földrajzi koordináták etc.}
 
-\chapter{Körvonalazás}
+\chapter{Bevezetés}
+
+\section{Motiváció}
+
+\todo[inline,color=red]{Körvonalazás/Motiváció: bevezetés, mi lesz ebben a szekcióban}
+
+\subsection{Egy mindennapi probléma}
+
+\todo[inline,color=red]{Egy mindennapi probléma: A visszatérő probléma kifejtése, ami engem motivált}
+
+\subsection{Fakerek}
+
+\todo[inline,color=red]{Fakerek: A fakerek népszerűsége stb. (végül még valós adatgenerálásra is ezt használják)}
+
+\subsection{Seed alapú nyílt világok}
+
+\todo[inline,color=red]{Seed alapú nyílt világok: Mi ez? Miért ne használhatnánk adatbázisokhoz? Indexek, egyéb követelmények --> következő szekció}
+
+\subsection{Valós relációs adatbázisok}
+
+\todo[inline,color=red]{Valós relációs adatbázisok: Miben is áll egy valós adatbázis? Mi a szűk keresztmetszet}
+
+\section{A megoldás körvonalai}
+
+\longcomment{section: A megoldás körvonalai}
+{
+A relációs modellre fogunk koncentrálni, de bármi más is ráépíthető.
+Mit csinál a felhasználó?
+A konfigurációs fájl (persze mindenhez van API) és jelentősége (rugalmas, verziókezelhető stb.).
+}
+
+\longcomment{Architektúraábra kiegészítése}{
+Az ábrán kiemelni a storage API-t illetve a virtual storage impl.-t.
+Hangsúlyozni, hogy a többi is meg van valósítva.
+Az SQL mellé rátenni még egyéb query típusokat (NoSQL, GraphQL) és más dolgokat.
+Esetleg a session layert és az SQL executor layert megcserélni (profibb lenne).
+Valós adatbázis feltöltése a virtuális tárból.
+}
+
+\begin{figure}[H]
+\centering
+\includesvg{diagram/simplearch}
+\caption{A virtuális adatbázis vázlatos architektúrája}
+\label{A virtuális adatbázis vázlatos architektúrája}
+\end{figure}
+
 
 \section{XXX}
 
-\todo[inline,color=red]{chapter: Körvonalazás}
+\todo[inline,color=red]{XXX}
 
 Előző változat bevezető fejezetei:
 
@@ -114,15 +159,14 @@ Egyéb:
     \item Relational data as a serverless function
     \item SQL, NoSQL, GraphQL, REST etc.
     \item miniconnect, minibase, REPL
+    \item valós adatbázis feltöltése innen
+    \item konfiguráció generálása
+    \begin{itemize}
+        \item valós adatbázis egyszerű feldolgozásával
+        \item valós adatbázis intelligens feldolgozásával (pl. evolúciós algoritmussal)
+        \item valós adathalmazokon tanított AI által
+    \end{itemize}
 \end{itemize}
-
-\begin{figure}[H]
-\centering
-\includesvg{diagram/simplearch}
-\caption{A virtuális adatbázis vázlatos architektúrája}
-\label{A virtuális adatbázis vázlatos architektúrája}
-\end{figure}
-
 
 
 
