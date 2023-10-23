@@ -194,7 +194,7 @@
 	% Completely erase header and footer
 	\fancyhf{}
 	% Set new footer
-    \fancyfoot[C]{\thepage}
+    \fancyfoot[C]{\thepage}ccc
 }
 
 % No header and footer on empty pages

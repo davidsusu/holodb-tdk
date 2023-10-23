@@ -1,15 +1,10 @@
 \documentclass[
-    parspace, % Add vertical space between paragraphs
-    noindent, % No indentation of first lines in each paragraph
-    %nohyp, % No hypenation of words
-    %twoside, % Double sided format
-    %draft, % Quicker draft compilation without rendering images
-    %final, % Set final to hide todos
+    parspace,
+    noindent,
+    %final, % hide todos
 ]{elteiktdk}[2023/04/10]
 
 \usepackage{xcolor}
-\newcommand{\guessvalue}{}
-%\newcommand{\guessvalue}{\color{red} \textbf{$_{?}$}}
 
 \usepackage{tabularx}
 \usepackage{booktabs}
@@ -32,7 +27,6 @@
 \date{2023}
 \author{Horváth Dávid}
 \degree{Programtervező Informatikus BSc}
-%\period{XXX. évfolyam}
 
 \supervisor{Vincellér Zoltán}
 \affiliation{PhD, Mesteroktató}
@@ -87,17 +81,61 @@ a diszkrét monoton függvények
 illetve a kriptográfiában is használatos megfordítható permutációk adják.
 \end{abstract}
 
-\todo[inline]{összetett adatok, valós címek, földrajzi koordináták etc.}
-
 \chapter{Bevezetés}
 
-\section{Motiváció}
+\section{Egy mindennapi probléma}
 
-\todo[inline,color=red]{Körvonalazás/Motiváció: bevezetés, mi lesz ebben a szekcióban}
+A szoftverfejlesztési és -releaselési folyamatok fontos előfeltevése,
+hogy az alkalmazás mint absztrakt entitás snapshot jellegű,
+azaz a mindenkori forráskód (és függőségek) aktuális \textit{állapotának} derviátuma,
+nem függ annak történetiségétől.
+Ezt az átlátható képet bolygatja meg a szoftverhez tartozó produkciós adatbázis,
+mely önálló életet él, a felhasználói világgal való interakcióban folyamatosan változik;
+szerkezete, szemantikája azonban szorosan az alkalmazás mindenkori állapotához kötődik.
 
-\subsection{Egy mindennapi probléma}
+Ez a kettős természet legalább két nagy problémakört eredményez.
+Az egyik a verziókezeléssel kapcsolatos:
+a produkciós adatbázist csak differencia-szkriptek végrehajtásával tudjuk módosítani,
+ami jellemzően egy másodlagos verziókezelést eredményez a forráskód verziókezelésén belül
+(ilyen megoldás például a Flyway vagy a Liquibase), és gyakori összefésülési problémákhoz vezet.
+A jelen dolgozatban nem foglalkozom ennek a kérdésnek a részleteivel,
+de az utolsó felyezetben vázolom majd egy lehetséges megoldás körvonalait,
+ami szervesen következik majd az előzőekből.
 
-\todo[inline,color=red]{Egy mindennapi probléma: A visszatérő probléma kifejtése, ami engem motivált}
+A másik problémakör azzal kapcsolatos, hogy ugyan az ``életnek kitett'' produkciós adatbázist
+kénytelenek vagyunk minden erőforrásigényével életben tartni valamint minden release-zel migrálni,
+ám az absztrakt értelemben vett mindenkori adatbázisra számos egyéb helyen is szükségünk van,
+ahol ezek a költségek igencsak nemkívánatosak.
+Ilyenek jellemzően:
+
+\begin{itemize}
+    \item adatfüggő stubok és mockok
+    \item integrációs és egy tesztek
+    \item gyors prototípusgyártás, draft adatbázisok
+    \item rövid demonstrációk, prezentációk
+    \item \todo[inline]{sziuációk/normál lista befejezése}
+\end{itemize}
+
+De a listát kiegészíthetjük még egészen más jellegű szituációkkal is:
+
+\begin{itemize}
+    \item adatbáziskezelés oktatása
+    \item \todo[inline]{sziuációk/egyéb lista befejezése}
+\end{itemize}
+
+[mégis adatbázissal csinálják, tárhelyigény, replikálás, anonimizálás vagy generálás stb.]
+
+
+[a szoftver snapshot-két deployolható (verziókezelhetővé is ez teszi --> git)]
+[az adatbázis belerondít ebbe a világba, élesben folyamatos evolúciója van, függetlenül a fejlesztéstől, +migrációs szkriptek stb.]
+[már megfogalmazás: az éles adatok kedvéért minden oké, de nem akarjuk ezt a tesztelésbe stb. bevinni...]
+[számtalan egyéb problémát is hoz, nagy stb.]
+[mockolás/fejlesztés; tesztelés; kísérletezés/db-tervezés; demonstrálás; oktatás; anonimizálás; adatbázis-dokumentáció]
+[hogyan kerüljük ki, hogy ezeket a problémákat meg kelljen örökölni?]
+
+\todo[inline]{kinyitni a konf. fájl mint migrációs diff alap lehetőségét?}
+
+\section{Ihletforrások}
 
 \subsection{Fakerek}
 
@@ -134,6 +172,8 @@ Valós adatbázis feltöltése a virtuális tárból.
 \caption{A virtuális adatbázis vázlatos architektúrája}
 \label{A virtuális adatbázis vázlatos architektúrája}
 \end{figure}
+
+\todo[inline,color=red]{A megoldás körvonalai (vagy következő): ide az összehasonlító táblázat}
 
 
 \section{XXX}
@@ -505,8 +545,7 @@ de ha igen, csak azokon belül kell tényleges összehasonlításos rendezést v
 
 \subsection{Nem-indexelt egyoszlopos értékkiosztások}
 
-A nem-indexelt oszlopok (melyek jellemzően terjedelmesebb adattartalmak)
-szimulálásakor a keresési-rendezési szempontokat egyáltalán nem kell figyelembe venni.
+A nem-indexelt oszlopok szimulálásakor a keresési-rendezési szempontokat egyáltalán nem kell figyelembe venni.
 Az indexelt oszlopokra vonatkozó elvárások közül így csak az első kettő releváns:
 
 \begin{enumerate}
@@ -515,13 +554,12 @@ Az indexelt oszlopokra vonatkozó elvárások közül így csak az első kettő 
 \end{enumerate}
 
 Vagyis elég, ha a \texttt{TreeRandom} által a sorhoz generált seed alapján
-előállítunk egy \texttt{Random} példányt.
-Ennek felhasználásával a tartalmat tetszőleges determinisztikus módszerrel állíthatjuk elő.
+előállítunk egy \texttt{Random} példányt,
+és ennek felhasználásával a tartalmat tetszőleges determinisztikus módszerrel állíthatjuk elő.
 Erre az előállításra kizárólag a konfigurációban megadott beállítások jelentenek megszorítást.
 
-A következő listában csak fölvillantanám az ilyen adattartalmak néhány jellegzetes típusát:\footnote{
-  Amelyeket érdemes beépítetten is támogatni, nyilván a lehetőségek korlátlanok.
-}
+A következő listában csak fölvillantanám az ilyen adattartalmak néhány jellegzetes,
+egyúttal könnyen szimulálható típusát:
 
 \begin{itemize}
   \item \textbf{Egyszerű szöveg:}
@@ -532,16 +570,17 @@ A következő listában csak fölvillantanám az ilyen adattartalmak néhány je
   \item \textbf{Strukturált szöveg:}
     először előállítunk egy általános struktúrát (címek, bekezdések stb.),
     majd ennek elemeit feltöltjük szöveggel,
-    végül a struktúrát valamilyen jelölőnyelven szolgáltatjuk (HTML, MarkDown, plain text stb.)
+    végül a struktúrát a kívánt jelölőnyelven szolgáltatjuk (HTML, MarkDown, plain text stb.)
   \item \textbf{Strukturált adat:}
     generált vagy konfigurációban megadott adat-schema alapján rekurzívan generáljuk le az adatstruktúrát,
-    a schema-nyelv (pl. JSON Schema) és a kimenet formátuma is konfigurálható (JSON, YAML, TOML stb.)
+    ekkor a schema-nyelv (pl. JSON Schema) és a kimenet formátuma (JSON, YAML, TOML stb.)
+    függetlenül konfigurálható
   \item \textbf{Egyszerűbb képek:}
     véletlen színű háttérre véletlen paraméterekkel
     rárajzolunk néhány egyszerű alakzatot,
-    majd a megadott vektoros/raszteres formátumban szolgáltatjuk
+    majd a kívánt vektoros vagy raszteres formátumban szolgáltatjuk
   \item \textbf{Jelszó-hash:}
-    tulajdonképpen elég a hash értéket magára a seedre generálni
+    egy valós hash előállításához elég, ha a hash-algoritmust magára a seedre mint bemenetre hívjuk meg
   \item \textbf{Általános BLOB/CLOB:}
     lekéréskor a konfigurációban megadott mérethatárok közötti bájtsort/karaktersort kell visszaadni,
     ami könnyen ellátható random bájtok/karakterek generálásával
@@ -551,6 +590,8 @@ A következő listában csak fölvillantanám az ilyen adattartalmak néhány je
 
 \todo[inline]{subsubsection: Értékkiosztás oszlopok közötti megkötésekkel}
 
+\todo[inline]{összetett adatok, valós címek, földrajzi koordináták etc.}
+
 \subsection{Táblák közötti kapcsolatok}
 
 \todo[inline]{subsubsection: Táblák közötti kapcsolatok (idegen értékkészlet; kiszervezett megkötések)}
@@ -559,6 +600,9 @@ A következő listában csak fölvillantanám az ilyen adattartalmak néhány je
 
 \todo[inline]{section: Az írhatósági réteg}
 
+\section{XXX}
+
+\todo[inline]{Az utolsó fejezetben foglalkozni az adatbázis-verziókezelési problémával}
 
 %%%%%% END CONTENT %%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%
