@@ -87,7 +87,8 @@ illetve a kriptográfiában is használatos megfordítható permutációk adják
 A szoftverfejlesztési és -release-elési folyamatok lényeges előfeltevése,
 hogy az alkalmazás mint absztrakt entitás snapshot jellegű,
 azaz a mindenkori forráskód\footnote{
-    Hozzáértve természetesen mindazokat a determinisztikus függőségeket is, amelyeket deklarál.
+    Hozzáértve természetesen mindazokat a determiniszt
+    ikus függőségeket is, amelyeket deklarál.
 }
 aktuális \textit{állapotának} derviátuma,
 nem függ annak történetiségétől.
@@ -107,7 +108,7 @@ ami szervesen következik majd az előzőekből.
 A másik problémakör azzal kapcsolatos, hogy ugyan az ``életnek kitett'' produkciós adatbázist
 kénytelenek vagyunk minden erőforrásigényével életben tartni valamint minden release-zel migrálni,
 ám az absztrakt értelemben vett mindenkori adatbázisra számos egyéb helyen is szükségünk van,
-ahol ezek a költségek igencsak nemkívánatosak.
+ahol ezek a folyamatos költségek igencsak nemkívánatosak.
 Ilyenek jellemzően:
 
 \begin{itemize}
@@ -115,29 +116,26 @@ Ilyenek jellemzően:
     \item integrációs és egyéb tesztek
     \item gyors prototípusgyártás, kísérletezés, draft adatbázisok
     \item rövid demonstrációk, prezentációk
-    \item 
 \end{itemize}
 
-De a listát kiegészíthetjük még egészen más jellegű szituációkkal is, találomra néhány:
+Ezeken kívül, ha egy csak-olvasható adattartalmat akarunk nagy adatforgalomnak kitenni,
+fölmerülhet az adattartalom replikálása, és load-balanceren keresztüli elérhetővé tétele,
+ekkor azonban minden újabb példány jelentősen növeli a tárhelyfoglalást.
 
-\begin{itemize}
-    \item adatbáziskezelés oktatása
-    \item csak-olvasható adatbázisok loadbalance-olása
-    \item 
-\end{itemize}
+De más területeken is találkozhatunk hasonló kívánalmakkal.
+Például az adatbázisok oktatásában is jellemző, hogy minden egyes hallgató
+számára elérhető egy saját adatbázis,
+bár mindegyik ilyen adatbázis szükségszerűen ugyanazzal a szerkezettel és adatokkal bír.
 
-[mégis adatbázissal csinálják, tárhelyigény, replikálás, anonimizálás vagy generálás stb.]
+Fogalmazzuk meg tehát a problémát:
 
-
-
-[a szoftver snapshot-két deployolható (verziókezelhetővé is ez teszi --> git)]
-[az adatbázis belerondít ebbe a világba, élesben folyamatos evolúciója van, függetlenül a fejlesztéstől, +migrációs szkriptek stb.]
-[már megfogalmazás: az éles adatok kedvéért minden oké, de nem akarjuk ezt a tesztelésbe stb. bevinni...]
-[számtalan egyéb problémát is hoz, nagy stb.]
-[mockolás/fejlesztés; tesztelés; kísérletezés/db-tervezés; demonstrálás; oktatás; anonimizálás; adatbázis-dokumentáció]
-[hogyan kerüljük ki, hogy ezeket a problémákat meg kelljen örökölni?]
-
-\todo[inline]{kinyitni a konf. fájl mint migrációs diff alap lehetőségét?}
+\parbox{10cm}{
+Lorem ipsum dolor sit amet.
+Lorem ipsum dolor sit amet.
+Lorem ipsum dolor sit amet.
+Lorem ipsum dolor sit amet.
+Lorem ipsum dolor sit amet.
+}
 
 \section{Ihletforrások}
 
@@ -165,6 +163,7 @@ példákat hozni!
 
 \longcomment{section: A megoldás körvonalai}
 {
+"random adatbázis"
 A relációs modellre fogunk koncentrálni, de bármi más is ráépíthető.
 Mit csinál a felhasználó?
 A konfigurációs fájl (persze mindenhez van API) és jelentősége (rugalmas, verziókezelhető stb.).
@@ -635,6 +634,8 @@ egyúttal könnyen szimulálható típusát:
 
 
 \section{XXX}
+
+\todo[inline]{kinyitni a konf. fájl mint migrációs diff alap lehetőségét?}
 
 \todo[inline]{Delphix?}
 
