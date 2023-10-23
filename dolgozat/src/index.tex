@@ -86,7 +86,10 @@ illetve a kriptográfiában is használatos megfordítható permutációk adják
 
 A szoftverfejlesztési és -release-elési folyamatok lényeges előfeltevése,
 hogy az alkalmazás mint absztrakt entitás snapshot jellegű,
-azaz a mindenkori forráskód (és függőségei) aktuális \textit{állapotának} derviátuma,
+azaz a mindenkori forráskód\footnote{
+    Hozzáértve természetesen mindazokat a determinisztikus függőségeket is, amelyeket deklarál.
+}
+aktuális \textit{állapotának} derviátuma,
 nem függ annak történetiségétől.
 Ezt az átlátható képet bolygatja meg a szoftverhez tartozó produkciós adatbázis,
 mely önálló életet él, a felhasználói világgal való interakcióban folyamatosan változik;
@@ -109,20 +112,22 @@ Ilyenek jellemzően:
 
 \begin{itemize}
     \item adatfüggő stubok és mockok
-    \item integrációs és egy tesztek
-    \item gyors prototípusgyártás, draft adatbázisok
+    \item integrációs és egyéb tesztek
+    \item gyors prototípusgyártás, kísérletezés, draft adatbázisok
     \item rövid demonstrációk, prezentációk
-    \item \todo[inline]{sziuációk/normál lista befejezése}
+    \item 
 \end{itemize}
 
-De a listát kiegészíthetjük még egészen más jellegű szituációkkal is:
+De a listát kiegészíthetjük még egészen más jellegű szituációkkal is, találomra néhány:
 
 \begin{itemize}
     \item adatbáziskezelés oktatása
-    \item \todo[inline]{sziuációk/egyéb lista befejezése}
+    \item csak-olvasható adatbázisok loadbalance-olása
+    \item 
 \end{itemize}
 
 [mégis adatbázissal csinálják, tárhelyigény, replikálás, anonimizálás vagy generálás stb.]
+
 
 
 [a szoftver snapshot-két deployolható (verziókezelhetővé is ez teszi --> git)]
@@ -136,9 +141,17 @@ De a listát kiegészíthetjük még egészen más jellegű szituációkkal is:
 
 \section{Ihletforrások}
 
-\subsection{Fakerek}
+\subsection{A kérések mockolása}
 
-\todo[inline,color=red]{Fakerek: A fakerek népszerűsége stb. (végül még valós adatgenerálásra is ezt használják)}
+\todo[inline,color=red]{A kérések mockolása: on-the-fly, inkonzisztencia stb.}
+
+\subsection{Adatgenerálás}
+
+\longcomment{Adatgenerálás}{
+A fakerek népszerűsége stb. (végül még valós adatgenerálásra is ezt használják);
+generálás, on-demand generálás (elég limitált, és az aggregációkat szükségszerűen nem támogatja);
+példákat hozni!
+}
 
 \subsection{Seed alapú nyílt világok}
 
@@ -195,9 +208,11 @@ Előző változat bevezető fejezetei:
 Egyéb:
 
 \begin{itemize}
+    \item determinisztikus, de a seed-del variálható//összekeverhető
     \item Relational data as a serverless function
     \item SQL, NoSQL, GraphQL, REST etc.
     \item miniconnect, minibase, REPL
+    \item a konfiguráció előfeldolgozható (pl. yaml + go template, mint a helmnél)
     \item valós adatbázis feltöltése innen
     \item konfiguráció generálása
     \begin{itemize}
@@ -619,7 +634,9 @@ egyúttal könnyen szimulálható típusát:
 
 
 
-\section{Ömlesztett megjegyzések}
+\section{XXX}
+
+\todo[inline]{Delphix?}
 
 \longcomment{Ömlesztett megjegyzések}{
 Vincellér:
