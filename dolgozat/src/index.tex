@@ -17,6 +17,12 @@
 
 \newcommand{\rhpad}{\vspace{0.6\baselineskip}}
 
+\newcommand{\thesispar}[1]{
+\vspace{1em}
+\hspace{0.7cm}\parbox[left][][c]{15.8cm}{\linespread{1.2}\selectfont #1}
+\vspace{1em}
+}
+
 \newcommand{\longcomment}[2]{\todo[inline]{Long comment: #1}}
 
 \usepackage[newfloat]{minted}
@@ -127,21 +133,40 @@ Például az adatbázisok oktatásában is jellemző, hogy minden egyes hallgat�
 számára elérhető egy saját adatbázis,
 bár mindegyik ilyen adatbázis szükségszerűen ugyanazzal a szerkezettel és adatokkal bír.
 
-Fogalmazzuk meg tehát a problémát:
+Fogalmazzuk meg tehát a problémát, mintegy tézisként:
 
-\parbox{10cm}{
-Lorem ipsum dolor sit amet.
-Lorem ipsum dolor sit amet.
-Lorem ipsum dolor sit amet.
-Lorem ipsum dolor sit amet.
-Lorem ipsum dolor sit amet.
+\thesispar{
+    \textbf{Alapmegállapítás:} Igen gyakran ütközünk abba a helyzetbe, hogy adott struktúrájú és szemantikájú
+    viszonylag rövid életű adatbázist kell biztosítani,
+    a produkciós adatokra vonatkozó speciális követelmények nélkül.
 }
 
-\section{Ihletforrások}
+Sőt, a produkciós adatbázis tartalma általában érzékeny adatokkal van tele,
+melyeket nem is használhatunk fel csak úgy (anonimizálás nélkül) egyéb célokra.
+
+A következő szakaszban röviden végigveszem, hogy általában hogyan szokás a problémát megkerülni,
+ezt követően pedig rátérek a az általam javasolt megoldás lényegének ismertetésére.
+Végül egy táblázatba foglalva összevetem mindezek előnyeit és hátrányait.
+
+\section{Megközelítések}
 
 \subsection{A kérések mockolása}
 
-\todo[inline,color=red]{A kérések mockolása: on-the-fly, inkonzisztencia stb.}
+Főként webes API-k által szolgáltatott adathalmazok mockolásakor találkozunk olyan megoldással,
+mely a lekérés (és persze az előre beállított szabályok)
+alapján generálja a válaszként visszaadandó adatstruktúrát
+(például egy rekordot vagy dokumentumot JSON formátumban).
+Az adatok véletlenszerűen kerülnek kitoltésre lekérés szerkezete alapján kiválasztott schema keretébe.
+
+A módszer SQL-lekérdezések közvetlen mockolására is adaptálható,
+a lekérdezés (és ha ismert, akkor a schema) alapján meg kell állapítani
+a visszaadandó eredménytábla szerkezetét, adattípusait,
+az egy-egy oszlopba kerülő adatok jellegét,
+majd random jelleggel elő kell állítani bizonyos számű, ezeknek a követelményeknek megfelelő eredményrekordot.
+
+Ez a megoldás természetesen nem fog konzisztens eredményt adni több lekérés esetén,
+így csak olyan esetben használható, ahol a lekérések nem épülnek egymásra.
+Cserébe erőforrásigénye csekély, nincs szükség az adatok tényleges tárolására.
 
 \subsection{Adatgenerálás}
 
@@ -155,11 +180,9 @@ példákat hozni!
 
 \todo[inline,color=red]{Seed alapú nyílt világok: Mi ez? Miért ne használhatnánk adatbázisokhoz? Indexek, egyéb követelmények --> következő szekció}
 
-\subsection{Valós relációs adatbázisok}
+\section{A javasolt megoldás körvonalai}
 
-\todo[inline,color=red]{Valós relációs adatbázisok: Miben is áll egy valós adatbázis? Mi a szűk keresztmetszet}
-
-\section{A megoldás körvonalai}
+\todo[inline,color=red]{Miben is áll egy valós adatbázis? Mi a szűk keresztmetszet}
 
 \longcomment{section: A megoldás körvonalai}
 {
@@ -614,6 +637,8 @@ egyúttal könnyen szimulálható típusát:
 \todo[inline]{section: Az írhatósági réteg}
 
 \section{XXX}
+
+\todo[inline]{Konfiguráció, AI tanulás --> SAT solvereknél (ez legalább egy hivatkozás)}
 
 \todo[inline]{Az utolsó fejezetben foglalkozni az adatbázis-verziókezelési problémával}
 
