@@ -228,21 +228,9 @@ Belátható, hogy mindezek egyszerre teljesíthetők, az alábbi szekcióban rö
 
 [ide a módosított, kiegészített architektúraábra
 
-\subsection{XXX: Miért nincs még ilyen megoldás?}
-
-[lehetetlen, hogy erre még senki nem gondolt]
-
 \subsection{XXX}
 
 A konfigurációs fájl további előnye, hogy létező adatbázispéldányokon tanított mesterséges intelligencia segítségével is generálható. Az MI-alapú konfigurációmenedzsent egyre szélesebb körben alkalmazott módszer, megtaláljuk a SAT-solverektől(hiv!) a felhőarchitektúrákig(hiv!), nem látszik akadálya azx   adatbázisra vonatkozó konfigurációban való alkalmazásnak.
-
-[az előzőek alapján a kétdés végülis: tudunk-e úgy virtuális adatvilágot szolgáltatni, hogy azokhoz indexek is tartozzanak? (--> storage API)]
-[világos, hogy a run-time performanciából vesztünk (de nem vészesen!), a lényeg, hogy más lényeges hátrány nem nagyon van]
-[teljesítményteszt kell egyszerűbb querykkel, illetve bonyolulttal is calcite-tal]
-[a rendezés vs. join problémát javítani]
-[ahol nem kell kereshetőnek lenni, ott tulajdonképpen a normál seedes szeletenkénti világgenerálás játszik]
-[konfigot kiegészíteni még egyedi működés támogatásával]
-[calcite minimális támogatása]
 
 \todo[inline,color=red]{Miben is áll egy valós adatbázis? Mi a szűk keresztmetszet}
 
@@ -270,6 +258,17 @@ Valós adatbázis feltöltése a virtuális tárból.
 \end{figure}
 
 \todo[inline,color=red]{A megoldás körvonalai (vagy következő): ide az összehasonlító táblázat}
+
+\subsection{XXX: Miért nincs még ilyen megoldás?}
+
+[lehetetlen, hogy erre még senki nem gondolt]
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 
 \section{XXX}
@@ -305,6 +304,14 @@ Egyéb:
         \item valós adathalmazokon tanított AI által
     \end{itemize}
 \end{itemize}
+
+[az előzőek alapján a kétdés végülis: tudunk-e úgy virtuális adatvilágot szolgáltatni, hogy azokhoz indexek is tartozzanak? (--> storage API)]
+[világos, hogy a run-time performanciából vesztünk (de nem vészesen!), a lényeg, hogy más lényeges hátrány nem nagyon van]
+[teljesítményteszt kell egyszerűbb querykkel, illetve bonyolulttal is calcite-tal]
+[a rendezés vs. join problémát javítani]
+[ahol nem kell kereshetőnek lenni, ott tulajdonképpen a normál seedes szeletenkénti világgenerálás játszik]
+[konfigot kiegészíteni még egyedi működés támogatásával]
+[calcite minimális támogatása]
 
 
 
