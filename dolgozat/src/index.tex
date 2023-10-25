@@ -168,19 +168,81 @@ Ez a megoldás természetesen nem fog konzisztens eredményt adni több lekéré
 így csak olyan esetben használható, ahol a lekérések nem épülnek egymásra.
 Cserébe erőforrásigénye csekély, nincs szükség az adatok tényleges tárolására.
 
-\subsection{Adatgenerálás}
+\subsection{Seed alapú virtuális világok}
 
-\longcomment{Adatgenerálás}{
-A fakerek népszerűsége stb. (végül még valós adatgenerálásra is ezt használják);
-generálás, on-demand generálás (elég limitált, és az aggregációkat szükségszerűen nem támogatja);
-példákat hozni!
-}
+Egyszerűbb szimulációkban és játékokban már igen régen generálnak kisebb világokat, pályákat procedurálisan valamilyen pszeudo-random algoritmus segítségével. A módszer továbbfejleszthető óriás világokra is. Ekkor a világteret (sorosan vagy hierarchikusan) szeletekre osztjuk, és biztosítunk egy függvényt, mely minden szelethez rendel egy saját seed értéket. Legegyszerűbb esetben a seed az adott szelet sorszámából generált hash. Amikor szükségünk van valamely szelet tartalmára, az adott szabályrendszer szerint, a szelet seedjét használva kiindulásként, on-demand legeneráljuk az adott szelet tartalmát. (A sűrűn benépesített világok szomszédos szeleteire vonatkozó összeillési problémától az egyszerűség kedvéért most tekintsünk el.)
 
-\subsection{Seed alapú nyílt világok}
+Egy korai közismert példa hasonló módszert alkalmazó szoftverre az Elite nevű 1984-ben kiadott űrhajós videójáték. A játékban meglátogatható bolygók kapnak egy-egy seedet, mely már teljesen meghatározza a felépítésüket: elég a bolygó meglátogatásakor legenerálni a tartalmát, illetve a későbbiekben csak a módosulásokat tárolni. A módszert utána számtalan óriástérképes játék vette át. Hasonló megközelítést alkalmaz a manapság népszerű Minecraft játék is (kiegészülve nagyterheltségű multi-player játékmód kiszolgálásának problémájával).
 
-\todo[inline,color=red]{Seed alapú nyílt világok: Mi ez? Miért ne használhatnánk adatbázisokhoz? Indexek, egyéb követelmények --> következő szekció}
+Ha elvonatkoztatunk a játékoktól és szimulációktól, ez a generálási módszer közel tetszőleges jellegű virtuális adathalmaz böngészését képes biztosítani. De azonnal szembeötlik a legfőbb hátrány is: a virtuális világ-adathalmaz nem kereshető. Nem tudjuk például hatékonyan lekérdezni, mely világszeletekben lelhető föl egy adott típusú objektum.
 
-\section{A javasolt megoldás körvonalai}
+A fenti módszer egy fapados változata, amikor a virtuális adatokat nézettáblákban szolgáltatjuk. Ezt a meglehetősen problémás lehetőséget most nem részletezem.
+
+\subsection{Relációs adatok generálása}
+
+Amikor adatokat generálunk egy relációs modellbe, azt legegyszerűbb megközelítésben fölfoghatjuk úgy is, mint az előbb bemutatott virtuális világ materializációját egy relációs adatbázisszerveren. Milyen előnyöket nyerünk ezzel? Lássunk néhányat:
+
+- utófeldolgozás: utólag holisztikus módosításokat eszközölhetünk az adathalmazon
+- rugalmas módosíthatóság: a módosításokhoz nem kell egyedi összefésülési módszereket kitalálni
+- kereshetőség: az adatbáziskezelő biztosítja az indexeket
+
+A fő hátrány egyértelmű: a nagy tárhelyigény. Vegyük észre, hogy a kereshetőség is az indexek által foglalt további tárhely által valósul meg, és ez csak az adatok eleve nagy tárhelyfoglalása mellett tűnhet elhanyagolhatónak. Ha pedig nem materializált adatok mellé gyártunk indexeket, akkor lényegileg elvesztjük az utófeldolgozás és a rugalmas módosíthatóság előnyét.
+
+Egyes generátorok a schema és az adatok jellegének deklaratív leírását is támogatják. Ez a leírás tárolható egy konfigurációs fájlban, ami verziókezelhető, dokumentálható, könnyen szerkeszthető.
+
+\subsection{Relációs adatok anonimizálása}
+
+Ha már rendelkezésre áll egy éles adatbázis, kézenfekvőnek látszik, hogy ennek replikáit használjuk a teszt- vagy mockadatbázis kiindulópontjaként. Így rögtön egy valószerű adatokhalmazzal indulunk, az érzékeny adatok miatt azonban anonimizálásra van szükség. Tehát a generáláshoz szükséges számítási igényt összességében felcseréljük a másolás és anonimizáció költségeivel.
+
+Úgy tűnik, gyakran anonimizálással együtt is egyszerűbb valós adatokból kiindulni, mint egy komplett generálási folyamatot kiépíteni. Egy köztes megoldás lehet a schema és az adatok nagyjábóli jellegének letapogatása, és az ez alapján történő újragenerálás.
+
+Azonban a bevezetőben felsorolt szituációk egy részében nem áll rendelkezésre egy létező produkciós adatbázis. Emiatt egy általános megoldás aligha épülhet aninimizálásos módszerre.
+
+\subsection{Nagy teljesítményű megoldások}
+
+Számos nagyteljesítményű megoldás érhető el a piacon, amellyel szintetikus adatok generálhatók. A MOSTLY AI megoldása az akkurátus adatokra helyezi a hangsúlyt. Az adatok statisztikai jellemzői és mintázatának lényeges elemei jól illeszkednek a valós adatoknál látható mintázatokra.
+
+Egyes platformok általános megoldást nyújtanak az adatgenerélásra, anonimizációra és CI/CD-integrációra. Ilyen például a Tonic, a GenRocket és a Delphix.
+
+Az ilyen rendszerek erősen optimalizálják és párhuzamosítják a tesztadatok előállításának egyes lépéseit, így a fapados megoldásokhoz képest költséghatékonyak. Csodát viszont nem lehet várni: a számításigény aszimptotikusan, a tárhelyigény pedig teljes egészében ugyanaz marad.
+
+\subsection{A hézag}
+
+Az előzőekben tárgyalt megközelítések mindegyikének megvoltak a maguk sajátos előnyei ás hátrányai. Fölmerül a kérdés: létezhet-e olyan megoldás, amely egyesíti az előnyöket és kikerüli a fő hátrányokat, vagy pedig ez eleve lehetetlen?
+
+Először szedjük össze tételesen, milyen követelményeket várnánk el egy (egyelőre hipotetikus) ideális készterméktől:
+
+- támogatja a relációs adatmodellt, mint legáltalánosabbat
+- determinisztikus, konzisztens, és egy root seed módosításával újrakeverhető
+- az adatokat csak elérésükkor, on-the-fly szolgáltatja
+- indexeket szolgáltat, ahol az egyébként is elvárható
+- könnyen és rugalmasan konfigurálható
+- skálázható, finomhangolható
+- egyedi működéssel könnyen bővíthető
+
+Belátható, hogy mindezek egyszerre teljesíthetők, az alábbi szekcióban röviden vázolom, milyen architekturális keretbe illeszkedik a megoldásom, a következő fejezetben pedig bemutatom az implementáció részleteit.
+
+\subsection{Egy újfajta megoldás körvonalai}
+
+[TODO]
+
+[ide a módosított, kiegészített architektúraábra
+
+\subsection{XXX: Miért nincs még ilyen megoldás?}
+
+[lehetetlen, hogy erre még senki nem gondolt]
+
+\subsection{XXX}
+
+A konfigurációs fájl további előnye, hogy létező adatbázispéldányokon tanított mesterséges intelligencia segítségével is generálható. Az MI-alapú konfigurációmenedzsent egyre szélesebb körben alkalmazott módszer, megtaláljuk a SAT-solverektől(hiv!) a felhőarchitektúrákig(hiv!), nem látszik akadálya azx   adatbázisra vonatkozó konfigurációban való alkalmazásnak.
+
+[az előzőek alapján a kétdés végülis: tudunk-e úgy virtuális adatvilágot szolgáltatni, hogy azokhoz indexek is tartozzanak? (--> storage API)]
+[világos, hogy a run-time performanciából vesztünk (de nem vészesen!), a lényeg, hogy más lényeges hátrány nem nagyon van]
+[teljesítményteszt kell egyszerűbb querykkel, illetve bonyolulttal is calcite-tal]
+[a rendezés vs. join problémát javítani]
+[ahol nem kell kereshetőnek lenni, ott tulajdonképpen a normál seedes szeletenkénti világgenerálás játszik]
+[konfigot kiegészíteni még egyedi működés támogatásával]
+[calcite minimális támogatása]
 
 \todo[inline,color=red]{Miben is áll egy valós adatbázis? Mi a szűk keresztmetszet}
 
