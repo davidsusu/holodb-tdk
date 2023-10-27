@@ -214,9 +214,10 @@ Először szedjük össze tételesen, milyen követelményeket várnánk el egy 
 
 - támogatja a relációs adatmodellt, mint legáltalánosabbat
 - determinisztikus, konzisztens, és egy root seed módosításával újrakeverhető
+- azonnal elindul, nincs számottevő preparálási folyamat
 - az adatokat csak elérésükkor, on-the-fly szolgáltatja
 - indexeket szolgáltat, ahol az egyébként is elvárható
-- könnyen és rugalmasan konfigurálható
+- könnyen és rugalmasan konfigurálható, fájlon keresztül is
 - skálázható, finomhangolható
 - egyedi működéssel könnyen bővíthető
 
@@ -225,6 +226,8 @@ Belátható, hogy mindezek egyszerre teljesíthetők, az alábbi szekcióban rö
 \subsection{Egy újfajta megoldás körvonalai}
 
 [TODO]
+
+[a lightweight jelleg új távlatokat nyit, például lehet füsttesztelni adatbázissal (különösen az embedded megoldással)]
 
 [ide a módosított, kiegészített architektúraábra
 
