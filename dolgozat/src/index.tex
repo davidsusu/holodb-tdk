@@ -97,19 +97,20 @@ azaz a mindenkori forráskód\footnote{
     ikus függőségeket is, amelyeket deklarál.
 }
 aktuális \textit{állapotának} derviátuma,
-nem függ annak történetiségétől.
+és nem függ annak történetiségétől.
 Ezt az átlátható képet bolygatja meg a szoftverhez tartozó produkciós adatbázis,
 mely önálló életet él, a felhasználói világgal való interakcióban folyamatosan változik;
 szerkezete, szemantikája azonban szorosan az alkalmazás mindenkori állapotához kötődik.
 
 Ez a kettős természet legalább két nagy problémakört eredményez.
-Az egyik a verziókezeléssel kapcsolatos:
+Az egyik a verziókezelést érinti:
 a produkciós adatbázist csak differencia-szkriptek végrehajtásával tudjuk módosítani,
 ami jellemzően egy másodlagos verziókezelést eredményez a forráskód verziókezelésén belül
-(ilyen megoldás például a Flyway vagy a Liquibase), és gyakori összefésülési problémákhoz vezet.
+(ilyen megoldás például a Flyway vagy a Liquibase),
+és sorozatos összefésülési problémákhoz vezet, ha az adatok szerkezete vagy szemantikája gyakran változik.
 A jelen dolgozatban nem foglalkozom ennek a kérdésnek a részleteivel,
 de az utolsó felyezetben vázolom majd egy lehetséges megoldás körvonalait,
-ami szervesen következik majd az előzőekből.
+ami szervesen következik majd az azt előzőekből.
 
 A másik problémakör azzal kapcsolatos, hogy ugyan az ``életnek kitett'' produkciós adatbázist
 kénytelenek vagyunk minden erőforrásigényével életben tartni valamint minden release-zel migrálni,
@@ -128,9 +129,14 @@ Ezeken kívül, ha egy csak-olvasható adattartalmat akarunk nagy adatforgalomna
 fölmerülhet az adattartalom replikálása, és load-balanceren keresztüli elérhetővé tétele,
 ekkor azonban minden újabb példány jelentősen növeli a tárhelyfoglalást.
 
-De más területeken is találkozhatunk hasonló kívánalmakkal.
+Nem is mindig áll rendelkezésre egy produkciós adatbázis,
+amikor éppen jól jönne belőle egy másolat.
+De amikor rendelkezésre is áll, tartalma általában érzékeny adatokkal van tele,
+melyeket nem is használhatunk fel csak úgy (anonimizálás nélkül) egyéb célokra.
+
+Más területeken is találkozhatunk a fentiekhez hasonló kívánalmakkal.
 Például az adatbázisok oktatásában is jellemző, hogy minden egyes hallgató
-számára elérhető egy saját adatbázis,
+számára elérhető saját izolált adatbázis adatbázist bocsátanak rendelkezésre,
 bár mindegyik ilyen adatbázis szükségszerűen ugyanazzal a szerkezettel és adatokkal bír.
 
 Fogalmazzuk meg tehát a problémát, mintegy tézisként:
@@ -141,24 +147,23 @@ Fogalmazzuk meg tehát a problémát, mintegy tézisként:
     a produkciós adatokra vonatkozó speciális követelmények nélkül.
 }
 
-Sőt, a produkciós adatbázis tartalma általában érzékeny adatokkal van tele,
-melyeket nem is használhatunk fel csak úgy (anonimizálás nélkül) egyéb célokra.
+A fejezet további részében röviden végigveszem, hogy általában hogyan szokás a hasonló problémákat megkerülni,
+majd rátérek a az általam javasolt megoldás nagy vonalakban történő ismertetésére.
+Ezt követően pedig táblázatba foglalva összevetem mindezek előnyeit és hátrányait.
+Végül az utolsó szakaszban megkísérlem megtalálni az okát,
+miért hiányzik 
 
-A következő szakaszban röviden végigveszem, hogy általában hogyan szokás a problémát megkerülni,
-ezt követően pedig rátérek a az általam javasolt megoldás lényegének ismertetésére.
-Végül egy táblázatba foglalva összevetem mindezek előnyeit és hátrányait.
+\section{Körkép}
 
-\section{Megközelítések}
-
-\subsection{A kérések mockolása on-the-fly}
+\subsection{Kérések mockolása on-the-fly}
 
 Főként webes API-k által szolgáltatott adathalmazok mockolásakor találkozunk olyan megoldással,
 mely a lekérés (és persze az előre beállított szabályok)
 alapján generálja a válaszként visszaadandó adatstruktúrát
 (például egy rekordot vagy dokumentumot JSON formátumban).
-Az adatok véletlenszerűen kerülnek kitoltésre a lekérés szerkezete alapján megállapított schema keretébe.
+Az adatok véletlenszerűen kerülnek kitöltésre a lekérés szerkezete alapján megállapított schema keretébe.
 
-A módszer SQL-lekérdezések közvetlen mockolására is adaptálható,
+A módszer SQL-lekérdezések közvetlen mockolásához is adaptálható,
 a lekérdezés (és ha ismert, akkor a schema) alapján meg kell állapítani
 a visszaadandó eredménytábla szerkezetét, adattípusait,
 az egy-egy oszlopba kerülő adatok jellegét,
@@ -170,58 +175,105 @@ Cserébe erőforrásigénye csekély, nincs szükség az adatok tényleges táro
 
 \subsection{Seed alapú virtuális világok}
 
-Egyszerűbb szimulációkban és játékokban már igen régen generálnak kisebb világokat, pályákat procedurálisan valamilyen pszeudo-random algoritmus segítségével. A módszer továbbfejleszthető óriás világokra is. Ekkor a világteret (sorosan vagy hierarchikusan) szeletekre osztjuk, és biztosítunk egy függvényt, mely minden szelethez rendel egy saját seed értéket. Legegyszerűbb esetben a seed az adott szelet sorszámából generált hash. Amikor szükségünk van valamely szelet tartalmára, az adott szabályrendszer szerint, a szelet seedjét használva kiindulásként, on-demand legeneráljuk az adott szelet tartalmát. (A sűrűn benépesített világok szomszédos szeleteire vonatkozó összeillési problémától az egyszerűség kedvéért most tekintsünk el.)
+Egyszerűbb szimulációkban és játékokban már igen régen generálnak kisebb világokat,
+pályákat procedurálisan valamilyen pszeudo-random algoritmus segítségével.
+A módszer továbbfejleszthető óriás világokra is.
+Ekkor a világteret (sorosan vagy hierarchikusan) szeletekre osztjuk, és biztosítunk egy függvényt,
+mely minden szelethez rendel egy saját seed értéket.
+Legegyszerűbb esetben a seed az adott szelet sorszámából generált hash.
+Amikor szükségünk van valamely szelet tartalmára, az adott szabályrendszer szerint,
+a szelet seedjét használva kiindulásként, on-demand legeneráljuk az adott szelet tartalmát.
+(A sűrűn benépesített világok szomszédos szeleteire vonatkozó összeillési problémától
+az egyszerűség kedvéért most tekintsünk el.)
 
-Egy korai közismert példa hasonló módszert alkalmazó szoftverre az Elite nevű 1984-ben kiadott űrhajós videójáték. A játékban meglátogatható bolygók kapnak egy-egy seedet, mely már teljesen meghatározza a felépítésüket: elég a bolygó meglátogatásakor legenerálni a tartalmát, illetve a későbbiekben csak a módosulásokat tárolni. A módszert utána számtalan óriástérképes játék vette át. Hasonló megközelítést alkalmaz a manapság népszerű Minecraft játék is (kiegészülve nagyterheltségű multi-player játékmód kiszolgálásának problémájával).
+Egy korai közismert példa hasonló módszert alkalmazó szoftverre
+az Elite nevű 1984-ben kiadott űrhajós videójáték.
+A játékban meglátogatható bolygók kapnak egy-egy seedet, mely már teljesen meghatározza a felépítésüket:
+elég a bolygó meglátogatásakor legenerálni a tartalmát, illetve a későbbiekben csak a módosulásokat tárolni.
+A módszert utána számtalan óriástérképes játék vette át.
+Hasonló megközelítést alkalmaz a manapság népszerű Minecraft játék is
+(kiegészülve nagyterheltségű multi-player játékmód kiszolgálásának problémájával).
 
-Ha elvonatkoztatunk a játékoktól és szimulációktól, ez a generálási módszer közel tetszőleges jellegű virtuális adathalmaz böngészését képes biztosítani. De azonnal szembeötlik a legfőbb hátrány is: a virtuális világ-adathalmaz nem kereshető. Nem tudjuk például hatékonyan lekérdezni, mely világszeletekben lelhető föl egy adott típusú objektum.
+Ha elvonatkoztatunk a játékoktól és szimulációktól,
+ez a generálási módszer közel tetszőleges jellegű virtuális adathalmaz böngészését képes biztosítani.
+De azonnal szembeötlik a legfőbb hátrány is: a virtuális világ-adathalmaz nem kereshető.
+Nem tudjuk például hatékonyan lekérdezni, mely világszeletekben lelhető föl egy adott típusú objektum.
 
-A fenti módszer egy fapados változata, amikor a virtuális adatokat nézettáblákban szolgáltatjuk. Ezt a meglehetősen problémás lehetőséget most nem részletezem.
+A fenti módszer egy fapados változata, amikor a virtuális adatokat nézettáblákban szolgáltatjuk.
+Ezt a meglehetősen problémás lehetőséget most nem részletezem.
 
 \subsection{Relációs adatok generálása}
 
-Amikor adatokat generálunk egy relációs modellbe, azt legegyszerűbb megközelítésben fölfoghatjuk úgy is, mint az előbb bemutatott virtuális világ materializációját egy relációs adatbázisszerveren. Milyen előnyöket nyerünk ezzel? Lássunk néhányat:
+Amikor adatokat generálunk egy relációs modellbe, azt legegyszerűbb megközelítésben fölfoghatjuk úgy is,
+mint az előbb bemutatott virtuális világ materializációját egy relációs adatbázisszerveren.
+Milyen előnyöket nyerünk ezzel? Lássunk néhányat:
 
 - utófeldolgozás: utólag holisztikus módosításokat eszközölhetünk az adathalmazon
 - rugalmas módosíthatóság: a módosításokhoz nem kell egyedi összefésülési módszereket kitalálni
 - kereshetőség: az adatbáziskezelő biztosítja az indexeket
 
-A fő hátrány egyértelmű: a nagy tárhelyigény. Vegyük észre, hogy a kereshetőség is az indexek által foglalt további tárhely által valósul meg, és ez csak az adatok eleve nagy tárhelyfoglalása mellett tűnhet elhanyagolhatónak. Ha pedig nem materializált adatok mellé gyártunk indexeket, akkor lényegileg elvesztjük az utófeldolgozás és a rugalmas módosíthatóság előnyét.
+A fő hátrány egyértelmű: a nagy tárhelyigény.
+Vegyük észre, hogy a kereshetőség is az indexek által foglalt további tárhely által valósul meg,
+és ez csak az adatok eleve nagy tárhelyfoglalása mellett tűnhet elhanyagolhatónak.
+Ha pedig nem materializált adatok mellé gyártunk indexeket,
+akkor lényegileg elvesztjük az utófeldolgozás és a rugalmas módosíthatóság előnyét.
 
 Egyes generátorok a schema és az adatok jellegének deklaratív leírását is támogatják. Ez a leírás tárolható egy konfigurációs fájlban, ami verziókezelhető, dokumentálható, könnyen szerkeszthető.
 
 \subsection{Relációs adatok anonimizálása}
 
-Ha már rendelkezésre áll egy éles adatbázis, kézenfekvőnek látszik, hogy ennek replikáit használjuk a teszt- vagy mockadatbázis kiindulópontjaként. Így rögtön egy valószerű adatokhalmazzal indulunk, az érzékeny adatok miatt azonban anonimizálásra van szükség. Tehát a generáláshoz szükséges számítási igényt összességében felcseréljük a másolás és anonimizáció költségeivel.
+Ha már rendelkezésre áll egy éles adatbázis, kézenfekvőnek látszik,
+hogy ennek replikáit használjuk a teszt- vagy mockadatbázis kiindulópontjaként.
+Így rögtön egy valószerű adatokhalmazzal indulunk, az érzékeny adatok miatt azonban anonimizálásra van szükség. Tehát a generáláshoz szükséges számítási igényt összességében
+felcseréljük a másolás és anonimizáció költségeivel.
 
-Úgy tűnik, gyakran anonimizálással együtt is egyszerűbb valós adatokból kiindulni, mint egy komplett generálási folyamatot kiépíteni. Egy köztes megoldás lehet a schema és az adatok nagyjábóli jellegének letapogatása, és az ez alapján történő újragenerálás.
+Úgy tűnik, gyakran anonimizálással együtt is egyszerűbb valós adatokból kiindulni,
+mint egy komplett generálási folyamatot kiépíteni.
+Egy köztes megoldás lehet a schema és az adatok nagyjábóli jellegének letapogatása,
+és az ez alapján történő újragenerálás.
 
-Azonban a bevezetőben felsorolt szituációk egy részében nem áll rendelkezésre egy létező produkciós adatbázis. Emiatt egy általános megoldás aligha épülhet aninimizálásos módszerre.
+Azonban a bevezetőben felsorolt szituációk egy részében nem áll rendelkezésre egy létező produkciós adatbázis.
+Emiatt egy általános megoldás aligha épülhet aninimizálásos módszerre.
 
 \subsection{Nagy teljesítményű megoldások}
 
 Számos nagyteljesítményű megoldás érhető el a piacon, amellyel szintetikus adatok generálhatók. A MOSTLY AI megoldása az akkurátus adatokra helyezi a hangsúlyt. Az adatok statisztikai jellemzői és mintázatának lényeges elemei jól illeszkednek a valós adatoknál látható mintázatokra.
 
-Egyes platformok általános megoldást nyújtanak az adatgenerélásra, anonimizációra és CI/CD-integrációra. Ilyen például a Tonic, a GenRocket és a Delphix.
+Egyes platformok általános megoldást nyújtanak az adatgenerélásra, anonimizációra és CI/CD-integrációra.
+Ilyen például a Tonic, a GenRocket és a Delphix.
 
-Az ilyen rendszerek erősen optimalizálják és párhuzamosítják a tesztadatok előállításának egyes lépéseit, így a fapados megoldásokhoz képest költséghatékonyak. Csodát viszont nem lehet várni: a számításigény aszimptotikusan, a tárhelyigény pedig teljes egészében ugyanaz marad.
+Az ilyen rendszerek erősen optimalizálják és párhuzamosítják a tesztadatok előállításának egyes lépéseit,
+így a fapados megoldásokhoz képest költséghatékonyak.
+Csodát viszont nem lehet várni: a számításigény aszimptotikusan,
+a tárhelyigény pedig teljes egészében ugyanaz marad.
 
 \section{A hézag}
 
-Az előzőekben tárgyalt megközelítések mindegyikének megvoltak a maguk sajátos előnyei ás hátrányai. Fölmerül a kérdés: létezhet-e olyan megoldás, amely egyesíti az előnyöket és kikerüli a fő hátrányokat, vagy pedig ez eleve lehetetlen?
+Az előzőekben tárgyalt megközelítések mindegyikének megvoltak a maga sajátos előnyei ás hátrányai.
+Fölmerül a kérdés: létezhet-e olyan megoldás, amely egyesíti az előnyöket és kikerüli a fő hátrányokat;
+vagy pedig ez eleve lehetetlen?
 
-Először szedjük össze tételesen, milyen követelményeket várnánk el egy (egyelőre hipotetikus) ideális készterméktől:
+Először szedjük össze tételesen, milyen követelményeket várnánk el
+egy (egyelőre hipotetikus) ideális készterméktől:
 
-- támogatja a relációs adatmodellt, mint legáltalánosabbat
-- determinisztikus, konzisztens, és egy root seed módosításával újrakeverhető
-- azonnal elindul, nincs számottevő preparálási folyamat
-- az adatokat csak elérésükkor, on-the-fly szolgáltatja
-- indexeket szolgáltat, ahol az egyébként is elvárható
-- könnyen és rugalmasan konfigurálható, fájlon keresztül is
-- skálázható, finomhangolható
-- egyedi működéssel könnyen bővíthető
+\begin{itemize}
+    \item támogatja a relációs adatmodellt, mint legáltalánosabbat
+    \item determinisztikus, konzisztens, és egy root seed módosításával újrakeverhető
+    \item azonnal elindul, nincs számottevő preparálási folyamat
+    \item az adatokat csak elérésükkor, on-the-fly számítja
+    \item indexeket szolgáltat, ahol az egyébként is elvárható lenne
+    \item könnyen és rugalmasan konfigurálható, fájlon keresztül is
+    \item skálázható, finomhangolható
+    \item egyedi működéssel könnyen bővíthető
+    \item opcionálisan írható
+\end{itemize}
 
-Belátható, hogy mindezek egyszerre teljesíthetők, az alábbi szekcióban röviden vázolom, milyen architekturális keretbe illeszkedik a megoldásom, a következő fejezetben pedig bemutatom az implementáció részleteit.
+Az utolsó, írhatósági követelménynél föltehetjük, hogy az ilyen adatbázis viszonylag rövid életű,
+tehát nincs szükség sem nagy mennyiségű módosítás megjegyzésére, sem azok hosszú távú perzisztálására.
+
+Belátható, hogy mindezek egyszerre teljesíthetők,
+az alábbi szekcióban röviden vázolom, milyen architekturális keretbe illeszkedik a megoldásom,
+az implementáció részleteit pedig a következő fejezetben fogom bemutatni.
 
 \section{Egy újfajta megoldás körvonalai}
 
@@ -238,13 +290,21 @@ egyéb fejezetek nagyjábóliszervezése
 generálás adatfából (ua. mint a regex), valós címek stb.
 }
 
-[a lightweight jelleg új távlatokat nyit, például lehet füsttesztelni adatbázissal (különösen az embedded megoldással)]
-
 [ide a módosított, kiegészített architektúraábra
 
-\section{XXX}
+\section{Az új megközelítés előnyei}
 
-A konfigurációs fájl további előnye, hogy létező adatbázispéldányokon tanított mesterséges intelligencia segítségével is generálható. Az MI-alapú konfigurációmenedzsent egyre szélesebb körben alkalmazott módszer, megtaláljuk a SAT-solverektől(hiv!) a felhőarchitektúrákig(hiv!), nem látszik akadálya azx   adatbázisra vonatkozó konfigurációban való alkalmazásnak.
+[a lightweight jelleg új távlatokat nyit, például lehet füsttesztelni adatbázissal (különösen az embedded megoldással)]
+
+A konfigurációs fájl további előnye,
+hogy létező adatbázispéldányokon tanított mesterséges intelligencia segítségével is generálható.
+Az MI-alapú konfigurációmenedzsent egyre szélesebb körben alkalmazott módszer,
+megtaláljuk a SAT-solverektől(hiv!) a felhőarchitektúrákig(hiv!),
+nem látszik akadálya az adatbázisra vonatkozó konfigurációban való alkalmazásnak.
+
+[ide az összehasonlító táblázat]
+
+\section{XXX}
 
 \todo[inline,color=red]{Miben is áll egy valós adatbázis? Mi a szűk keresztmetszet}
 
@@ -275,7 +335,14 @@ Valós adatbázis feltöltése a virtuális tárból.
 
 \section{XXX: Miért nincs még ilyen megoldás?}
 
-[lehetetlen, hogy erre még senki nem gondolt]
+0) lehetetlen, hogy erre még senki nem gondolt
+
+A) nem egyszerű megérteni a koncepciót... kontraintuitív... hol vannak az adatok?
+
+B) korábban nem léteztek olyan jól kezelhető frameworkök (jólstrukturált és/vagy nyílt forrású),
+mint az apache calcite, amivel a query réteg könnyen megoldható
+
+C) nagy cégek miért nem?
 
 
 
