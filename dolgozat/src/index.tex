@@ -1,7 +1,7 @@
 \documentclass[
     parspace,
     noindent,
-    nohyphen,
+    nohyp,
     %final, % hide todos
 ]{elteiktdk}[2023/04/10]
 
@@ -250,7 +250,7 @@ Az ilyen rendszerek erősen optimalizálják és párhuzamosítják a tesztadato
 Csodát viszont nem lehet várni: a számításigény aszimptotikusan,
 a tárhelyigény pedig teljes egészében ugyanaz marad.
 
-\section{A hézag}
+\section{A betöltésre váró hézag}
 
 Az előzőekben tárgyalt megközelítések mindegyikének megvoltak a maga sajátos előnyei ás hátrányai.
 Fölmerül a kérdés: létezhet-e olyan megoldás, amely egyesíti az előnyöket és kikerüli a fő hátrányokat;
@@ -274,8 +274,8 @@ egy (egyelőre hipotetikus) ideális készterméktől:
 Az utolsó, írhatósági követelménynél föltehetjük, hogy az ilyen adatbázis viszonylag rövid életű,
 tehát nincs szükség sem nagy mennyiségű módosítás megjegyzésére, sem azok hosszú távú perzisztálására.
 
-Belátható, hogy mindezek egyszerre teljesíthetők,
-az alábbi szekcióban röviden vázolom, milyen architekturális keretbe illeszkedik a megoldásom,
+Belátható, hogy mindezek egyszerre teljesíthetők.
+Az alábbi szekcióban röviden vázolom, milyen architekturális keretbe illeszkedik a megoldásom,
 az implementáció részleteit pedig a következő fejezetben fogom bemutatni.
 
 \section{Egy újfajta megoldás körvonalai}
@@ -293,32 +293,6 @@ egyéb fejezetek nagyjábóliszervezése
 generálás adatfából (ua. mint a regex), valós címek stb.
 }
 
-[ide a módosított, kiegészített architektúraábra
-
-\section{Az új megközelítés előnyei}
-
-[a lightweight jelleg új távlatokat nyit, például lehet füsttesztelni adatbázissal (különösen az embedded megoldással)]
-
-A konfigurációs fájl további előnye,
-hogy létező adatbázispéldányokon tanított mesterséges intelligencia segítségével is generálható.
-Az MI-alapú konfigurációmenedzsent egyre szélesebb körben alkalmazott módszer,
-megtaláljuk a SAT-solverektől(hiv!) a felhőarchitektúrákig(hiv!),
-nem látszik akadálya az adatbázisra vonatkozó konfigurációban való alkalmazásnak.
-
-[ide az összehasonlító táblázat]
-
-\section{XXX}
-
-\todo[inline,color=red]{Miben is áll egy valós adatbázis? Mi a szűk keresztmetszet}
-
-\longcomment{section: A megoldás körvonalai}
-{
-"random adatbázis"
-A relációs modellre fogunk koncentrálni, de bármi más is ráépíthető.
-Mit csinál a felhasználó?
-A konfigurációs fájl (persze mindenhez van API) és jelentősége (rugalmas, verziókezelhető stb.).
-}
-
 \longcomment{Architektúraábra kiegészítése}{
 Az ábrán kiemelni a storage API-t illetve a virtual storage impl.-t.
 Hangsúlyozni, hogy a többi is meg van valósítva.
@@ -333,6 +307,26 @@ Valós adatbázis feltöltése a virtuális tárból.
 \caption{A virtuális adatbázis vázlatos architektúrája}
 \label{A virtuális adatbázis vázlatos architektúrája}
 \end{figure}
+
+\section{Az új megközelítés előnyei}
+
+\todo[inline,color=red]{Miben is áll egy valós adatbázis? Mi a szűk keresztmetszet}
+
+\longcomment{section: A megoldás körvonalai}
+{
+"random adatbázis"
+A relációs modellre fogunk koncentrálni, de bármi más is ráépíthető.
+Mit csinál a felhasználó?
+A konfigurációs fájl (persze mindenhez van API) és jelentősége (rugalmas, verziókezelhető stb.).
+}
+
+[a lightweight jelleg új távlatokat nyit, például lehet füsttesztelni adatbázissal (különösen az embedded megoldással)]
+
+A konfigurációs fájl további előnye,
+hogy létező adatbázispéldányokon tanított mesterséges intelligencia segítségével is generálható.
+Az MI-alapú konfigurációmenedzsent egyre szélesebb körben alkalmazott módszer,
+megtaláljuk a SAT-solverektől(hiv!) a felhőarchitektúrákig(hiv!),
+nem látszik akadálya az adatbázisra vonatkozó konfigurációban való alkalmazásnak.
 
 \todo[inline,color=red]{A megoldás körvonalai (vagy következő): ide az összehasonlító táblázat}
 
@@ -529,7 +523,7 @@ Természetesen az ilyen esetek szimulálása a legegyszerűbb.
 
 Triviális eset, ha egy oszlop mezői egy közös konstans értéket tartalmaznak.
 
-Ha olyan adathalmazt szimulálunk, melyre megengedhető a feltevés,
+Továbbá, ha olyan adathalmazt szimulálunk, melyre megengedhető a feltevés,
 hogy sem törlés, sem releváns értelemben problémás felülírás nem történt még,
 úgy egyes oszlopok szekvenciális alapon generálhatók.
 Az ilyen esetekben az $n$-edik érték lekérése
@@ -540,6 +534,13 @@ A szekvenciális oszlopoknál az érték megegyezik a rekord 1-től indított so
 
 Időbélyegeket is generálhatunk hasonló módon,
 amennyiben megengedhető, hogy a szimulált időadatok között egyenletes időközök legyenek.
+
+\subsection{Unique értékkiosztás}
+
+\todo[inline, color=red]{subsubsection: Unique értékkiosztás}
+
+[feltétel: az értékkészlet számossága legalább a hossz]
+[megoldás: permutáció, ami kívülesik, az kimaradt]
 
 \subsubsection{Általános kétfázisú értékkiosztás}
 
@@ -775,6 +776,11 @@ egyúttal könnyen szimulálható típusát:
     ami könnyen ellátható random bájtok/karakterek generálásával
 \end{itemize}
 
+További indexeletlen eset, amikor az oszlop teljes tartalma explicite felsorolva van megadva,
+például egy listafájlból.
+Nagy táblahossznál érdemes lehet ezt indexeltté tenni egy tényleges adatstruktúrával (például B-Tree),
+mivel ilyenkor valószínűleg úgysem a memóriahasználat minimalizálása a cél.
+
 \subsection{Értékkiosztás oszlopok közötti megkötésekkel}
 
 \todo[inline]{subsubsection: Értékkiosztás oszlopok közötti megkötésekkel}
@@ -809,11 +815,18 @@ egyúttal könnyen szimulálható típusát:
 
 
 
-
+\chapter{Eredmények a prototípussal}
 
 \section{XXX}
 
 \todo[inline]{kinyitni a konf. fájl mint migrációs diff alap lehetőségét?}
+
+
+
+
+
+
+
 
 \todo[inline]{Delphix?}
 
