@@ -293,7 +293,7 @@ Az implementáció részleteit a következő fejezetben fogom bemutatni.
 \section{Egy újfajta megoldás körvonalai}
 
 A következőkben leírt szoftvernek már létezik egy prototípusa HoloDB[hiv!] néven.
-Mivel ez Java nyelven íródott, a továbbiakban esetenként implicite felteszem, hogy Java környezetben vagyunk.
+Mivel ez Java nyelven íródott, a továbbiakban implicite felteszem, hogy Java környezetben vagyunk.
 
 Megoldásom mindenekelőtt egy relációs adatbázist leíró API-t fog definiálni illetve megvalósítani.
 Aligha érdemes más megközelítést választani,
@@ -301,11 +301,12 @@ hiszen a relációs adatmodell nem csak tradicionálisan megkerülhetetlen
 és máig a legnépszerűbb adattárolási módszer[hiv!],
 de egyúttal közös nevezőként szolgál bármely más modellhez.
 Egy relációs struktúrával gyakorlatilag bármilyen interpretált adathalmazt le tudunk írni,
-mivel a relációs séma egy teljesen általános normalizációs segédeszköz.
+mivel a relációs séma általános normalizációs segédeszköz.
 
-Hamar arra a megállapításra jutottam, hogy a releváns értelemben legalapvetőbb objektum az oszlop.
+Hamar arra a megállapításra jutottam, hogy a releváns értelemben legalapvetőbb objektum
+az \textit{oszlop}.
 Az oszlop alatt azonos típusú adatokat találunk,
-az első feladat mindig ezen adatok értékkészletének megadása.
+és az első feladat mindig ezen adatok értékkészletének megadása.
 Általában egy index is egy (esetleg néhány) konkrét oszlophoz köthető.
 
 Természetesen hamar ki kell lépnünk a teljes oszlop-orientáltságból.
@@ -313,11 +314,11 @@ Lehetnek összefüggések például egy táblán belül oszlopok között,
 de ezt még mindig egyszerűbb az oszlopos megközelítés megfelelő kiterjesztésével elérni,
 mintsem áttérni valamiféle rekordonkénti generálásra.
 Az oszlopok alatti mezők jó jelöltek arra, hogy ``világszeletek'' legyenek,
-mig egész rekordok nem.
+míg egész rekordok nem.
 
 Illetve lehetnek megkötések táblák között is.
 Ezek kezelése is könnyen elvégezhető az oszlopos alapvetésre építve.
-Az egészszámos idegen kulcsok esetében például csak annyit kell biztosítani,
+Az egészszámos idegen kulcsoknál például csak annyit kell biztosítani,
 hogy a hivatkozó oszlop értékkészlete a hivatkozottnak a tartalma legyen.
 
 A legtöbb oszlop értékkészlete jól behatárolható.
@@ -335,20 +336,20 @@ Vegyük észre, hogy két független problémával szembesülünk:
     \item az értékek összekeverése
 \end{enumerate}
 
-Ezeket úgy kell megvalósítani, hogy a végső értéklista n-edik eleme is gyorsan lekérhető legyen,
-valamint egy adott érték vagy értéksáv előfordulási pozíciói is,
-utóbbi esetben rendezetten.
+Ezeket úgy kell megvalósítani, hogy a végső értéklista adott pozíciójú eleme is gyorsan lekérhető legyen,
+valamint egy adott érték vagy értéksáv előfordulási pozíciói is
+(utóbbi esetben lehetőleg rendezetten).
 Ha feltesszük, hogy a multihalmaz úgy van ábrázolva,
 hogy a hatékony értéklekérés és keresés-rendezés elvárása teljesül,
 akkor már csak egy (a tábla hosszára értelmezett) invertálható permutációra van szükség,
-hogy az adatokat visszakereshetően szétszórjuk.
-Lentebb látni fogjuk, milyen módszerrel tudjuk a multihalmaz egy (eleve rendezett) reprezentációját képezni,
-amivel az elvárások teljesíthetők.
+hogy az adatokat visszakereshetően szét is szórjuk.
+(Lentebb látni fogjuk, milyen módszerrel tudjuk a multihalmaz egy (eleve rendezett) reprezentációját képezni,
+amivel az elvárások teljesíthetők.)
 
-Gyorsan számítható invertálható permutációk például modulo szorzásbóll kiindulva valósíthatók meg.
-Költségesebb, de igazán véletlenszerű összevisszaságot bitzosító invertálható permutációkat
+Gyorsan számítható invertálható permutációk például modulo szorzásból kiindulva valósíthatók meg.
+Költségesebb, de erősen véletlenszerű összevisszaságot bitzosító invertálható permutációkat
 különféle kriptográfiai módszerekkel állítok elő.
-Többéle módszer kipróbálása után (pl. Format Preserving Encryption) végül
+Többéle algoritmuscsalád kipróbálása után (pl. Format Preserving Encryption) végül
 a hosszigazított Feistel-hálózat alkalmazása bizonyult a legkezelhetőbbnek.
 
 A kétfázisú értékiosztásnak ezzel az ötletével
@@ -359,14 +360,15 @@ Az értékkészlet esetenként óriási lehet,
 gondoljunk például a reguláris kifejezés alapján kitöltött oszlop lehetséges értékeinek számára.
 Az on-the-fly értékszámítás során gyakran fordulnak elő átmeneti óriás számok,
 ám nehezen jósolható, hogy pontosan mikor.
-Az adatbázis méretére vonatkozóan sem akartam megkötéseket tenni.
-Nem lett volna célszerű explicit ellenőrzések tömegét beépíteni a problémás esetek földerítésére.
+Emellett az adatbázis méretére vonatkozóan sem akartam megkötéseket tenni.
+Nem lett volna célszerű explicit ellenőrzések tömegét beépíteni
+a problémás számítások, potenciális túlcsordulások földerítésére.
 Az egész számokat egységesen szerettem volna kezelni, függetlenül azok méretétől,
 így a \texttt{BigInteger} típus használata eleve kiesett,
 mivel az kisebb számokra a \texttt{long} típushoz képest rendkívül rossz performanciájú.
 Bár létezik egy-két megoldás, mely ugyanezt a problémát célozza (például a Scala \texttt{BigInt} típusa),
 végül egy egyedi típus implementálása mellett döntöttem,
-mellyel sikerült minden alternatíívánál jobb performanciát elérnem.
+mellyel sikerült minden alternatívánál jobb performanciát elérnem.
 
 Az értékkiosztási trükkökkel egy statikus adatbázist írunk le,
 ami értelemszerűen önmagában csak-olvashatóan érhető el.
@@ -377,9 +379,10 @@ az írhatóság illúzióját kelti.
 Ha a relációs adatmodell objektumait (oszlopok, táblák, indexek stb.) sikeresen implementáltuk,
 a relációs műveletek (és így az SQL nyelv) megvalósítása már a szokásos módon történhet.
 Ma már elérhető néhány nyílt forrású jól felépített SQL query planner framework,
-ilyen például az Apache Calcite, ami lehetővé tette egy teljeskörű SQL-szerver kiépítését.
+ami lehetővé teszi egy teljeskörű SQL-szerver kiépítését.
+Ilyen például az általam használt Apache Calcite
 (Ugyanakkor egy saját SQL-futtatót is implementáltam,
-mely a nyelv limitált verzióját támogatja, de néhány esetben gyorsabban fut.)
+mely a nyelv limitált verzióját támogatja, de néhány esetben gyorsabban fut).
 
 [TODO]
 
