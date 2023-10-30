@@ -384,28 +384,16 @@ Ilyen például az általam használt Apache Calcite
 (Ugyanakkor egy saját SQL-futtatót is implementáltam,
 mely a nyelv limitált verzióját támogatja, de néhány esetben gyorsabban fut).
 
-[TODO]
+A virtuális adatbázis felépítése a felhasználó számára legegyszerűbben
+egy konfigurációs fájl segítségével történik,
+melyben megadja az adatbázis-séma egyes elemeit, megkötéseit.
+Az oszlopok tartalmának keverési módja és értékkészlete kényelmesen állítható,
+például előre adott értéklistákkal, reguláris kifejezéssel,
+vagy a felhasználó által implementált Java-osztállyal.
+A virtuális adatbázis dockerben való indításához vagy beágyazott használatához
+lényegileg elég egy ilyen konfigurációs fájl.
 
-  a relációs adatbázis a közös nevező, már eleve egy normálforma (amit a relációs normálformák csak tovább szofisztikálnak)
-- adja magát, hogy az oszlop legyen az alapentitás (ez fogja össze a hasonló adatokat, ami önmagában egy fókusz), ide kerül a főfókusz, az oszlopok és táblák közötti viszonyokat is ebből kiindulva tudjuk majd megvalósítani
-- a rekordok egységessége? a relációs-volt... mi tesz egy relációt valóságossá vagy épp nem?
-- ha egy oszlopot kereshető akarunk tenni, indexet kell hozzá szolgáltatni, tehát a lekérdezhetőség kétirányú
-- különféle indexek...
-- összevissza adatokat akarunk; hogyan lehet ezt megvalósítani?
-- permutációval tudjuk keverni --> kriptográfiai megfordítható permutációk
-- monotonic
-- egyes adatoknál van egy adott értékkészlet, másoknál ez virtuális (pl. regex)
-- hogy az óriás számosságokat jól kezeljük, kell a hatékony LargeInteger (performancia-teszt bemutatása?)
-
-\longcomment{amiket meg akartam csinálni a küldéshez}{
-szöveg: A javasolt megoldás körvonalai
-Átfogó feature-táblázat
-szöveg: Miért nincs még ilyen megoldás?
-szöveg: a storage API
-szövegek javítása bővítése
-egyéb fejezetek nagyjábóliszervezése
-generálás adatfából (ua. mint a regex), valós címek stb.
-}
+\todo[inline]{konfiguráció-példa ide?}
 
 \section{Az új megközelítés előnyei}
 
@@ -451,6 +439,8 @@ C) nagy cégek miért nem?
 \section{XXX}
 
 \todo[inline,color=red]{XXX}
+
+\todo[inline,color=red]{generálás adatfából (ua. mint a regex), valós címek stb.}
 
 Előző változat bevezető fejezetei:
 
