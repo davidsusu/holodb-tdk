@@ -7,14 +7,12 @@
 
 \usepackage{xcolor}
 
-\usepackage{tabularx}
-\usepackage{booktabs}
-\newcolumntype{Y}{>{\centering\arraybackslash}X}
-
 \usepackage{graphicx}
 \usepackage{svg}
 \usepackage{todonotes}
 \usepackage{float}
+
+\usepackage{arydshln}
 
 \newcommand{\rhpad}{\vspace{0.6\baselineskip}}
 
@@ -87,18 +85,14 @@ a diszkrét monoton függvények
 illetve a kriptográfiában is használatos megfordítható permutációk adják.
 \end{abstract}
 
-\chapter{Bevezetés}
+\chapter{Áttekintés}
 
 \section{Egy mindennapi probléma}
 
 A szoftverfejlesztési és -release-elési folyamatok lényeges előfeltevése,
 hogy az alkalmazás mint absztrakt entitás snapshot jellegű,
-azaz a mindenkori forráskód\footnote{
-    Hozzáértve természetesen mindazokat a determiniszt
-    ikus függőségeket is, amelyeket deklarál.
-}
-aktuális \textit{állapotának} derviátuma,
-és nem függ annak történetiségétől.
+azaz a mindenkori forráskód \textit{aktuális állapotának} determinisztikus derivátuma,
+nem függ annak történetiségétől.
 Ezt az átlátható képet bolygatja meg a szoftverhez tartozó produkciós adatbázis,
 mely önálló életet él, a felhasználói világgal való interakcióban folyamatosan változik;
 szerkezete, szemantikája azonban szorosan az alkalmazás mindenkori állapotához kötődik.
@@ -184,27 +178,15 @@ mely minden szelethez rendel egy saját seed értéket.
 Legegyszerűbb esetben a seed az adott szelet sorszámából generált hash.
 Amikor szükségünk van valamely szelet tartalmára, az adott szabályrendszer szerint
 a szelet seedjéből kiindulva on-demand legeneráljuk az adott szelet tartalmát.
-(A sűrűn benépesített világok szomszédos szeleteire vonatkozó
-összeillési és interpolációs problémáktól
-az egyszerűség kedvéért most tekintsünk el.)
+A sűrűn benépesített világok szomszédos szeleteinek összeillesztése néha nem triviális.
+Felületek generálása esetén gyakran használnak valamilyen eleve interpolált eljárást, például Perlin-zajt,
+így biztosítva a közeli helyeken a közeli értékeket.
 
-Egy közismert korai példa hasonló módszert alkalmazó szoftverre
+Egy közismert korai példa seed alapú módszert alkalmazó szoftverre
 az Elite nevű 1984-ben kiadott űrhajós videójáték.
 A játékban meglátogatható bolygók kapnak egy-egy seedet, mely már teljesen meghatározza a felépítésüket,
 így elég a bolygó meglátogatásakor legenerálni a tartalmát.
 A módszert utána számtalan óriástérképes játék vette át.
-
-\longcomment{Perlin-zaj, simplex zaj stb.}{
-sajátos előnyeik
-szempont: ha ennek az adatok közelisége a speciális erőssége,
-  akkor egy relációs adatbázishoz készíthető hasonló megoldásnak az indexeltség
-    (utóbbit később is hozzá lehet tenni, visszutalásként)
-egy illusztráció
-}
-
-Felületek generálása esetén gyakran használnak valamilyen interpolált eljárást, például Perlin-zajt,
-így biztosítva a közeli helyeken a közeli értékeket.
-
 
 Ha elvonatkoztatunk a játékoktól és szimulációktól,
 ez a generálási módszer közel tetszőleges jellegű virtuális adathalmaz böngészését képes biztosítani.
@@ -393,37 +375,113 @@ vagy a felhasználó által implementált Java-osztállyal.
 A virtuális adatbázis dockerben való indításához vagy beágyazott használatához
 lényegileg elég egy ilyen konfigurációs fájl.
 
-\todo[inline]{konfiguráció-példa ide?}
-
 \section{Az új megközelítés előnyei}
 
-[a lightweight jelleg új távlatokat nyit, például lehet füsttesztelni adatbázissal (különösen az embedded megoldással)]
+Ha a virtuális adatbázis legegyszerűbb használati módját tekintjük,
+a felhasználói élményben három lényeges fázist különíthetünk el.
+A figyelem először a konfigurációs fájlra irányul:
+egyetlen átlátható, deklaratív, verziókezelhető adatfájlban minden megadható, amire szükség van.
+Majd az adatbázis létrejötte és a szerver elindulásakor feltűnik,
+hogy teljesen hiányzik a szokásos másolási, generálási, anonimizálási, inicializálási vagy egyéb folyamat,
+a szerver töredékmásodperc alatt válaszképesen elindul.
+Végül futási időben az látszik, hogy a szerver rendkívül kis memóriaigénnyel fut
+(ez csak a módosításokkal arányban változik valamelyest),
+ugyanakkor a lekérdezések futási ideje sem marad el nagyságrendekkel a tényleges adatbázisétól.
 
-A konfigurációs fájl további előnye,
+Az integrált konfigurációs fájl előnye még,
 hogy létező adatbázispéldányokon tanított mesterséges intelligencia segítségével is generálható.
 Az MI-alapú konfigurációmenedzsent egyre szélesebb körben alkalmazott módszer,
 megtaláljuk a SAT-solverektől[hiv!] a felhőarchitektúrákig[hiv!],
-nem látszik akadálya az adatbázisra vonatkozó konfigurációban való alkalmazásnak.
+nem látszik elvi akadálya az adatbázisra vonatkozó konfigurációban való alkalmazásnak.
 
-\todo[inline,color=red]{A megoldás körvonalai (vagy következő): ide az összehasonlító táblázat}
+De ilyen vaskos módszerek nélkül, egyszerűbb heurisztikákkal is lehetséges
+egy létező adatbázis jó közelítéssel történő letapogatása.
+Hasonlóan, a virtuális adatbázis könnyen renderelhető egy valós adatbázisba.
 
-\section{XXX: Miért nincs még ilyen megoldás?}
+Arra is lehetőség van, hogy a konfiguráció a JPA entitások
+(és opcionálisan az azokra helyezett specializált annotációk)
+alapján generálódjon, például adatbázisos tesztek futtatásához.
 
-0) lehetetlen, hogy erre még senki nem gondolt
+A könnyűsúlyú jelleg olyan új távlatokat nyit, amelyek korábban föl sem merülhettek.
+Például most már nincs akadálya, hogy bármely füstteszt adatbázis-eléréssel fusson.
+A CI/CD pipeline-okban adathalmazok kívülről való betöltése nélkül is lehet rövid feladatokat futtatni.
 
-A) nem egyszerű megérteni a koncepciót... kontraintuitív... hol vannak az adatok?
+Azt hiszem, jogosan merül föl a kérdés, hogy miért nem született és terjedt el még hasonló termék.
+Ennek fő okait az alábbiakban látom:
 
-B) korábban nem léteztek olyan jól kezelhető frameworkök (jólstrukturált és/vagy nyílt forrású),
-mint az apache calcite, amivel a query réteg könnyen megoldható
+\begin{itemize}
+    \item \textbf{kontraintuitív}: előzetes feltevésemmel szemben úgy tűnik,
+          nem olyan egyszerű átlátni a koncepciót, és megérteni hogy ``hol is vannak az adatok''
+    \item \textbf{megfelelő SQL plannerek eddigi hiánya}: az Apache Calcite például
+          csak az utóbbi néhány évben vált népszerűvé, és inkább elsősorban adatintegrátorként
+    \item \textbf{bejáratott alternatívák}: az adatnélküli mockolás lehetősége,
+          a NoSQL adatbázisok elterjedése, a felhőmegoldások fejlődése stb.
+          szenderképző kerülőmegoldásokként elfedték a problémát
+    \item \textbf{érdekhiány}: a releváns területen működő nagyobb vendorok elsősorban
+          erőforrásokat adnak bérbe, és az általuk fejlesztett architektúrák (történetileg érthetően)
+          elsősorban az ezeken futó tényleges adatbázisok kezelését kell megoldják;
+          nincs tehát nyomás jelentősen más típusú termékkel való kísérletezésre
+\end{itemize}
 
-C) nagy cégek miért nem?
+A következő táblázat összehasonlítja megközelítéseim és a létező megoldások fő jellemzőit:
+
+\begin{table}[H]
+\settowidth\rotheadsize{mmmmmmmmmmmmmm}
+\begin{center}
+\begin{tabular}{ |c|c c c c:c c| }
+  \hline
+  \begin{tabular}{ l l } ~ \\ ~ \\ XXXX / \\ YYYY\end{tabular} &
+    \rothead{Adatgenerálás \\ \textit{külső} adatbázissal} &
+    \rothead{Adatgenerálás \\ \textit{beágyazott} adatbázissal} &
+    \rothead{Produkciós adatbázis \\ másolatának használata} &
+    \rothead{Anonimizálás a \\ produkciós adatbázisból} &
+    \rothead{A jelen megoldás \\ \textit{konténerben} futtatva}&
+    \rothead{A jelen megoldás \\ \textit{beágyazva}} \\
+  \hline
+  \parbox{2cm}{\rhpad Item 1 \rhpad} &
+    ((AAA)) &
+    ((BBB)) &
+    ((CCC)) &
+    ((DDD)) &
+    ((EEE)) &
+    ((FFF)) \\
+  \parbox{2cm}{\rhpad Item 2 \rhpad} &
+    ((AAA)) &
+    ((BBB)) &
+    ((CCC)) &
+    ((DDD)) &
+    ((EEE)) &
+    ((FFF)) \\
+  \hline
+\end{tabular}
+\end{center}
+\end{table}
+
+\todo[inline]{még az elején is valami ábra vagy tábla}
 
 
 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+
+
+
+
+
+
+
+
+
+
+
+\chapter{A virtuális adattár}
+
+
+
+
+
+
+
 
 
 \section{XXX}
@@ -476,16 +534,6 @@ Egyéb:
 
 
 
-
-
-
-
-
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%%%%%% BEGIN CONTENT %%%%%%
-
-\chapter{A virtuális adattár}
 
 \section{A TreeRandom és kapcsolódó API-k}
 
@@ -890,21 +938,25 @@ Az elért eredmények tudományos értéke (6 pont)
 A bíráló összefoglaló véleménye a dolgozatról és színvonalának értékelése. A dolgozat erényei és hibái (8 pont)
 }
 
-%%%%%% END CONTENT %%%%%%
-%%%%%%%%%%%%%%%%%%%%%%%%%
 
 
 
+\chapter{Két kiegészítő szcenárió}
+
+[eddig teljesen általános dolgokat tárgyaltunk, ami egy alapszoftver része]
+[most két speciálisabb kiegészítést mutatok be, bemutatva, milyen könnyen adaptálható bla-bla-bla]
+
+\section{Valós címadatok használata}
+
+\todo[inline]{section: Valós címadatok használata}
+
+\section{Valószerű geográfiai értékek generálása}
+
+\todo[inline]{section: Valószerű geográfiai értékek generálása}
 
 
 
-
-
-
-
-
-
-\chapter{Eredmények a prototípussal [???]}
+\chapter{Eredmények a prototípussal}
 
 \begin{figure}[H]
 \centering
