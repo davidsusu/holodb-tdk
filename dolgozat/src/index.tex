@@ -11,7 +11,7 @@
 \usepackage{svg}
 \usepackage{todonotes}
 \usepackage{float}
-
+\usepackage{pgfplots}
 \usepackage{arydshln}
 
 \newcommand{\rhpad}{\vspace{0.6\baselineskip}}
@@ -27,7 +27,7 @@
 \usepackage[newfloat]{minted}
 \AtBeginEnvironment{minted}{\singlespacing}
 
-\title{HoloDB - virtuális on-the-fly relációs adattár}
+\title{HoloDB, egy on-the-fly virtuális relációs adattár}
 \date{2023}
 \author{Horváth Dávid}
 \degree{Programtervező Informatikus BSc}
@@ -348,9 +348,6 @@ a problémás számítások, potenciális túlcsordulások földerítésére.
 Az egész számokat egységesen szerettem volna kezelni, függetlenül azok méretétől,
 így a \texttt{BigInteger} típus használata eleve kiesett,
 mivel az kisebb számokra a \texttt{long} típushoz képest rendkívül rossz performanciájú.
-Bár létezik egy-két megoldás, mely ugyanezt a problémát célozza (például a Scala \texttt{BigInt} típusa),
-végül egy egyedi típus implementálása mellett döntöttem,
-mellyel sikerült minden alternatívánál jobb performanciát elérnem.
 
 Az értékkiosztási trükkökkel egy statikus adatbázist írunk le,
 ami értelemszerűen önmagában csak-olvashatóan érhető el.
@@ -410,7 +407,7 @@ Azt hiszem, jogosan merül föl a kérdés, hogy miért nem született és terje
 Ennek fő okait az alábbiakban látom:
 
 \begin{itemize}
-    \item \textbf{kontraintuitív}: előzetes feltevésemmel szemben úgy tűnik,
+    \item \textbf{kontraintuitivitás}: előzetes feltevésemmel szemben úgy tűnik,
           nem olyan egyszerű átlátni a koncepciót, és megérteni hogy ``hol is vannak az adatok''
     \item \textbf{megfelelő SQL plannerek eddigi hiánya}: az Apache Calcite például
           csak az utóbbi néhány évben vált népszerűvé, és inkább elsősorban adatintegrátorként
@@ -532,8 +529,81 @@ Egyéb:
 
 
 
+\section{A \texttt{LargeInteger} típus}
 
+Az adatok on-the-fly számításakor a szűk keresztmetszet
+a tárolás és elérés problémáiról a kalkulációkra helyeződik át.
+Nyilvánvaló tehát, hogy az egész koncepció sikere azon áll vagy bukik,
+hogy milyen gyorsan tudjuk számítani az eredményt.
 
+A legtöbb oszloptípusnál rendezett értékkészletbeli pozíciókat mappelünk össze sorindexekkel.
+Az értékkészlet óriási is lehet,
+illetve számos további részeredmény esetében merül föl az óriás számok problémája.
+Ezért szükségesnek mutatkozott egy olyan egész típus megalkotása,
+mely kis és óriás számokra egyaránt működik,
+és kis számok esetében nagyon hatékony (ellentétben a beépített \texttt{BigInteger} típussal).
+
+Az ecélból készített (egyébként teljesen általános) \texttt{LargeInteger} típus
+valójában egy interfész két privát implementációval:
+az \texttt{ImplSmall} a \texttt{Long.MIN\_VALUE}-tól a \texttt{Long.MAX\_VALUE}-ig
+terjedő intervallumra (kis számok),
+az \texttt{ImplBig} pedig az ezen kívül eső értékekre (nagy számok) optimalizálva.
+
+Az \texttt{ImplSmall} egy primitív \texttt{long} értéket tárol.
+Az egyes műveletei esetében egy olcsó ellenőrzéssel mindig megállapítja,
+hogy biztos-e, hogy nem lesz túlcsordulás.
+Ha ez biztos, akkor a műveletet primitív műveletként végzi el.
+Ha nem biztos
+(vagy azért, mert az ellenőrzés nem zárta ki a túlcsordulást,
+vagy mert nagy számot kapott operandusként),
+akkor a \texttt{BigInteger} segítségével hajtja végre a műveletet;
+ha az eredmény mégis kis szám, akkor \texttt{ImplSmall} példányként adja vissza.
+
+Az \texttt{ImplBig} mindig a \texttt{BigInteger}-en keresztül végzi a műveleteket.
+Hasonlóan a másik implementációhoz, szintén ellenőrzi, hogy az eredmény kis szám-e,
+Általában, egy \texttt{LargeInteger} szám akkor és csak akkor csomagolódik \texttt{ImplBig}-ként,
+ha kívül esik a \texttt{long} értékkészletén.
+
+A \texttt{LargeInteger} a \texttt{BigInteger} összes metódusát replikálja,
+illetve számos további kényelmi metódust ad hozzá.
+A zérusközeli értékek gyorsítótárazva vannak a hatékonyság további növelése érdekében.
+
+A Scala standard könyvtárának \texttt{BigInt} típusa szitén a \texttt{long} és \texttt{BigInteger}
+aritmetika váltogatásával oldja meg,
+hogy az óriás számok támogatása mellett kis számokon viszonylag gyorsan fusson.
+A két megoldás performanciában hasonló,
+a jelen esetben releváns szűk keresztmetszet esetében (kisebb számok, sokféle művelet)
+a \texttt{LargeInteger} gyorsabb.
+
+\begin{figure}[H]
+    \centering
+    \begin{tikzpicture}
+        \begin{axis}[
+                symbolic x coords={primitive long,,LargeInteger,,BigInt (Scala),,BigInteger},
+                xticklabel style={rotate=45,anchor=north east},
+                xtick={primitive long,LargeInteger,BigInt (Scala),BigInteger},
+                ylabel=Time in nanoseconds,
+                ymajorgrids,
+                ymin=0,
+                ymax=150,
+                bar width=25pt,
+                enlarge x limits=0.2,
+                nodes near coords,
+                nodes near coords align={vertical},
+            ]
+            \addplot[ybar,fill=cyan] coordinates { (primitive long,27)};
+            \addplot[ybar,fill=orange] coordinates { (LargeInteger,32) };
+            \addplot[ybar,fill=cyan] coordinates { (BigInt (Scala),42) };
+            \addplot[ybar,fill=cyan] coordinates { (BigInteger,126) };
+        \end{axis}
+    \end{tikzpicture}
+    \caption{
+        A \texttt{LargeInteger} teljesítményének összehasonlítása
+        egy kis számokon végzett összetett számítás átlagos futási ideje alapján
+    }
+\end{figure}
+
+\todo[inline]{további LargeInteger-alternatívák teljesítményének vizsgálata}
 
 \section{A TreeRandom és kapcsolódó API-k}
 
@@ -945,6 +1015,16 @@ A bíráló összefoglaló véleménye a dolgozatról és színvonala�
 
 [eddig teljesen általános dolgokat tárgyaltunk, ami egy alapszoftver része]
 [most két speciálisabb kiegészítést mutatok be, bemutatva, milyen könnyen adaptálható bla-bla-bla]
+
+\longcomment{Két kiegészítő szcenárió: jegyzet}{
+néhány további esettanulmány:
+- földrajzi magasságpontok generálása
+- valós címadatbázis használata
+    az ilyen bonyolítások használata
+      is egy skálázási lehetőség
+    valahol felsorolni
+      az alap skálázási lehetőségeket...
+}
 
 \section{Valós címadatok használata}
 

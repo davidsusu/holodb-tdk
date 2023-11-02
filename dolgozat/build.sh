@@ -9,13 +9,21 @@ rm -Rf build/*
 
 cp -R ./src/. ./build
 
-cd build
+cd build/diagram
 
-ls diagram/ --color=never | egrep '^.*\.drawio$' | while IFS=' ' read -r diagramFilename; do
+ls ./ --color=never | egrep '^.*\.drawio$' | while IFS=' ' read -r diagramFilename; do
     diagramSvgFilename="$( echo "${diagramFilename}" | sed -E 's/.drawio$/.svg/' )"
-    drawio -x -f svg -o "diagram/${diagramSvgFilename}" "diagram/${diagramFilename}"
-    inkscape "diagram/${diagramSvgFilename}" --export-text-to-path --export-overwrite
+    drawio -x -f svg -o "${diagramSvgFilename}" "${diagramFilename}"
+    inkscape "${diagramSvgFilename}" --export-text-to-path --export-overwrite
 done
+
+#ls ./ --color=never | egrep '^.*\.m$' | while IFS=' ' read -r diagramFilename; do
+#    diagramNameBase="$( echo "${diagramFilename}" | sed -E 's/.m$//' )"
+#    sed -iE "s/\boutputfilename\b/${diagramNameBase}/" "${diagramFilename}"
+#    octave --no-gui --no-window-system "${diagramFilename}"
+#done
+
+cd ..
 
 command="pdflatex --shell-escape -interaction=nonstopmode -jobname='${jobName}' '${inputFileName}'"
 
