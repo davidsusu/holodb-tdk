@@ -527,9 +527,11 @@ Egyéb:
 
 
 
+\section{A megvalósítás alapjai}
 
+Ha az adatelérést objektumok
 
-\section{A \texttt{LargeInteger} típus}
+\subsection{A \texttt{LargeInteger} típus}
 
 Az adatok on-the-fly számításakor a szűk keresztmetszet
 a tárolás és elérés problémáiról a kalkulációkra helyeződik át.
@@ -572,7 +574,7 @@ A Scala standard könyvtárának \texttt{BigInt} típusa szitén a \texttt{long}
 aritmetika váltogatásával oldja meg,
 hogy az óriás számok támogatása mellett kis számokon viszonylag gyorsan fusson.
 A két megoldás performanciában hasonló,
-néhány jelen esetben releváns esetben (kisebb számok, sokféle művelet)
+a jelen esetben releváns esetek egy részében (kisebb számok, sokféle művelet)
 a \texttt{LargeInteger} valamivel gyorsabb.
 
 \begin{figure}[H]
@@ -605,11 +607,7 @@ a \texttt{LargeInteger} valamivel gyorsabb.
 
 \todo[inline]{további LargeInteger-alternatívák teljesítményének vizsgálata}
 
-\section{A TreeRandom és kapcsolódó API-k}
-
-\todo[inline]{section: A TreeRandom és kapcsolódó API-k}
-
-\section{A storage API}
+\subsection{A storage API}
 
 \todo[inline]{section: A storage API}
 
@@ -621,6 +619,10 @@ indexek
    full-text
    spatial???
 }
+
+\subsection{A TreeRandom és kapcsolódó API-k}
+
+\todo[inline]{section: A TreeRandom és kapcsolódó API-k}
 
 \section{A csak-olvasható alapréteg}
 
@@ -663,7 +665,7 @@ Az e szempontból problémás esetekre külön ki fogok térni.
 
 \todo[inline]{További megjegyzések a csak-olvasható alapréteghez}
 
-\section{Megoldások a hatékony értékkiosztásra}
+\subsection{Az értékkiosztás }
 
 Virtuális adatok alatt elsősorban az egy-egy oszlop alá besorakozó,
 közös típussal rendelkező mezőértékeket értem.
@@ -1051,7 +1053,39 @@ néhány további esettanulmány:
 
 \todo[inline]{kinyitni a konf. fájl mint migrációs diff alap lehetőségét?}
 
+\section{MiniConnect: egy minimalisztikus adatbázis-API}
 
+\todo[inline]{MiniConnect}
+
+\subsection{Kompatibilitás a JDBC-vel}
+
+\todo[inline]{Kompatibilitás a JDBC-vel (a JDBC kritikáját is ide)}
+
+\subsection{JPA-integráció}
+
+\todo[inline]{JPA-integráció }
+
+\subsection{REPL}
+
+\todo[inline]{REPL}
+
+\section{MiniBase: egy bővíthető relációsadatbázis-keretrendszer}
+
+\todo[inline]{MiniBase (Apache Calcite stb.)}
+
+\section{HoloDB: a virtuális adattár}
+
+\todo[inline]{HoloDB}
+
+\section{További eszközök}
+
+\todo[inline]{További eszközök}
+
+\section{Empirikus eredmények}
+
+\todo[inline]{Teszteredmények}
+
+\section{XXX}
 
 
 
