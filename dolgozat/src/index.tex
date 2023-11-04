@@ -8,6 +8,7 @@
 \usepackage{xcolor}
 
 \usepackage{graphicx}
+\usepackage{colortbl}
 \usepackage{svg}
 \usepackage{todonotes}
 \usepackage{float}
@@ -422,10 +423,11 @@ Ennek fő okait az alábbiakban látom:
 
 A következő táblázat összehasonlítja megközelítéseim és a már említett megoldások fő jellemzőit:
 
+\newcommand{\comptableleftwidth}{3.2cm}
 \begin{table}[H]
 \settowidth\rotheadsize{mmmmmmmmmmmmmm}
 \begin{center}
-\begin{tabular}{ |c|c c c c c:c c| }
+\begin{tabular}{ |p{3.2cm}|c c c c c:c c| }
   \hline
   \begin{tabular}{ l l } ~ \\ ~ \\ XXXX / \\ YYYY\end{tabular} &
     \rothead{Adatgenerálás \\ \textit{külső} adatbázissal} &
@@ -436,7 +438,8 @@ A következő táblázat összehasonlítja megközelítéseim és a már említe
     \rothead{A jelen megoldás \\ \textit{konténerben} futtatva}&
     \rothead{A jelen megoldás \\ \textit{beágyazva}} \\
   \hline
-  \parbox{2cm}{\rhpad Forrásadatbázis \\ szükségessége \rhpad} &
+  \arrayrulecolor{black!40}
+  \parbox{\comptableleftwidth}{\rhpad Forrásadatbázis \\ szükségessége \rhpad} &
     ((AAA)) &
     ((BBB)) &
     ((CCC)) &
@@ -444,7 +447,8 @@ A következő táblázat összehasonlítja megközelítéseim és a már említe
     ((EEE)) &
     ((FFF)) &
     ((GGG)) \\
-  \parbox{2cm}{\rhpad Forrásadatbázisból \\ előállítható \rhpad} &
+  \hdashline[0.7pt/4pt]
+  \parbox{\comptableleftwidth}{\rhpad Adatbázisból \\ előállítható \rhpad} &
     ((AAA)) &
     ((BBB)) &
     ((CCC)) &
@@ -452,7 +456,8 @@ A következő táblázat összehasonlítja megközelítéseim és a már említe
     ((EEE)) &
     ((FFF)) &
     ((GGG)) \\
-  \parbox{2cm}{\rhpad Előállítás költsége \rhpad} &
+  \hdashline[0.7pt/4pt]
+  \parbox{\comptableleftwidth}{\rhpad Előállítás költsége \rhpad} &
     ((AAA)) &
     ((BBB)) &
     ((CCC)) &
@@ -460,7 +465,8 @@ A következő táblázat összehasonlítja megközelítéseim és a már említe
     ((EEE)) &
     ((FFF)) &
     ((GGG)) \\
-  \parbox{2cm}{\rhpad Indítás költsége \rhpad} &
+  \hdashline[0.7pt/4pt]
+  \parbox{\comptableleftwidth}{\rhpad Indítás költsége \rhpad} &
     ((AAA)) &
     ((BBB)) &
     ((CCC)) &
@@ -468,7 +474,8 @@ A következő táblázat összehasonlítja megközelítéseim és a már említe
     ((EEE)) &
     ((FFF)) &
     ((GGG)) \\
-  \parbox{2cm}{\rhpad Runtime tárhelyigény \\ asdf \rhpad} &
+  \hdashline[0.7pt/4pt]
+  \parbox{\comptableleftwidth}{\rhpad Runtime tárhelyigény \rhpad} &
     ((AAA)) &
     ((BBB)) &
     ((CCC)) &
@@ -476,7 +483,8 @@ A következő táblázat összehasonlítja megközelítéseim és a már említe
     ((EEE)) &
     ((FFF)) &
     ((GGG)) \\
-  \parbox{2cm}{\rhpad Produkciós adatbázis \\ [finomhangolt utánzása] \rhpad} &
+  \hdashline[0.7pt/4pt]
+  \parbox{\comptableleftwidth}{\rhpad Prod. adatbázis \\ leképezése \rhpad} &
     ((AAA)) &
     ((BBB)) &
     ((CCC)) &
@@ -484,7 +492,8 @@ A következő táblázat összehasonlítja megközelítéseim és a már említe
     ((EEE)) &
     ((FFF)) &
     ((GGG)) \\
-  \parbox{2cm}{\rhpad Konzisztencia \\ a kérések között \rhpad} &
+  \hdashline[0.7pt/4pt]
+  \parbox{\comptableleftwidth}{\rhpad Kérések közötti \\ konzisztencia \rhpad} &
     ((AAA)) &
     ((BBB)) &
     ((CCC)) &
@@ -492,7 +501,8 @@ A következő táblázat összehasonlítja megközelítéseim és a már említe
     ((EEE)) &
     ((FFF)) &
     ((GGG)) \\
-  \parbox{2cm}{\rhpad Írhatóság \rhpad} &
+  \hdashline[0.7pt/4pt]
+  \parbox{\comptableleftwidth}{\rhpad Írhatóság \rhpad} &
     ((AAA)) &
     ((BBB)) &
     ((CCC)) &
@@ -500,7 +510,8 @@ A következő táblázat összehasonlítja megközelítéseim és a már említe
     ((EEE)) &
     ((FFF)) &
     ((GGG)) \\
-  \parbox{2cm}{\rhpad Konfiguráció \rhpad} &
+  \hdashline[0.7pt/4pt]
+  \parbox{\comptableleftwidth}{\rhpad Konfiguráció \rhpad} &
     ((AAA)) &
     ((BBB)) &
     ((CCC)) &
@@ -508,6 +519,7 @@ A következő táblázat összehasonlítja megközelítéseim és a már említe
     ((EEE)) &
     ((FFF)) &
     ((GGG)) \\
+  \arrayrulecolor{black}
   \hline
 \end{tabular}
 \end{center}
