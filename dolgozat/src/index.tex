@@ -669,9 +669,7 @@ hogy a keresésen kívül még néhány további funkciót is támogatnia kellje
 például a rendezést és a $NULL$ értékek kezelését.
 Külön kitérek majd az ezzel kapcsolatos problémákra, ahol szükséges.
 
-\todo[inline]{További megjegyzések a csak-olvasható alapréteghez}
-
-\subsection{Az értékkiosztás }
+\subsection{Keretrendszer az értékkiosztásokhoz}
 
 Virtuális adatok alatt elsősorban az egy-egy oszlop alá besorakozó,
 közös típussal rendelkező mezőértékeket értem.
@@ -686,6 +684,8 @@ valójában más jellegű értékkiosztási módszer is lehet mögötte,
 amennyiben az egy-egy oszlophoz tartozó listanézetek biztosítottak.
 Majd a több oszlopot érintő megkötések esetében ez lesz a helyzet.
 De lássuk először az egyoszlopos értékkiosztások lehetséges módszereit.
+
+\todo[inline, color=red]{Keretrendszer az értékkiosztásokhoz: ide egy ábra, ami ezt szemlélteti}
 
 \subsection{Indexelt egyoszlopos értékkiosztások}
 
@@ -740,7 +740,7 @@ A szekvenciális oszlopoknál az érték megegyezik a rekord 1-től indított so
 Időbélyegeket is generálhatunk hasonló módon,
 amennyiben megengedhető, hogy a szimulált időadatok között egyenletes időközök legyenek.
 
-\subsection{Unique értékkiosztás}
+\subsubsection{Unique értékkiosztás}
 
 \todo[inline, color=red]{subsubsection: Unique értékkiosztás}
 
@@ -774,6 +774,8 @@ mégpedig összevissza
 \caption{Keresés a kétfázisú értékkiosztásban: a rendezett értékkészlet és a vetítések megfordíthatósága biztosítja a hatékony kereshetőséget az virtuális listában}
 \label{Keresés a kétfázisú értékkiosztásban}
 \end{figure}
+
+\todo[inline, color=red]{kétfázisú: a két ábra inkább egymás mellé menjen}
 
 Egy adott érték lekérése egyszerűen így történik:
 
