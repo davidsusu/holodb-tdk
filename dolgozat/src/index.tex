@@ -436,7 +436,7 @@ A következő táblázat összehasonlítja megközelítéseim és a már említe
     \rothead{A jelen megoldás \\ \textit{konténerben} futtatva}&
     \rothead{A jelen megoldás \\ \textit{beágyazva}} \\
   \hline
-  \parbox{2cm}{\rhpad Item 1 \\ asdf \rhpad} &
+  \parbox{2cm}{\rhpad Forrásadatbázis \\ szükségessége \rhpad} &
     ((AAA)) &
     ((BBB)) &
     ((CCC)) &
@@ -444,7 +444,63 @@ A következő táblázat összehasonlítja megközelítéseim és a már említe
     ((EEE)) &
     ((FFF)) &
     ((GGG)) \\
-  \parbox{2cm}{\rhpad Item 2 \rhpad} &
+  \parbox{2cm}{\rhpad Forrásadatbázisból \\ előállítható \rhpad} &
+    ((AAA)) &
+    ((BBB)) &
+    ((CCC)) &
+    ((DDD)) &
+    ((EEE)) &
+    ((FFF)) &
+    ((GGG)) \\
+  \parbox{2cm}{\rhpad Előállítás költsége \rhpad} &
+    ((AAA)) &
+    ((BBB)) &
+    ((CCC)) &
+    ((DDD)) &
+    ((EEE)) &
+    ((FFF)) &
+    ((GGG)) \\
+  \parbox{2cm}{\rhpad Indítás költsége \rhpad} &
+    ((AAA)) &
+    ((BBB)) &
+    ((CCC)) &
+    ((DDD)) &
+    ((EEE)) &
+    ((FFF)) &
+    ((GGG)) \\
+  \parbox{2cm}{\rhpad Runtime tárhelyigény \\ asdf \rhpad} &
+    ((AAA)) &
+    ((BBB)) &
+    ((CCC)) &
+    ((DDD)) &
+    ((EEE)) &
+    ((FFF)) &
+    ((GGG)) \\
+  \parbox{2cm}{\rhpad Produkciós adatbázis \\ [finomhangolt utánzása] \rhpad} &
+    ((AAA)) &
+    ((BBB)) &
+    ((CCC)) &
+    ((DDD)) &
+    ((EEE)) &
+    ((FFF)) &
+    ((GGG)) \\
+  \parbox{2cm}{\rhpad Konzisztencia \\ a kérések között \rhpad} &
+    ((AAA)) &
+    ((BBB)) &
+    ((CCC)) &
+    ((DDD)) &
+    ((EEE)) &
+    ((FFF)) &
+    ((GGG)) \\
+  \parbox{2cm}{\rhpad Írhatóság \rhpad} &
+    ((AAA)) &
+    ((BBB)) &
+    ((CCC)) &
+    ((DDD)) &
+    ((EEE)) &
+    ((FFF)) &
+    ((GGG)) \\
+  \parbox{2cm}{\rhpad Konfiguráció \rhpad} &
     ((AAA)) &
     ((BBB)) &
     ((CCC)) &
@@ -762,20 +818,23 @@ mégpedig összevissza
 \end{figure}
 
 \begin{figure}[H]
-\centering
-\includesvg{diagram/getvalue}
-\caption{Adatlekérés a kétfázisú értékkiosztásból}
-\label{Adatlekérés a kétfázisú értékkiosztásból}
+  \centering
+  \hspace*{\fill}
+  \begin{minipage}[t]{0.42\textwidth}
+    \includesvg[width=\textwidth]{diagram/getvalue}
+    \caption{Adatlekérés a kétfázisú értékkiosztásból}
+  \end{minipage}
+  \hspace*{\fill}
+  \begin{minipage}[t]{0.42\textwidth}
+    \includesvg[width=\textwidth]{diagram/findvalue}
+    \caption{
+      Keresés a kétfázisú értékkiosztásban:
+      a rendezett értékkészlet és a vetítések megfordíthatósága
+      biztosítja a hatékony kereshetőséget az virtuális listában
+    }
+  \end{minipage}
+  \hspace*{\fill}
 \end{figure}
-
-\begin{figure}[H]
-\centering
-\includesvg{diagram/findvalue}
-\caption{Keresés a kétfázisú értékkiosztásban: a rendezett értékkészlet és a vetítések megfordíthatósága biztosítja a hatékony kereshetőséget az virtuális listában}
-\label{Keresés a kétfázisú értékkiosztásban}
-\end{figure}
-
-\todo[inline, color=red]{kétfázisú: a két ábra inkább egymás mellé menjen}
 
 Egy adott érték lekérése egyszerűen így történik:
 
