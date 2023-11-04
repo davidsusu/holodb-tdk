@@ -75,7 +75,8 @@ Dolgozatomban egy olyan megoldás alapjait mutatom be,
 mely további előnyök mellett ötvözi az előbbi kettő erősségeit,
 míg kikerüli azok fő hátrányait.
 Az előterjesztett megoldás egy akár közel zéró erőforrásigényű virtuális relációs adattár,
-melynek szerkezete és adattartalma konfigurációs fájlon keresztül rugalmasan paraméterezhető,
+melynek szerkezete és adattartalma deklaratív
+konfigurációs fájlon keresztül rugalmasan paraméterezhető,
 és a lekérdezéseket on-the-fly hajtja végre konzisztensen
 (legyen az SQL, NoSQL, GraphQL vagy egyéb),
 és performanciája legalábbis összemérhető a valódi adatbázisokéval.
@@ -83,6 +84,9 @@ Ez a performancia akkor érhető el, ha a virtuális adatokhoz virtuális indexe
 aminek implementációbeli magját többek között a rendezett értékkészletek,
 a diszkrét monoton függvények
 illetve a kriptográfiában is használatos megfordítható permutációk adják.
+
+\todo[inline]{abstract végére: mit várok a bemutatott megoldástól}
+
 \end{abstract}
 
 \chapter{Áttekintés}
@@ -420,39 +424,47 @@ Ennek fő okait az alábbiakban látom:
           nincs tehát nyomás jelentősen más típusú termékkel való kísérletezésre
 \end{itemize}
 
-A következő táblázat összehasonlítja megközelítéseim és a létező megoldások fő jellemzőit:
+A következő táblázat összehasonlítja megközelítéseim és a már említett megoldások fő jellemzőit:
 
 \begin{table}[H]
 \settowidth\rotheadsize{mmmmmmmmmmmmmm}
 \begin{center}
-\begin{tabular}{ |c|c c c c:c c| }
+\begin{tabular}{ |c|c c c c c:c c| }
   \hline
   \begin{tabular}{ l l } ~ \\ ~ \\ XXXX / \\ YYYY\end{tabular} &
     \rothead{Adatgenerálás \\ \textit{külső} adatbázissal} &
     \rothead{Adatgenerálás \\ \textit{beágyazott} adatbázissal} &
     \rothead{Produkciós adatbázis \\ másolatának használata} &
     \rothead{Anonimizálás a \\ produkciós adatbázisból} &
+    \rothead{Ad hoc on-the-fly \\ SQL mocking} &
     \rothead{A jelen megoldás \\ \textit{konténerben} futtatva}&
     \rothead{A jelen megoldás \\ \textit{beágyazva}} \\
   \hline
-  \parbox{2cm}{\rhpad Item 1 \rhpad} &
+  \parbox{2cm}{\rhpad Item 1 \\ asdf \rhpad} &
     ((AAA)) &
     ((BBB)) &
     ((CCC)) &
     ((DDD)) &
     ((EEE)) &
-    ((FFF)) \\
+    ((FFF)) &
+    ((GGG)) \\
   \parbox{2cm}{\rhpad Item 2 \rhpad} &
     ((AAA)) &
     ((BBB)) &
     ((CCC)) &
     ((DDD)) &
     ((EEE)) &
-    ((FFF)) \\
+    ((FFF)) &
+    ((GGG)) \\
   \hline
 \end{tabular}
 \end{center}
 \end{table}
+
+
+
+
+
 
 \todo[inline]{még az elején is valami ábra vagy tábla}
 
@@ -1033,6 +1045,8 @@ néhány további esettanulmány:
 \todo[inline]{section: Valós címadatok használata}
 
 \section{Valószerű geográfiai értékek generálása}
+
+[bár eddig a standalone-snaphot jelleget hangsúlyoztuk]
 
 \todo[inline]{section: Valószerű geográfiai értékek generálása}
 
