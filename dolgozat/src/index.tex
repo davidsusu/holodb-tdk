@@ -157,10 +157,10 @@ Főként webes API-k által szolgáltatott adathalmazok mockolásakor találkozu
 mely a lekérés (és persze az előre beállított szabályok)
 alapján generálja a válaszként visszaadandó adatstruktúrát
 (például egy rekordot vagy dokumentumot JSON formátumban).
-Az adatok véletlenszerűen kerülnek kitöltésre a lekérés szerkezete alapján megállapított schema keretébe.
+Az adatok véletlenszerűen kerülnek kitöltésre a lekérés szerkezete alapján megállapított séma keretébe.
 
 A módszer SQL-lekérdezések közvetlen mockolásához is adaptálható,
-a lekérdezés (és ha ismert, akkor a schema) alapján meg kell állapítani
+a lekérdezés (és ha ismert, akkor a séma) alapján meg kell állapítani
 a visszaadandó eredménytábla szerkezetét, adattípusait,
 az egy-egy oszlopba kerülő adatok jellegét,
 majd random jelleggel elő kell állítani bizonyos számű, ezeknek a követelményeknek megfelelő eredményrekordot.
@@ -212,7 +212,7 @@ Vegyük észre, hogy még a kereshetőség is az indexek által foglalt további
 Ha pedig nem materializált adatok mellé gyártunk indexeket,
 akkor ki kell dolgoznunk valamilyen módszert a módosulások detektálására, ami általában nem triviális.
 
-Egyes generátorok a schema és az adatok jellegének deklaratív leírását is támogatják. Ez a leírás tárolható egy konfigurációs fájlban, ami verziókezelhető, dokumentálható, könnyen szerkeszthető.
+Egyes generátorok a séma és az adatok jellegének deklaratív leírását is támogatják. Ez a leírás tárolható egy konfigurációs fájlban, ami verziókezelhető, dokumentálható, könnyen szerkeszthető.
 
 \subsection{Relációs adatok anonimizálása}
 
@@ -223,7 +223,7 @@ felcseréljük a másolás és anonimizáció költségeivel.
 
 Úgy tűnik, gyakran anonimizálással együtt is egyszerűbb valós adatokból kiindulni,
 mint egy komplett generálási folyamatot kiépíteni.
-Egy köztes megoldás lehet a schema és az adatok nagyjábóli jellegének letapogatása,
+Egy köztes megoldás lehet a séma és az adatok nagyjábóli jellegének letapogatása,
 és az ez alapján történő újragenerálás.
 
 Azonban a bevezetőben felsorolt szituációk egy részében nem áll rendelkezésre egy létező produkciós adatbázis.
@@ -424,6 +424,7 @@ Ennek fő okait az alábbiakban látom:
 A következő táblázat összehasonlítja megközelítéseim és a már említett megoldások fő jellemzőit:
 
 \newcommand{\comptableleftwidth}{3.2cm}
+\newcommand{\comptablelinesep}{\hdashline[0.7pt/3pt]}
 \begin{table}[H]
 \settowidth\rotheadsize{mmmmmmmmmmmmmm}
 \begin{center}
@@ -447,7 +448,7 @@ A következő táblázat összehasonlítja megközelítéseim és a már említe
     ((EEE)) &
     ((FFF)) &
     ((GGG)) \\
-  \hdashline[0.7pt/4pt]
+  \comptablelinesep
   \parbox{\comptableleftwidth}{\rhpad Adatbázisból \\ előállítható \rhpad} &
     ((AAA)) &
     ((BBB)) &
@@ -456,7 +457,7 @@ A következő táblázat összehasonlítja megközelítéseim és a már említe
     ((EEE)) &
     ((FFF)) &
     ((GGG)) \\
-  \hdashline[0.7pt/4pt]
+  \comptablelinesep
   \parbox{\comptableleftwidth}{\rhpad Előállítás költsége \rhpad} &
     ((AAA)) &
     ((BBB)) &
@@ -465,7 +466,7 @@ A következő táblázat összehasonlítja megközelítéseim és a már említe
     ((EEE)) &
     ((FFF)) &
     ((GGG)) \\
-  \hdashline[0.7pt/4pt]
+  \comptablelinesep
   \parbox{\comptableleftwidth}{\rhpad Indítás költsége \rhpad} &
     ((AAA)) &
     ((BBB)) &
@@ -474,8 +475,8 @@ A következő táblázat összehasonlítja megközelítéseim és a már említe
     ((EEE)) &
     ((FFF)) &
     ((GGG)) \\
-  \hdashline[0.7pt/4pt]
-  \parbox{\comptableleftwidth}{\rhpad Runtime tárhely \rhpad} &
+  \comptablelinesep
+  \parbox{\comptableleftwidth}{\rhpad Runtime \\ tárhelyigény \rhpad} &
     ((AAA)) &
     ((BBB)) &
     ((CCC)) &
@@ -483,8 +484,8 @@ A következő táblázat összehasonlítja megközelítéseim és a már említe
     ((EEE)) &
     ((FFF)) &
     ((GGG)) \\
-  \hdashline[0.7pt/4pt]
-  \parbox{\comptableleftwidth}{\rhpad Runtime performancia \rhpad} &
+  \comptablelinesep
+  \parbox{\comptableleftwidth}{\rhpad Runtime \\ performancia \rhpad} &
     ((AAA)) &
     ((BBB)) &
     ((CCC)) &
@@ -492,7 +493,7 @@ A következő táblázat összehasonlítja megközelítéseim és a már említe
     ((EEE)) &
     ((FFF)) &
     ((GGG)) \\
-  \hdashline[0.7pt/4pt]
+  \comptablelinesep
   \parbox{\comptableleftwidth}{\rhpad Prod. adatbázis \\ leképezése \rhpad} &
     ((AAA)) &
     ((BBB)) &
@@ -501,7 +502,7 @@ A következő táblázat összehasonlítja megközelítéseim és a már említe
     ((EEE)) &
     ((FFF)) &
     ((GGG)) \\
-  \hdashline[0.7pt/4pt]
+  \comptablelinesep
   \parbox{\comptableleftwidth}{\rhpad Kérések közötti \\ konzisztencia \rhpad} &
     ((AAA)) &
     ((BBB)) &
@@ -510,7 +511,7 @@ A következő táblázat összehasonlítja megközelítéseim és a már említe
     ((EEE)) &
     ((FFF)) &
     ((GGG)) \\
-  \hdashline[0.7pt/4pt]
+  \comptablelinesep
   \parbox{\comptableleftwidth}{\rhpad Írhatóság \rhpad} &
     ((AAA)) &
     ((BBB)) &
@@ -519,8 +520,17 @@ A következő táblázat összehasonlítja megközelítéseim és a már említe
     ((EEE)) &
     ((FFF)) &
     ((GGG)) \\
-  \hdashline[0.7pt/4pt]
+  \comptablelinesep
   \parbox{\comptableleftwidth}{\rhpad Konfiguráció \rhpad} &
+    ((AAA)) &
+    ((BBB)) &
+    ((CCC)) &
+    ((DDD)) &
+    ((EEE)) &
+    ((FFF)) &
+    ((GGG)) \\
+  \comptablelinesep
+  \parbox{\comptableleftwidth}{\rhpad Sklázhatóság \rhpad} &
     ((AAA)) &
     ((BBB)) &
     ((CCC)) &
@@ -533,13 +543,6 @@ A következő táblázat összehasonlítja megközelítéseim és a már említe
 \end{tabular}
 \end{center}
 \end{table}
-
-
-
-
-
-
-\todo[inline]{még az elején is valami ábra vagy tábla}
 
 
 
@@ -720,7 +723,7 @@ A konzisztencia ez esetben két dolgot jelent:
   \item Felépíthető egy olyan tényleges immutábilis relációs adatbázis ($M$),
         hogy minden lehetséges relációs lekérdezés esetében, amely a közös schemára ($S$) értelmes,
         a virtuális és a tényleges adatbázis esetében visszaadott eredménytábla megegyezik.
-  \item Az $S$ schema teljesíti a virtuális adatbázis felhasználói konfigurációját ($C$),
+  \item Az $S$ séma teljesíti a virtuális adatbázis felhasználói konfigurációját ($C$),
         valamint az $M$-ben szereplő adatok tulajdonságai illeszkednek a $C$-ben leírt megkötésekre.
 \end{enumerate}
 
@@ -1049,8 +1052,8 @@ egyúttal könnyen szimulálható típusát:
     majd ennek elemeit feltöltjük szöveggel,
     végül a struktúrát a kívánt jelölőnyelven szolgáltatjuk (HTML, MarkDown, plain text stb.)
   \item \textbf{Strukturált adat:}
-    generált vagy konfigurációban megadott adat-schema alapján rekurzívan generáljuk le az adatstruktúrát,
-    ekkor a schema-nyelv (pl. JSON Schema) és a kimenet formátuma (JSON, YAML, TOML stb.)
+    generált vagy konfigurációban megadott adatséma alapján rekurzívan generáljuk le az adatstruktúrát,
+    ekkor a sémanyelv (pl. JSON Schema) és a kimenet formátuma (JSON, YAML, TOML stb.)
     függetlenül konfigurálható
   \item \textbf{Egyszerűbb képek:}
     véletlen színű háttérre véletlen paraméterekkel
@@ -1215,7 +1218,7 @@ A problémák valódi adatbázis használatával
     - ez rengeteg helyet is foglal, pedig általában kevés adatot használunk
     - 
 - egyéb (színnel is lehet jelezni)
-    - tudni kell, mi a schema
+    - tudni kell, mi a séma
     - tudni kell mifélék az adatok
 --> az egyéb kategóriába tartozók:
 - dokumentáció jellegűek (nem kell minden indításkor végrehajtani őket)
@@ -1242,7 +1245,7 @@ előzmény, motiváció, nagyon régóta érik
 inspirációk
   - faker
   - seed alapú nyílt világ
-  - relációs schema
+  - relációs séma
 a gyakorlati probléma
   - prototype, mock
   - teszt
@@ -1258,7 +1261,7 @@ az elméleti problémák
          - egyszerűek (counter, egysz. regex)
          - kereshető regex
          - speciális constrained
-         - struct schema
+         - struct séma
          - binary gen (pl. kép)
   - később: profilozás
 interfészek, erőteljes bővíthetőség
@@ -1274,9 +1277,9 @@ egyéb (a másik i rány):
    - generálás meglévő adatbázisból
       - és vica versa
       - column szemantikájának detektálása
-   - AI által generált schema, szöveg vagy constraintek alapján
+   - AI által generált séma, szöveg vagy constraintek alapján
      "please provide a medium sized database for a book library"
-        (az egész read-only adatbázis maga a schema, azáltal meghatározott)
+        (az egész read-only adatbázis maga a séma, azáltal meghatározott)
 
 TDK-hoz:
 ---------------
@@ -1300,9 +1303,9 @@ E: holodb
 projekt előfeltétele
 - A: feltöltött adatbázis
 - B: feltöltött adatbázis
-- C: kész schema
-- D: kész schema
-- E: schema-vázlat
+- C: kész séma
+- D: kész séma
+- E: séma-vázlat
 mock előfeltétele
 - A: ---
 - B: anonimizáló szkript
