@@ -76,14 +76,13 @@ melynek szerkezete és adattartalma deklaratív
 konfigurációs fájlon keresztül rugalmasan paraméterezhető,
 és a lekérdezéseket on-the-fly hajtja végre konzisztensen
 (legyen az SQL, NoSQL, GraphQL vagy egyéb),
-és performanciája legalábbis összemérhető a valódi adatbázisokéval.
+és runtime performanciája nagyságrendileg megközelíti a tényleges adatbázisokét.
 Ez a performancia akkor érhető el, ha a virtuális adatokhoz virtuális indexek is tartoznak,
 aminek implementációbeli magját többek között a rendezett értékkészletek,
 a diszkrét monoton függvények
 illetve a kriptográfiában is használatos megfordítható permutációk adják.
 Az új megoldás reményeim szerint további előnyök mellett ötvözi a korábbi megoldások erősségeit,
 míg kikerüli azok fő hátrányait.
-
 \end{abstract}
 
 \chapter{Áttekintés}
@@ -668,9 +667,7 @@ elérhető a tényleges adatbázisokéval összemérhető performancia.
 A storage API-ban úgy definiáltuk a megfelelő interfészt,
 hogy a keresésen kívül még néhány további funkciót is támogatnia kelljen,
 például a rendezést és a $NULL$ értékek kezelését.
-A következőkben leírt értékkiosztási módszerek többéségénél természetes módon következik,
-hogy ezeket a további elvárásokat is teljesítik.
-Az e szempontból problémás esetekre külön ki fogok térni.
+Külön kitérek majd az ezzel kapcsolatos problémákra, ahol szükséges.
 
 \todo[inline]{További megjegyzések a csak-olvasható alapréteghez}
 
@@ -1022,31 +1019,6 @@ A bíráló összefoglaló véleménye a dolgozatról és színvonala�
 
 
 
-\chapter{Két kiegészítő szcenárió}
-
-[eddig teljesen általános dolgokat tárgyaltunk, ami egy alapszoftver része]
-[most két speciálisabb kiegészítést mutatok be, bemutatva, milyen könnyen adaptálható bla-bla-bla]
-
-\longcomment{Két kiegészítő szcenárió: jegyzet}{
-néhány további esettanulmány:
-- földrajzi magasságpontok generálása
-- valós címadatbázis használata
-    az ilyen bonyolítások használata
-      is egy skálázási lehetőség
-    valahol felsorolni
-      az alap skálázási lehetőségeket...
-}
-
-\section{Valós címadatok használata}
-
-\todo[inline]{section: Valós címadatok használata}
-
-\section{Valószerű geográfiai értékek generálása}
-
-[bár eddig a standalone-snaphot jelleget hangsúlyoztuk]
-
-\todo[inline]{section: Valószerű geográfiai értékek generálása}
-
 
 
 \chapter{Eredmények a prototípussal}
@@ -1097,6 +1069,39 @@ néhány további esettanulmány:
 \todo[inline]{Teszteredmények}
 
 \section{XXX}
+
+\chapter{Néhány bővítési példaszcenárió}
+
+[eddig teljesen általános dolgokat tárgyaltunk, ami egy alapszoftver része]
+[most két speciálisabb kiegészítést mutatok be, bemutatva, milyen könnyen adaptálható bla-bla-bla]
+
+\longcomment{bővítési példaszcenáriókhoz...}{
+néhány további esettanulmány:
+- földrajzi magasságpontok generálása
+- valós címadatbázis használata
+    az ilyen bonyolítások használata
+      is egy skálázási lehetőség
+    valahol felsorolni
+      az alap skálázási lehetőségeket...
+}
+
+\section{Valós címadatok használata}
+
+\todo[inline]{section: Valós címadatok használata}
+
+\section{Valószerű geográfiai értékek generálása}
+
+[bár eddig a standalone-snaphot jelleget hangsúlyoztuk]
+
+\todo[inline]{section: Valószerű geográfiai értékek generálása}
+
+\section{On-demand schema mode? [?]}
+
+XXX...
+
+\chapter{Konklúzió}
+
+xxx
 
 
 
