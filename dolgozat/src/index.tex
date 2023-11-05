@@ -5,8 +5,7 @@
     %final, % hide todos
 ]{elteiktdk}[2023/04/10]
 
-\usepackage{xcolor}
-
+\usepackage[dvipsnames]{xcolor}
 \usepackage{graphicx}
 \usepackage{colortbl}
 \usepackage{svg}
@@ -14,6 +13,7 @@
 \usepackage{float}
 \usepackage{pgfplots}
 \usepackage{arydshln}
+\usepackage{fontawesome}
 
 \newcommand{\rhpad}{\vspace{0.6\baselineskip}}
 
@@ -375,14 +375,13 @@ lényegileg elég egy ilyen konfigurációs fájl.
 
 \section{Az új megközelítés előnyei}
 
-Ha a virtuális adatbázis legegyszerűbb használati módját tekintjük,
-a felhasználói élményben három lényeges fázist különíthetünk el.
+Egyszerű esetben a felhasználói élményben három lényeges fázist különíthetünk el.
 A figyelem először a konfigurációs fájlra irányul:
 egyetlen átlátható, deklaratív, verziókezelhető adatfájlban minden megadható, amire szükség van.
-Majd az adatbázis létrejötte és a szerver elindulásakor feltűnik,
+Majd az adatbázis létrejötte és a szerver elindulásakor látható,
 hogy teljesen hiányzik a szokásos másolási, generálási, anonimizálási, inicializálási vagy egyéb folyamat,
 a szerver töredékmásodperc alatt válaszképesen elindul.
-Végül futási időben az látszik, hogy a szerver rendkívül kis memóriaigénnyel fut
+Végül a szerver rendkívül kis memóriaigénnyel fut
 (ez csak a módosításokkal arányban változik valamelyest),
 ugyanakkor a lekérdezések futási ideje sem marad el nagyságrendekkel a tényleges adatbázisétól.
 
@@ -412,8 +411,8 @@ Ennek fő okait az alábbiakban látom:
           nem olyan egyszerű átlátni a koncepciót, és megérteni hogy ``hol is vannak az adatok''
     \item \textbf{megfelelő SQL plannerek eddigi hiánya}: az Apache Calcite például
           csak az utóbbi néhány évben vált népszerűvé, és inkább elsősorban adatintegrátorként
-    \item \textbf{bejáratott alternatívák}: az adatnélküli mockolás lehetősége,
-          a NoSQL adatbázisok elterjedése, a felhőmegoldások fejlődése stb.
+    \item \textbf{bejáratott alternatívák}: az on-the-fly mockolás lehetősége,
+          a NoSQL adatbázisok és felhőmegoldások fejlődése stb.
           szenderképző kerülőmegoldásokként elfedték a problémát
     \item \textbf{érdekhiány}: a releváns területen működő nagyobb vendorok elsősorban
           erőforrásokat adnak bérbe, és az általuk fejlesztett architektúrák (történetileg érthetően)
@@ -421,10 +420,11 @@ Ennek fő okait az alábbiakban látom:
           nincs tehát nyomás jelentősen más típusú termékkel való kísérletezésre
 \end{itemize}
 
-A következő táblázat összehasonlítja megközelítéseim és a már említett megoldások fő jellemzőit:
+A következő táblázat összehasonlítja megközelítésim és a már említett megoldások fő jellemzőit:
 
 \newcommand{\comptableleftwidth}{3.2cm}
 \newcommand{\comptablelinesep}{\hdashline[0.7pt/3pt]}
+\newcommand{\comptableicon}[2]{\raisebox{-0.5\height}{\fontsize{15}{17}\selectfont \textcolor{#1}{#2}}}
 \begin{table}[H]
 \settowidth\rotheadsize{mmmmmmmmmmmmmm}
 \begin{center}
@@ -441,22 +441,22 @@ A következő táblázat összehasonlítja megközelítéseim és a már említe
   \hline
   \arrayrulecolor{black!40}
   \parbox{\comptableleftwidth}{\rhpad Forrásadatbázis \\ szükséges \rhpad} &
-    nem &
-    nem &
-    igen &
-    igen &
-    nem &
-    nem &
-    nem \\
+    \comptableicon{Green}{\faClose} &
+    \comptableicon{Green}{\faClose} &
+    \comptableicon{Red}{\faExclamationTriangle} &
+    \comptableicon{Red}{\faExclamationTriangle} &
+    \comptableicon{Green}{\faClose} &
+    \comptableicon{Green}{\faClose} &
+    \comptableicon{Green}{\faClose} \\
   \comptablelinesep
   \parbox{\comptableleftwidth}{\rhpad Adatbázisból \\ előállítható \rhpad} &
-    ((AAA)) &
-    ((BBB)) &
-    ((CCC)) &
-    ((DDD)) &
-    ((EEE)) &
-    ((FFF)) &
-    ((GGG)) \\
+    \comptableicon{Blue}{\faCheck} &
+    \comptableicon{Blue}{\faCheck} &
+    \comptableicon{Green}{\faCheck} &
+    \comptableicon{Blue}{\faCheck} &
+    \comptableicon{Red}{\faClose} &
+    \comptableicon{Blue}{\faCheck} &
+    \comptableicon{Blue}{\faCheck} \\
   \comptablelinesep
   \parbox{\comptableleftwidth}{\rhpad Előállítás költsége \rhpad} &
     ((AAA)) &
@@ -477,13 +477,13 @@ A következő táblázat összehasonlítja megközelítéseim és a már említe
     ((GGG)) \\
   \comptablelinesep
   \parbox{\comptableleftwidth}{\rhpad Runtime \\ tárhelyigény \rhpad} &
-    ((AAA)) &
-    ((BBB)) &
-    ((CCC)) &
-    ((DDD)) &
-    ((EEE)) &
-    ((FFF)) &
-    ((GGG)) \\
+    \comptableicon{Red}{\faDatabase} &
+    \comptableicon{Red}{\faDatabase} &
+    \comptableicon{Red}{\faDatabase} &
+    \comptableicon{Red}{\faDatabase} &
+    \comptableicon{Red}{\faDatabase} &
+    \comptableicon{Green}{\faEnvira} &
+    \comptableicon{Green}{\faEnvira} \\
   \comptablelinesep
   \parbox{\comptableleftwidth}{\rhpad Runtime \\ performancia \rhpad} &
     ((AAA)) &
@@ -512,14 +512,14 @@ A következő táblázat összehasonlítja megközelítéseim és a már említe
     ((FFF)) &
     ((GGG)) \\
   \comptablelinesep
-  \parbox{\comptableleftwidth}{\rhpad Írhatóság \rhpad} &
-    ((AAA)) &
-    ((BBB)) &
-    ((CCC)) &
-    ((DDD)) &
-    ((EEE)) &
-    ((FFF)) &
-    ((GGG)) \\
+  \parbox{\comptableleftwidth}{\rhpad Írható \rhpad} &
+    \comptableicon{Green}{\faCheck} &
+    \comptableicon{Green}{\faCheck} &
+    \comptableicon{Green}{\faCheck} &
+    \comptableicon{Green}{\faCheck} &
+    \comptableicon{Red}{\faClose} &
+    \comptableicon{Green}{\faCheck} &
+    \comptableicon{Green}{\faCheck} \\
   \comptablelinesep
   \parbox{\comptableleftwidth}{\rhpad Konfiguráció \rhpad} &
     ((AAA)) &
@@ -530,14 +530,14 @@ A következő táblázat összehasonlítja megközelítéseim és a már említe
     ((FFF)) &
     ((GGG)) \\
   \comptablelinesep
-  \parbox{\comptableleftwidth}{\rhpad Indítható \\ ORM-entitásokból \rhpad} &
-    ((AAA)) &
-    ((BBB)) &
-    ((CCC)) &
-    ((DDD)) &
-    ((EEE)) &
-    ((FFF)) &
-    \textcolor{green}{igen} \\
+  \parbox{\comptableleftwidth}{\rhpad Indítható \\ ORM alapján \rhpad} &
+    \comptableicon{Apricot}{\faClose} &
+    \comptableicon{Apricot}{\faClose} &
+    \comptableicon{Apricot}{\faClose} &
+    \comptableicon{Apricot}{\faClose} &
+    \comptableicon{Apricot}{\faClose} &
+    \comptableicon{Apricot}{\faClose} &
+    \comptableicon{Green}{\faCheck} \\
   \comptablelinesep
   \parbox{\comptableleftwidth}{\rhpad Sklázhatóság \rhpad} &
     ((AAA)) &

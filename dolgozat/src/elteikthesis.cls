@@ -322,7 +322,7 @@
 % ------------------------------
 % Colored texts
 \RequirePackage{color}
-\RequirePackage{xcolor}
+\RequirePackage[dvipsnames]{xcolor}
 % Predefined colors
 \definecolor{codebackg}{rgb}{1,1,1}
 \definecolor{codeline}{rgb}{0.9,0.85,0.8}
