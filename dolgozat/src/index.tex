@@ -420,17 +420,17 @@ Ennek fő okait az alábbiakban látom:
           nincs tehát nyomás jelentősen más típusú termékkel való kísérletezésre
 \end{itemize}
 
-A következő táblázat összehasonlítja megközelítésim és a már említett megoldások fő jellemzőit:
+A következő táblázat összehasonlítja az új megközelítés és a már említett megoldások fő jellemzőit:
 
 \newcommand{\comptableleftwidth}{3.2cm}
 \newcommand{\comptablelinesep}{\hdashline[0.7pt/3pt]}
 \newcommand{\comptableicon}[2]{\raisebox{-0.5\height}{\fontsize{15}{17}\selectfont \textcolor{#1}{#2}}}
 \begin{table}[H]
-\settowidth\rotheadsize{mmmmmmmmmmmmmm}
+\settowidth\rotheadsize{mmmmmmmmmmmm}
 \begin{center}
 \begin{tabular}{ |p{3.2cm}|c c c c c:c c| }
   \hline
-  \begin{tabular}{ l l } ~ \\ ~ \\ XXXX / \\ YYYY\end{tabular} &
+  \parbox{2.9cm}{\rhpad ~ \\ ~ \\ ~ \\ \raggedleft Megoldás \\ \centering \textbackslash \\ \raggedright Tulajdonság \rhpad} &
     \rothead{Adatgenerálás \\ \textit{külső} adatbázissal} &
     \rothead{Adatgenerálás \\ \textit{beágyazott} adatbázissal} &
     \rothead{Produkciós adatbázis \\ másolatának használata} &
@@ -494,14 +494,14 @@ A következő táblázat összehasonlítja megközelítésim és a már említet
     \comptableicon{Green}{\faBolt} &
     \comptableicon{Green}{\faBolt} \\
   \comptablelinesep
-  \parbox{\comptableleftwidth}{\rhpad Prod. adatbázis \\ leképezése \rhpad} &
+  \parbox{\comptableleftwidth}{\rhpad Prod. adatbázis \\ pontos utánzása \rhpad} &
     \comptableicon{Green}{\faCheck} &
     \comptableicon{Red}{\faClose} &
     \comptableicon{Green}{\faCheck} &
     \comptableicon{Green}{\faCheck} &
     \comptableicon{Red}{\faClose} &
-    \~ &
-    ((GGG)) \\
+    \comptableicon{Red}{\faClose} &
+    \comptableicon{Red}{\faClose} \\
   \comptablelinesep
   \parbox{\comptableleftwidth}{\rhpad Kérések között \\ konzisztens \rhpad} &
     \comptableicon{Green}{\faCheck} &
@@ -530,32 +530,32 @@ A következő táblázat összehasonlítja megközelítésim és a már említet
     \comptableicon{Green}{\faCheck} &
     \comptableicon{Green}{\faCheck} \\
   \comptablelinesep
-  \parbox{\comptableleftwidth}{\rhpad Konfiguráció \rhpad} &
-    ((AAA)) &
-    ((BBB)) &
-    ((CCC)) &
-    ((DDD)) &
-    ((EEE)) &
-    ((FFF)) &
-    ((GGG)) \\
-  \comptablelinesep
-  \parbox{\comptableleftwidth}{\rhpad Indítható \\ ORM alapján \rhpad} &
-    \comptableicon{Apricot}{\faClose} &
-    \comptableicon{Apricot}{\faClose} &
-    \comptableicon{Apricot}{\faClose} &
-    \comptableicon{Apricot}{\faClose} &
-    \comptableicon{Apricot}{\faClose} &
-    \comptableicon{Apricot}{\faClose} &
+  \parbox{\comptableleftwidth}{\rhpad Deklaratív, \\ determinisztikus \rhpad} &
+    \comptableicon{Red}{\faClose} &
+    \comptableicon{Red}{\faClose} &
+    \comptableicon{Red}{\faClose} &
+    \comptableicon{Red}{\faClose} &
+    \comptableicon{Red}{\faClose} &
+    \comptableicon{Green}{\faCheck} &
     \comptableicon{Green}{\faCheck} \\
   \comptablelinesep
-  \parbox{\comptableleftwidth}{\rhpad Sklázhatóság \rhpad} &
-    ((AAA)) &
-    ((BBB)) &
-    ((CCC)) &
-    ((DDD)) &
-    ((EEE)) &
-    ((FFF)) &
-    ((GGG)) \\
+  \parbox{\comptableleftwidth}{\rhpad Indítható pusztán \\ ORM alapján \rhpad} &
+    \comptableicon{Red}{\faClose} &
+    \comptableicon{Red}{\faClose} &
+    \comptableicon{Red}{\faClose} &
+    \comptableicon{Red}{\faClose} &
+    \comptableicon{SkyBlue}{\faCheck} &
+    \comptableicon{Red}{\faClose} &
+    \comptableicon{Green}{\faCheck} \\
+  \comptablelinesep
+  \parbox{\comptableleftwidth}{\rhpad Kétirányú \\ skálázhatóság \rhpad} &
+    \comptableicon{Red}{\faClose} &
+    \comptableicon{Red}{\faClose} &
+    \comptableicon{Red}{\faClose} &
+    \comptableicon{Red}{\faClose} &
+    \comptableicon{Red}{\faClose} &
+    \comptableicon{Green}{\faCheck} &
+    \comptableicon{Green}{\faCheck} \\
   \arrayrulecolor{black}
   \hline
 \end{tabular}
@@ -635,9 +635,9 @@ Egyéb:
 
 \section{A megvalósítás alapjai}
 
-Ha az adatelérést objektumok
+\todo[inline]{text: Ha az adatelérést objektumok...}
 
-\subsection{A \texttt{LargeInteger} típus}
+\subsubsection{A \texttt{LargeInteger} típus}
 
 Az adatok on-the-fly számításakor a szűk keresztmetszet
 a tárolás és elérés problémáiról a kalkulációkra helyeződik át.
@@ -713,9 +713,48 @@ a \texttt{LargeInteger} valamivel gyorsabb.
 
 \todo[inline]{további LargeInteger-alternatívák teljesítményének vizsgálata}
 
+\subsubsection{A \texttt{Permutation} és implementációi}
+
+\begin{figure}[H]
+  \centering
+  \hspace*{\fill}
+  \begin{minipage}[b]{0.4\textwidth}
+    \includegraphics[width=\textwidth]{image/permutation-fpe1.png}
+    \caption{FPE1 permutation}
+  \end{minipage}
+  \hspace*{\fill}
+  \begin{minipage}[b]{0.4\textwidth}
+    \includegraphics[width=\textwidth]{image/permutation-mp1.png}
+    \caption{Modulo permutation}
+  \end{minipage}
+  \hspace*{\fill}
+  
+  \vspace*{0.7cm}
+  
+  \hspace*{\fill}
+  \begin{minipage}[b]{0.4\textwidth}
+    \includegraphics[width=\textwidth]{image/permutation-feif1.png}
+    \caption{Feistel network 1 + fast hash}
+  \end{minipage}
+  \hspace*{\fill}
+  \begin{minipage}[b]{0.4\textwidth}
+    \includegraphics[width=\textwidth]{image/permutation-feis2.png}
+    \caption{Feistel network 2 + SHA256}
+  \end{minipage}
+  \hspace*{\fill}
+\end{figure}
+
+\subsubsection{A \texttt{Monotonic} és implementációi}
+
+\todo[inline]{Monotonic}
+
+\subsubsection{A \texttt{TreeRandom} és kapcsolódó API-k}
+
+\todo[inline]{A TreeRandom és kapcsolódó API-k}
+
 \subsection{A storage API}
 
-\todo[inline]{section: A storage API}
+\todo[inline]{A storage API}
 
 \longcomment{Storage API ötletelés}{
 schemák, táblák és oszlopok
@@ -725,10 +764,6 @@ indexek
    full-text
    spatial???
 }
-
-\subsection{A TreeRandom és kapcsolódó API-k}
-
-\todo[inline]{section: A TreeRandom és kapcsolódó API-k}
 
 \section{A csak-olvasható alapréteg}
 
@@ -840,17 +875,34 @@ amennyiben megengedhető, hogy a szimulált időadatok között egyenletes idők
 
 \subsubsection{Unique értékkiosztás}
 
-\todo[inline, color=red]{subsubsection: Unique értékkiosztás}
+Elsődleges vagy más egyedi kulcsok szimulálásakor fontos,
+hogy ugyanaz az érték ne forduljon elő kétszer az értéklistában.
+Ennek természetesen előfeltétele,
+hogy a lehetséges értékkészlet nagyobb legyen, mint az oszlop hossza
+($NULL$ értékek nélkül).
 
-[feltétel: az értékkészlet számossága legalább a hossz]
-[megoldás: permutáció, ami kívülesik, az kimaradt]
+Egy egyszerűen megvalósítható módszer,
+ha egyszerűen valamilyen \texttt{Permutation} példányt alkalmazunk az értékkészlet fölött,
+és a permutált lista oszlophosszúságú prefixét vesszük értéklistaként.
+Ekkor a random elérés triviális, csak a permutációt kell visszafejteni.
+Az index a rendezett értékkészletre alapozható,
+a találatokat a permutációval megforgatva kell listázni,
+kihagyva a prefixen kívül eső értékeket.
+
+Ha azonban az értékkészlet mérete lényegesen nagyobb, mint az oszlophossz,
+jellemzően nagyon sok értéket kell átugranunk, amely a prefixen kívül esik.
+Sokkal hatékonyabb, ha a következő részben leírt általános kétfázisú értékkiosztást használjuk,
+ami nem csak unique oszlopokhoz alkalmazható.
+A unique oszlop esetén csak annyi a megkötés, hogy a használt \texttt{Monotonic}
+a kimenetet szigorúan monoton módon állítsa elő.
 
 \subsubsection{Általános kétfázisú értékkiosztás}
 
 \todo[inline, color=red]{subsubsection: Kétfázisú értékkiosztás (bevezetés, leírás)}
 
-Talán a leggyakoribb eset, hogy előre ismert véges értékkészlet elemeeit szeretnénk viszontlátni az oszlopban,
-mégpedig összevissza
+Talán a leggyakoribb eset,
+hogy előre ismert véges értékkészlet elememeit szeretnénk viszontlátni az oszlopban,
+mégpedig összevissza.
 
 \begin{figure}[H]
 \centering
@@ -955,6 +1007,8 @@ amikor az események általános sűrűsége adott,
 de véletlenszerű, zajos kiemenetet szeretnénk látni.
 
 \subsubsection{Összetett értékek kezelése}
+
+\todo[inline]{Összetett értékek kezelése}
 
 \subsubsection{Értékkiosztás reguláris kifejezés alapján}
 
