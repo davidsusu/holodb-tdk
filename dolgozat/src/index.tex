@@ -241,11 +241,12 @@ Ezek a rendszerek erősen optimalizálják és párhuzamosítják a tesztadatok 
 Csodát viszont nem lehet várni: a számításigény aszimptotikusan,
 a tárhelyigény pedig teljes egészében ugyanaz marad.
 
-\section{A betöltésre váró hézag}
+\section{Egy újfajta megoldás körvonalai}
 
 Az előzőekben tárgyalt megközelítések mindegyikének megvoltak a maga sajátos előnyei ás hátrányai.
 Fölmerül a kérdés: létezhet-e olyan megoldás, amely egyesíti az előnyöket és kikerüli a fő hátrányokat;
 vagy pedig ez eleve lehetetlen?
+Nincs-e itt egy beöltésre váró hézag?
 
 Először szedjük össze tételesen, milyen követelményeket várnánk el
 egy (egyelőre hipotetikus) ideális készterméktől:
@@ -272,106 +273,6 @@ az egyes felhasználásoknál már nincs ezzel kapcsolatos teendő.
 Belátható, hogy a fenti elvárások egyszerre teljesíthetők.
 Az alábbi szekcióban röviden vázolom, milyen ötletek és tervezési elvek alakították ki a megoldásom.
 Az implementáció részleteit a következő fejezetben fogom bemutatni.
-
-\section{Egy újfajta megoldás körvonalai}
-
-A következőkben leírt szoftvernek már létezik egy prototípusa HoloDB[hiv!] néven.
-Mivel ez Java nyelven íródott, a továbbiakban implicite felteszem, hogy Java környezetben vagyunk.
-
-Megoldásom mindenekelőtt egy relációs adatbázist leíró API-t fog definiálni illetve megvalósítani.
-Aligha érdemes más megközelítést választani,
-hiszen a relációs adatmodell nem csak tradicionálisan megkerülhetetlen
-és máig a legnépszerűbb adattárolási módszer[hiv!],
-de egyúttal közös nevezőként szolgál bármely más modellhez.
-Egy relációs struktúrával gyakorlatilag bármilyen interpretált adathalmazt le tudunk írni,
-mivel a relációs séma általános normalizációs segédeszköz.
-
-Hamar arra a megállapításra jutottam, hogy a releváns értelemben legalapvetőbb objektum
-az \textit{oszlop}.
-Az oszlop alatt azonos típusú adatokat találunk,
-és az első feladat mindig ezen adatok értékkészletének megadása.
-Általában egy index is egy (esetleg néhány) konkrét oszlophoz köthető.
-
-Természetesen hamar ki kell lépnünk a teljes oszlop-orientáltságból.
-Lehetnek összefüggések például egy táblán belül oszlopok között,
-de ezt még mindig egyszerűbb az oszlopos megközelítés megfelelő kiterjesztésével elérni,
-mintsem áttérni valamiféle rekordonkénti generálásra.
-Az oszlopok alatti mezők jó jelöltek arra, hogy ``világszeletek'' legyenek,
-míg egész rekordok nem.
-
-Illetve lehetnek megkötések táblák között is.
-Ezek kezelése is könnyen elvégezhető az oszlopos alapvetésre építve.
-Az egészszámos idegen kulcsoknál például csak annyit kell biztosítani,
-hogy a hivatkozó oszlop értékkészlete a hivatkozottnak a tartalma legyen.
-
-A legtöbb oszlop értékkészlete jól behatárolható.
-A tényleges értékek egy efölötti multihalmazt alkotnak,
-néha ehhez valamilyen statisztikai megkötés is tartozik ($NULL$-ok száma, értékgyakoriság stb.).
-Továbbá a multihalmaz valamilyen konkrét sorrendben helyezkedik el az oszlop alatt.
-Itt jegyzem meg, hogy a tábla rekordjait sorrendezettnek fogom tekinteni:
-azonos táblabeli valamely két oszlop értéklistájából kiválasztott egy-egy mező
-azonos rekordhoz tartozik pontosan akkor, ha a sorrendbeli pozíciójuk (sorindexük) megegyezik.
-
-Vegyük észre, hogy két független problémával szembesülünk:
-
-\begin{enumerate}
-    \item az oszlopértékek multihalmazának előállítása
-    \item az értékek összekeverése
-\end{enumerate}
-
-Ezeket úgy kell megvalósítani, hogy a végső értéklista adott pozíciójú eleme is gyorsan lekérhető legyen,
-valamint egy adott érték vagy értéksáv előfordulási pozíciói is
-(utóbbi esetben lehetőleg rendezetten).
-Ha feltesszük, hogy a multihalmaz úgy van ábrázolva,
-hogy a hatékony értéklekérés és keresés-rendezés elvárása teljesül,
-akkor már csak egy (a tábla hosszára értelmezett) invertálható permutációra van szükség,
-hogy az adatokat visszakereshetően szét is szórjuk.
-(Lentebb látni fogjuk, milyen módszerrel tudjuk a multihalmaz egy (eleve rendezett) reprezentációját képezni,
-amivel az elvárások teljesíthetők.)
-
-Gyorsan számítható invertálható permutációk például modulo szorzásból kiindulva valósíthatók meg.
-Költségesebb, de erősen véletlenszerű összevisszaságot bitzosító invertálható permutációkat
-különféle kriptográfiai módszerekkel állítok elő.
-Többéle algoritmuscsalád kipróbálása után (pl. Format Preserving Encryption) végül
-a hosszigazított Feistel-hálózat alkalmazása bizonyult a legkezelhetőbbnek.
-
-A kétfázisú értékiosztásnak ezzel az ötletével
-egy egyszerűbb adatbázis szimulációjának kívánalmait már tulajdonképpen le is fedtük,
-de néhány további hasznos értékkiosztási módszert is be fogok majd mutatni.
-
-Az értékkészlet esetenként óriási lehet,
-gondoljunk például a reguláris kifejezés alapján kitöltött oszlop lehetséges értékeinek számára.
-Az on-the-fly értékszámítás során gyakran fordulnak elő átmeneti óriás számok,
-ám nehezen jósolható, hogy pontosan mikor.
-Emellett az adatbázis méretére vonatkozóan sem akartam megkötéseket tenni.
-Nem lett volna célszerű explicit ellenőrzések tömegét beépíteni
-a problémás számítások, potenciális túlcsordulások földerítésére.
-Az egész számokat egységesen szerettem volna kezelni, függetlenül azok méretétől,
-így a \texttt{BigInteger} típus használata eleve kiesett,
-mivel az kisebb számokra a \texttt{long} típushoz képest rendkívül rossz performanciájú.
-
-Az értékkiosztási trükkökkel egy statikus adatbázist írunk le,
-ami értelemszerűen önmagában csak-olvashatóan érhető el.
-Látni fogjuk, hogy lehet egy csak-olvasható tábla fölé olyan dekorátort helyezni,
-mely a változások megfelelő adatstruktúrában történő számontartásával
-az írhatóság illúzióját kelti.
-
-Ha a relációs adatmodell objektumait (oszlopok, táblák, indexek stb.) sikeresen implementáltuk,
-a relációs műveletek (és így az SQL nyelv) megvalósítása már a szokásos módon történhet.
-Ma már elérhető néhány nyílt forrású jól felépített SQL query planner framework,
-ami lehetővé teszi egy teljeskörű SQL-szerver kiépítését.
-Ilyen például az általam használt Apache Calcite
-(Ugyanakkor egy saját SQL-futtatót is implementáltam,
-mely a nyelv limitált verzióját támogatja, de néhány esetben gyorsabban fut).
-
-A virtuális adatbázis felépítése a felhasználó számára legegyszerűbben
-egy konfigurációs fájl segítségével történik,
-melyben megadja az adatbázis-séma egyes elemeit, megkötéseit.
-Az oszlopok tartalmának keverési módja és értékkészlete kényelmesen állítható,
-például előre adott értéklistákkal, reguláris kifejezéssel,
-vagy a felhasználó által implementált Java-osztállyal.
-A virtuális adatbázis dockerben való indításához vagy beágyazott használatához
-lényegileg elég egy ilyen konfigurációs fájl.
 
 \section{Az új megközelítés előnyei}
 
@@ -563,79 +464,159 @@ A következő táblázat összehasonlítja az új megközelítés és a már eml
 \end{table}
 
 
+\chapter{A virtuális adattár konstrukciója}
+
+\section{A nagy illúzió}
+
+Olyan adattár felépítésére vállalkozunk most,
+amely egy tetszőlegesen nagy méretű, konzisztens és kereshető adattárat imitál,
+miközben valójában mindebből semmi sem létezik,
+az egész mintegy illúzió.
+Hogy ezt az illúziót elérjük, egyfelől meg kell találni azt az univerzális modellt,
+mely a lehető legrugalmasabb felhasználásra alkalmassá teszi;
+másrészt a cél eléréséhez, mint majd látjuk, apró eszközök egész tárát kell összeverbuválni
+különféle területekről, a relációktól az automataelméleten át a kriptográfiáig.
+
+Megoldásom alapvetésként egy relációs adatbázist leíró API-t fog definiálni illetve megvalósítani.
+Aligha érdemes más megközelítést választani,
+hiszen a relációs adatmodell nem csak tradicionálisan megkerülhetetlen
+és máig a legnépszerűbb adattárolási módszer[hiv!],
+de egyúttal közös nevezőként szolgál bármely más modellhez.
+Egy relációs struktúrával gyakorlatilag bármilyen interpretált adathalmazt le tudunk írni,
+mivel a relációs séma általános normalizációs segédeszköz.
+
+A legtöbb alkalmazásban van valamilyen fokális entitás, objektumtípus,
+mely alapvető szerepet tölt be az architektúrában
+(egy task manager esetében ilyen lehet a task,
+míg egy könyvtári katalógusban a könyvkötetnek megfelelő típus).
+A tervezés elején hamar arra a megállapításra jutottam,
+hogy esetünkben a legalapvetőbb objektum az \textit{oszlop}.
+Az oszlop alatt azonos típusú adatokat találunk,
+az alapfeladat mindig ezen adatok értékkészletének megadása lehet.
+Általában egy index is egy (esetleg néhány) konkrét oszlophoz köthető.
+
+Természetesen hamar ki kell lépnünk a szigorú oszlop-orientáltságból.
+Lehetnek például összefüggések egy táblán belüli oszlopok között.
+De ezt még mindig egyszerűbb az oszlopos megközelítés megfelelő kiterjesztésével elérni,
+mintsem áttérni valamiféle rekordonkénti generálásra.
+Úgy is mondhatjuk, hogy az oszlopok alatti mezők jó jelöltek arra, hogy ``világszeletek'' legyenek,
+míg egész rekordok nem.
+
+Lehetnek továbbá megkötések táblák között is.
+Ezek kezelése is könnyen elvégezhető az oszlopos alapvetésre építve.
+Az egészszámos idegen kulcsoknál például csak annyit kell biztosítani,
+hogy a hivatkozó oszlop értékkészlete a hivatkozottnak a tartalma legyen.
+
+A legtöbb oszlop értékkészlete jól behatárolható.
+A tényleges értékek egy efölötti multihalmazt alkotnak,
+néha ehhez valamilyen statisztikai megkötés is tartozik ($NULL$-ok száma, értékgyakoriság stb.).
+Továbbá a multihalmaz valamilyen konkrét sorrendben helyezkedik el az oszlop alatt.
+Itt jegyzem meg, hogy a tábla rekordjait sorrendezettnek fogom tekinteni:
+azonos táblabeli valamely két oszlop értéklistájából kiválasztott egy-egy mező
+azonos rekordhoz tartozik pontosan akkor, ha a sorrendbeli pozíciójuk (sorindexük) megegyezik.
+
+Vegyük észre, hogy két független problémával szembesülünk:
+
+\begin{enumerate}
+    \item az oszlopértékek multihalmazának előállítása
+    \item az értékek összekeverése
+\end{enumerate}
+
+Ezeket úgy kell megvalósítani, hogy a végső értéklista adott pozíciójú eleme is gyorsan lekérhető legyen,
+valamint egy adott érték vagy értéksáv előfordulási pozíciói is
+(utóbbi esetben lehetőleg rendezetten).
+Ha feltesszük, hogy a multihalmaz úgy van ábrázolva,
+hogy a hatékony értéklekérés és keresés-rendezés elvárása teljesül,
+akkor már csak egy (a tábla hosszára értelmezett) invertálható permutációra van szükség,
+hogy az adatokat visszakereshetően szét is szórjuk.
+(Lentebb látni fogjuk, milyen módszerrel tudjuk a multihalmaz egy (eleve rendezett) reprezentációját képezni,
+amivel az elvárások teljesíthetők.)
+
+Gyorsan számítható invertálható permutációk tipikus képviselője a modulo szorzásra épül.
+Plusz költség vállalásával pedig sokkal jobb szórást biztosító permutációkat kapunk,
+ha kriptográfiai módszereket vetünk be.
+
+A kétfázisú értékiosztásnak ezzel az ötletével
+egy egyszerűbb adatbázis szimulációjának kívánalmait már tulajdonképpen le is fedtük,
+de néhány további hasznos értékkiosztási módszert is be fogok majd mutatni.
+
+A szoftver létező prototípusa, a \textit{HoloDB}\footnote{
+  Az elnevezés a hologramokra utal:
+  a konfigurációból leképzett, ``kivetített'' virtuális adatbázis hasonlóan illuzórikus,
+  mint a a hologramból előhívott térbeli kép.
+}
+(és a hozzá kapcsolódó segédeszközök, könyvtárak nagy része) Java programnyelven íródott,
+ezért a továbbiakban implicite felteszem, hogy Java környezetben vagyunk.
 
 
+Az értékkészlet esetenként óriási lehet,
+gondoljunk például a reguláris kifejezés alapján kitöltött oszlop lehetséges értékeinek számára.
+Az on-the-fly értékszámítás során gyakran fordulnak elő átmeneti óriás számok,
+ám nehezen jósolható, hogy pontosan mikor.
+Emellett az adatbázis méretére vonatkozóan sem akartam megkötéseket tenni.
+Nem lett volna célszerű explicit ellenőrzések tömegét beépíteni
+a problémás számítások, potenciális túlcsordulások földerítésére.
+Az egész számokat egységesen szerettem volna kezelni, függetlenül azok méretétől,
+így a \texttt{BigInteger} típus használata eleve kiesett,
+mivel az kisebb számokra a \texttt{long} típushoz képest rendkívül rossz performanciájú.
 
+Az értékkiosztási trükkökkel egy statikus adatbázist írunk le,
+ami értelemszerűen önmagában csak-olvashatóan érhető el.
+Látni fogjuk, hogy lehet egy csak-olvasható tábla fölé olyan dekorátort helyezni,
+mely a változások megfelelő adatstruktúrában történő számontartásával
+az írhatóság illúzióját kelti.
 
+Ha a relációs adatmodell objektumait (oszlopok, táblák, indexek stb.) sikeresen implementáltuk,
+a relációs műveletek (és így az SQL nyelv) megvalósítása már a szokásos módon történhet.
+Ma már elérhető néhány nyílt forrású jól felépített SQL query planner framework,
+ami lehetővé teszi egy teljeskörű SQL-szerver kiépítését.
+Ilyen például az általam használt Apache Calcite
+(Ugyanakkor egy saját SQL-futtatót is implementáltam,
+mely a nyelv limitált verzióját támogatja, de néhány esetben gyorsabban fut).
 
-
-
-
-
-
-
-
-
-
-\chapter{A virtuális adattár}
-
-
-
-
-
-
-
-
-
-\section{XXX}
-
-\todo[inline,color=red]{XXX}
-
-\todo[inline,color=red]{generálás adatfából (ua. mint a regex), valós címek stb.}
-
-Előző változat bevezető fejezetei:
-
-\begin{itemize}
-    \item Végtelenített virtuális világok
-    \item A fakerek limitációi
-    \item Néhány visszatérő probléma közös nevezője
-    \item A fakerek limitációi
-    \item Virtuális mockolás: hézag jelei új termék számára?
-    \item \dots
-    \item Felépítés
-    \item Konfiguráció
-\end{itemize}
-
-Egyéb:
-
-\begin{itemize}
-    \item determinisztikus, de a seed-del variálható//összekeverhető
-    \item Relational data as a serverless function
-    \item SQL, NoSQL, GraphQL, REST etc.
-    \item miniconnect, minibase, REPL
-    \item a konfiguráció előfeldolgozható (pl. yaml + go template, mint a helmnél)
-    \item valós adatbázis feltöltése innen
-    \item konfiguráció generálása
-    \begin{itemize}
-        \item valós adatbázis egyszerű feldolgozásával
-        \item valós adatbázis intelligens feldolgozásával (pl. evolúciós algoritmussal)
-        \item valós adathalmazokon tanított AI által
-    \end{itemize}
-\end{itemize}
-
-[az előzőek alapján a kétdés végülis: tudunk-e úgy virtuális adatvilágot szolgáltatni, hogy azokhoz indexek is tartozzanak? (--> storage API)]
-[világos, hogy a run-time performanciából vesztünk (de nem vészesen!), a lényeg, hogy más lényeges hátrány nem nagyon van]
-[teljesítményteszt kell egyszerűbb querykkel, illetve bonyolulttal is calcite-tal]
-[a rendezés vs. join problémát javítani]
-[ahol nem kell kereshetőnek lenni, ott tulajdonképpen a normál seedes szeletenkénti világgenerálás játszik]
-[konfigot kiegészíteni még egyedi működés támogatásával]
-[calcite minimális támogatása]
-
-
+A virtuális adatbázis felépítése a felhasználó számára legegyszerűbben
+egy konfigurációs fájl segítségével történik,
+melyben megadja az adatbázis-séma egyes elemeit, megkötéseit.
+Az oszlopok tartalmának keverési módja és értékkészlete kényelmesen állítható,
+például előre adott értéklistákkal, reguláris kifejezéssel,
+vagy a felhasználó által implementált Java-osztállyal.
+A virtuális adatbázis dockerben való indításához vagy beágyazott használatához
+lényegileg elég egy ilyen konfigurációs fájl.
 
 \section{A megvalósítás alapjai}
 
-\todo[inline]{text: Ha az adatelérést objektumok...}
+\longcomment{A megvalósítás alapjai...}{
+
+  Ha az adatelérést objektumok...
+  interfészek, erőteljes bővíthetőségű
+  
+  
+  generálás adatfából (ua. mint a regex), valós címek stb.
+  
+  Előző változat bevezető fejezetei
+
+  - Végtelenített virtuális világok
+  - A fakerek limitációi
+  - Néhány visszatérő probléma közös nevezője
+  - A fakerek limitációi
+  - Virtuális mockolás: hézag jelei új termék számára?
+  - ...
+  - Felépítés
+  - Konfiguráció
+
+  Egyéb:
+
+  - determinisztikus, de a seed-del variálható//összekeverhető
+  - Relational data as a serverless function
+  - SQL, NoSQL, GraphQL, REST etc.
+  - miniconnect, minibase, REPL
+  - a konfiguráció előfeldolgozható (pl. yaml + go template, mint a helmnél)
+  - valós adatbázis feltöltése innen
+  - konfiguráció generálása
+    - valós adatbázis egyszerű feldolgozásával
+    - valós adatbázis intelligens feldolgozásával (pl. evolúciós algoritmussal)
+    - valós adathalmazokon tanított AI által
+}
 
 \subsubsection{A \texttt{LargeInteger} típus}
 
@@ -714,6 +695,16 @@ a \texttt{LargeInteger} valamivel gyorsabb.
 \todo[inline]{további LargeInteger-alternatívák teljesítményének vizsgálata}
 
 \subsubsection{A \texttt{Permutation} és implementációi}
+
+Gyorsan számítható invertálható permutációk például modulo szorzásból kiindulva valósíthatók meg.
+
+Költségesebb, de erősen véletlenszerű összevisszaságot bitzosító invertálható permutációkat
+különféle kriptográfiai módszerekkel állíthatók elő.
+Többéle algoritmuscsalád kipróbálása után (pl. Format Preserving Encryption) végül
+egy megfelelően kialakított Feistel-hálózat bizonyult a legkezelhetőbbnek.
+
+A következő ábrán vizuálisan összehasonlítottam néhány permutáció-típus értékeloszlását
+(a közeli értékek színe hasonló):
 
 \begin{figure}[H]
   \centering
@@ -1153,6 +1144,35 @@ mivel ilyenkor valószínűleg úgysem a memóriahasználat minimalizálása a c
 
 \todo[inline]{subsubsection: Táblák közötti kapcsolatok (idegen értékkészlet; kiszervezett megkötések)}
 
+\section{Néhány bővítési példaszcenárió}
+
+[eddig teljesen általános dolgokat tárgyaltunk, ami egy alapszoftver része]
+[most két speciálisabb kiegészítést mutatok be, bemutatva, milyen könnyen adaptálható bla-bla-bla]
+
+\longcomment{bővítési példaszcenáriókhoz...}{
+néhány további esettanulmány:
+- földrajzi magasságpontok generálása
+- valós címadatbázis használata
+    az ilyen bonyolítások használata
+      is egy skálázási lehetőség
+    valahol felsorolni
+      az alap skálázási lehetőségeket...
+}
+
+\subsection{Valós címadatok használata}
+
+\todo[inline]{section: Valós címadatok használata}
+
+\subsection{Valószerű geográfiai értékek generálása}
+
+[bár eddig a standalone-snaphot jelleget hangsúlyoztuk]
+
+\todo[inline]{section: Valószerű geográfiai értékek generálása}
+
+\subsection{On-demand schema mode? [?]}
+
+XXX...
+
 \section{Az írhatósági réteg}
 
 \todo[inline]{section: Az írhatósági réteg}
@@ -1178,7 +1198,7 @@ A bíráló összefoglaló véleménye a dolgozatról és színvonala�
 
 
 
-\chapter{Eredmények a prototípussal}
+\chapter{Megvalósítás}
 
 \begin{figure}[H]
 \centering
@@ -1188,6 +1208,10 @@ A bíráló összefoglaló véleménye a dolgozatról és színvonala�
 \end{figure}
 
 \todo[inline]{ebben a fejezetben bemutatni a konfigurációs fájlt}
+
+\longcomment{egy gyors példa dockerrel}{
+  bemutatni, hogy mit tud, elindítani egy szervert
+}
 
 \section{XXX}
 
@@ -1223,42 +1247,13 @@ A bíráló összefoglaló véleménye a dolgozatról és színvonala�
 
 \section{Empirikus eredmények}
 
-\todo[inline]{Teszteredmények}
-
-\section{XXX}
-
-\chapter{Néhány bővítési példaszcenárió}
-
-[eddig teljesen általános dolgokat tárgyaltunk, ami egy alapszoftver része]
-[most két speciálisabb kiegészítést mutatok be, bemutatva, milyen könnyen adaptálható bla-bla-bla]
-
-\longcomment{bővítési példaszcenáriókhoz...}{
-néhány további esettanulmány:
-- földrajzi magasságpontok generálása
-- valós címadatbázis használata
-    az ilyen bonyolítások használata
-      is egy skálázási lehetőség
-    valahol felsorolni
-      az alap skálázási lehetőségeket...
+\longcomment{Teszteredmények}{
+  teljesítményteszt kell egyszerűbb querykkel, illetve bonyolulttal is calcite-tal
 }
 
-\section{Valós címadatok használata}
+\section{Konklúzió}
 
-\todo[inline]{section: Valós címadatok használata}
-
-\section{Valószerű geográfiai értékek generálása}
-
-[bár eddig a standalone-snaphot jelleget hangsúlyoztuk]
-
-\todo[inline]{section: Valószerű geográfiai értékek generálása}
-
-\section{On-demand schema mode? [?]}
-
-XXX...
-
-\chapter{Konklúzió}
-
-xxx
+\todo[inline]{Konklúzió}
 
 
 
