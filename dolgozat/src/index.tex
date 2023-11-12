@@ -143,11 +143,7 @@ Fogalmazzuk meg tehát a problémát, mintegy tézisként:
     a produkciós adatokra vonatkozó speciális követelmények nélkül.
 }
 
-A fejezet további részében röviden végigveszem, hogy általában hogyan szokás a hasonló problémákat megkerülni,
-majd rátérek a az általam javasolt megoldás nagy vonalakban történő ismertetésére.
-Ezt követően pedig táblázatba foglalva összevetem mindezek előnyeit és hátrányait.
-Végül az utolsó szakaszban megkísérlem megtalálni az okát,
-miért hiányzik 
+A következő szekcióban röviden végigveszem, hogyan szokás általában a hasonló problémákat kezelni.
 
 \section{Körkép}
 
@@ -469,10 +465,10 @@ A következő táblázat összehasonlítja az új megközelítés és a már eml
 \section{A nagy illúzió}
 
 Olyan adattár felépítésére vállalkozunk most,
-amely egy tetszőlegesen nagy méretű, konzisztens és kereshető adattárat imitál,
+mely egy tetszőlegesen nagy méretű, konzisztens és kereshető adattárat imitál,
 miközben valójában mindebből semmi sem létezik,
 az egész mintegy illúzió.
-Hogy ezt az illúziót elérjük, egyfelől meg kell találni azt az univerzális modellt,
+Hogy az illúziót elérjük, egyfelől meg kell találni azt az univerzális modellt,
 mely a lehető legrugalmasabb felhasználásra alkalmassá teszi;
 másrészt a cél eléréséhez, mint majd látjuk, apró eszközök egész tárát kell összeverbuválni
 különféle területekről, a relációktól az automataelméleten át a kriptográfiáig.
@@ -563,36 +559,37 @@ Az on-the-fly értékszámítás során gyakran fordulnak elő átmeneti óriás
 Emellett az adatbázis méretére vonatkozóan sem akartam megkötéseket tenni.
 Nem lett volna célszerű explicit ellenőrzések tömegét beépíteni
 a problémás számítások, potenciális túlcsordulások földerítésére.
-Az egész számokat egységesen szerettem volna kezelni, függetlenül azok méretétől,
-így a \texttt{BigInteger} típus használata eleve kiesett,
+Az egész számokat egységesen szerettem volna kezelni, függetlenül azok méretétől.
+Így a beépített \texttt{BigInteger} típust egy idő utánelvetettem,
 mivel az kisebb számokra a \texttt{long} típushoz képest rendkívül rossz performanciájú.
 
 Az értékkiosztási trükkökkel egy statikus adatbázist írunk le,
 ami értelemszerűen önmagában csak-olvashatóan érhető el.
-Látni fogjuk, hogy lehet egy csak-olvasható tábla fölé olyan dekorátort helyezni,
+Látni fogjuk, hogyan lehet egy csak-olvasható tábla fölé olyan dekorátort helyezni,
 mely a változások megfelelő adatstruktúrában történő számontartásával
 az írhatóság illúzióját kelti.
 
 Ha a relációs adatmodell objektumait (oszlopok, táblák, indexek stb.) sikeresen implementáltuk,
-a relációs műveletek (és így az SQL nyelv) megvalósítása már a szokásos módon történhet.
+a relációs műveletek (és így az SQL nyelv) megvalósítása már a hagyományos módon történhet.
 Ma már elérhető néhány nyílt forrású jól felépített SQL query planner framework,
 ami lehetővé teszi egy teljeskörű SQL-szerver kiépítését.
-Ilyen például az általam használt Apache Calcite
+Ilyen például az általam használt Apache Calcite.
 (Ugyanakkor egy saját SQL-futtatót is implementáltam,
-mely a nyelv limitált verzióját támogatja, de néhány esetben gyorsabban fut).
+mely a nyelv limitált verzióját támogatja, de néhány esetben gyorsabban fut.)
 
 A virtuális adatbázis felépítése a felhasználó számára legegyszerűbben
 egy konfigurációs fájl segítségével történik,
 melyben megadja az adatbázis-séma egyes elemeit, megkötéseit.
 Az oszlopok tartalmának keverési módja és értékkészlete kényelmesen állítható,
 például előre adott értéklistákkal, reguláris kifejezéssel,
-vagy a felhasználó által implementált Java-osztállyal.
+vagy akár a felhasználó által implementált Java-osztállyal.
 A virtuális adatbázis dockerben való indításához vagy beágyazott használatához
 lényegileg elég egy ilyen konfigurációs fájl.
+Ennek konkrétumaira majd a 3. fejezetben térek ki.
 
-\section{A megvalósítás alapjai}
+\section{Az architektúra alapjai}
 
-\longcomment{A megvalósítás alapjai...}{
+\longcomment{Az architektúra alapjai...}{
 
   Ha az adatelérést objektumok...
   interfészek, erőteljes bővíthetőségű
@@ -699,6 +696,45 @@ a \texttt{LargeInteger} valamivel gyorsabb.
     }
 \end{figure}
 
+\subsection{A \texttt{TreeRandom} és kapcsolódó API-k}
+
+Az adatbázist egy hierarchikus képződményként is fölfoghatjuk,
+ahol a sémákon belül táblák, azon belül oszlopok,
+azon belül pedig sorindexekkel megjelölt mezők foglalnak helyet
+(vagy egy holisztikus értékkészlet),
+végül a mezők értéke is lehet strukturált adat, melyben a rétegződés folytatódik.
+Azt szeretnénk, hogy az értékek bárhol véletlenszerűen álljanak elő,
+ugyanakkor determinisztikusan, egy globális kiinduló seed alapján.
+Ezért szükségünk van egy olyan véletlengenerátor típusra,
+mely teljesíti a következő követelményeket:
+
+\begin{itemize}
+    \item tetszőleges számú bitet képes generálni, mindig ugyanazt a (végtelen) bitsorozatot adva vissza
+   \item véletlenszerű kimenetet ad
+   \item eltérő példányoknál jellemzően teljesen független, különböző kimenetet ad, azonosaknál ugyanazt
+   \item egy kulcs bájtsorozat megadásával visszaad egy újabb példányt, mely az eggyel alacsonyabb szintnek felel meg
+   \item ugyanazzal a kulcs bájtsorozattal egyenlő példányt ad vissza
+\end{itemize}
+
+\todo[inline]{soft követelmények külön? csupa 1-es csak ezeket nem teljesíti}
+
+Az ezeknek való megfelelés a \texttt{TreeRandom} interfészen keresztül történik.
+
+Igen gyakran számokat akarunk előállítani,
+ezért kényelmi okokból az interfészhez adtuk a \texttt{getNumber()} default metódust,
+mely a paraméterül kapott számnál kisebb nem negatív egészet ad vissza.
+Ehhez annyi generált bitet használ,
+amennyi a szám elfogulatlan kiválasztásához szükséges (rejection sampling).\footnote{
+  Az általános eset miatt valójában egy beépített limittel, melynek elérésekor zérót ad vissza.
+  Ha a visszaadott bitgenerátor például csupa 1-est generál
+  (ami nem teljesít ugyan minden követelményt, de fapados implementációként teljesen valid),
+  könnyen végtelen ciklus alakulhatna ki.
+}
+
+\todo[inline]{BitSource és tovbbi interfészek}
+
+\todo[inline]{TreeRandom implementációi}
+
 \subsection{A \texttt{Permutation} és implementációi}
 
 Gyorsan számítható invertálható permutációk például modulo szorzásból kiindulva valósíthatók meg.
@@ -758,46 +794,26 @@ A rendezettség miatt a második kérdésre mindig egy összefüggő sáv a vál
 
 Ezeket az elvárásokat formalizálja a \texttt{Monotonic} interfész.
 
-\todo[inline]{Monotonic implementációi}
+A legegyszerűbb implementáció a diszkrét lineáris vetítés.
+A $k$ hosszúságú értékkészletet ekkor úgy vetítjük az $n$ listahosszra,
+hogy az $i$-edig helyre a $\lfloor \frac{k \cdot i}{n} \rfloor$ pozíciójú érték kerül.
 
-\subsection{A \texttt{TreeRandom} és kapcsolódó API-k}
+A költségesebb, jobb minőségű implementációk pszeudovéletlen mintavételezésen alapulnak.
+Ehhez rekurzívan osztjuk föl az értékkészletet, miközben a felosztás fája determinisztikus, mindig ugyanaz.
+A fa minden elágazásánál egy mintavételezés történik, ami eldönti,
+hogy az értékkészlet szeletei a céllista mely szeleteire vetüljenek.
+A mintavételezéshez jelenleg az Apache Commons Maths könyvtár
+\texttt{BinomialDistribution} osztályát használom,
+melyet a \texttt{TreeRandom} példányból generált seeddel hívva
+determinisztikus eredményt tudok előállítani.
 
-Az adatbázist egy hierarchikus képződményként is fölfoghatjuk,
-ahol a sémákon belül táblák, azon belül oszlopok,
-azon belül pedig sorindexekkel megjelölt mezők foglalnak helyet
-(vagy egy holisztikus értékkészlet),
-végül a mezők értéke is lehet strukturált adat, melyben a rétegződés folytatódik.
-Azt szeretnénk, hogy az értékek bárhol véletlenszerűen álljanak elő,
-ugyanakkor determinisztikusan, egy globális kiinduló seed alapján.
-Ezért szükségünk van egy olyan véletlengenerátor típusra,
-mely teljesíti a következő követelményeket:
-
-\begin{itemize}
-    \item tetszőleges számú bitet képes generálni, mindig ugyanazt a (végtelen) bitsorozatot adva vissza
-   \item véletlenszerű kimenetet ad
-   \item eltérő példányoknál jellemzően teljesen független, különböző kimenetet ad, azonosaknál ugyanazt
-   \item egy kulcs bájtsorozat megadásával visszaad egy újabb példányt, mely az eggyel alacsonyabb szintnek felel meg
-   \item ugyanazzal a kulcs bájtsorozattal egyenlő példányt ad vissza
-\end{itemize}
-
-\todo[inline]{soft követelmények külön? csupa 1-es csak ezeket nem teljesíti}
-
-Az ezeknek való megfelelés a \texttt{TreeRandom} interfészen keresztül történik.
-
-Igen gyakran számokat akarunk előállítani,
-ezért kényelmi okokból az interfészhez adtuk a \texttt{getNumber()} default metódust,
-mely a paraméterül kapott számnál kisebb nem negatív egészet ad vissza.
-Ehhez annyi generált bitet használ,
-amennyi a szám elfogulatlan kiválasztásához szükséges (rejection sampling).\footnote{
-  Az általános eset miatt valójában egy beépített limittel, melynek elérésekor zérót ad vissza.
-  Ha a visszaadott bitgenerátor például csupa 1-est generál
-  (ami nem teljesít ugyan minden követelményt, de fapados implementációként teljesen valid),
-  könnyen végtelen ciklus alakulhatna ki.
-}
-
-\todo[inline]{BitSource és tovbbi interfészek}
-
-\todo[inline]{TreeRandom implementációi}
+A mintavételezéses eljárás többféleképpen is továbbszofisztikálható.
+Egy ilyen lehetőség a szürjektív eredmény biztosítása, amikor szeretnénk, ha minden érték előfordulna
+(a zajosan monoton értékkiosztásoknál ennel lesz egy további alkalmazása).
+Illetve az is lehetséges, hogy konkrét táblázatunk van,
+mely minden értékkészletbeli értékre tartalmazza annak várható előfordulási gyakoriságát.
+Ezeket az előre definiált gyakoriságokat használhatjuk a mintavételezésben,
+de akár közvetlenül is alkalmazhatjuk egy diszkrét lineáris vetítéssel.
 
 \subsection{A storage API}
 
