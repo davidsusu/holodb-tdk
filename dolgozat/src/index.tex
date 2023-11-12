@@ -759,7 +759,7 @@ hogy az $i$-edig helyre a $\lfloor \frac{k \cdot i}{n} \rfloor$ pozíciójú ér
 
 A költségesebb, jobb minőségű implementációk pszeudovéletlen mintavételezésen alapulnak.
 Ehhez rekurzívan osztjuk föl az értékkészletet, miközben a felosztás fája determinisztikus, mindig ugyanaz.
-A fa minden elágazásánál egy mintavételezés történik, ami eldönti,
+A fa minden elágazásához tartozik egy mintavételezés, mely eldönti,
 hogy az értékkészlet szeletei a céllista mely szeleteire vetüljenek.
 A mintavételezéshez jelenleg az Apache Commons Maths könyvtár
 \texttt{BinomialDistribution} osztályát használom,
