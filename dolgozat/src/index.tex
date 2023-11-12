@@ -507,6 +507,14 @@ Ezek kezelése is könnyen elvégezhető az oszlopos alapvetésre építve.
 Az egészszámos idegen kulcsoknál például csak annyit kell biztosítani,
 hogy a hivatkozó oszlop értékkészlete a hivatkozottnak a tartalma legyen.
 
+A mindenkori módszert, amivel egy oszlop értéklistáját biztosítjuk,
+\textit{értékkiosztás}nak fogom nevezni.
+A virtuális értékkiosztások olyan függvényt valósítanak meg,
+mellyel egy adott mező értéke determinisztikusan előállítható;
+illetve lehetőleg ezzel konzisztensen az értékek kereshetők is.
+Az ilyen függvény az adat fizikai elérését helyettesíti,
+ami a tényleges adatbázisok egyik szűk keresztmetszete.
+
 A legtöbb oszlop értékkészlete jól behatárolható.
 A tényleges értékek egy efölötti multihalmazt alkotnak,
 néha ehhez valamilyen statisztikai megkötés is tartozik ($NULL$-ok száma, értékgyakoriság stb.).
@@ -531,12 +539,11 @@ akkor már csak egy (a tábla hosszára értelmezett) invertálható permutáci�
 hogy az adatokat visszakereshetően szét is szórjuk.
 (Lentebb látni fogjuk, milyen módszerrel tudjuk a multihalmaz egy (eleve rendezett) reprezentációját képezni,
 amivel az elvárások teljesíthetők.)
-
-Gyorsan számítható invertálható permutációk tipikus képviselője a modulo szorzásra épül.
+A gyorsan számítható invertálható permutációk tipikus képviselője a modulo szorzásra épül.
 Plusz költség vállalásával pedig sokkal jobb szórást biztosító permutációkat kapunk,
 ha kriptográfiai módszereket vetünk be.
 
-A kétfázisú értékiosztásnak ezzel az ötletével
+A kétfázisú értékkiosztásnak ezzel az ötletével
 egy egyszerűbb adatbázis szimulációjának kívánalmait már tulajdonképpen le is fedtük,
 de néhány további hasznos értékkiosztási módszert is be fogok majd mutatni.
 
@@ -692,8 +699,6 @@ a \texttt{LargeInteger} valamivel gyorsabb.
     }
 \end{figure}
 
-\todo[inline]{további LargeInteger-alternatívák teljesítményének vizsgálata}
-
 \subsection{A \texttt{Permutation} és implementációi}
 
 Gyorsan számítható invertálható permutációk például modulo szorzásból kiindulva valósíthatók meg.
@@ -753,6 +758,8 @@ A rendezettség miatt a második kérdésre mindig egy összefüggő sáv a vál
 
 Ezeket az elvárásokat formalizálja a \texttt{Monotonic} interfész.
 
+\todo[inline]{Monotonic implementációi}
+
 \subsection{A \texttt{TreeRandom} és kapcsolódó API-k}
 
 Az adatbázist egy hierarchikus képződményként is fölfoghatjuk,
@@ -787,6 +794,10 @@ amennyi a szám elfogulatlan kiválasztásához szükséges (rejection sampling)
   (ami nem teljesít ugyan minden követelményt, de fapados implementációként teljesen valid),
   könnyen végtelen ciklus alakulhatna ki.
 }
+
+\todo[inline]{BitSource és tovbbi interfészek}
+
+\todo[inline]{TreeRandom implementációi}
 
 \subsection{A storage API}
 
@@ -1063,7 +1074,7 @@ Azaz bármely $n$ sorindexre elő kell tudnunk állítani az $n$-edik illeszked�
 hányadik illeszkedő stringgel azonos vagy melyikhez van közel, ha nem illeszkedik.
 Ha már van egy ilyen virtuális listánk, azt a kétfázisú értékkiosztással könnyen a kívánt oszloppá alakíthatjuk.
 
-A megoldás a reguláris kifejezések lehetőségeinek csak valamilyen (erősen limitált) részhalmazát fogja támogatna.
+A megoldás a reguláris kifejezések lehetőségeinek csak valamilyen limitált részhalmazát fogja támogatna.
 De még így is bőven lefedi az olyan egyszerű eseteket, mint például a telefonszámok, email-címek stb.
 
 Az ilyen típusú szöveggenerálás részletes bemutatása kimutat a jelen dolgozat keretei közül,
@@ -1121,11 +1132,11 @@ mely megfelel ennek a két kritériumnak:
 
 A második kritérium természetesen legegyszerűbben úgy teljesíthető,
 hogy a kiválasztott szavakat abc-rendben felsoroljuk.
-De mivel teljes szabadságunk van (az index már biztosított),
+De mivel teljes szabadságunk van (az indexeltség ekkorra már biztosítva van),
 tetszőlegesen szofisztikált módszereket alkalmazhatunk a minél életszerűbb szöveg kialakítására
 (ez egy skálázható opció).
 
-A rendezésnél kihasználjuk, hogy az első $L$ szóra már van egy hagyományos indexünk,
+A rendezésnél kihasználjuk, hogy az első $L$ szóra van egy hagyományos indexünk,
 így a prefixek egymáshoz képesti rendezése már megoldott.
 Mivel a Descartes-szorzat miatt a lehetséges prefixek listája igen nagy,
 feltehetjük, hogy jellemzően nem nagyon lesznek ismétlődő prefixek,
@@ -1141,8 +1152,8 @@ Az indexelt oszlopokra vonatkozó elvárások közül így csak az első kettő 
   \item pozíciótól függő érték (seed + sorindex)
 \end{enumerate}
 
-Vagyis elég, ha a \texttt{TreeRandom} által a sorhoz generált seed alapján
-előállítunk egy \texttt{Random} példányt,
+Vagyis elég, ha a \texttt{TreeRandom} által a sorindexhez generált seed alapján
+előállítunk egy normál \texttt{Random} példányt,
 és ennek felhasználásával a tartalmat tetszőleges determinisztikus módszerrel állíthatjuk elő.
 Erre az előállításra kizárólag a konfigurációban megadott beállítások jelentenek megszorítást.
 
@@ -1154,10 +1165,11 @@ egyúttal könnyen szimulálható típusát:
     a legegyszerűbb megoldásban egy szótár szavait véletlenszerűen helyezzük egymás után,
     közben feljavítva a szövegképet nagybetűs szavakkal és központozással
     (az eredmény tovább javítható kifejezésminták használatával,
-    amikor időnként egy többszavas részletre előre adott sablont használunk)
+    amikor időnként egy többszavas részletre előre adott sablont használunk;
+    de ha a minőség az elsődleges, bevethetünk Markov-láncokat[hiv!] vagy különféle nyelvi modelleket)
   \item \textbf{Strukturált szöveg:}
     először előállítunk egy általános struktúrát (címek, bekezdések stb.),
-    majd ennek elemeit feltöltjük szöveggel,
+    majd ennek elemeit feltöltjük szöveggel (lásd az előző pontot),
     végül a struktúrát a kívánt jelölőnyelven szolgáltatjuk (HTML, MarkDown, plain text stb.)
   \item \textbf{Strukturált adat:}
     generált vagy konfigurációban megadott adatséma alapján rekurzívan generáljuk le az adatstruktúrát,
@@ -1172,6 +1184,7 @@ egyúttal könnyen szimulálható típusát:
   \item \textbf{Általános BLOB/CLOB:}
     lekéréskor a konfigurációban megadott mérethatárok közötti bájtsort/karaktersort kell visszaadni,
     ami könnyen ellátható random bájtok/karakterek generálásával
+    (legegyszerűbb közvetlenül a \texttt{TreeRandom} által szolgáltatott biteket használni)
 \end{itemize}
 
 További indexeletlen eset, amikor az oszlop teljes tartalma explicite felsorolva van megadva,
