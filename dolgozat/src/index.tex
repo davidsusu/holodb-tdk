@@ -711,8 +711,8 @@ mely teljesíti a következő követelményeket:
 \begin{itemize}
     \item tetszőleges számú bitet képes generálni, mindig ugyanazt a (végtelen) bitsorozatot adva vissza
    \item véletlenszerű kimenetet ad
-   \item eltérő példányoknál jellemzően teljesen független, különböző kimenetet ad, azonosaknál ugyanazt
-   \item egy kulcs bájtsorozat megadásával visszaad egy újabb példányt, mely az eggyel alacsonyabb szintnek felel meg
+   \item eltérő példányoknál jellemzően független, különböző kimenetet ad, azonosaknál ugyanazt
+   \item egy kulcs bájtsorozat megadásával visszaad egy újabb példányt (eggyel alacsonyabb szint)
    \item ugyanazzal a kulcs bájtsorozattal egyenlő példányt ad vissza
 \end{itemize}
 
@@ -734,6 +734,45 @@ amennyi a szám elfogulatlan kiválasztásához szükséges (rejection sampling)
 \todo[inline]{BitSource és tovbbi interfészek}
 
 \todo[inline]{TreeRandom implementációi}
+
+\subsection{A \texttt{Monotonic} és implementációi}
+
+Gyakran egy adott értékkészlet elemeiből egy $n$ hosszúságú rendezett listát akarunk képezni.
+Az eloszlás (beleértve, hogy valamely érték egyáltalán előfordul-e) teljesen implementációfüggő lehet. Mivel az értékkészlet maga is egy $k$ hosszúsága lista, a további leképezési kompozíciók szempontjából rugalmasabb, ha az értékindexeket, azaz a $[0..k)$ egész-intervallum számait tesszūk a listába.
+
+Követelmény, hogy le tudjuk kérdezni az alábbiakat:
+
+\begin{itemize}
+    \item egy adott pozícióra mely értékindex került
+    \item adott értékindex mely sávba került
+\end{itemize}
+
+A rendezettség miatt a második kérdésre mindig egy összefüggő sáv a válasz. Ha az értékindex nem szerepel, akkor ez egy zéróhosszú sáv azon a helyen, ahová a rendezés szerint beszùrható lenne.
+
+Értelemszerűen értéksávokra is tudunk keresni, hiszen az értéksáv szélső értékeinek értékindedeire keresve megkapjuk a képzett sáv széleinek sorindexeit is.
+
+Ezeket az elvárásokat formalizálja a \texttt{Monotonic} interfész.
+
+A legegyszerűbb implementáció a diszkrét lineáris vetítés.
+A $k$ hosszúságú értékkészletet ekkor úgy vetítjük az $n$ listahosszra,
+hogy az $i$-edig helyre a $\lfloor \frac{k \cdot i}{n} \rfloor$ pozíciójú érték kerül.
+
+A költségesebb, jobb minőségű implementációk pszeudovéletlen mintavételezésen alapulnak.
+Ehhez rekurzívan osztjuk föl az értékkészletet, miközben a felosztás fája determinisztikus, mindig ugyanaz.
+A fa minden elágazásánál egy mintavételezés történik, ami eldönti,
+hogy az értékkészlet szeletei a céllista mely szeleteire vetüljenek.
+A mintavételezéshez jelenleg az Apache Commons Maths könyvtár
+\texttt{BinomialDistribution} osztályát használom,
+melyet a \texttt{TreeRandom} példányból generált seeddel hívva
+determinisztikus eredményt tudok előállítani.
+
+A mintavételezéses eljárás többféleképpen is továbbszofisztikálható.
+Egy ilyen lehetőség a szürjektív eredmény biztosítása, amikor szeretnénk, ha minden érték előfordulna
+(a zajosan monoton értékkiosztásoknál ennel lesz egy további alkalmazása).
+Illetve az is lehetséges, hogy konkrét táblázatunk van,
+mely minden értékkészletbeli értékre tartalmazza annak várható előfordulási gyakoriságát.
+Ezeket az előre definiált gyakoriságokat használhatjuk a mintavételezésben,
+de akár közvetlenül is alkalmazhatjuk egy diszkrét lineáris vetítéssel.
 
 \subsection{A \texttt{Permutation} és implementációi}
 
@@ -775,45 +814,6 @@ A következő ábrán vizuálisan összehasonlítottam néhány permutáció-tí
   \end{minipage}
   \hspace*{\fill}
 \end{figure}
-
-\subsection{A \texttt{Monotonic} és implementációi}
-
-Gyakran egy adott értékkészlet elemeiből egy $n$ hosszúságú rendezett listát akarunk képezni.
-Az eloszlás (beleértve, hogy valamely érték egyáltalán előfordul-e) teljesen implementációfüggő lehet. Mivel az értékkészlet maga is egy $k$ hosszúsága lista, a további leképezési kompozíciók szempontjából rugalmasabb, ha az értékindexeket, azaz a $[0..k)$ egész-intervallum számait tesszūk a listába.
-
-Követelmény, hogy le tudjuk kérdezni az alábbiakat:
-
-\begin{itemize}
-    \item egy adott pozícióra mely értékindex került
-    \item adott értékindex mely sávba került
-\end{itemize}
-
-A rendezettség miatt a második kérdésre mindig egy összefüggő sáv a válasz. Ha az értékindex nem szerepel, akkor ez egy zéróhosszú sáv azon a helyen, ahová a rendezés szerint beszùrható lenne.
-
-Értelemszerűen értéksávokra is tudunk keresni, hiszen az értéksáv szélső értékeinek értékindedeire keresve megkapjuk a képzett sáv széleinek sorindexeit is.
-
-Ezeket az elvárásokat formalizálja a \texttt{Monotonic} interfész.
-
-A legegyszerűbb implementáció a diszkrét lineáris vetítés.
-A $k$ hosszúságú értékkészletet ekkor úgy vetítjük az $n$ listahosszra,
-hogy az $i$-edig helyre a $\lfloor \frac{k \cdot i}{n} \rfloor$ pozíciójú érték kerül.
-
-A költségesebb, jobb minőségű implementációk pszeudovéletlen mintavételezésen alapulnak.
-Ehhez rekurzívan osztjuk föl az értékkészletet, miközben a felosztás fája determinisztikus, mindig ugyanaz.
-A fa minden elágazásánál egy mintavételezés történik, ami eldönti,
-hogy az értékkészlet szeletei a céllista mely szeleteire vetüljenek.
-A mintavételezéshez jelenleg az Apache Commons Maths könyvtár
-\texttt{BinomialDistribution} osztályát használom,
-melyet a \texttt{TreeRandom} példányból generált seeddel hívva
-determinisztikus eredményt tudok előállítani.
-
-A mintavételezéses eljárás többféleképpen is továbbszofisztikálható.
-Egy ilyen lehetőség a szürjektív eredmény biztosítása, amikor szeretnénk, ha minden érték előfordulna
-(a zajosan monoton értékkiosztásoknál ennel lesz egy további alkalmazása).
-Illetve az is lehetséges, hogy konkrét táblázatunk van,
-mely minden értékkészletbeli értékre tartalmazza annak várható előfordulási gyakoriságát.
-Ezeket az előre definiált gyakoriságokat használhatjuk a mintavételezésben,
-de akár közvetlenül is alkalmazhatjuk egy diszkrét lineáris vetítéssel.
 
 \subsection{A storage API}
 
