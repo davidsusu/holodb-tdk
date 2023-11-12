@@ -698,7 +698,7 @@ a \texttt{LargeInteger} valamivel gyorsabb.
 
 Gyorsan számítható invertálható permutációk például modulo szorzásból kiindulva valósíthatók meg.
 
-Költségesebb, de erősen véletlenszerű összevisszaságot bitzosító invertálható permutációkat
+Költségesebb, de erősen véletlenszerű összevisszaságot biutosító invertálható permutációkat
 különféle kriptográfiai módszerekkel állíthatók elő.
 Többéle algoritmuscsalád kipróbálása után (pl. Format Preserving Encryption) végül
 egy megfelelően kialakított Feistel-hálózat bizonyult a legkezelhetőbbnek.
@@ -737,11 +737,56 @@ A következő ábrán vizuálisan összehasonlítottam néhány permutáció-tí
 
 \subsubsection{A \texttt{Monotonic} és implementációi}
 
-\todo[inline]{Monotonic}
+Gyakran egy adott értékkészlet elemeiből egy $n$ hosszúságú rendezett listát akarunk képezni.
+Az eloszlás (beleértve, hogy valamely érték egyáltalán előfordul-e) teljesen implementációfüggő lehet. Mivel az értékkészlet maga is egy $k$ hosszúsága lista, a további leképezési kompozíciók szempontjából rugalmasabb, ha az értékindexeket, azaz a $[0..k)$ egész-intervallum számait tesszūk a listába.
+
+Követelmény, hogy le tudjuk kérdezni az alábbiakat:
+
+\begin{itemize}
+    \item egy adott pozícióra mely értékindex került
+    \item adott értékindex mely sávba került
+\end{itemize}
+
+A rendezettség miatt a második kérdésre mindig egy összefüggő sáv a válasz. Ha az értékindex nem szerepel, akkor ez egy zéróhosszú sáv azon a helyen, ahová a rendezés szerint beszùrható lenne.
+
+Értelemszerűen értéksávokra is tudunk keresni, hiszen az értéksáv szélső értékeinek értékindedeire keresve megkapjuk a képzett sáv széleinek sorindexeit is.
+
+Ezeket az elvárásokat formalizálja a \texttt{Monotonic} interfész.
 
 \subsubsection{A \texttt{TreeRandom} és kapcsolódó API-k}
 
-\todo[inline]{A TreeRandom és kapcsolódó API-k}
+Az adatbázist egy hierarchikus képződményként is fölfoghatjuk,
+ahol a sémákon belül táblák, azon belül oszlopok,
+azon belül pedig sorindexekkel megjelölt mezők foglalnak helyet
+(vagy egy holisztikus értékkészlet),
+végül a mezők értéke is lehet strukturált adat, melyben a rétegződés folytatódik.
+Azt szeretnénk, hogy az értékek bárhol véletlenszerűen álljanak elő,
+ugyanakkor determinisztikusan, egy globális kiinduló seed alapján.
+Ezért szükségünk van egy olyan véletlengenerátor típusra,
+mely teljesíti a következő követelményeket:
+
+\begin{itemize}
+    \item tetszőleges számú bitet képes generálni, mindig ugyanazt a (végtelen) bitsorozatot adva vissza
+   \item véletlenszerű kimenetet ad
+   \item eltérő példányoknál jellemzően teljesen független, különböző kimenetet ad, azonosaknál ugyanazt
+   \item egy kulcs bájtsorozat megadásával visszaad egy újabb példányt, mely az eggyel alacsonyabb szintnek felel meg
+   \item ugyanazzal a kulcs bájtsorozattal egyenlő példányt ad vissza
+\end{itemize}
+
+\todo[inline]{soft követelmények külön? csupa 1-es csak ezeket nem teljesíti}
+
+Az ezeknek való megfelelés a \texttt{TreeRandom} interfészen keresztül történik.
+
+Igen gyakran számokat akarunk előállítani,
+ezért kényelmi okokból az interfészhez adtuk a \texttt{getNumber()} default metódust,
+mely a paraméterül kapott számnál kisebb nem negatív egészet ad vissza.
+Ehhez annyi generált bitet használ,
+amennyi a szám elfogulatlan kiválasztásához szükséges (rejection sampling).\footnote{
+  Az általános eset miatt valójában egy beépített limittel, melynek elérésekor zérót ad vissza.
+  Ha a visszaadott bitgenerátor például csupa 1-est generál
+  (ami nem teljesít ugyan minden követelményt, de fapados implementációként teljesen valid),
+  könnyen végtelen ciklus alakulhatna ki.
+}
 
 \subsection{A storage API}
 
