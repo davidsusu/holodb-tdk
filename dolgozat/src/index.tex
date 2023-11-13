@@ -589,44 +589,26 @@ Ennek konkrétumaira majd a 3. fejezetben térek ki.
 
 \section{Az architektúra alapjai}
 
-\longcomment{Az architektúra alapjai...}{
+\subsection{Segédtípusok}
 
-  Ha az adatelérést objektumok...
-  interfészek, erőteljes bővíthetőségű
-  
-  
-  generálás adatfából (ua. mint a regex), valós címek stb.
-  
-  Előző változat bevezető fejezetei
+Mielőtt rátérnék a relációs ontológiát leíró Storage API tárgyalására,
+röviden áttekintem azokat a segédinterfészeket,
+amelyek a későbbiekben nélkülözhetetlenek lesznek majd.
+Természetesen ezek az esszenciális típusok apró szeletei csak a teljes architektúrának.
 
-  - Végtelenített virtuális világok
-  - A fakerek limitációi
-  - Néhány visszatérő probléma közös nevezője
-  - A fakerek limitációi
-  - Virtuális mockolás: hézag jelei új termék számára?
-  - ...
-  - Felépítés
-  - Konfiguráció
+A következő osztálydiagram összefoglalja a kiemelt és lentebb tárgyalt interfészeket:
 
-  Egyéb:
-
-  - determinisztikus, de a seed-del variálható//összekeverhető
-  - Relational data as a serverless function
-  - SQL, NoSQL, GraphQL, REST etc.
-  - miniconnect, minibase, REPL
-  - a konfiguráció előfeldolgozható (pl. yaml + go template, mint a helmnél)
-  - valós adatbázis feltöltése innen
-  - konfiguráció generálása
-    - valós adatbázis egyszerű feldolgozásával
-    - valós adatbázis intelligens feldolgozásával (pl. evolúciós algoritmussal)
-    - valós adathalmazokon tanított AI által
-}
+\begin{figure}[H]
+\centering
+\includegraphics[width=\textwidth]{diagram/basic-ifaces-uml.png}
+\caption{Néhány segédinterfész, melyek alapvető szerepet töltenek be az architektúrában}
+\end{figure}
 
 \subsection{A \texttt{LargeInteger} típus}
 
 Az adatok on-the-fly számításakor a szűk keresztmetszet
 a tárolás és elérés problémáiról a kalkulációkra helyeződik át.
-Nyilvánvaló tehát, hogy az egész koncepció sikere azon áll vagy bukik,
+Világos tehát, hogy az egész koncepció sikere azon áll vagy bukik,
 hogy milyen gyorsan tudjuk számítani az eredményt.
 
 A legtöbb oszloptípusnál rendezett értékkészletbeli pozíciókat mappelünk össze sorindexekkel.
@@ -659,7 +641,7 @@ ha kívül esik a \texttt{long} értékkészletén.
 
 A \texttt{LargeInteger} a \texttt{BigInteger} összes metódusát replikálja,
 illetve számos további kényelmi metódust ad hozzá.
-A zérusközeli értékek gyorsítótárazva vannak a hatékonyság további növelése érdekében.
+A zérusközeli értékek gyorsítótárazva vannak a hatékonyság érdekében.
 
 A Scala standard könyvtárának \texttt{BigInt} típusa szitén a \texttt{long} és \texttt{BigInteger}
 aritmetika váltogatásával oldja meg,
@@ -696,7 +678,7 @@ a \texttt{LargeInteger} valamivel gyorsabb.
     }
 \end{figure}
 
-\subsection{A \texttt{TreeRandom} és kapcsolódó API-k}
+\subsection{A \texttt{TreeRandom} és implementációi}
 
 Az adatbázist egy hierarchikus képződményként is fölfoghatjuk,
 ahol a sémákon belül táblák, azokon belül oszlopok,
@@ -710,13 +692,16 @@ mely teljesíti a következő követelményeket:
 
 \begin{itemize}
     \item tetszőleges számú bitet képes generálni, mindig ugyanazt a (végtelen) bitsorozatot adva vissza
-   \item véletlenszerű kimenetet ad
-   \item eltérő példányoknál jellemzően független, különböző kimenetet ad, azonosaknál ugyanazt
-   \item egy kulcs bájtsorozat megadásával visszaad egy újabb példányt (eggyel alacsonyabb szint)
+   \item egy kulcs bájtsorozat megadásával visszaad egy alpéldányt (eggyel alacsonyabb szint)
    \item ugyanazzal a kulcs bájtsorozattal egyenlő példányt ad vissza
 \end{itemize}
 
-\todo[inline]{soft követelmények külön? csupa 1-es csak ezeket nem teljesíti}
+Valamint lehetőleg az alábbi gyenge követelményeket:
+
+\begin{itemize}
+   \item véletlenszerű kimenetet ad
+   \item eltérő példányoknál jellemzően független, különböző kimenetet ad, azonosaknál ugyanazt
+\end{itemize}
 
 Az ezeknek való megfelelés a \texttt{TreeRandom} interfészen keresztül történik.
 
@@ -727,13 +712,22 @@ Ehhez annyi generált bitet használ,
 amennyi a szám elfogulatlan kiválasztásához szükséges (rejection sampling).\footnote{
   Az általános eset miatt valójában egy beépített limittel, melynek elérésekor zérót ad vissza.
   Ha a visszaadott bitgenerátor például csupa 1-est generál
-  (ami nem teljesít ugyan minden követelményt, de fapados implementációként teljesen valid),
+  (ami nem teljesíti ugyan a gyenge követelményeket, de fapados implementációként teljesen valid),
   könnyen végtelen ciklus alakulhatna ki.
 }
 
-\todo[inline]{BitSource és tovbbi interfészek}
+A fő implementáció hashelésen alapul, és magának a hashelésnek a minőségével skálázható.
+Minden ilyen példány belsőleg tartalmaz egy kulcs-bájtsorozatot.
+A root példánynál ez a root seed alapján áll elő.
+Egy alpéldány előállításakor az eredeti objektum kulcs-bájtsorozatához egy szeparátorbájt,
+majd a megadott kulcs alapján előállított bájtsorozat kerül hozzáfűzésre,
+így áll elő az alpéldány kulcs-bájtsorozata.
 
-\todo[inline]{TreeRandom implementációi}
+Amikor az adott példányból bitek kerülnek lekérdezésre,
+az első néhány bájt a kulcs-bájtsorozat hashelésével áll elő.
+A további bitek ennek derivátumai, ennek legegyszerűbb algoritmusa,
+ha a hash alapján előállított seeddel inicializált \texttt{Random} példánnyal
+rendre visszaadott bájtokat használjuk.
 
 \subsection{A \texttt{Monotonic} és implementációi}
 
@@ -780,8 +774,11 @@ Gyorsan számítható invertálható permutációk például modulo szorzásból
 
 Költségesebb, de erősen véletlenszerű összevisszaságot biutosító invertálható permutációkat
 különféle kriptográfiai módszerekkel állíthatók elő.
-Többéle algoritmuscsalád kipróbálása után (pl. Format Preserving Encryption) végül
+Többéle algoritmuscsalád kipróbálása után (pl. FPE, azaz Format Preserving Encryption) végül
 egy megfelelően kialakított Feistel-hálózat bizonyult a legkezelhetőbbnek.
+A Feistel-háló fő skálázási paramétere (akárcsak a hash-alapú \texttt{TreeRandom}-implementációnál)
+a hashelő algoritmus minősége,
+de a háló mérete illetve a permutáció $n$ hossza is lényeges.
 
 A következő ábrán vizuálisan összehasonlítottam néhány permutáció-típus értékeloszlását
 (a közeli értékek színe hasonló):
@@ -789,35 +786,73 @@ A következő ábrán vizuálisan összehasonlítottam néhány permutáció-tí
 \begin{figure}[H]
   \centering
   \hspace*{\fill}
-  \begin{minipage}[b]{0.4\textwidth}
-    \includegraphics[width=\textwidth]{image/permutation-fpe1.png}
-    \caption{FPE1 permutation}
+  \begin{minipage}[b]{0.45\textwidth}
+    \centering
+    \includegraphics[width=0.9\textwidth]{image/permutation-fpe1.png}
+    \caption{FPE permutation[hiv!]}
   \end{minipage}
   \hspace*{\fill}
-  \begin{minipage}[b]{0.4\textwidth}
-    \includegraphics[width=\textwidth]{image/permutation-mp1.png}
-    \caption{Modulo permutation}
+  \begin{minipage}[b]{0.45\textwidth}
+    \centering
+    \includegraphics[width=0.9\textwidth]{image/permutation-mp1.png}
+    \caption{Modular permutation}
   \end{minipage}
   \hspace*{\fill}
   
   \vspace*{0.7cm}
   
   \hspace*{\fill}
-  \begin{minipage}[b]{0.4\textwidth}
-    \includegraphics[width=\textwidth]{image/permutation-feif1.png}
-    \caption{Feistel network 1 + fast hash}
+  \begin{minipage}[b]{0.45\textwidth}
+    \centering
+    \includegraphics[width=0.9\textwidth]{image/permutation-feif1.png}
+    \caption{Feistel network (1-round, fast hash)}
   \end{minipage}
   \hspace*{\fill}
-  \begin{minipage}[b]{0.4\textwidth}
-    \includegraphics[width=\textwidth]{image/permutation-feis2.png}
-    \caption{Feistel network 2 + SHA256}
+  \begin{minipage}[b]{0.45\textwidth}
+    \centering
+    \includegraphics[width=0.9\textwidth]{image/permutation-feis2.png}
+    \caption{Feistel network (2-round, SHA256)}
   \end{minipage}
   \hspace*{\fill}
 \end{figure}
 
+A kriptográfiában alkalmazott legtöbb megfordítható permutáció kötött méretű.
+A Fesitel-háló ebből a szempontból elég rugalmas,
+de a permutáció hossza még ekkor is csak 2-hatvány lehet.
+A tetszőleges hossz biztosítára átméretező dekorátorok használhatók.
+A hosszcsökkentő dekorátor meghívja a dekorált permutációt,
+ha az érték a célhosszon belül van, akkor visszaadja, ha nem,
+akkor a mindenkori értékkel addig hívja újra a dekorált permutációt,
+amíg megfelelő értéket nem kap.
+A hossznövelő dekorátor ennek felhasználásával implementálható,
+de a jelentősége kisebb, jellemzően hosszcsökkentés történik.
+Egyes speciális permutációknál az előbbi módszer nagyon sok újrahívással járhat
+(például egy olyannál, ahol az értékek eggyel előre tolása történik),
+Aaz átméretező metódus bekerült magába az interfészbe,
+hogy az ilyen implementációk maguk kezeljék a helyzetet.
+A jó szétszórást biztosító permutációknál valószínűtlen a sok újrahívás.
+
 \subsection{A storage API}
 
 \todo[inline]{A storage API}
+
+\textit{elérést} biztosító (az írhatóság majd hozzáteszi: TablePatch, Sequence, Contraint stb.)
+
+Lorem ipsum.
+
+Lorem ipsum.
+
+Lorem ipsum.
+
+Lorem ipsum.
+
+Lorem ipsum.
+
+Lorem ipsum.
+
+Lorem ipsum.
+
+Lorem ipsum.
 
 \longcomment{Storage API ötletelés}{
 schemák, táblák és oszlopok
@@ -828,6 +863,12 @@ indexek
    spatial???
 }
 
+\begin{figure}[H]
+\centering
+\includegraphics[width=\textwidth]{diagram/storage-api-uml.png}
+\caption{A Storage API fő interfészei (egy relációs adattár alapontológiája)}
+\end{figure}
+
 \section{A csak-olvasható alapréteg}
 
 Bármilyen imlementáció legyen is mögötte, a storage API egy relációs adatbázist ír le.
@@ -837,7 +878,7 @@ A konzisztencia ez esetben két dolgot jelent:
 
 \begin{enumerate}
   \item Felépíthető egy olyan tényleges immutábilis relációs adatbázis ($M$),
-        hogy minden lehetséges relációs lekérdezés esetében, amely a közös schemára ($S$) értelmes,
+        hogy minden lehetséges relációs lekérdezés esetében, amely a közös sémára ($S$) értelmes,
         a virtuális és a tényleges adatbázis esetében visszaadott eredménytábla megegyezik.
   \item Az $S$ séma teljesíti a virtuális adatbázis felhasználói konfigurációját ($C$),
         valamint az $M$-ben szereplő adatok tulajdonságai illeszkednek a $C$-ben leírt megkötésekre.
@@ -880,8 +921,6 @@ valójában más jellegű értékkiosztási módszer is lehet mögötte,
 amennyiben az egy-egy oszlophoz tartozó listanézetek biztosítottak.
 Majd a több oszlopot érintő megkötések esetében ez lesz a helyzet.
 De lássuk először az egyoszlopos értékkiosztások lehetséges módszereit.
-
-\todo[inline, color=red]{Keretrendszer az értékkiosztásokhoz: ide egy ábra, ami ezt szemlélteti}
 
 \subsection{Indexelt egyoszlopos értékkiosztások}
 
@@ -961,18 +1000,32 @@ a kimenetet szigorúan monoton módon állítsa elő.
 
 \subsubsection{Általános kétfázisú értékkiosztás}
 
-\todo[inline, color=red]{subsubsection: Kétfázisú értékkiosztás (bevezetés, leírás)}
-
 Talán a leggyakoribb eset,
-hogy előre ismert véges értékkészlet elememeit szeretnénk viszontlátni az oszlopban,
+hogy előre ismert véges értékkészlet elemeit szeretnénk viszontlátni az oszlopban,
 mégpedig összevissza.
+
+Fentebb már utaltam rá, hogy ez a legtöbb esetben megoldható két független lépéssel.
+Először egy \texttt{Monotonic} példány segítségével a kívánt célhosszra
+értelmezett függvényt állítunk elő, mely az értékkészlet pozícióira mutat;
+ezt a továbbiakban \textit{rányújtás}nak nevezem majd.
+Majd az így előállt (esetlegesen $NULL$ értékekkel kiegészített) listát
+egy \texttt{Permutation} példány segítségével elkeverjük.
 
 \begin{figure}[H]
 \centering
-\includesvg{diagram/distribution}
+\includesvg[width=0.55\textwidth]{diagram/distribution}
 \caption{A kétfázisú értékkiosztás alapelve: egymás után végrehajtott visszafejthető disztribúció és permutáció}
 \label{A kétfázisú értékkiosztás alapelve}
 \end{figure}
+
+Láttuk, hogy mindkét függvénytípus interfésze úgy van definiálva, hogy relációként megfordítható.
+A \texttt{Monotonic} \texttt{indicesOf()} metódusaivel egy értékindexnek illetve -sávnak
+a céllistabeli sávjára tudunk rákérdezni.
+A \texttt{Permutation} pedig az \textt{indexOf()} metódust biztosítja hasonló célra
+(illetve inverze maga is permutáció).
+Ezek használatával egy reverse index könnyen implementálható.
+
+A következő két ábra szemlélteti az adatlekérés illetve értékkeresés folyamatát:
 
 \begin{figure}[H]
   \centering
@@ -993,22 +1046,16 @@ mégpedig összevissza.
   \hspace*{\fill}
 \end{figure}
 
-Egy adott érték lekérése egyszerűen így történik:
-
-\begin{minted}{python}
-def getValueOfMonotonic(i, start, end):
-    flip = split(start, end)
-    if i < flip:
-        return getValueOfMonotonic(i, start, flip)
-    else:
-        return getValueOfMonotonic(i, flip, end)
-\end{minted}
-
-\todo[inline, color=red]{Nyújtás: jó egyáltalán így a lekérés-kód? index-pszeudokód + leírás}
-
 \subsubsection{Kétfázisú értékkiosztás gyakoriságtáblázattal}
 
-\todo[inline, color=red]{subsubsection: Kétfázisú értékkiosztás gyakoriságtáblázattal}
+Egyes esetekben előre ismert az értékek eloszlása,
+amit szeretnénk nagyjából vagy pontosan viszontlátni a céloszlopban.
+Ekkor egyszerűen \texttt{Monotonic} fentebb tárgyalt konkrét eloszlásokat használó
+implementációnak egyikét kell használnunk.
+
+A felhasználó számára biztosítani kell a gyakoriságok könnyű konfigurálhatóságát.
+Ennek legegyszerűbb módja, ha szám-érték párokat kérünk be.
+Az értékekhez tartozó számok egymáshoz képesti relatív gyakoriságok.
 
 \subsubsection{Zajosan monoton értékkiosztások}
 
