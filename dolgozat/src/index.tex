@@ -854,10 +854,19 @@ az oszlopnév vagy oszloppozíció megadásával.
 
 Az adatok hatékony keresését indexek segítik, itt három ilyen indexfajtávalmfogom foglalkozni,
 a normál \texttt{TableIndex}, a \texttt{FulltextIndex} és a \texttt{SpatialIndex} típusokkal.
-Ezek mindegyikének keresőmetódusai egy \texttt{TableSelection} példánnyal térnek vissza,
+Ezek keresőmetódusai egy \texttt{TableSelection} példánnyal térnek vissza,
 melyen keresztül a találati listához férünk hozzá.
 
-A következő osztálydiagramon ezeket az interfészekez foglaltam össze,
+A \texttt{TableIndex} a szokásos rendezett indextípus,
+mely egyúttal teljes kontrollal rendelkezik a találati lista rendezése
+és a $NULL$ érékek kezelése fölött.
+A másik két típusnál egyelőre ezekkel nem foglalkoztam.
+A \texttt{FulltextIndex} lehet úgy implementálva, hogy mindig rendezett értéket ad vissza
+(ehhez lásd később a fulltext értékkiosztásról szóló részt),
+a \texttt{SpatialIndex} találatainak rendezése definiálatlan.
+Egyik sem ad vissza $NULL$ mezőket.
+
+A következő osztálydiagramon a fenti interfészeket foglaltam össze,
 a tömörség kedvéért néhol kicsit vázlatosan:
 
 \begin{figure}[H]
