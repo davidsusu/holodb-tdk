@@ -834,34 +834,31 @@ A jó szétszórást biztosító permutációknál valószínűtlen a sok újrah
 
 \subsection{A storage API}
 
-\todo[inline]{A storage API}
+Ha definiáltuk a relációs ontológia fő elemeit,
+akkor ezek megfelelő implementációi már megvalósítanak egy relációs adattárat,
+mely funkcionálisan megfelel egy tényleges adatbázisnak.
+De melyek legyenek ezek az elemek?
+A kérdést elsőként a \textit{hozzáférés} szempontjából érdemes megközelíteni.
+Az írhatóság problémakörével később foglalkozom.
 
-\textit{elérést} biztosító (az írhatóság majd hozzáteszi: TablePatch, Sequence, Contraint stb.)
+Nyilvánvalóan gondoskodni kell az alaphierarchiáról,
+ezek lesznek a \texttt{Schema}, \texttt{Table} és \texttt{Column} típusok.
+Az oszlopok elvont tulajdonságait a \texttt{ColumnDefinition} típus fogja össze.
+Bár az egyes mezők értékeit általában oszloporientáltan állítjuk elő,
+jellemzően az értéklistákat megadó \texttt{Source} objektimok használatával,
+a lekérésnél több szempontból is intuitívabbnak és előnyösebbnek mutatkozik
+a rekordorientált megközelítés.
+A rekordot a \textt{Row} típus reprezentálja,
+ezen keresztül kérhetőek le a konkrét mezőértékek
+az oszlopnév vagy oszloppozíció megadásával.
 
-Lorem ipsum.
+Az adatok hatékony keresését indexek segítik, itt három ilyen indexfajtávalmfogom foglalkozni,
+a normál \texttt{TableIndex}, a \texttt{FulltextIndex} és a \texttt{SpatialIndex} típusokkal.
+Ezek mindegyikének keresőmetódusai egy \texttt{TableSelection} példánnyal térnek vissza,
+melyen keresztül a találati listához férünk hozzá.
 
-Lorem ipsum.
-
-Lorem ipsum.
-
-Lorem ipsum.
-
-Lorem ipsum.
-
-Lorem ipsum.
-
-Lorem ipsum.
-
-Lorem ipsum.
-
-\longcomment{Storage API ötletelés}{
-schemák, táblák és oszlopok
-indexek
-   normál
-   rendezetlen (optimalizálás-egyszerűsítés, kezelhető normál indexek halmazaként is)
-   full-text
-   spatial???
-}
+A következő osztálydiagramon ezeket az interfészekez foglaltam össze,
+a tömörség kedvéért néhol kicsit vázlatosan:
 
 \begin{figure}[H]
 \centering
