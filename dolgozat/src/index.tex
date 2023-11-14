@@ -596,7 +596,7 @@ Ennek konkrétumaira majd a 3. fejezetben térek ki.
 Mielőtt rátérnék a relációs ontológiát leíró Storage API tárgyalására,
 röviden áttekintem azokat a segédinterfészeket,
 amelyek a későbbiekben nélkülözhetetlenek lesznek majd.
-Természetesen ezek az esszenciális típusok apró szeletei csak a teljes architektúrának.
+Természetesen ezek az esszenciális típusok apró szeletét adják csak a teljes architektúrának.
 
 A következő osztálydiagram összefoglalja a kiemelt és lentebb tárgyalt interfészeket:
 
@@ -621,7 +621,7 @@ mely kis és óriás számokra egyaránt működik,
 és kis számok esetében nagyon hatékony (ellentétben a beépített \texttt{BigInteger} típussal).
 
 Az ecélból készített (egyébként teljesen általános) \texttt{LargeInteger} típus
-valójában egy interfész két privát implementációval:
+valójában egy absztrakt típus két privát implementációval:
 az \texttt{ImplSmall} a \texttt{Long.MIN\_VALUE}-tól a \texttt{Long.MAX\_VALUE}-ig
 terjedő intervallumra (kis számok),
 az \texttt{ImplBig} pedig az ezen kívül eső értékekre (nagy számok) optimalizálva.
@@ -645,7 +645,7 @@ A \texttt{LargeInteger} a \texttt{BigInteger} összes metódusát replikálja,
 illetve számos további kényelmi metódust ad hozzá.
 A zérusközeli értékek gyorsítótárazva vannak a hatékonyság érdekében.
 
-A Scala standard könyvtárának \texttt{BigInt} típusa szitén a \texttt{long} és \texttt{BigInteger}
+A Scala standard könyvtárának \texttt{BigInt} típusa szintén a \texttt{long} és \texttt{BigInteger}
 aritmetika váltogatásával oldja meg,
 hogy az óriás számok támogatása mellett kis számokon viszonylag gyorsan fusson.
 A két megoldás performanciában hasonló,
@@ -685,8 +685,8 @@ a \texttt{LargeInteger} valamivel gyorsabb.
 Az adatbázist egy hierarchikus képződményként is fölfoghatjuk,
 ahol a sémákon belül táblák, azokon belül oszlopok,
 azokon belül pedig sorindexekkel megjelölt mezők foglalnak helyet
-(vagy egy holisztikus értékkészlet),
-végül a mezők értéke is lehet strukturált adat, melyben a rétegződés folytatódik.
+(vagy egy holisztikus értékkészlet).
+Végül a mezők értéke is lehet strukturált adat, melyben a rétegződés folytatódik.
 Azt szeretnénk, hogy az értékek bárhol véletlenszerűen álljanak elő,
 ugyanakkor determinisztikusan, egy globális kiinduló seed alapján.
 Ezért szükségünk van egy olyan véletlengenerátor típusra,
@@ -702,7 +702,7 @@ Valamint lehetőleg az alábbi gyenge követelményeket:
 
 \begin{itemize}
    \item véletlenszerű kimenetet ad
-   \item eltérő példányoknál jellemzően független, különböző kimenetet ad, azonosaknál ugyanazt
+   \item eltérő példányoknál jellemzően független, különböző kimenetet ad
 \end{itemize}
 
 Az ezeknek való megfelelés a \texttt{TreeRandom} interfészen keresztül történik.
@@ -713,7 +713,7 @@ mely a paraméterül kapott számnál kisebb nem negatív egészet ad vissza.
 Ehhez annyi generált bitet használ,
 amennyi a szám elfogulatlan kiválasztásához szükséges (rejection sampling).\footnote{
   Az általános eset miatt valójában egy beépített limittel, melynek elérésekor zérót ad vissza.
-  Ha a visszaadott bitgenerátor például csupa 1-est generál
+  Ha a bitgenerátor-stratégia például csupa 1-est generál
   (ami nem teljesíti ugyan a gyenge követelményeket, de fapados implementációként teljesen valid),
   könnyen végtelen ciklus alakulhatna ki.
 }
@@ -727,14 +727,18 @@ majd a megadott kulcs alapján előállított bájtsorozat kerül hozzáfűzésr
 
 Amikor az adott példányból bitek kerülnek lekérdezésre,
 az első néhány bájt a kulcs-bájtsorozat hashelésével áll elő.
-A további bitek ennek derivátumai, ennek legegyszerűbb algoritmusa,
+A további bitek ennek derivátumai, aminek legegyszerűbb algoritmusa,
 ha a hash alapján előállított seeddel inicializált \texttt{Random} példánnyal
 rendre visszaadott bájtokat használjuk.
 
 \subsection{A \texttt{Monotonic} és implementációi}
 
-Gyakran egy adott értékkészlet elemeiből egy $n$ hosszúságú rendezett listát akarunk képezni.
-Az eloszlás (beleértve, hogy valamely érték egyáltalán előfordul-e) teljesen implementációfüggő lehet. Mivel az értékkészlet maga is egy $k$ hosszúsága lista, a további leképezési kompozíciók szempontjából rugalmasabb, ha az értékindexeket, azaz a $[0..k)$ egész-intervallum számait tesszūk a listába.
+Gyakran egy adott értékkészlet elemeiből akarunk képezni egy $n$ hosszúságú rendezett listát.
+Az eloszlás (beleértve, hogy valamely érték egyáltalán előfordul-e)
+teljesen implementációfüggő lehet.
+Mivel az értékkészlet maga is egy $k$ hosszúsága lista,
+a további leképezési kompozíciók szempontjából rugalmasabb,
+ha az értékindexeket, azaz a $[0..k)$ egész-intervallum számait tesszūk a listába.
 
 Követelmény, hogy le tudjuk kérdezni az alábbiakat:
 
@@ -743,9 +747,9 @@ Követelmény, hogy le tudjuk kérdezni az alábbiakat:
     \item adott értékindex mely sávba került
 \end{itemize}
 
-A rendezettség miatt a második kérdésre mindig egy összefüggő sáv a válasz. Ha az értékindex nem szerepel, akkor ez egy zéróhosszú sáv azon a helyen, ahová a rendezés szerint beszùrható lenne.
+A rendezettség miatt a második kérdésre mindig egy összefüggő sáv a válasz. Ha az értékindex nem szerepel, akkor ez egy zéróhosszú sáv azon a helyen, ahová a rendezés szerint beszúrható lenne.
 
-Értelemszerűen értéksávokra is tudunk keresni, hiszen az értéksáv szélső értékeinek értékindedeire keresve megkapjuk a képzett sáv széleinek sorindexeit is.
+Értelemszerűen értéksávokra is tudunk keresni, hiszen az értéksáv szélső értékeinek értékindexeire keresve megkapjuk a képzett sáv széleinek sorindexeit is.
 
 Ezeket az elvárásokat formalizálja a \texttt{Monotonic} interfész.
 
@@ -764,7 +768,7 @@ determinisztikus eredményt tudok előállítani.
 
 A mintavételezéses eljárás többféleképpen is továbbszofisztikálható.
 Egy ilyen lehetőség a szürjektív eredmény biztosítása, amikor szeretnénk, ha minden érték előfordulna
-(a zajosan monoton értékkiosztásoknál ennel lesz egy további alkalmazása).
+(a zajosan monoton értékkiosztásoknál ennek lesz egy további alkalmazása).
 Illetve az is lehetséges, hogy konkrét táblázatunk van,
 mely minden értékkészletbeli értékre tartalmazza annak várható előfordulási gyakoriságát.
 Ezeket az előre definiált gyakoriságokat használhatjuk a mintavételezésben,
