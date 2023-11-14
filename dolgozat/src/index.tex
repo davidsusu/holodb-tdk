@@ -593,7 +593,7 @@ Ennek konkrétumaira majd a 3. fejezetben térek ki.
 
 \subsection{Segédtípusok}
 
-Mielőtt rátérnék a relációs ontológiát leíró Storage API tárgyalására,
+Mielőtt rátérnék a relációs ontológiát leíró storage API tárgyalására,
 röviden áttekintem azokat a segédinterfészeket,
 amelyek a későbbiekben nélkülözhetetlenek lesznek majd.
 Természetesen ezek az esszenciális típusok apró szeletét adják csak a teljes architektúrának.
@@ -778,7 +778,7 @@ de akár közvetlenül is alkalmazhatjuk egy diszkrét lineáris vetítéssel.
 
 Gyorsan számítható invertálható permutációk például modulo szorzásból kiindulva valósíthatók meg.
 
-Költségesebb, de erősen véletlenszerű összevisszaságot biutosító invertálható permutációkat
+Költségesebb, de erősen véletlenszerű összevisszaságot biztosító invertálható permutációk
 különféle kriptográfiai módszerekkel állíthatók elő.
 Többéle algoritmuscsalád kipróbálása után (pl. FPE, azaz Format Preserving Encryption) végül
 egy megfelelően kialakított Feistel-hálózat bizonyult a legkezelhetőbbnek.
@@ -825,16 +825,16 @@ A következő ábrán vizuálisan összehasonlítottam néhány permutáció-tí
 A kriptográfiában alkalmazott legtöbb megfordítható permutáció kötött méretű.
 A Fesitel-háló ebből a szempontból elég rugalmas,
 de a permutáció hossza még ekkor is csak 2-hatvány lehet.
-A tetszőleges hossz biztosítára átméretező dekorátorok használhatók.
-A hosszcsökkentő dekorátor meghívja a dekorált permutációt,
-ha az érték a célhosszon belül van, akkor visszaadja, ha nem,
-akkor a mindenkori értékkel addig hívja újra a dekorált permutációt,
+A tetszőleges hossz biztosítására átméretező dekorátorok használhatók.
+A hosszcsökkentő dekorátor továbbhív a dekorált permutációra,
+és ha a kapott érték a célhosszon belül van, akkor visszaadja, ha nem,
+akkor a mindenkori értékkel addig hívja újra,
 amíg megfelelő értéket nem kap.
 A hossznövelő dekorátor ennek felhasználásával implementálható,
 de a jelentősége kisebb, jellemzően hosszcsökkentés történik.
 Egyes speciális permutációknál az előbbi módszer nagyon sok újrahívással járhat
 (például egy olyannál, ahol az értékek eggyel előre tolása történik),
-Aaz átméretező metódus bekerült magába az interfészbe,
+Az átméretező metódus bekerült magába az interfészbe,
 hogy az ilyen implementációk maguk kezeljék a helyzetet.
 A jó szétszórást biztosító permutációknál valószínűtlen a sok újrahívás.
 
@@ -858,7 +858,7 @@ A rekordot a \textt{Row} típus reprezentálja,
 ezen keresztül kérhetőek le a konkrét mezőértékek
 az oszlopnév vagy oszloppozíció megadásával.
 
-Az adatok hatékony keresését indexek segítik, itt három ilyen indexfajtávalmfogom foglalkozni,
+Az adatok hatékony keresését indexek segítik, itt három ilyen indexfajtával fogok foglalkozni,
 a normál \texttt{TableIndex}, a \texttt{FulltextIndex} és a \texttt{SpatialIndex} típusokkal.
 Ezek keresőmetódusai egy \texttt{TableSelection} példánnyal térnek vissza,
 melyen keresztül a találati listához férünk hozzá.
@@ -866,6 +866,7 @@ melyen keresztül a találati listához férünk hozzá.
 A \texttt{TableIndex} a szokásos rendezett indextípus,
 mely egyúttal teljes kontrollal rendelkezik a találati lista rendezése
 és a $NULL$ érékek kezelése fölött.
+
 A másik két típusnál egyelőre ezekkel nem foglalkoztam.
 A \texttt{FulltextIndex} lehet úgy implementálva, hogy mindig rendezett értéket ad vissza
 (ehhez lásd később a fulltext értékkiosztásról szóló részt),
@@ -878,7 +879,7 @@ a tömörség kedvéért néhol kicsit vázlatosan:
 \begin{figure}[H]
 \centering
 \includegraphics[width=\textwidth]{diagram/storage-api-uml.png}
-\caption{A Storage API fő interfészei (egy relációs adattár alapontológiája)}
+\caption{A storage API fő interfészei (egy relációs adattár alapontológiája)}
 \end{figure}
 
 \section{A csak-olvasható alapréteg}
@@ -913,7 +914,7 @@ A lekérdező műveletek esetében két különösen fontos hozzáférési módo
 Ha e két hozzáférési mód hatékony, akkor már a lekérdezések jelentős részénél
 elérhető a tényleges adatbázisokéval összemérhető performancia.
 
-A storage API-ban úgy definiáltuk a megfelelő interfészt,
+A storage API-ban úgy definiáltuk a \texttt{TableIndex} interfészt,
 hogy a keresésen kívül még néhány további funkciót is támogatnia kelljen,
 például a rendezést és a $NULL$ értékek kezelését.
 Külön kitérek majd az ezzel kapcsolatos problémákra, ahol szükséges.
@@ -922,7 +923,7 @@ Külön kitérek majd az ezzel kapcsolatos problémákra, ahol szükséges.
 
 Virtuális adatok alatt elsősorban az egy-egy oszlop alá besorakozó,
 közös típussal rendelkező mezőértékeket értem.
-Úgy is fogalmazhatunk, hogy az adatokat alapvetően oszlop-orientáltan fogjuk előállítani.
+Azaz alapesetben, ahogy korábban fogalmaztam, az adatokat oszlop-orientáltan fogjuk előállítani.
 Minden oszlophoz tartozik majd egy virtuális adatlista,
 melynek hossza egyenlő az adott oszlopot tartalmazó tábla hosszával
 (opcionálisan szerepelhetnek benne $NULL$ értékek),
@@ -976,7 +977,8 @@ Természetesen az ilyen esetek szimulálása a legegyszerűbb.
 Triviális eset, ha egy oszlop mezői egy közös konstans értéket tartalmaznak.
 
 Továbbá, ha olyan adathalmazt szimulálunk, melyre megengedhető a feltevés,
-hogy sem törlés, sem releváns értelemben problémás felülírás nem történt még,
+hogy nem történt még releváns módosítás
+(ami persze az írási réteggel utána korrigálható),
 úgy egyes oszlopok szekvenciális alapon generálhatók.
 Az ilyen esetekben az $n$-edik érték lekérése
 egy egyszerű lineáris függvénnyel számolható.
