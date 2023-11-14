@@ -108,8 +108,8 @@ A jelen dolgozatban nem foglalkozom ennek a kérdésnek a részleteivel,
 de az utolsó felyezetben vázolom majd egy lehetséges megoldás körvonalait,
 ami szervesen következik majd az azt előzőekből.
 
-A másik problémakör azzal kapcsolatos, hogy ugyan az ``életnek kitett'' produkciós adatbázist
-kénytelenek vagyunk minden erőforrásigényével életben tartni valamint minden release-zel migrálni,
+A másik problémakör azzal kapcsolatos, hogy ugyan az életnek kitett produkciós adatbázist
+kénytelenek vagyunk minden erőforrásigényével életben tartani, valamint minden release-zel migrálni,
 ám az absztrakt értelemben vett mindenkori adatbázisra számos egyéb helyen is szükségünk van,
 ahol ezek a folyamatos költségek igencsak nemkívánatosak.
 Ilyenek jellemzően:
@@ -125,10 +125,10 @@ Ezeken kívül, ha egy csak-olvasható adattartalmat akarunk nagy adatforgalomna
 fölmerülhet az adattartalom replikálása, és load-balanceren keresztüli elérhetővé tétele,
 ekkor azonban minden újabb példány jelentősen növeli a tárhelyfoglalást.
 
-Nem is mindig áll rendelkezésre egy produkciós adatbázis,
-amikor éppen jól jönne belőle egy másolat.
-De amikor rendelkezésre is áll, tartalma általában érzékeny adatokkal van tele,
-melyeket nem is használhatunk fel csak úgy (anonimizálás nélkül) egyéb célokra.
+Azonban nem mindig áll rendelkezésre egy produkciós adatbázis,
+mikor éppen jól jönne belőle egy másolat.
+És amikor rendelkezésre is áll, tartalma általában érzékeny adatokkal van tele,
+melyeket nemhasználhatunk fel csak úgy (anonimizálás nélkül) egyéb célokra.
 
 Más területeken is találkozhatunk a fentiekhez hasonló kívánalmakkal.
 Például az adatbázisok oktatásában is jellemző, hogy minden egyes hallgató
@@ -159,7 +159,7 @@ A módszer SQL-lekérdezések közvetlen mockolásához is adaptálható,
 a lekérdezés (és ha ismert, akkor a séma) alapján meg kell állapítani
 a visszaadandó eredménytábla szerkezetét, adattípusait,
 az egy-egy oszlopba kerülő adatok jellegét,
-majd random jelleggel elő kell állítani bizonyos számű, ezeknek a követelményeknek megfelelő eredményrekordot.
+majd random jelleggel elő kell állítani bizonyos számú, ezeknek a követelményeknek megfelelő eredményrekordot.
 
 Ez a megoldás természetesen nem fog konzisztens eredményt adni több lekérés esetén,
 így csak olyan esetben használható, ahol a lekérések nem épülnek egymásra.
@@ -167,7 +167,7 @@ Cserébe erőforrásigénye csekély, nincs szükség az adatok tényleges táro
 
 \subsection{Seed alapú virtuális világok}
 
-Egyszerűbb szimulációkban és játékokban már igen régen generálnak kisebb világokat,
+Játékokban és egyszerűbb szimulációkba már igen régóta generálnak kisebb világokat,
 pályákat procedurálisan valamilyen pszeudo-random algoritmus segítségével.
 A módszer továbbfejleszthető óriás világokra is.
 Ekkor a világteret (sorosan vagy hierarchikusan) szeletekre osztjuk, és biztosítunk egy függvényt,
@@ -290,7 +290,7 @@ nem látszik elvi akadálya az adatbázisra vonatkozó konfigurációban való a
 
 De ilyen vaskos módszerek nélkül, egyszerűbb heurisztikákkal is lehetséges
 egy létező adatbázis jó közelítéssel történő letapogatása.
-Hasonlóan, a virtuális adatbázis könnyen renderelhető egy valós adatbázisba.
+Hasonlóan, a virtuális adatbázis könnyen materializálható egy valós adatbázisba.
 
 Arra is lehetőség van, hogy a konfiguráció a JPA entitások
 (és opcionálisan az azokra helyezett specializált annotációk)
