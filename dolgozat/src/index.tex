@@ -1053,8 +1053,8 @@ A következő két ábra szemlélteti az adatlekérés illetve értékkeresés f
     \includesvg[width=\textwidth]{diagram/findvalue}
     \caption{
       Keresés a kétfázisú értékkiosztásban:
-      a rendezett értékkészlet és a vetítések megfordíthatósága
-      biztosítja a hatékony kereshetőséget az virtuális listában
+      a rendezett értékkészlet és a leképezések megfordíthatósága
+      biztosítja a hatékony kereshetőséget a virtuális listában
     }
   \end{minipage}
   \hspace*{\fill}
@@ -1064,7 +1064,7 @@ A következő két ábra szemlélteti az adatlekérés illetve értékkeresés f
 
 Egyes esetekben előre ismert az értékek eloszlása,
 amit szeretnénk nagyjából vagy pontosan viszontlátni a céloszlopban.
-Ekkor egyszerűen \texttt{Monotonic} fentebb tárgyalt konkrét eloszlásokat használó
+Ekkor egyszerűen a \texttt{Monotonic} fentebb tárgyalt konkrét eloszlásokat használó
 implementációnak egyikét kell használnunk.
 
 A felhasználó számára biztosítani kell a gyakoriságok könnyű konfigurálhatóságát.
@@ -1081,9 +1081,9 @@ melynek egyes értékei összességében egy adott sűrűség szerint növekedne
 de lokálisan nagy az egyenetlenség.
 Ezt is két lépésben fogjuk megvalósítani.\footnote{
   A két lépés általánosítható egy általános sűrűségfüggvény és egy zajfüggvény komponációjává,
-  ahol a sűrűségfüggvény meredeksége és a zajfüggvény kilengése közötti viszonyt kell biztosítani
-  (hogy az értékek ne ugorják át egymást).
-  Itt most nem foglalkozunk ezzel az általánosabb kerettel.
+  ahol a sűrűségfüggvény meredeksége és a zajfüggvény kilengése közötti megfelelő viszonyt kell biztosítani,
+  hogy az értékek ne ugorják át egymást.
+  Itt most nem foglalkozom ezzel az általánosabb kerettel.
 }
 
 Az első lépés alapelve tehát hasonló az előbbi megoldás első fázisához.
@@ -1110,9 +1110,9 @@ Egy kézenfekvő megvalósítás,
 hogy a sorindex és a seed alapján inicializált randomgenerátorral
 generáltatunk egy véletlen értéket, ami a sávba esik.
 
-Az értéksávra való keresés úgy történik, hogy a vesszük a minimális és a maximális keresett értéket,
+Értéksávra való kereséskor vesszük a minimális és a maximális keresett értéket,
 és az inverz rányújtást használva megkeressük a megfelelő sorindexeket, amelyek sávjához az érté tartozik.
-Ezen sorindexek feszítik ki majd a találati sorindexsávot.
+Ezen sorindexek feszítik majd ki a találati sorindexsávot.
 Hogy az alsó érték beletartozik-e, annak eldöntéséhez le kell generálni
 az alső sorindexhez a konkrét értéket, és ellenőrizni, hogy nagyobbegyenlő-e,
 mint a keresett alsó érték.
@@ -1141,7 +1141,7 @@ akkor a reguláris kifejezés alapján történő értékkiosztást nagyon könn
 egy véges automatával történő véletlenszerű inverz mintaillesztéssel\footnote{
   A jelenlegi implementáció a \textit{generex} könyvtárat használja erre.
 },
-(a sorindex és a \texttt{TreeRandom}-ból vett seed figyelembevételével).
+a sorindex és a \texttt{TreeRandom}-ból vett seed figyelembevételével.
 
 Ha azonban fenn szeretnénk tartani a gyors keresés lehetőségét,
 szükséges lesz, hogy képezni tudjuk az adott reguláris kifejezésre illeszkedő összes string virtuális listáját.
@@ -1176,7 +1176,7 @@ A módszert két generálási szakaszra bontjuk, a prefix és a fennamaradó ré
 
 Kezdjük a prefix kiosztásával.
 Legyen a szavak minimális száma $L$ ($L > 0$).
-Vegyük $L$ darab szólistát, melyek rendre az $n$-edik szó lehetséges értékeit tartalmazzák.\footnote{
+Vegyünk $L$ darab szólistát, melyek rendre az $n$-edik szó lehetséges értékeit tartalmazzák.\footnote{
   Legegyszerűbb esetben ezek azonosak, és egy szótár szavai vagy generált értékek.
   De egy szofisztikáltabb változatban figyelembe vehetjük a valós szövegek jellemzőit.
 }
@@ -1218,6 +1218,8 @@ A rendezésnél kihasználjuk, hogy az első $L$ szóra van egy hagyományos ind
 Mivel a Descartes-szorzat miatt a lehetséges prefixek listája igen nagy,
 feltehetjük, hogy jellemzően nem nagyon lesznek ismétlődő prefixek,
 de ha igen, csak azokon belül kell tényleges összehasonlításos rendezést végezni.
+
+\todo[inline,color=red]{Kitérni még annak kezelésére, hogy ha átfedések vannak a szólistákban}
 
 \subsection{Nem-indexelt egyoszlopos értékkiosztások}
 
@@ -1327,6 +1329,8 @@ A dolgozat formai kivitele, stílusa (6 pont)
 Az elért eredmények tudományos értéke (6 pont)
 A bíráló összefoglaló véleménye a dolgozatról és színvonalának értékelése. A dolgozat erényei és hibái (8 pont)
 }
+
+\todo[inline,color=red]{Általában a seed terminológiát tisztázni, inkább a TreeRandomra hivatkozni}
 
 
 
