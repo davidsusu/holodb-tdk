@@ -214,7 +214,9 @@ Egyes generátorok a séma és az adatok jellegének deklaratív leírását is 
 
 Ha már rendelkezésre áll egy éles adatbázis, kézenfekvőnek látszik,
 hogy ennek replikáit használjuk a teszt- vagy mockadatbázis kiindulópontjaként.
-Így rögtön egy valószerű adatokhalmazzal indulunk, az érzékeny adatok miatt azonban anonimizálásra van szükség. Tehát a generáláshoz szükséges számítási igényt összességében
+Így rögtön egy valószerű adathalmazzal indulunk,
+az érzékeny adatok miatt azonban anonimizálásra van szükség.
+Tehát a generáláshoz szükséges számítási igényt összességében
 felcseréljük a másolás és anonimizáció költségeivel.
 
 Úgy tűnik, gyakran anonimizálással együtt is egyszerűbb valós adatokból kiindulni,
@@ -261,14 +263,15 @@ egy (egyelőre hipotetikus) ideális készterméktől:
 \end{itemize}
 
 Az utolsó, írhatósági követelménynél föltehetjük, hogy az ilyen adatbázis viszonylag rövid életű,
-tehát nincs szükség sem nagy mennyiségű módosítás megjegyzésére, sem azok hosszú távú perzisztálására.
-Így az egynemű módosíthatóság fentebb említett előnyét nyugodtan elvethetjük.
-Ha egyszer a módosítási réteg megfelelően és univerzálisan implementálva van,
+tehát jllemzően nincs szükség sem nagy mennyiségű módosítás megjegyzésére,
+sem azok hosszú távú perzisztálására.
+Így az egynemű módosíthatóság fentebb említett előnyét nyugodtan elvethetjük:
+ha egyszer a módosítási réteg megfelelően és univerzálisan implementálva van,
 az egyes felhasználásoknál már nincs ezzel kapcsolatos teendő.
 
 Belátható, hogy a fenti elvárások egyszerre teljesíthetők.
-Az alábbi szekcióban röviden vázolom, milyen ötletek és tervezési elvek alakították ki a megoldásom.
-Az implementáció részleteit a következő fejezetben fogom bemutatni.
+Az alábbi szekcióban röviden vázolom, milyen előnyöket nyerünk így,
+az implementáció részleteit pedig a következő fejezetben fogom bemutatni.
 
 \section{Az új megközelítés előnyei}
 
@@ -493,21 +496,21 @@ az alapfeladat mindig ezen adatok értékkészletének megadása lehet.
 
 Természetesen hamar ki kell lépnünk a szigorú oszlop-orientáltságból.
 Lehetnek például összefüggések egy táblán belüli oszlopok között.
-De ezt még mindig egyszerűbb az oszlopos megközelítés megfelelő kiterjesztésével elérni,
+Ezt azonban még mindig egyszerűbb az oszlopos megközelítés megfelelő kiterjesztésével elérni,
 mintsem áttérni valamiféle rekordonkénti generálásra.
 Úgy is mondhatjuk, hogy az oszlopok alatti mezők jó jelöltek arra, hogy ``világszeletek'' legyenek,
 míg egész rekordok nem.
 
 Lehetnek továbbá megkötések táblák között is.
 Ezek kezelése is könnyen elvégezhető az oszlopos alapvetésre építve.
-Az egészszámos idegen kulcsoknál például csak annyit kell biztosítani,
+Az egyoszlopos idegen kulcsoknál például csak annyit kell biztosítani,
 hogy a hivatkozó oszlop értékkészlete a hivatkozottnak a tartalma legyen.
 
 A mindenkori módszert, amivel egy oszlop értéklistáját biztosítjuk,
 \textit{értékkiosztás}nak fogom nevezni.
 A virtuális értékkiosztások olyan függvényt valósítanak meg,
 mellyel egy adott mező értéke determinisztikusan előállítható;
-illetve lehetőleg ezzel konzisztensen az értékek kereshetők is.
+illetve ezzel konzisztensen az értékek lehetőleg kereshetők is.
 Az ilyen függvény az adat fizikai elérését helyettesíti,
 ami a tényleges adatbázisok egyik szűk keresztmetszete.
 
@@ -551,7 +554,6 @@ A szoftver létező prototípusa, a \textit{HoloDB}\footnote{
 (és a hozzá kapcsolódó segédeszközök, könyvtárak nagy része) Java programnyelven íródott,
 ezért a továbbiakban implicite felteszem, hogy Java környezetben vagyunk.
 
-
 Az értékkészlet esetenként óriási lehet,
 gondoljunk például a reguláris kifejezés alapján kitöltött oszlop lehetséges értékeinek számára.
 Az on-the-fly értékszámítás során gyakran fordulnak elő átmeneti óriás számok,
@@ -560,7 +562,7 @@ Emellett az adatbázis méretére vonatkozóan sem akartam megkötéseket tenni.
 Nem lett volna célszerű explicit ellenőrzések tömegét beépíteni
 a problémás számítások, potenciális túlcsordulások földerítésére.
 Az egész számokat egységesen szerettem volna kezelni, függetlenül azok méretétől.
-Így a beépített \texttt{BigInteger} típust egy idő utánelvetettem,
+Így a beépített \texttt{BigInteger} típust egy idő után elvetettem,
 mivel az kisebb számokra a \texttt{long} típushoz képest rendkívül rossz performanciájú.
 
 Az értékkiosztási trükkökkel egy statikus adatbázist írunk le,
