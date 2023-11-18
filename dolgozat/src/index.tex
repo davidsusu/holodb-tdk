@@ -1161,65 +1161,123 @@ Az ilyen típusú szöveggenerálás részletes bemutatása kimutat a jelen dolg
 
 \subsubsection{Full-text indexelt értékkiosztás}
 
-A full-text indexelés legegyszerűbb formáját fogjuk támogatni:
-tudunk majd keresni a szövegben előforduló szavakra,
-azaz vissza tudjuk adni azon sorindexeket,
-amelyekhez tartozó szövegben szerepel az összes keresett szó.
+Ez az értékkiosztási mód folyószövegeket állít elő, melyekhez full-text indexet tesz elérhetővé.
+Itt most csak a full-text index legegyszerűbb fajtájával foglalkozunk,
+melynek bemenete egy néhány szóból álló halmaz,
+eredménye pedig az ezen szavak mindegyikét tartalmazó mezők sorindexeinek halmaza.
+Rendezéssel ez esetben nem foglalkozunk, a full-text indexek ezt általában nem is biztosítják.
+Látni fogjuk, hogy a bemutatott megoldás könnyen továbbfejleszthető.
 
-Most egy kicsit egyszerűsített modellt mutatok be,
-melyben a szavak betűkarakterek sorozatai,
-és ezeket szóközök választják el.
-Az egyéb szövegjellemzők (például központozás) hozzáadása nehézség nélkül kivitelezhető,
-az áttekinthetőség kedvéért ezekkel most nem foglalkozom.
+Első körben induljunk ki abból, hogy adott egy szólista, a mellékelt $f_i$ előfordulási gyakoriságokkal.
+Az $f_i$ előfordulási gyakoriság szimulható is Zipf törvényére alapozva[hiv!].
+A szavakat egyszerűen betűkarakterek sorozataiként fogjuk föl,
+előzetesen függetlenítve a központozás, szövegfelépítés problematikájától.
 
-A módszert két generálási szakaszra bontjuk, a prefix és a fennamaradó rész generálására.
+Lesz emellett egy a szövegekre vonatkozó várható szószám is, jelöljük ezt $c$-vel.
+A gyakoriság és a hossz együtt meghatározza az adott szó
+$p_i$ szereplési valószínűségét valamely szövegben a következő egyszerű képlet szerint:
 
-Kezdjük a prefix kiosztásával.
-Legyen a szavak minimális száma $L$ ($L > 0$).
-Vegyünk $L$ darab szólistát, melyek rendre az $n$-edik szó lehetséges értékeit tartalmazzák.\footnote{
-  Legegyszerűbb esetben ezek azonosak, és egy szótár szavai vagy generált értékek.
-  De egy szofisztikáltabb változatban figyelembe vehetjük a valós szövegek jellemzőit.
-}
-Vegyük most azt a virtuális listát, melyen keresztül ezek Descartes-szorzatát érjük el.
-Nem kell mást tennünk, mint ezt a listát a kétfázisú értékkiosztással alkalmazni.
-Ha jó nekünk, hogy minden érték $L$ szóból áll, készen is vagyunk.
+$$
+p_i = 1 - (1 - f_i)^c
+$$
 
-Ha viszont változó szószámot szeretnénk,
-akkor még gondoskodni kell a szövegek fennmaradó részének előállításáról.
-Ehhez állítsunk elő egy-egy függvényt a szótár minden egyes szavára\footnote{
-  Feltételezzük, hogy a szótár nem túl nagy (például lorem ipsum szavak).
-  De nagy szótár esetén is van egy egyszerű kerülőmegoldás:
-  a függvényt több rekurzív szinten valósítjuk meg,
-  először a szótár nagy szeleteit osztjuk ki,
-  majd azon belül kisebb szeleteket, és így tovább, végül az egyes szavakat.
-  Így a szó ellenőrzése az adott sorindexre még mindig logaritmikus számítási igényű.
-}, mely lényegileg a két logikai érték rányújtása:
-bármely sorindexre megadja, hogy az adott szó szerepel-e a hozzá tartozó szövegben,
-illetve bármely szóra megadja a sorindexeket, ahol a szó szerepel.
+Legyen $s$ az egy szövegben várhatóan előforduló szavak halmazának számossága ($s \leq c$).
+Az $n$ táblahossz számú mezőre akarjuk képezni a szövegeket,
+amit egy $n \times s$ méretű virtuális mátrix segítségével fogunk elvégezni.
+A szavakat valamilyen sorrendben véve (a sorrend megválasztásának problémáit most mellőzöm),
+az $n s$ hosszú listát feltöltjük úgy, hogy minden szó egy összefüggő sávban szerepel,
+a sávok sorrendje az említett szósorrend,
+a sávok egymáshoz képesti relatív hossza pedig a $p_i$ szereplési valószínűségen alapul.
+Ezt a listát képezzük bele oszlopfolytonosan a mátrixba.
 
-Már csak annyi feladatunk van, hogy bármely sorindexre következetesen visszaadjunk egy olyan szöveget,
-mely megfelel ennek a két kritériumnak:
+Egy adott sorindexhez tartozó mezőben szereplő szavakat úgy kapjuk,
+hogy egyszerűen vesszük a mátrix megfelelő sorát.
+Szavakra keresni pedig úgy tudunk, hogy a keresett szavakhoz tartozó
+(esetleg oszlopváltással megszakított) sávok metszetsávját vesszük,
+ha nincs metszet, nincs találat.
+A mátrixsorokat az életszerűség kedvéért érdemes permutálni a fentebb már ismertetett módszerrel.
+
+A mátrixos módszer egyik hátránya,
+hogy az egymás mellé került szavak eltartanak egymástól ugyanabban az oszlopban,
+így jellemzően nem tudnak majd bekerülni ugyanabba a szövegbe,
+illetve általában is viszonylag korlátolt,
+hogy melyek a lehetséges konstellációk.
+Ez viszonylag jól orvosolható azzal, ha egy-egy szó sávja több független sávba törik szét
+(jól ügyelve arra, hogy ezek a részsávok távoli sorokra essenek,
+de legalábbis ne legyen metszetük modulo $n$).
+
+Egy másik probléma (hacsaknem épp ez a cél), hogy a szövegek túl uniformak, ugyanannyi féle szóból állnak.
+Ezen könnyen segíthetünk, ha a szósávok közé sok apró üres sávot helyezünk el.
+
+A következő ábrák szemléltetik az eddig leírt szóösszeállítási illetve keresési módszert:
+
+
+\begin{figure}[H]
+  \centering
+  \hspace*{\fill}
+  \begin{minipage}[t]{0.42\textwidth}
+    \includesvg[width=\textwidth]{diagram/fulltext-getvalue}
+    \caption{Full-text szóösszeállítás}
+  \end{minipage}
+  \hspace*{\fill}
+  \begin{minipage}[t]{0.42\textwidth}
+    \includesvg[width=\textwidth]{diagram/fulltext-findvalue}
+    \caption{Full-text keresés}
+  \end{minipage}
+  \hspace*{\fill}
+\end{figure}
+
+
+Egy harmadik egyszerű javítás a használati esetekre alapozható.
+Ha előre ismert, hogy mely néhány (ideálisan kb. 6-8) szó lesz gyakran keresve,
+akkor ezeket kiemelhetjük az előbbi szóhalmazból, és teljesen külön kezelhetjük.
+Képezzük az összes lehetséges előfordulási kombinációt azok pontos gyakoriságával,
+az így kapott értékkészletet pedig lineárisan rányújtjuk a táblahosszra.
+Célszerű ezt a többi szótól teljesen függetlenül permutálni.
+A mező szavainak összeállításához a kétféle kiosztás unióját kell venni,
+kereséskor pedig a kettő által adott találatok metszetét.
+
+Megjegyzem, ha vannak kiemelt szavak, akkor a többi szó halmaza részben vagy egészben
+akár mesterségesen előállított szavakból is állhat.
+Ekkor egy minta alapján generálunk szavakat
+(on-the-fly, ld. a reguláris kifejezések kapcsán írottakat),
+majd például Zipf törvénye alapján hozzájuk rendeljük a gyakoriságokat.
+Ha így járunk el, megspóroljuk a konkrét szavak tárolásának tárhelyigényét.
+
+Egy-egy mezőértékhez még csak a szavak halmazát állítottuk elő.
+Amikor lekérjük a mező konkrét értékét, akkor egy tényleges szöveget szeretnénk kapni,
+mely pontosan ennek a halmaznak a szavait tartalmazza (sorrendtől és multiplicitástól függetlenül),
+és lehetőleg egy viszonylag valóságosnak tűnő szöveg, még ha nem is értelmes.
+Vegyük észre, hogy ebben teljes szabadságunk van, hiszen az érték és index konzisztenciája már biztosított.
+
+Az aktuális \texttt{TreeRandom}, a sorindex és a kapott szóhalmaz függvényében
+a szöveg generálására tetszőleges módszert használhatunk,
+itt tehát egy széles skálázási lehetőség adódik.
+A fapados megoldás a halmaz szavainak egyszerű felsorolása szóközzel választva
+(abban a sorrendben, ahogy a kiemelt szavak fel voltak sorolva, illetve ahogyan a mátrixból nyertük őket).
+Egy nagyon szofisztikált módszer lehet, ha nyelvi modellt használunk a szöveg generálására.
+
+Egy olcsó, ugyanakkor viszonylag jó eredményt adó módszer a következő:
 
 \begin{enumerate}
-  \item Az első $L$ szó egyezik az első szakaszban meghatározott prefixszel.
-  \item A fennmaradó rész pontosan azokat a szavakat tartalmazza,
-        amely a fennmaradó rész kiosztásánál leírt szóválasztásnak megfelel.
-        Ugyanaz a szó többször is szerepelhet.
+    \item Határozzuk meg a $c_i$ konkrét szószámot.
+    \item Vegyük a szóhalmazt valamilyen konkrét sorrendben.
+    \item Helyezzünk ezek közé további szavakat a gyakoriságok figyelembevételével,
+          míg a $c_i$ szószámot el nem érjük.
+    \item Határozzuk meg a mondat- illetve részmondathatárok pozícióit.
+    \item Fűzzük össze a szöveget szóközökkel.
+          A mondatkezdő szavakat nagy kezdőbetűsre alakítjuk,
+          a mondat- illetve részmondatvégekre pedig megfelelő központozást helyezünk el.
 \end{enumerate}
 
-A második kritérium természetesen legegyszerűbben úgy teljesíthető,
-hogy a kiválasztott szavakat abc-rendben felsoroljuk.
-De mivel teljes szabadságunk van (az indexeltség ekkorra már biztosítva van),
-tetszőlegesen szofisztikált módszereket alkalmazhatunk a minél életszerűbb szöveg kialakítására
-(ez egy skálázható opció).
+Mindegyik lépés finomítható különféle heurisztikákkal.
+Ennek lehetséges megoldásaival most nem foglalkozom.
 
-A rendezésnél kihasználjuk, hogy az első $L$ szóra van egy hagyományos indexünk,
-így a prefixek egymáshoz képesti rendezése már megoldott.
-Mivel a Descartes-szorzat miatt a lehetséges prefixek listája igen nagy,
-feltehetjük, hogy jellemzően nem nagyon lesznek ismétlődő prefixek,
-de ha igen, csak azokon belül kell tényleges összehasonlításos rendezést végezni.
-
-\todo[inline,color=red]{Kitérni még annak kezelésére, hogy ha átfedések vannak a szólistákban}
+A fent tárgyalt full-text index természetes módon továbbbővíthető különféle irányokba.
+Könnyen integrálható például az exkuzálandó szavak listájának kezelése.
+A szóhalmaz kiválasztásának és a szöveg generálásának összehangolásával
+a kifejezésekre való keresés bizonyos formái is megvalósíthatóvá válnak.
+Ezekre a bővítési lehetőségekre ezen keretek között szintén nem tudunk részletesen kitérni.
 
 \subsection{Nem-indexelt egyoszlopos értékkiosztások}
 
