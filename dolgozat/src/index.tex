@@ -1361,7 +1361,7 @@ például egy listafájlból.
 Nagy táblahossznál érdemes lehet ezt indexeltté tenni egy tényleges adatstruktúrával (például B-Tree),
 mivel ilyenkor valószínűleg úgysem a memóriahasználat minimalizálása a cél.
 
-\subsection{Értékkiosztás oszlopok közötti megkötésekkel [összefüggéssel]}
+\subsection{Értékkiosztás oszlopok közötti összefüggéssel}
 
 \todo[inline]{subsubsection: Értékkiosztás oszlopok közötti megkötésekkel}
 
@@ -1377,18 +1377,23 @@ csak a hivatkozott tábla érintett oszlopának (vagy oszlop-$n$-esének)
 Vagyis ($NULL$ értékektől eltekintve),
 a hivatkozó oszlop értékkiosztásakor az alaplista a hivatkozott oszlop tartalma lesz.
 Másként fogalmazva, az értéklistát indextartó módon kell átképezni a másik táblára.
-Ez a fentiek tükrében már egyszerűen bitosítható.
+Ez a fentiek tükrében már egyszerűen biztosítható.
 
+Egyes esetekben (bizonyos típusú 1:1 kapcsolatok) valójában egy tábla kerül szétbontásra több táblára.
+Ekkor a többtáblára bontottság csak külsődleges,
+és az előző részben oszlopok közötti összefüggésekről írottak alkalmazhatók,
+még akkor is, ha a két tábla számossága nem egyezik teljesen
+(a hiányzó sorok a $NULL$ értékek kezelésének fentebb ismertetett
+általános módszerével kerülhetnek kiválasztásra).
 
-
-[TODO]
-
-- másféle táblaközi kapcsolatok
-- valamilyen statisztikai összefüggés
-- az oszlopok közötti kapcsolatok kiterjesztése több táblába
-
-
-
+A legbonyolultabb esetben 1:n kapcsolat mellett különféle statisztikai
+vagy egyéb követelményeket biztosító indexelt oszlopokat szeretnénk előállítani.
+Ennek tárgyalása messzire vezet,
+de egy rövid megjegyzéssel érzékeltetném, hogy a dolog nem lehetetlen:
+egy lehetséges kiinduló megközelítés, hogy a két táblát egyként kezeljük,
+az egyesített táblában a kisebb tábla adatait pedig redundánsan szerepeltetjük
+(ez egy oszlopközi összefüggés a fenti értelemben);
+így az összefüggéseket már táblán belül tudjuk értelmezni.
 
 \section{Az írhatósági réteg}
 
