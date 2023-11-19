@@ -1373,12 +1373,13 @@ akkor meg kell engednünk a $NULL$ értékeket az érintett oszlopokban,
 és a kielégíthetetlen esetekben mindegyikre $NULL$-t kell visszaadni
 (esetleg valamilyen egyéb alapértelmezett értéket).
 
-Szintén elég általános eset, amikor opcionálisan indexelt mesteroszlopok
+Szintén elég általános eset, amikor mesteroszlopok
 alapján akarunk indexeletlen oszlopokat egymástól függetlenül legenerálni.
 Ekkor teljes szabadságunk van,
 értelemszerűen mesteroszlopok értékei és a \texttt{TreeRandom}-ból nyert seed lesz a bemenet.
 
-Életszerű azonban, hogy a függő oszlopokra is szeretnénk indexelést.
+Életszerű azonban, hogy indexelt mesteroszlopokon túl
+a függő oszlopokra is szeretnénk indexelést.
 Ha egy nagy közös index elég,
 akkor elégséges a függő értékeket becsoportosítani a mesterértékek alá.
 
