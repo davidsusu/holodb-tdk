@@ -1363,9 +1363,31 @@ mivel ilyenkor valószínűleg úgysem a memóriahasználat minimalizálása a c
 
 \subsection{Értékkiosztás oszlopok közötti összefüggéssel}
 
-\todo[inline]{subsubsection: Értékkiosztás oszlopok közötti megkötésekkel}
+Az oszlopok közötti összefüggésnek számtalan módja lehetséges.
+A legalátalánosabb eset képletszerű összefüggések felsorolása lenne,
+ami indexeletlen esetben meg is megvalósítható:
+a \texttt{TreeRandom}-ból nyert seeddel véletlenszerűsítve futtathatunk valamilyen constraint solvert,
+mely a követelményeket teljesítő értékeket determinisztikusan előállítja.
+Ha lehetséges, hogy egyes seed értékek mellett a követelményrendszer nem kielégíthatő,
+akkor meg kell engednünk a $NULL$ értékeket az érintett oszlopokban,
+és a kielégíthetetlen esetekben mindegyikre $NULL$-t kell visszaadni
+(esetleg valamilyen egyéb alapértelmezett értéket).
 
-\todo[inline]{összetett adatok, valós címek, földrajzi koordináták etc.}
+Szintén elég általános eset, amikor opcionálisan indexelt mesteroszlopok
+alapján akarunk indexeletlen oszlopokat egymástól függetlenül legenerálni.
+Ekkor teljes szabadságunk van,
+értelemszerűen mesteroszlopok értékei és a \texttt{TreeRandom}-ból nyert seed lesz a bemenet.
+
+Életszerű azonban, hogy a függő oszlopokra is szeretnénk indexelést.
+Ha egy nagy közös index elég,
+akkor elégséges a függő értékeket becsoportosítani a mesterértékek alá.
+
+Bonyolult, de még mindig teljesen életszerű eset,
+amikor a függő értékek külön önálló indexeket is kapnak
+(ilyen eset például, ha az életkor adatot a végzettséghez igazítva generáljuk).
+Ha a mesteroszlop(ok) értékkészlete kicsi,
+akkor minden ilyen értéken belül elvégezhetjük a keresést illetve rendezést a függő értékekre,
+és ezek összefésült eredményét adjuk vissza.
 
 \subsection{Táblák közötti kapcsolatok}
 
