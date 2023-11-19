@@ -67,7 +67,7 @@ a modern szoftvertechnológia két elengedhetetlen alapköve.
 Mégis, ezek egyik fő függőségének, a teszt- illetve demóadatoknak
 a rendelkezésre állása manapság is komoly kihívást jelent.
 Általában két megközelítési móddal találkozunk:
-vagy az adatok on-the-fly generálával, mely ugyan kisköltségű,
+vagy az adatok on-the-fly generálásával, mely ugyan kisköltségű,
 de teljesen inkonzisztens az egyes üzenetváltások között;
 vagy valamilyen tesztadatbázis odahelyezésével,
 mely nem csak hogy hordozza a tényleges adatbázis minden költségigényét,
@@ -105,7 +105,7 @@ ami jellemzően egy másodlagos verziókezelést eredményez a forráskód verzi
 (ilyen megoldás például a Flyway vagy a Liquibase),
 és sorozatos összefésülési problémákhoz vezet, ha az adatok szerkezete vagy szemantikája gyakran változik.
 A jelen dolgozatban nem foglalkozom ennek a kérdésnek a részleteivel,
-de az utolsó felyezetben vázolom majd egy lehetséges megoldás körvonalait,
+de az utolsó fejezetben vázolom majd egy lehetséges megoldás körvonalait,
 ami szervesen következik majd az azt előzőekből.
 
 A másik problémakör azzal kapcsolatos, hogy ugyan az életnek kitett produkciós adatbázist
@@ -128,7 +128,7 @@ ekkor azonban minden újabb példány jelentősen növeli a tárhelyfoglalást.
 Azonban nem mindig áll rendelkezésre egy produkciós adatbázis,
 mikor éppen jól jönne belőle egy másolat.
 És amikor rendelkezésre is áll, tartalma általában érzékeny adatokkal van tele,
-melyeket nemhasználhatunk fel csak úgy (anonimizálás nélkül) egyéb célokra.
+melyeket nem használhatunk fel csak úgy (anonimizálás nélkül) egyéb célokra.
 
 Más területeken is találkozhatunk a fentiekhez hasonló kívánalmakkal.
 Például az adatbázisok oktatásában is jellemző, hogy minden egyes hallgató
@@ -199,7 +199,7 @@ Milyen előnyöket nyerünk ezzel? Lássunk néhányat:
 \begin{itemize}
     \item utófeldolgozás: utólag holisztikus módosításokat eszközölhetünk az adathalmazon
     \item egynemű módosíthatóság: minden eleve tárolva van, nem kell külön kezelni a változásokat
-    \item kereshetőség: az adatbáziskezelő biztosítja az indexeket
+    \item kereshetőség: az adatbázis-kezelő biztosítja az indexeket
 \end{itemize}
 
 A fő hátrány egyértelmű: a nagy tárhelyigény.
@@ -263,7 +263,7 @@ egy (egyelőre hipotetikus) ideális készterméktől:
 \end{itemize}
 
 Az utolsó, írhatósági követelménynél föltehetjük, hogy az ilyen adatbázis viszonylag rövid életű,
-tehát jllemzően nincs szükség sem nagy mennyiségű módosítás megjegyzésére,
+tehát jellemzően nincs szükség sem nagy mennyiségű módosítás megjegyzésére,
 sem azok hosszú távú perzisztálására.
 Így az egynemű módosíthatóság fentebb említett előnyét nyugodtan elvethetjük:
 ha egyszer a módosítási réteg megfelelően és univerzálisan implementálva van,
@@ -755,7 +755,7 @@ Ezeket az elvárásokat formalizálja a \texttt{Monotonic} interfész.
 
 A legegyszerűbb implementáció a diszkrét lineáris vetítés.
 A $k$ hosszúságú értékkészletet ekkor úgy vetítjük az $n$ listahosszra,
-hogy az $i$-edig helyre a $\lfloor \frac{k \cdot i}{n} \rfloor$ pozíciójú érték kerül.
+hogy az $i$-edik helyre a $\lfloor \frac{k \cdot i}{n} \rfloor$ pozíciójú érték kerül.
 
 A költségesebb, jobb minőségű implementációk pszeudovéletlen mintavételezésen alapulnak.
 Ehhez rekurzívan osztjuk föl az értékkészletet, miközben a felosztás fája determinisztikus, mindig ugyanaz.
@@ -780,7 +780,7 @@ Gyorsan számítható invertálható permutációk például modulo szorzásból
 
 Költségesebb, de erősen véletlenszerű összevisszaságot biztosító invertálható permutációk
 különféle kriptográfiai módszerekkel állíthatók elő.
-Többéle algoritmuscsalád kipróbálása után (pl. FPE, azaz Format Preserving Encryption) végül
+Többféle algoritmuscsalád kipróbálása után (pl. FPE, azaz Format Preserving Encryption) végül
 egy megfelelően kialakított Feistel-hálózat bizonyult a legkezelhetőbbnek.
 A Feistel-háló fő skálázási paramétere (akárcsak a hash-alapú \texttt{TreeRandom}-implementációnál)
 a hashelő algoritmus minősége,
@@ -823,7 +823,7 @@ A következő ábrán vizuálisan összehasonlítottam néhány permutáció-tí
 \end{figure}
 
 A kriptográfiában alkalmazott legtöbb megfordítható permutáció kötött méretű.
-A Fesitel-háló ebből a szempontból elég rugalmas,
+A Feistel-háló ebből a szempontból elég rugalmas,
 de a permutáció hossza még ekkor is csak 2-hatvány lehet.
 A tetszőleges hossz biztosítására átméretező dekorátorok használhatók.
 A hosszcsökkentő dekorátor továbbhív a dekorált permutációra,
@@ -851,7 +851,7 @@ Nyilvánvalóan gondoskodni kell az alaphierarchiáról,
 ezek lesznek a \texttt{Schema}, \texttt{Table} és \texttt{Column} típusok.
 Az oszlopok elvont tulajdonságait a \texttt{ColumnDefinition} típus fogja össze.
 Bár az egyes mezők értékeit általában oszloporientáltan állítjuk elő,
-jellemzően az értéklistákat megadó \texttt{Source} objektimok használatával,
+jellemzően az értéklistákat megadó \texttt{Source} objektumok használatával,
 a lekérésnél több szempontból is intuitívabbnak és előnyösebbnek mutatkozik
 a rekordorientált megközelítés.
 A rekordot a \textt{Row} típus reprezentálja,
@@ -865,7 +865,7 @@ melyen keresztül a találati listához férünk hozzá.
 
 A \texttt{TableIndex} a szokásos rendezett indextípus,
 mely egyúttal teljes kontrollal rendelkezik a találati lista rendezése
-és a $NULL$ érékek kezelése fölött.
+és a $NULL$ értékek kezelése fölött.
 
 A másik két típusnál egyelőre ezekkel nem foglalkoztam.
 A \texttt{FulltextIndex} lehet úgy implementálva, hogy mindig rendezett értéket ad vissza
@@ -884,7 +884,7 @@ a tömörség kedvéért néhol kicsit vázlatosan:
 
 \section{A csak-olvasható alapréteg}
 
-Bármilyen imlementáció legyen is mögötte, a storage API egy relációs adatbázist ír le.
+Bármilyen implementáció legyen is mögötte, a storage API egy relációs adatbázist ír le.
 Tehát ahhoz, hogy a virtuális adatok funkcionálisan egy valódi (csak-olvasható) relációs adathalmaz képét adják,
 nem kell más, mint hogy konzisztens módon elérhetők legyenek a storage API-n keresztül.
 A konzisztencia ez esetben két dolgot jelent:
@@ -929,7 +929,7 @@ melynek hossza egyenlő az adott oszlopot tartalmazó tábla hosszával
 (opcionálisan szerepelhetnek benne $NULL$ értékek),
 a többi érték típusának pedig kompatibilisnak kell lennie az oszlophoz megadott típussal.
 
-Bár ez a megközelítás oszloponként független adatlistákra van szabva,
+Bár ez a megközelítés oszloponként független adatlistákra van szabva,
 valójában más jellegű értékkiosztási módszer is lehet mögötte,
 amennyiben az egy-egy oszlophoz tartozó listanézetek biztosítottak.
 Majd a több oszlopot érintő megkötések esetében ez lesz a helyzet.
@@ -1032,7 +1032,7 @@ egy \texttt{Permutation} példány segítségével elkeverjük.
 \end{figure}
 
 Láttuk, hogy mindkét függvénytípus interfésze úgy van definiálva, hogy relációként megfordítható.
-A \texttt{Monotonic} \texttt{indicesOf()} metódusaivel egy értékindexnek illetve -sávnak
+A \texttt{Monotonic} \texttt{indicesOf()} metódusaival egy értékindexnek illetve -sávnak
 a céllistabeli sávjára tudunk rákérdezni.
 A \texttt{Permutation} pedig az \textt{indexOf()} metódust biztosítja hasonló célra
 (illetve inverze maga is permutáció).
@@ -1079,7 +1079,7 @@ melynek egyes értékei összességében egy adott sűrűség szerint növekedne
 (vagy csökkennek; az egyszerűség kedvéért most csak a növekedő esetről lesz szó),
 de lokálisan nagy az egyenetlenség.
 Ezt is két lépésben fogjuk megvalósítani.\footnote{
-  A két lépés általánosítható egy általános sűrűségfüggvény és egy zajfüggvény komponációjává,
+  A két lépés általánosítható egy általános sűrűségfüggvény és egy zajfüggvény összegévé,
   ahol a sűrűségfüggvény meredeksége és a zajfüggvény kilengése közötti megfelelő viszonyt kell biztosítani,
   hogy az értékek ne ugorják át egymást.
   Itt most nem foglalkozom ezzel az általánosabb kerettel.
@@ -1092,7 +1092,7 @@ Minden sorindexhez hozzárendelődik egy (a szigorú monotonitás elvárása ese
 dedikált sáv az értékkészletből.
 
 A második lépés választ egy értéket a sávból.
-Nem szigoróan monoton értéksor esetén megengedjük az üres sávot is,
+Nem szigorúan monoton értéksor esetén megengedjük az üres sávot is,
 és ilyen esetekben mindig a rákövetkező elemet választjuk.\footnote{
   Ebben az esetben explicite ki kell zárni, hogy az utolsó sáv üres legyen.
   Ez legtermészetesebben egy logikai paraméter beiktatásával érhető el,
@@ -1127,7 +1127,7 @@ amit egy egyszerű, szigorúan egyenletes kiosztás esetén vettek volna föl.
 
 Ez az értékkiosztás különösen alkalmas időbélyegek szimulálására,
 amikor az események általános sűrűsége adott,
-de véletlenszerű, zajos kiemenetet szeretnénk látni.
+de véletlenszerű, zajos kimenetet szeretnénk látni.
 
 \subsubsection{Értékkiosztás reguláris kifejezés alapján}
 
@@ -1164,7 +1164,7 @@ Rendezéssel ez esetben nem foglalkozunk, a full-text indexek ezt általában ne
 Látni fogjuk, hogy a bemutatott megoldás könnyen továbbfejleszthető.
 
 Első körben induljunk ki abból, hogy adott egy szólista, a mellékelt $f_i$ előfordulási gyakoriságokkal.
-Az $f_i$ előfordulási gyakoriság szimulható is Zipf törvényére alapozva[hiv!].
+Az $f_i$ előfordulási gyakoriság szimulálható is Zipf törvényére alapozva[hiv!].
 A szavakat egyszerűen betűkarakterek sorozataiként fogjuk föl,
 előzetesen függetlenítve a központozás, szövegfelépítés problematikájától.
 
@@ -1201,7 +1201,7 @@ Ez viszonylag jól orvosolható azzal, ha egy-egy szó sávja több független s
 (jól ügyelve arra, hogy ezek a részsávok távoli sorokra essenek,
 de legalábbis ne legyen metszetük modulo $n$).
 
-Egy másik probléma (hacsaknem épp ez a cél), hogy a szövegek túl uniformak, ugyanannyi féle szóból állnak.
+Egy másik probléma (hacsaknem épp ez a cél), hogy a szövegek túl uniformak, ugyanannyiféle szóból állnak.
 Ezen könnyen segíthetünk, ha a szósávok közé sok apró üres sávot helyezünk el.
 
 A következő ábrák szemléltetik az eddig leírt szóösszeállítási illetve keresési módszert:
@@ -1364,11 +1364,11 @@ mivel ilyenkor valószínűleg úgysem a memóriahasználat minimalizálása a c
 \subsection{Értékkiosztás oszlopok közötti összefüggéssel}
 
 Az oszlopok közötti összefüggésnek számtalan módja lehetséges.
-A legalátalánosabb eset képletszerű összefüggések felsorolása lenne,
+A legáltalánosabb eset képletszerű összefüggések felsorolása lenne,
 ami indexeletlen esetben meg is megvalósítható:
 a \texttt{TreeRandom}-ból nyert seeddel véletlenszerűsítve futtathatunk valamilyen constraint solvert,
 mely a követelményeket teljesítő értékeket determinisztikusan előállítja.
-Ha lehetséges, hogy egyes seed értékek mellett a követelményrendszer nem kielégíthatő,
+Ha lehetséges, hogy egyes seed értékek mellett a követelményrendszer nem kielégíthető,
 akkor meg kell engednünk a $NULL$ értékeket az érintett oszlopokban,
 és a kielégíthetetlen esetekben mindegyikre $NULL$-t kell visszaadni
 (esetleg valamilyen egyéb alapértelmezett értéket).
@@ -1403,7 +1403,7 @@ Másként fogalmazva, az értéklistát indextartó módon kell átképezni a m�
 Ez a fentiek tükrében már egyszerűen biztosítható.
 
 Egyes esetekben (bizonyos típusú 1:1 kapcsolatok) valójában egy tábla kerül szétbontásra több táblára.
-Ekkor a többtáblára bontottság csak külsődleges,
+Ekkor a több táblára bontottság csak külsődleges,
 és az előző részben oszlopok közötti összefüggésekről írottak alkalmazhatók,
 még akkor is, ha a két tábla számossága nem egyezik teljesen
 (a hiányzó sorok a $NULL$ értékek kezelésének fentebb ismertetett
