@@ -1029,7 +1029,6 @@ egy \texttt{Permutation} példány segítségével elkeverjük.
 \centering
 \includesvg[width=0.55\textwidth]{diagram/distribution}
 \caption{A kétfázisú értékkiosztás alapelve: egymás után végrehajtott visszafejthető disztribúció és permutáció}
-\label{A kétfázisú értékkiosztás alapelve}
 \end{figure}
 
 Láttuk, hogy mindkét függvénytípus interfésze úgy van definiálva, hogy relációként megfordítható.
@@ -1130,10 +1129,6 @@ Ez az értékkiosztás különösen alkalmas időbélyegek szimulálására,
 amikor az események általános sűrűsége adott,
 de véletlenszerű, zajos kiemenetet szeretnénk látni.
 
-\subsubsection{Összetett értékek kezelése}
-
-\todo[inline]{Összetett értékek kezelése}
-
 \subsubsection{Értékkiosztás reguláris kifejezés alapján}
 
 Ha elengedjük a gyors keresés kritériumát,
@@ -1211,7 +1206,6 @@ Ezen könnyen segíthetünk, ha a szósávok közé sok apró üres sávot helye
 
 A következő ábrák szemléltetik az eddig leírt szóösszeállítási illetve keresési módszert:
 
-
 \begin{figure}[H]
   \centering
   \hspace*{\fill}
@@ -1227,14 +1221,13 @@ A következő ábrák szemléltetik az eddig leírt szóösszeállítási illetv
   \hspace*{\fill}
 \end{figure}
 
-
-Egy harmadik egyszerű javítás a használati esetekre alapozható.
-Ha előre ismert, hogy mely néhány (ideálisan kb. 6-8) szó lesz gyakran keresve,
-akkor ezeket kiemelhetjük az előbbi szóhalmazból, és teljesen külön kezelhetjük.
-Képezzük az összes lehetséges előfordulási kombinációt azok pontos gyakoriságával,
+Egy harmadik egyszerű javítás adódik,
+ha előre ismert, mely néhány (ideálisan kb. 6-8) szó lesz gyakran keresve,
+ezeket teljesen külön kezelhetjük.
+Vesszük az összes lehetséges előfordulási kombinációt azok pontos gyakoriságával,
 az így kapott értékkészletet pedig lineárisan rányújtjuk a táblahosszra.
 Célszerű ezt a többi szótól teljesen függetlenül permutálni.
-A mező szavainak összeállításához a kétféle kiosztás unióját kell venni,
+Egy mező szóhalmazaként a kétféle kiosztás unióját kell venni,
 kereséskor pedig a kettő által adott találatok metszetét.
 
 Megjegyzem, ha vannak kiemelt szavak, akkor a többi szó halmaza részben vagy egészben
@@ -1262,22 +1255,61 @@ Egy olcsó, ugyanakkor viszonylag jó eredményt adó módszer a következő:
 \begin{enumerate}
     \item Határozzuk meg a $c_i$ konkrét szószámot.
     \item Vegyük a szóhalmazt valamilyen konkrét sorrendben.
-    \item Helyezzünk ezek közé további szavakat a gyakoriságok figyelembevételével,
-          míg a $c_i$ szószámot el nem érjük.
+    \item Helyezzünk ezek közé további szavakat, míg a $c_i$ szószámot el nem érjük.
     \item Határozzuk meg a mondat- illetve részmondathatárok pozícióit.
-    \item Fűzzük össze a szöveget szóközökkel.
-          A mondatkezdő szavakat nagy kezdőbetűsre alakítjuk,
-          a mondat- illetve részmondatvégekre pedig megfelelő központozást helyezünk el.
+    \item Fűzzük össze a szöveget szóközökkel, adjuk hozzá a központozást.
 \end{enumerate}
 
-Mindegyik lépés finomítható különféle heurisztikákkal.
-Ennek lehetséges megoldásaival most nem foglalkozom.
+Mindegyik lépés finomítható különféle heurisztikákkal,
+ezekkel most nem foglalkozom.
 
-A fent tárgyalt full-text index természetes módon továbbbővíthető különféle irányokba.
-Könnyen integrálható például az exkuzálandó szavak listájának kezelése.
+A fent tárgyalt full-text index természetes módon bővíthető.
+Könnyen integrálható például a kizárandó szavak kezelése.
 A szóhalmaz kiválasztásának és a szöveg generálásának összehangolásával
 a kifejezésekre való keresés bizonyos formái is megvalósíthatóvá válnak.
 Ezekre a bővítési lehetőségekre ezen keretek között szintén nem tudunk részletesen kitérni.
+
+\subsection{Földrajzi koordináták értékkiosztása}
+
+A legegyszerűbben közelítjük meg a problémát,
+ami nagyobb dimenziószámra és lényegileg tetszőleges geometriára is átvihető.
+Csak a megoldás vázát ismertetem.
+
+Az értékek sűrűségének, elhelyezkedésének valamint opcionálisan a várható lekérdezések
+figyelembevételével a felületet térszeletekre osztjuk.
+Ennek a felosztásnak nem feltétlenül kell egyenletesnek vagy egyáltalán szabályosnak lennie,
+de az egyszerűség kedvéért most maradjunk a szokványos hálónál:
+adott $w$ földrajzi szélességenként illetve adott $h$ földrajzi szélességenként vágjuk föl a gömbfelszínt.
+A kapott háló (a sarkoknál háromszöggé fajuló) kis kvázi-négyszögeket határoz meg.
+Ezeket soronként véve egy lineáris sorrendezést kapunk.
+
+A szélesség-hosszúság párokat egy $2d$ bites ábrázolással kódoljuk.
+Ennek lehetséges értékkészletére nyújtjuk rá a sorindexeket
+a zajosan monoton értékkiosztásoknál ismertetett módszer valamely variánsával,
+de itt a nagyléptékű egyenletességet más szempontokra cserélhetjük.
+Az értékkészlet összefüggő sávjai a kvázi-négyszögeknek feleltethetők meg,
+tehát a kvázi-négyszögekbe tartozó értékekre ugyanúgy tudunk keresni,
+mint fentebb az időbélyegekre.
+
+Kereséskor a kvázi-négyszögek két halmazát kell elkülöníteni:
+amelyek teljesen az alakzaton belülre esnek,
+illetve amelyeket az alakzat határvonala átmetsz.
+Az előbbiek értékei feltétel nélkül találatok lesznek.
+Utóbbiaknál a kvázi-négyszögön belülre kell hatolnunk,
+esetleg egyesével kell ellenőriznünk az értékek alakzaton belüliségét.
+Mivel ezek a határvonalhoz köthetők,
+számuk egyszerű alakzatok esetén a mérettel egyenesen arányos.
+nem kell tehát területarányos mennyiségű kvázi-négyszöget megbontani,
+sőt, az egy sorban egymás után lévők összevontan is kezelhetők.
+
+\begin{figure}[H]
+\centering
+\includesvg[width=0.7\textwidth]{diagram/geospatial-search}
+\caption{
+  Geolokációk keresése alakzat alapján, rácsozott gömbfelületen. \\
+  Csak a határvonal által metszett mezőkbe eső pontokkal kell részletesebben foglalkozni.
+}
+\end{figure}
 
 \subsection{Nem-indexelt egyoszlopos értékkiosztások}
 
@@ -1337,7 +1369,55 @@ mivel ilyenkor valószínűleg úgysem a memóriahasználat minimalizálása a c
 
 \subsection{Táblák közötti kapcsolatok}
 
-\todo[inline]{subsubsection: Táblák közötti kapcsolatok (idegen értékkészlet; kiszervezett megkötések)}
+Amíg megmaradunk a read-only szempontoknál,
+a táblák közötti idegenkulcs jellegű kapcsolatokra vonatkozó egyetlen kemény követelmény,
+hogy a hivatkozó tábla érintett oszlopa (vagy oszlop-$n$-ese)
+csak a hivatkozott tábla érintett oszlopának (vagy oszlop-$n$-esének) 
+értékkészletének elemeit vehesse föl.
+Vagyis ($NULL$ értékektől eltekintve),
+a hivatkozó oszlop értékkiosztásakor az alaplista a hivatkozott oszlop tartalma lesz.
+Másként fogalmazva, az értéklistát indextartó módon kell átképezni a másik táblára.
+Ez a fentiek tükrében már egyszerűen bitosítható.
+
+\todo[inline]{másféle táblaközi kapcsolatok...}
+
+\section{Az írhatósági réteg}
+
+\todo[inline]{section: Az írhatósági réteg}
+
+
+\chapter{Gyakorlati eredmények}
+
+\section{A prototípus}
+
+\todo[inline]{A prototípus}
+
+\begin{figure}[H]
+\centering
+\includesvg{diagram/simplearch}
+\caption{A virtuális adatbázis vázlatos architektúrája}
+\end{figure}
+
+\longcomment{egy gyors példa dockerrel}{
+- MiniConnect
+- Kompatibilitás a JDBC-vel
+- JPA-integráció
+- REPL
+- MiniBase
+- HoloDB
+...
+bemutatni, hogy mit tud, elindítani egy szervert
+}
+
+\section{Konfiguráció}
+
+\todo[inline]{Konfiguráció}
+
+\todo[inline]{Tesztesethez igazítható konfiguráció, füstteszt stb. (nincs generálás!)}
+
+\todo[inline]{AI tanulás --> SAT solvereknél (ez legalább egy hivatkozás)}
+
+\todo[inline]{Az adatbázis-verziókezelési probléma}
 
 \section{Néhány bővítési példaszcenárió}
 
@@ -1366,81 +1446,13 @@ néhány további esettanulmány:
 
 \subsection{On-demand schema mode? [?]}
 
-XXX...
-
-\section{Az írhatósági réteg}
-
-\todo[inline]{section: Az írhatósági réteg}
-
-\section{XXX}
-
-\todo[inline]{Konfiguráció, AI tanulás --> SAT solvereknél (ez legalább egy hivatkozás)}
-
-\todo[inline]{Az utolsó fejezetben foglalkozni az adatbázis-verziókezelési problémával}
-
-\longcomment{Bírálati szempontok}{
-A dolgozat újszerűsége, a feldolgozás színvonala (8 pont)
-A dolgozat témája, tartalma (8 pont)
-Az eredmények igazoltsága (8 pont)
-A téma irodalmának feldolgozása (6 pont)
-A dolgozat formai kivitele, stílusa (6 pont)
-Az elért eredmények tudományos értéke (6 pont)
-A bíráló összefoglaló véleménye a dolgozatról és színvonalának értékelése. A dolgozat erényei és hibái (8 pont)
-}
-
-\todo[inline,color=red]{Általában a seed terminológiát tisztázni, inkább a TreeRandomra hivatkozni}
-
-
-
-
-
-
-\chapter{A prototípus}
-
-\begin{figure}[H]
-\centering
-\includesvg{diagram/simplearch}
-\caption{A virtuális adatbázis vázlatos architektúrája}
-\label{A virtuális adatbázis vázlatos architektúrája}
-\end{figure}
-
-\todo[inline]{ebben a fejezetben bemutatni a konfigurációs fájlt}
-
-\longcomment{egy gyors példa dockerrel}{
-  bemutatni, hogy mit tud, elindítani egy szervert
-}
-
-\section{XXX}
-
-\todo[inline]{kinyitni a konf. fájl mint migrációs diff alap lehetőségét?}
-
-\section{MiniConnect: egy minimalisztikus adatbázis-API}
-
-\todo[inline]{MiniConnect}
-
-\subsection{Kompatibilitás a JDBC-vel}
-
-\todo[inline]{Kompatibilitás a JDBC-vel (a JDBC kritikáját is ide)}
-
-\subsection{JPA-integráció}
-
-\todo[inline]{JPA-integráció }
-
-\subsection{REPL}
-
-\todo[inline]{REPL}
-
-\section{MiniBase: egy bővíthető relációsadatbázis-keretrendszer}
-
-\todo[inline]{MiniBase (Apache Calcite stb.)}
-
-\section{HoloDB: a virtuális adattár}
-
-\todo[inline]{HoloDB}
+\todo[inline]{On-demand schema mode}
 
 \section{További eszközök}
 
 \todo[inline]{További eszközök}
+
+\todo[inline]{Serverless/lambda}
 
 \section{Empirikus eredmények}
 
@@ -1457,7 +1469,32 @@ A bíráló összefoglaló véleménye a dolgozatról és színvonala�
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+\todo[inline,color=red]{Általában a seed terminológiát tisztázni, inkább a TreeRandomra hivatkozni}
+
 \todo[inline]{Delphix?}
+
+\longcomment{Bírálati szempontok}{
+A dolgozat újszerűsége, a feldolgozás színvonala (8 pont)
+A dolgozat témája, tartalma (8 pont)
+Az eredmények igazoltsága (8 pont)
+A téma irodalmának feldolgozása (6 pont)
+A dolgozat formai kivitele, stílusa (6 pont)
+Az elért eredmények tudományos értéke (6 pont)
+A bíráló összefoglaló véleménye a dolgozatról és színvonalának értékelése. A dolgozat erényei és hibái (8 pont)
+}
 
 \longcomment{Ömlesztett megjegyzések}{
 Vincellér:
