@@ -1479,7 +1479,7 @@ A \texttt{DiffTable} dekorátor minden további nélkül elhelyezhető
 más \texttt{DiffTable} objektumok fölé is, ami lehetővé teszi, hogy egymásra épülő snapshotokat tároljunk.
 
 Így könnyen megvalósítható a \textit{multiversion concurrency control} (MVCC),
-amikor a kiinduló állapot snaphotja a módosító műveletek közben is rendelkezésre áll,
+amikor a kiinduló állapot snapshotja a módosító műveletek közben is rendelkezésre áll,
 azaz az olvasási műveletek ekkor is zavartalanul futtathatók.
 Az írási tranzakció végeztével az érintett \texttt{DiffTable} példányok
 beküldik a saját módosítási rétegüket a dekorált táblába,
@@ -1488,6 +1488,11 @@ beküldik a saját módosítási rétegüket a dekorált táblába,
 A snapshotok alkalmazásából a tranzakciós savepointok támogatása is természetesen következik.
 Egy savepointra való visszaugrás egyszerűen a megfelelő szintre való visszatérést jelenti
 a \texttt{DiffTable} dekorátorok egymásra épülő hierarchiájában.
+
+Mivel a snapshotkezelés táblánként függetlenül működtethető,
+párhuzamosan is futtathatunk írási tranzakciókat,
+amíg azok különböző táblákon futnak.
+
 
 \chapter{Gyakorlati eredmények}
 
