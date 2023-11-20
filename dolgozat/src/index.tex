@@ -1376,7 +1376,7 @@ akkor meg kell engednünk a $NULL$ értékeket az érintett oszlopokban,
 Szintén elég általános eset, amikor mesteroszlopok
 alapján akarunk indexeletlen oszlopokat egymástól függetlenül legenerálni.
 Ekkor teljes szabadságunk van,
-értelemszerűen mesteroszlopok értékei és a \texttt{TreeRandom}-ból nyert seed lesz a bemenet.
+értelemszerűen a mesteroszlopok értékei és a \texttt{TreeRandom}-ból nyert seed lesz a bemenet.
 
 Életszerű azonban, hogy indexelt mesteroszlopokon túl
 a függő oszlopokra is szeretnénk indexelést.
@@ -1420,7 +1420,72 @@ az egyesített táblában a kisebb tábla adatait pedig redundánsan szerepeltet
 
 \section{Az írhatósági réteg}
 
-\todo[inline]{section: Az írhatósági réteg}
+\subsection{A \texttt{DiffTable} dekorátor}
+
+A virtuális adattár egy-egy példánya várhatóan viszonylag rövid élettartamú lesz.
+Feltehetjük, hogy az írási műveletek összességében kevés módosítást eredményeznek.
+A tipikus szcenáriókban főként egyes konkrét rekordok lesznek módosítva, hozzáadva, törölve.
+A tömeges módosítások kérdésével itt nem foglalkozom,
+de nem látszik akadálya az ilyen irányú továbbfejlesztésnek.
+
+A módosítások támogatásához előszöris a \texttt{Table} interfészt magát
+ki kell egészíteni a megfelelő műveletekkel
+(pl. \texttt{isWritable()}, \texttt{applyPatch(TablePatch)}, \texttt{sequence()}).
+A csak-írható implementáció persze az írási műveleteket nem fogja támogatni.
+
+A \texttt{DiffTable} implementáció egy dekorátor,
+mely tetszőleges \texttt{Table} implementáció fölé elhelyezhető.\footnote{
+  Akár olyan táblák fölé, amelyek valós adatbázistáblákat használnak backendként.
+  Ezzel a módszerrel akár írhatóan használhatunk egy létező adatbázist,
+  mégis az eredeti adatok módosítása nélkül.
+}
+Teljesen áttetszően működik, amíg nincsenek módosítások,
+minden műveletet egyszerűen továbbít a dekorált tábla felé.
+Módosítás esetén a különbségeket (módosított értékek, beszúrt és törölt sorok) a memóriában tárolja.
+A további lekérdezésekkor figyelembe veszi a különbségréteget a továbbhíváskor,
+illetve a szükséges mértékben összefésüli az eredményt a különbségekkel.
+
+xxx
+
+\subsection{Generikus tranzakciókezelés}
+
+A fő elv, amit a tranzakciókkal kapcsolatban követni fogunk,
+hogy megmaradjunk a réteges felépítésnél,
+és semmiképp ne a táblákra terheljük a tranzakciókezelés terhét
+(mint számos adatbáziskezelő architektúrájában láthatjuk[hiv!]).
+
+Egy teljesen általános tranzakciókezelési módszer,
+amikor a szerver két állapotát különböztetjük meg,
+a \texttt{READ} és a \textt{WRITE} státuszokat.
+Feltételezzük, hogy jóval több olvasási kérés érkezik be, mint írási.
+
+Az alapértelmezett \texttt{READ} státuszban feltétel nélkül, konkurrensen
+szolgáljuk ki a beérkező olvasási lekérdezéseket.
+Ha azonban egy módosító lekérdezés illetve tranzakció érkezik,
+elhelyezzük a módosító műveleteknek fenntartott queue-ba,
+és átváltunk \texttt{WRITE} módba.
+
+\texttt{WRITE} módban a beérkező olvasási illetve írási műveletek
+a számukra fenntartott két dedikált queue-ba kerülnek.
+Először kiszolgáljuk a még folyamatban lévő olvasási műveleteket,
+ezután sorra szekvenciálisan kivesszük és végrehajtjuk a módosítási queue elemeit, amíg van ilyen.
+Ha már nincs elem a módosítási queue-ban,
+akkor az olvasási queue összes elemét felszabadítjuk, és továbbítjuk párhuzamos végrehajtásra,
+miközben visszaállítjuk a \texttt{READ} státuszt.
+
+Új módosító művelet érkezésekor a ciklus újrakezdődik.
+
+\subsection{Snapshot-alapú tranzakciókezelés}
+
+A \texttt{DiffTable} dekorátor minden további nélkül elhelyezhető
+más \texttt{DiffTable} objektumok fölé is, ami lehetővé teszi, hogy egymásra épülő snapshotokat tároljuk.
+
+Így könnyen megvalósítható a \textit{multiversion concurrency control} (MVCC),
+amikor a kiinduló állapot snaphotja a módosító műveletek közben is rendelkezésre áll,
+azaz az olvasási műveletek ekkor is zavartalanul futtathatók.
+Az írási tranzakció végeztével az érintett \texttt{DiffTable} példányok
+beküldik a saját módosítási rétegüket a dekorált táblába,
+így az belefésülésre kerül a megosztott adattérbe.
 
 
 \chapter{Gyakorlati eredmények}
