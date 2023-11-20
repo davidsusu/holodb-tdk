@@ -1434,18 +1434,16 @@ ki kell egészíteni a megfelelő műveletekkel
 A csak-írható implementáció persze az írási műveleteket nem fogja támogatni.
 
 A \texttt{DiffTable} implementáció egy dekorátor,
-mely tetszőleges \texttt{Table} implementáció fölé elhelyezhető.\footnote{
-  Akár olyan táblák fölé, amelyek valós adatbázistáblákat használnak backendként.
-  Ezzel a módszerrel akár írhatóan használhatunk egy létező adatbázist,
-  mégis az eredeti adatok módosítása nélkül.
-}
-Teljesen áttetszően működik, amíg nincsenek módosítások,
+mely tetszőleges \texttt{Table} implementáció fölé elhelyezhető.
+Teljesen áttetszően működik: amíg nincsenek módosítások,
 minden műveletet egyszerűen továbbít a dekorált tábla felé.
 Módosítás esetén a különbségeket (módosított értékek, beszúrt és törölt sorok) a memóriában tárolja.
 A további lekérdezésekkor figyelembe veszi a különbségréteget a továbbhíváskor,
 illetve a szükséges mértékben összefésüli az eredményt a különbségekkel.
 
-xxx
+Olyan táblák is dekorálhatók így, amelyek valós adatbázistáblákat használnak backendként.
+Ezzel a módszerrel akár írhatóan használhatunk egy létező adatbázist,
+mégis az eredeti adatok módosítása nélkül.
 
 \subsection{Generikus tranzakciókezelés}
 
