@@ -864,10 +864,7 @@ mely egyúttal teljes kontrollal rendelkezik a találati lista rendezése
 és a $NULL$ értékek kezelése fölött.
 Ha többoszlopos, akkor az oszloplista bármely prefixére is indexként működik (leftmost prefix lookup).
 
-A másik két típus specializált.
-A \texttt{FulltextIndex} lehet úgy implementálva, hogy mindig rendezett értéket ad vissza
-(ehhez lásd később a fulltext értékkiosztásról szóló részt),
-a \texttt{SpatialIndex} találatainak rendezése definiálatlan.
+A másik két típus találatainak rendezése definiálatlan.
 Egyik sem ad vissza $NULL$ mezőket.
 
 A következő osztálydiagramon a fenti interfészeket foglaltam össze,
