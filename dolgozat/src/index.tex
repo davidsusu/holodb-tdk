@@ -862,6 +862,7 @@ melyen keresztül a találati listához férünk hozzá.
 A \texttt{TableIndex} a szokásos rendezett indextípus,
 mely egyúttal teljes kontrollal rendelkezik a találati lista rendezése
 és a $NULL$ értékek kezelése fölött.
+Ha többoszlopos, akkor az oszloplista bármely prefixére is indexként működik (leftmost prefix lookup).
 
 A másik két típusnál egyelőre ezekkel nem foglalkoztam.
 A \texttt{FulltextIndex} lehet úgy implementálva, hogy mindig rendezett értéket ad vissza
@@ -1589,7 +1590,7 @@ mindent a beérkező kérések alapján fogunk generálni.
 Itt feltételezem, hogy csak olvasási műveletek érkeznek,
 de az elv, komoly komplikációk vállalásával, írható műveletekre is kiterjeszthető.
 
-Néhány alapbeállítást (pl. \texttt{seed}) beégethetünk vagy az első lekérés függvényévé tehetünk.
+Néhány alapbeállítást (pl. \texttt{seed}) beégethetünk, vagy az első lekérés függvényévé tehetünk.
 
 A táblás lekérések implicite megadnak valamilyen szerkezetet,
 mivel konkrét sémákon és táblákon belüli konkrét oszlopokat próbálnak elérni.
@@ -1603,7 +1604,7 @@ Ha nem tudtuk eléggé leszűkíteni az oszlop típusát,
 valamilyen kellően generikus alapértelmezett beállítást kell használnunk,
 ekkor is vállalva persze, hogy egy jövőbeli lekérdezés ezzel inkompatibilis lesz.
 
-A wildcardot tartalmazó lekérdezéseknél többféle stratégiát követhetünk,
+A wildcardos lekérdezéseknél többféle stratégiát követhetünk,
 legegyszerűbb, ha egyszerűen az addigi oszlopokat adjuk vissza
 (új tábla esetén egy alapértelmezett oszlopot adhatunk hozzá).
 
