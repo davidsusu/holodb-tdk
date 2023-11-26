@@ -295,10 +295,6 @@ De ilyen vaskos módszerek nélkül, egyszerűbb heurisztikákkal is lehetséges
 egy létező adatbázis jó közelítéssel történő letapogatása.
 Hasonlóan, a virtuális adatbázis könnyen materializálható egy valós adatbázisba.
 
-Arra is lehetőség van, hogy a konfiguráció a JPA entitások
-(és opcionálisan az azokra helyezett specializált annotációk)
-alapján generálódjon, például adatbázisos tesztek futtatásához.
-
 A könnyűsúlyú jelleg olyan új távlatokat nyit, amelyek korábban föl sem merülhettek.
 Például most már nincs akadálya, hogy bármely füstteszt adatbázis-eléréssel fusson.
 A CI/CD pipeline-okban adathalmazok kívülről való betöltése nélkül is lehet rövid feladatokat futtatni.
@@ -1507,6 +1503,8 @@ amíg azok különböző táblákon futnak.
 \caption{A virtuális adatbázis vázlatos architektúrája}
 \end{figure}
 
+\todo[inline]{docker; Serverless/lambda}
+
 \longcomment{egy gyors példa dockerrel}{
 - MiniConnect
 - Kompatibilitás a JDBC-vel
@@ -1520,57 +1518,98 @@ bemutatni, hogy mit tud, elindítani egy szervert
 
 \section{Konfiguráció}
 
-\todo[inline]{Konfiguráció}
+A HoloDB egy YAML formátumú konfigurációs fájl segítségével paraméterezhető fel,
+melyben az adatbázis minden lényeges eleme beállítható.
+A konfigurációhoz formális specifikáció is tartozik,
+így a fájl strukturális és tartalmi helyessége statikusan ellenőrizhező.
+A konfigurációt hordozó Java-osztályok egy programkódban is használhatók,
+ez csak egy dedikált, minimalisztikus csomag függőségként való beemelését igényli.
 
 \todo[inline]{Kép: baloldalt egyszerű config, jobboldalt entity diagram + data}
 
-\todo[inline]{Tesztesethez igazítható konfiguráció, füstteszt stb. (nincs generálás!)}
+A konfiguráció ezen kívül JPA-entitásokra helyezett annotációkkal is beállítható,
+így külső eszközök nélkül is futtathatunk teszteket beágyazott adatbázissal.
 
-\todo[inline]{AI tanulás --> SAT solvereknél (ez legalább egy hivatkozás)}
+Az egyéni működéssel való kiegészítés több szinten támogatott.
+A beépített értékkiosztási módok esetén is lehetőség van egyéni adatfájl betöltésére,
+a permutációk és rányújtások egyéni implementációjának betöltésére.
+De az oszlop értékkiosztásához teljesen egyedi implementáció is használható,
+ehhez meg kell adnunk egy olyan osztály nevét, mely implementálja a \texttt{SourceFactory} interfészt
+(illetve biztosítani kell, hogy az egyedi osztályok láthatóak legyenek a classpath alatt).
 
-\todo[inline]{JPA-alapú konfiguráció}
+A YAML formátum a humán kezelhetőségen kívül azzal az előnnyel is jár, hogy könnyen előfeldolgozható.
+Például egy megfelelő sablonkezelő használatával ugyanazt a vázat használva
+különféle tesztesetekhez finomhangolhatjuk az adatbázist.
 
-\longcomment{entites-first}{
-    enetities first approach...
-    egy adatbázis-nehéz alkalmazásnál ez nem játszik
-}
+A konfiguráció gépileg is generálható.
+A prototípus tartalmaz néhány ilyen segédeszközt,
+ezek közül a legfontosabb a konfigurációt a meglévő adatbázist letapogatásával,
+különféle heurisztikák bevetésével legeneráló, Python nyelven írt szkriptfájl.
+Az eredmény (és persze maga a szkriptfájl is) könnyen testreszabható.
 
-\todo[inline]{Az adatbázis-verziókezelési probléma}
+Ahogy már említettem, a konfiguráció szofisztikáltabb generálásának egy lehetséges módja,
+ha a konfigurációt optimalizáló mesterséges intelligenciára épülő módszert vetünk be.
+Ennek kutatása egy izgalmas jövőbeli projektnek ígérkezik.
+Érdekes probléma például, hogyan érdemes számítani a bemeneti adatbázis
+és az előállított konfiguráció közötti megfelelőségi mutatót.
+
+A konfigurációs fájl az adatbázis nagyjábóli definíciójának is felfogható.
+Egy másik ígéretesnek tűnő továbbfejlesztési lehetőség,
+hogy kiegészítsük a struktúrát olyan további opcionális elemekkel,
+melyek egyrészt teljesen leírják az éles adatbázis szerkezetét,
+másrészt pedig lehetővé teszik az adatmigrációknak
+kizárólag a konfigurációs fájlok különbségére épülő automatizálását.
+Természetesen ez egyáltalán nem triviális,
+hiszen néha a meglévő adatok átstruktúrálására van szükség,
+illetve lehetnek a két konfigurációs állapot közötti történetben elbújó lényeges módosítások.
+Úgy vélem, mindkét probléma kezelhető,
+közeljövőbeli tervem egy ilyen migrációs keretrendszer kialakítása.
 
 \section{Néhány bővítési példaszcenárió}
 
-[eddig teljesen általános dolgokat tárgyaltunk, ami egy alapszoftver része]
-[most két speciálisabb kiegészítést mutatok be, bemutatva, milyen könnyen adaptálható bla-bla-bla]
-
-\longcomment{bővítési példaszcenáriókhoz...}{
-néhány további esettanulmány:
-- földrajzi magasságpontok generálása
-- valós címadatbázis használata
-    az ilyen bonyolítások használata
-      is egy skálázási lehetőség
-    valahol felsorolni
-      az alap skálázási lehetőségeket...
-}
+Eddig általános igényekkel foglalkoztunk,
+melyeket a megoldásnak out-of-the-box kell támogatnia.
+Alább bemutatok három speciálisabb szcenáriót,
+demonstrálva a koncepció bővíthetőségét és rugalmasságát.
 
 \subsection{Valós címadatok használata}
 
 \todo[inline]{section: Valós címadatok használata}
 
-\subsection{Valószerű geográfiai értékek generálása}
-
-[bár eddig a standalone-snaphot jelleget hangsúlyoztuk]
+\subsection{Valószerű geográfiai értékek előállítása}
 
 \todo[inline]{section: Valószerű geográfiai értékek generálása}
 
-\subsection{On-demand schema mode? [?]}
+\subsection{On-demand schema}
 
-\todo[inline]{On-demand schema mode}
+Egyes használati esetek megengedik,
+hogy további drasztikus lépésként teljesen nyitottá és automatikussá tegyük a virtuális adatbázis felépítését.
+Ebben az esetben konfigurációs fájl létrehozására sincsen szükség,
+mindent a beérkező kérések alapján fogunk generálni.
+Itt feltételezem, hogy csak olvasási műveletek érkeznek,
+de az elv, komoly komplikációk vállalásával, írható műveletekre is kiterjeszthető.
 
-\section{További eszközök}
+Néhány alapbeállítást (pl. \texttt{seed}) beégethetünk vagy az első lekérés függvényévé tehetünk.
 
-\todo[inline]{További eszközök}
+A táblás lekérések implicite megadnak valamilyen szerkezetet,
+mivel konkrét sémákon és táblákon belüli konkrét oszlopokat próbálnak elérni.
+Ezeket on-demand kell létrehozni, és a továbbiakban megtartani.
+A táblák hosszának beállításakor esetleg figyelembe vehetjük az első lekérés limit értékeit, ha van.
+Az oszlop paramétereit a lekérésben az adott oszlopra vonatkozó
+implicit információk alapján kell meghatároznunk.
+Az oszlopnév, az érték használati módja, a keresési feltételek stb.
+mind hasznosak lehetnek.
+Ha nem tudtuk eléggé leszűkíteni az oszlop típusát,
+valamilyen kellően generikus alapértelmezett beállítást kell használnunk,
+ekkor is vállalva persze, hogy egy jövőbeli lekérdezés ezzel inkompatibilis lesz.
 
-\todo[inline]{Serverless/lambda}
+A wildcardot tartalmazó lekérdezéseknél többféle stratégiát követhetünk,
+legegyszerűbb, ha egyszerűen az addigi oszlopokat adjuk vissza
+(új tábla esetén egy alapértelmezett oszlopot adhatunk hozzá).
+
+A szisztéma megvalósításához mindössze egy proxy réteg szükséges,
+mely minden beérkező kérés továbbítása előtt megfelelően kiegészíti a konfigurációt,
+és újratölti a virtuális adatbázist.
 
 \section{Empirikus eredmények}
 
