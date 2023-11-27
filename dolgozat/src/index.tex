@@ -14,6 +14,7 @@
 \usepackage{pgfplots}
 \usepackage{arydshln}
 \usepackage{fontawesome}
+\usepackage{picture,xcolor}
 
 \newcommand{\rhpad}{\vspace{0.6\baselineskip}}
 
@@ -309,7 +310,7 @@ Ennek fő okait az alábbiakban látom:
           csak az utóbbi néhány évben vált népszerűvé, és inkább elsősorban adatintegrátorként
     \item \textbf{bejáratott alternatívák}: az on-the-fly mockolás lehetősége,
           a NoSQL adatbázisok és felhőmegoldások fejlődése stb.
-          szenderképző kerülőmegoldásokként elfedték a problémát
+          sztenderdképző kerülőmegoldásokként elfedték a problémát
     \item \textbf{érdekhiány}: a releváns területen működő nagyobb vendorok elsősorban
           erőforrásokat adnak bérbe, és az általuk fejlesztett architektúrák (történetileg érthetően)
           elsősorban az ezeken futó tényleges adatbázisok kezelését kell megoldják;
@@ -542,11 +543,7 @@ A kétfázisú értékkiosztásnak ezzel az ötletével
 egy egyszerűbb adatbázis szimulációjának kívánalmait már tulajdonképpen le is fedtük,
 de néhány további hasznos értékkiosztási módszert is be fogok majd mutatni.
 
-A szoftver létező prototípusa, a \textit{HoloDB}\footnote{
-  Az elnevezés a hologramokra utal:
-  a konfigurációból leképzett, ``kivetített'' virtuális adatbázis hasonlóan illuzórikus,
-  mint a a hologramból előhívott térbeli kép.
-}
+A szoftver létező prototípusa, a \textit{HoloDB}
 (és a hozzá kapcsolódó segédeszközök, könyvtárak nagy része) Java programnyelven íródott,
 ezért a továbbiakban implicite felteszem, hogy Java környezetben vagyunk.
 
@@ -655,7 +652,7 @@ a \texttt{LargeInteger} valamivel gyorsabb.
                 symbolic x coords={primitive long,,LargeInteger,,BigInt (Scala),,BigInteger},
                 xticklabel style={rotate=45,anchor=north east},
                 xtick={primitive long,LargeInteger,BigInt (Scala),BigInteger},
-                ylabel=Time in nanoseconds,
+                ylabel=Futásidő nanomásodperben,
                 ymajorgrids,
                 ymin=0,
                 ymax=150,
@@ -783,7 +780,7 @@ a hashelő algoritmus minősége,
 de a háló mérete illetve a permutáció $n$ hossza is lényeges.
 
 A következő ábrán vizuálisan összehasonlítottam néhány permutáció-típus értékeloszlását
-(a közeli értékek színe hasonló):
+(a közeli értékek színe hasonló; minél összevisszább, annál jobb):
 
 \begin{figure}[H]
   \centering
@@ -791,13 +788,13 @@ A következő ábrán vizuálisan összehasonlítottam néhány permutáció-tí
   \begin{minipage}[b]{0.45\textwidth}
     \centering
     \includegraphics[width=0.9\textwidth]{image/permutation-fpe1.png}
-    \caption{FPE permutation[hiv!]}
+    \caption{FPE permutáció[hiv!]}
   \end{minipage}
   \hspace*{\fill}
   \begin{minipage}[b]{0.45\textwidth}
     \centering
     \includegraphics[width=0.9\textwidth]{image/permutation-mp1.png}
-    \caption{Modular permutation}
+    \caption{Modulo permutáció}
   \end{minipage}
   \hspace*{\fill}
   
@@ -807,13 +804,13 @@ A következő ábrán vizuálisan összehasonlítottam néhány permutáció-tí
   \begin{minipage}[b]{0.45\textwidth}
     \centering
     \includegraphics[width=0.9\textwidth]{image/permutation-feif1.png}
-    \caption{Feistel network (1-round, fast hash)}
+    \caption{Feistel-háló (1-round, fast hash)}
   \end{minipage}
   \hspace*{\fill}
   \begin{minipage}[b]{0.45\textwidth}
     \centering
     \includegraphics[width=0.9\textwidth]{image/permutation-feis2.png}
-    \caption{Feistel network (2-round, SHA256)}
+    \caption{Feistel-háló (2-round, SHA256)}
   \end{minipage}
   \hspace*{\fill}
 \end{figure}
@@ -1493,26 +1490,60 @@ amíg azok különböző táblákon futnak.
 
 \section{A prototípus}
 
-\todo[inline]{A prototípus}
-
 \begin{figure}[H]
 \centering
 \includesvg{diagram/simplearch}
 \caption{A virtuális adatbázis vázlatos architektúrája}
 \end{figure}
 
-\todo[inline]{docker; Serverless/lambda}
+A virtuális adatbázist megvalósító szoftvert HoloDB néven tettem elérhetővé.
+Az elnevezés a hologramokra utal:
+a konfigurációból leképzett, ``kivetített'' virtuális adatbázis hasonlóan illuzórikus,
+mint a hologramból előhívott térbeli látvány.
 
-\longcomment{egy gyors példa dockerrel}{
-- MiniConnect
-- Kompatibilitás a JDBC-vel
-- JPA-integráció
-- REPL
-- MiniBase
-- HoloDB
-...
-bemutatni, hogy mit tud, elindítani egy szervert
+A HoloDB sok tekintetben már kinőtte a prototípus státuszt,
+hiszen egy nagyívű rétegelt architektúráról van szó,
+mely kellően megszilárdult alapvonalakkal rendelkezik a hosszútávú fejlesztéshez.
+Ugyanakkor stabil verzióról még nem beszélhetünk;
+az implementációs részleteket, valós használati eseteket,
+más eszközökkel való integrációt illetően még számos felmérendő, kikísérletezendő dolog adódik.
+
+A szerver docker konténerként is futtatható, amihez a Docker Hubon biztosítok egy testreszabott képet.
+A felhasználói Dockerfile mellé csak a konfigurációs fájlt kell elhelyezni az indításhoz.
+A testreszabott kép a kis erőforrásigény miatt serverless végpontként is jól használható.\footnote{
+    Későbbi terv egy erősen optimalizált, GraalVM-re épülő képváltozat fejlesztése.
 }
+
+A HoloDB a MiniBase projektre épül.
+Utóbbi egy relációsadatbázis-keretrendszer, mely definiálja a storage API-t,
+és annak konkrét implentációjához agnosztikusan viszonyulva
+egy komplett adatbázisszervert épít fölé;
+beleértve a lekérdezések fordítását és futtatását,
+a felhasználói munkamenetek, tranzakciók és változók kezelését,
+a runtime sémamódosításokat illetve új táblákat és más felelősségi köröket.
+A HoloDB ehhez a storage API virtuális implementációját,
+a konfiguráció kezelését
+és a megfelelő futtatási környezetet adja hozzá.
+
+A MiniBase közvetlenül biztosít egy SQL-futtató felületet, a MiniConnect API megvalósításával.
+A MiniConnect testvérprojekt célja egy egyszerű és egyértelmű adatbázis-elérési API definiálása,
+melyet a JDBC nehézkessége inspirált.\footnote{
+    Nem áll módomban ehelyt a JDBC részletes kritikájába bocsátkozni.
+    De milyen problémát is old meg a \texttt{nativeSQL()} metódus?
+    Egyáltalán miként egyszerűsítené a helyzetet ez a kellemetlenül rengeteg függvény?
+    Miért származik a \texttt{PreparedStatement} a \texttt{Statement} típusból?
+    Hosszan folytathatjuk a sort.
+}
+A MiniConnecthez különféle middleware változatok is elérhetők, például hálózaton keresztül is használható,
+illetve letisztultsága miatt könnyen írhatók hozzá dekorátorok, proxyk.
+Egy (deb csomagként is elérhető) REPL is tartozik hozzá,
+mellyel parancssorból tudunk hálózaton keresztül csatlakozni a MiniConnectet támogató tetszőleges adatbázishoz.
+Ez egyúttal a HoloDB kipróbálásának legkényelmesebb módja,
+számos kényelmi funkciót támogat (szép kimenet, syntax highlight, parancstörténet stb.).
+
+Az architektúra köré sokféle további eszközt fejlesztettem,
+melyek a robusztusság eltérő fokain állnak.
+Ilyenek például: automatikus REST API, GraphQL adapter, authentikációs proxy, Apache Calcite SQL driver stb.
 
 \section{Konfiguráció}
 
@@ -1524,6 +1555,14 @@ A konfigurációt hordozó Java-osztályok egy programkódban is használhatók,
 ez csak egy dedikált, minimalisztikus csomag függőségként való beemelését igényli.
 
 \todo[inline]{Kép: baloldalt egyszerű config, jobboldalt entity diagram + data}
+
+\begin{center}
+  \setlength{\unitlength}{1cm}
+  \begin{picture}(12,6)(0,0)
+    \setlength\fboxsep{0pt}
+    \colorbox{gray!20}{\framebox(12,6){[TODO] Ábra: egyszerű konfiguráció és eredménye}}
+  \end{picture}
+\end{center}
 
 A konfiguráció ezen kívül JPA-entitásokra helyezett annotációkkal is beállítható,
 így külső eszközök nélkül is futtathatunk teszteket beágyazott adatbázissal.
@@ -1537,11 +1576,13 @@ ehhez meg kell adnunk egy olyan osztály nevét, mely implementálja a \texttt{S
 
 A YAML formátum a humán kezelhetőségen kívül azzal az előnnyel is jár, hogy könnyen előfeldolgozható.
 Például egy megfelelő sablonkezelő használatával ugyanazt a vázat használva
-különféle tesztesetekhez finomhangolhatjuk az adatbázist.
+különféle tesztesetekhez finomhangolhatjuk az adatbázist.\footnote{
+    Ilyen megközelítést használ például a \textit{helm} nevű deployment eszköz.
+}
 
 A konfiguráció gépileg is generálható.
 A prototípus tartalmaz néhány ilyen segédeszközt,
-ezek közül a legfontosabb a konfigurációt a meglévő adatbázist letapogatásával,
+ezek közül a legfontosabb a konfigurációt a meglévő adatbázis letapogatásával,
 különféle heurisztikák bevetésével legeneráló, Python nyelven írt szkriptfájl.
 Az eredmény (és persze maga a szkriptfájl is) könnyen testreszabható.
 
@@ -1556,7 +1597,7 @@ Egy másik ígéretesnek tűnő továbbfejlesztési lehetőség,
 hogy kiegészítsük a struktúrát olyan további opcionális elemekkel,
 melyek egyrészt teljesen leírják az éles adatbázis szerkezetét,
 másrészt pedig lehetővé teszik az adatmigrációknak
-kizárólag a konfigurációs fájlok különbségére épülő automatizálását.
+kizárólag a konfigurációs fájlok különbségén alapuló automatizálását.
 Természetesen ez egyáltalán nem triviális,
 hiszen néha a meglévő adatok átstruktúrálására van szükség,
 illetve lehetnek a két konfigurációs állapot közötti történetben elbújó lényeges módosítások.
@@ -1568,15 +1609,88 @@ közeljövőbeli tervem egy ilyen migrációs keretrendszer kialakítása.
 Eddig általános igényekkel foglalkoztunk,
 melyeket a megoldásnak out-of-the-box kell támogatnia.
 Alább bemutatok három speciálisabb szcenáriót,
-demonstrálva a koncepció bővíthetőségét és rugalmasságát.
+demonstrálva az architektúra bővíthetőségét és rugalmasságát.
 
 \subsection{Valós címadatok használata}
 
-\todo[inline]{section: Valós címadatok használata}
+Előfordulhat, hogy bizonyos adatok óriás értékkészletét külső adattárakból szeretnénk betölteni,
+amivel ugyan elvesztjük a teljes virtualitás kis memóriaigényét és további kedvező jellemzőit,
+de még mindig igényt támaszthatunk az egyéb előnyökre.
+Most egy ilyen szcenáriót vizsgálok meg:
+valamely tábla rekordjaiban olyan magyarországi közigazgatási címeket szeretnénk viszontlátni,
+melyek valósak.
+Amennyire lehetséges, indexeket is szeretnénk biztosítani.
+
+A cím elemei különálló mezőkre bonthatók.
+Első körben kiválasztjuk azokat, melyek egy egyértelmű hierarchiát definiálnak:
+
+\begin{center}
+    településnév ~ $\rightarrow$ ~
+    kerület ~ $\rightarrow$ ~
+    közterület neve ~ $\rightarrow$ ~
+    közterület jellege ~ $\rightarrow$ ~
+    házszám ~ $\rightarrow$ ~
+    egyéb
+\end{center}
+
+Az ``egyéb'' részt nem szofisztikáljuk tovább, egy szabad szöveges mezőnek tekintjük.
+
+Néhány további mező nem tartozik a fő hierarchiába:
+
+\begin{center}
+    település típusa ~ $\bullet$ ~
+    vármegye ~ $\bullet$ ~
+    irányítószám
+\end{center}
+
+Utóbbi mezőkre külön-külön indexeket fogunk biztosítani.
+A fő hierarchiára pedig egy közös többoszlopos (leftmost prefix) indexet,
+pontosabban kettőt:
+lesz egy rövidített változat vidéki címekhez, melyben a kerületet nem kell megadni,
+és implicite üres értékkel töltődik, amikor továbbhív a másik indexre.
+
+A címadatbázist egy nagy fastruktúrába rendezzük,
+minden szintnek a fenti hierarchia egy-egy eleme felel meg.
+Az alsóbb szinteken spórolhatunk a tárolással,
+például egymásutáni megbontatlan házszámok tartományként tárolhatók.
+Egy prefix indexhívásnál a megfelelő szintig megyünk le a keresésben,
+a találatok pedig az az alatti levelek lesznek.
+A tényleges rekordokra való leképezést
+a kétfázisú értékkiosztásnál megismerthez hasonló módszerrel végezzük el.
+
+A fő hierarchián kívüli mezők értékei és a fa közötti indexelést külön adatstruktúrába generáljuk.
+Változó lehet, hogy a tábla mely szintjén történik meg az irányítószámra való leképezés,
+a legtöbb helyen egy egész várost tudunk hozzárendelni.
 
 \subsection{Valószerű geográfiai értékek előállítása}
 
-\todo[inline]{section: Valószerű geográfiai értékek generálása}
+A probléma: földrajzi koordinátákhoz akarunk valamilyen számszerű adatot kapcsolni úgy,
+hogy mindkettőhöz külön index tartozik,
+és a koordinátával ellátott adatok valamilyen szempontból valószerű elrendeződést mutatnak.
+Olyan megoldást kell találni, ahol tetszőleges számú ilyen kapcsolt adat akár függetlenül generálható
+(különben elég lenne a szélesség-hosszúság-adat háromdimenziós terében megfelelően alkalmazni
+a földrajzi koordináták fentebb ismertetett értékkiosztását).
+
+Az alapötlet rendkívül egyszerű, és kellően rugalmas.
+Szükségünk lesz egy $F$ függvényre, mely minden földrajzi koordinátához rendel egy kapcsolt értéket.
+A kapcsolt adat értékkészletét kis sávokra bontjuk föl (nevezzük ezeket kontextussávoknak),
+és minden sávhoz le kell tudnunk kérni azon alakzatok (véges) listáját,
+melyekben az $F$ függvény értéke a sávba esik.
+Bármilyen függvény megfelel, ha ezeket tudjuk biztosítani hozzá.
+Használhatunk például teljesen virtuális háromszögelt felületet,
+ahol egy-egy háromszög mindig egy konkrét értéksávba esik, nem nyúlik át.
+Vagy akár betölthetünk tényleges domborzati adatokat.
+
+Ha ezt sikerült megoldani, az értékkiosztás működése már triviális.
+Adott rekordhoz a földrajzi koordinátát a korábban ismertett módszerrel generáljuk,
+a kapcsolt adatot ez alapján számítjuk az $F$ függvény szerint.
+A kapcsolt adat valamely egyéni értéksávjára való kereséskor
+lekérjük a sávon teljesen belülre eső illetve a kilógó kontextussávokat,
+lekérjük az ezekhez tartozó alakzatokat,
+és ezen alakzatokra keressük a földrajzi koordinátákat.
+A keresett sávon teljesen belülre eső kontextussávokhoz tartozó találatok feltétel nélkül megtarthatók.
+A kilógó kontextussávokban le kell kérni a konkrét kapcsolt értéket,
+és eldobni a találatot, ha az mégsem esik a keresett sávba.
 
 \subsection{On-demand schema}
 
@@ -1611,17 +1725,54 @@ mely minden beérkező kérés továbbítása előtt megfelelően kiegészíti a
 
 \section{Empirikus eredmények}
 
-\longcomment{Teszteredmények}{
-  teljesítményteszt kell egyszerűbb querykkel, illetve bonyolulttal is calcite-tal
-}
+A három jól elkülöníthető adatbázis-szolgáltatási móddal
+(adatgenerálás, anonimizálás, virtuális adatbázis)
+megvalósítottam ugyanannak a demó alkalmazásnak a tesztkörnyezetét,
+és ezen integrált tesztek egy gyűjteményét futtattam le,
+mérve többek között a preparálási, indítási, runtime, és összesített performanciát,
+illetve a memóriahasználatot.
+A tesztben csak a beépített alaképességeket vettem igénybe,
+melyek idiomatikusnak tekinthetők a HoloDB szempontjából,
+ugyanakkor egy valószerű szituációt igyekeztem modellezni.
+
+\todo[inline]{Teljesítményteszt eredménye három megközelítéssel}
+
+\begin{center}
+  \setlength{\unitlength}{1cm}
+  \begin{picture}(12,6)(0,0)
+    \setlength\fboxsep{0pt}
+    \colorbox{gray!20}{\framebox(12,6){[TODO] Ábra: Teljesítményteszt eredménye három megközelítéssel}}
+  \end{picture}
+\end{center}
+
+Látható, hogy összesített performanciában és memóriahasználatban a HoloDB
+nagyságrendekkel jobban teljesít, épp ahogyan azt vártuk.
+A vizsgált valószerű szituációban a runtime performancia is
+alig marad el a tényleges adatbázisok mögött.
 
 \section{Konklúzió}
 
-\todo[inline]{Konklúzió}
+A dolgozatban az adatbázismockolás egy újszerű megközelítését mutattam be.
+Láthattuk, hogy néhány alapvetően egyszerű ötlet kombinálásával lehetséges
+egy funkcionálisan teljeskörű relációs adatbázist működtetni,
+anélkül, hogy azt ténylegesen tárolni kellene.
+A prototípus a teszteredmények alapján
+valóban drasztikusan csökkenti az erőforráshasználatot,
+miközben tisztán deklaratív, snapshot jellegű entitássá teszi a nem-produkciós adatbázist.
 
+A HoloDB egy alapvető, a szoftverfejlesztők többségét érintő probléma megoldását kínálja.
+Ha a szoftver, leküzdve gyermekbetegségeit, eljut egy igazán stabil verzióig,
+valamint sikerül a koncepció ideáját a fejlesztők szélesebb nyilvánosságával megismertetni,
+úgy természetes következményként nagy népszerűségre lehet számítani.
 
-
-
+Az új megoldás esszenciája a meglévő terminológiákkal nehézkesen körülírható (ld. a dolgozat címét),
+így egy megfelelő, jellegzetes és egyszerű megnevezés
+szükséges feltétele lesz a szélesebb körű népszerűsítésnek.
+Felmerült jelöltként
+a \textit{holografikus adatbázis},
+a \textit{fantomadatbázis},
+és a \textit{deklaratív adatbázis} kifejezés;
+mindegyik mellett szólnak pro és kontra érvek.
 
 
 
@@ -1638,10 +1789,6 @@ mely minden beérkező kérés továbbítása előtt megfelelően kiegészíti a
 
 
 \todo[inline,color=red]{Általában a seed terminológiát tisztázni, inkább a TreeRandomra hivatkozni}
-
-\todo[inline]{Delphix?}
-
-\todo[inline]{developer mode: on-the-fly újratöltés (config fájl vagy jpa)}
 
 \longcomment{Bírálati szempontok}{
 A dolgozat újszerűsége, a feldolgozás színvonala (8 pont)
