@@ -287,8 +287,8 @@ ugyanakkor a lekérdezések futási ideje sem marad el nagyságrendekkel a tény
 Az integrált konfigurációs fájl előnye még,
 hogy létező adatbázispéldányokon tanított mesterséges intelligencia segítségével is generálható.
 A gépi tanulással segített konfigurációmenedzsent egyre szélesebb körben alkalmazott módszer,
-megtaláljuk a SAT-solverektől\cite{sat-classification} a felhőarchitektúrákig[hiv!],
-nem látszik elvi akadálya az adatbázisra vonatkozó konfigurációban való alkalmazásnak.
+megtaláljuk a SAT-solverektől\cite{Hoos2021AutomatedCA} a felhőarchitektúrákig\cite{Osypanka2022ResourceUC},
+és nem látszik elvi akadálya az adatbázisra vonatkozó konfigurációban való alkalmazásnak.
 
 De ilyen vaskos módszerek nélkül, egyszerűbb heurisztikákkal is lehetséges
 egy létező adatbázis jó közelítéssel történő letapogatása.
@@ -474,7 +474,7 @@ különféle területekről, a relációktól az automataelméleten át a kripto
 Megoldásom alapvetésként egy relációs adatbázist leíró API-t fog definiálni illetve megvalósítani.
 Aligha érdemes más megközelítést választani,
 hiszen a relációs adatmodell nem csak tradicionálisan megkerülhetetlen
-és máig a legnépszerűbb adattárolási módszer[hiv!],
+és máig a legnépszerűbb adattárolási módszer\cite{Akhtar2023PopularityRO},
 de egyúttal közös nevezőként szolgál bármely más modellhez.
 Egy relációs struktúrával gyakorlatilag bármilyen interpretált adathalmazt le tudunk írni,
 mivel a relációs séma általános normalizációs segédeszköz.
@@ -771,8 +771,8 @@ Gyorsan számítható invertálható permutációk például modulo szorzásból
 
 Költségesebb, de erősen véletlenszerű összevisszaságot biztosító invertálható permutációk
 különféle kriptográfiai módszerekkel állíthatók elő.
-Többféle algoritmuscsalád kipróbálása után (pl. FPE, azaz Format Preserving Encryption) végül
-egy megfelelően kialakított Feistel-hálózat bizonyult a legkezelhetőbbnek.
+Többféle algoritmuscsalád kipróbálása után
+végül egy megfelelően kialakított Feistel-hálózat bizonyult a legkezelhetőbbnek.
 A Feistel-háló fő skálázási paramétere (akárcsak a hash-alapú \texttt{TreeRandom}-implementációnál)
 a hashelő algoritmus minősége,
 de a háló mérete illetve a permutáció $n$ hossza is lényeges.
@@ -786,7 +786,7 @@ A következő ábrán vizuálisan összehasonlítottam néhány permutáció-tí
   \begin{minipage}[b]{0.45\textwidth}
     \centering
     \includegraphics[width=0.9\textwidth]{image/permutation-fpe1.png}
-    \caption{FPE permutáció[hiv!]}
+    \caption{Rank-then-encipher FPE\protect\cite{Bellare2009FormatPreservingE}}
   \end{minipage}
   \hspace*{\fill}
   \begin{minipage}[b]{0.45\textwidth}
