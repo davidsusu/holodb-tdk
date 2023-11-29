@@ -2,7 +2,8 @@
 
 inputFileName='index.tex'
 outputFileName='dolgozat.pdf'
-jobName="$( uuidgen )"
+
+baseName="$( echo "${inputFileName}" | sed 's/\.[^.]*$//' )"
 
 mkdir -p build
 rm -Rf build/*
@@ -28,16 +29,15 @@ done
 
 cd ..
 
-command="pdflatex --shell-escape -interaction=nonstopmode -jobname='${jobName}' '${inputFileName}'"
+command="pdflatex --shell-escape -interaction=nonstopmode '${inputFileName}'"
 
-eval "$command" | exit 0
-bibtex "$inputFileName"
-makeindex -s nomencl.ist -t index.nlg -o index.nls index.nlo # FIXME
-eval "$command"
-eval "$command"
+eval "${command}"
+bibtex "${baseName}"
+eval "${command}"
+eval "${command}"
 
 cd ..
 
 mkdir -p out
-cp -f "build/${jobName}.pdf" "out/${outputFileName}"
+cp -f "build/${baseName}.pdf" "out/${outputFileName}"
 rm -f ./*.out ./*.dvi
