@@ -164,7 +164,7 @@ Cserébe erőforrásigénye csekély, nincs szükség az adatok tényleges táro
 
 \subsection{Seed alapú virtuális világok}
 
-Játékokban és egyszerűbb szimulációkba már igen régóta generálnak kisebb világokat,
+Játékokban és egyszerűbb szimulációkban már igen régóta generálnak kisebb világokat,
 pályákat procedurálisan valamilyen pszeudo-random algoritmus segítségével.
 A módszer továbbfejleszthető óriás világokra is.
 Ekkor a világteret (sorosan vagy hierarchikusan) szeletekre osztjuk, és biztosítunk egy függvényt,
@@ -1447,8 +1447,11 @@ az eredeti adatok módosítása nélkül.
 
 A fő elv, amit a tranzakciókkal kapcsolatban követni fogunk,
 hogy megmaradjunk a réteges felépítésnél,
-és semmiképp ne a táblákra terheljük a tranzakciókezelés terhét
-(mint például a \textit{H2} adatbáziskezelő architektúrájában láthatjuk).
+és semmiképp ne a táblákra toljuk a tranzakciókezelés terhét.\footnote{
+    Mint több adatbáziskezelőnél láthatjuk (a \textit{H2} például tipikusan ilyen).
+    A munkamenetek kezelésének a táblainterfész alá tolásával
+    különféle architekturális nehézségek jelentkeznek.
+}
 
 Egy teljesen általános tranzakciókezelési módszer,
 amikor a szerver két állapotát különböztetjük meg,
