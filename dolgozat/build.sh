@@ -21,12 +21,6 @@ ls ./ --color=never | egrep '^.*\.drawio$' | while IFS=' ' read -r diagramFilena
     inkscape "${diagramSvgFilename}" --export-text-to-path --export-overwrite
 done
 
-#ls ./ --color=never | egrep '^.*\.m$' | while IFS=' ' read -r diagramFilename; do
-#    diagramNameBase="$( echo "${diagramFilename}" | sed -E 's/.m$//' )"
-#    sed -iE "s/\boutputfilename\b/${diagramNameBase}/" "${diagramFilename}"
-#    octave --no-gui --no-window-system "${diagramFilename}"
-#done
-
 cd ..
 
 command="pdflatex --shell-escape -interaction=nonstopmode '${inputFileName}'"
