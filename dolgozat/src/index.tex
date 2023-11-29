@@ -283,8 +283,9 @@ egyetlen átlátható, deklaratív, verziókezelhető adatfájlban minden megadh
 Majd az adatbázis létrejöttekor és a szerver elindulásakor látható,
 hogy teljesen hiányzik a szokásos másolási, generálási, anonimizálási, inicializálási vagy egyéb folyamat,
 a szerver töredékmásodperc alatt válaszképesen elindul.
-Végül a szerver rendkívül kis memóriaigénnyel fut
-(ez csak a módosításokkal arányban változik valamelyest),
+Végül a szerver rendkívül kis memóriaigénnyel fut\footnote{
+    Ami persze a betöltött plusz adatforrások és a beérkező írási műveletek arányában megnövekedhet.
+},
 ugyanakkor a lekérdezések futási ideje sem marad el nagyságrendekkel a tényleges adatbázisétól.
 
 Az integrált konfigurációs fájl előnye még,
@@ -816,7 +817,7 @@ A következő ábrán vizuálisan összehasonlítottam néhány permutáció-tí
   \hspace*{\fill}
 \end{figure}
 
-A kriptográfiában alkalmazott legtöbb megfordítható permutáció kötött méretű.
+A kriptográfiában alkalmazott legtöbb megfordítható permutáció mérete eleve kötött.
 A Feistel-háló ebből a szempontból elég rugalmas,
 de a permutáció hossza még ekkor is csak 2-hatvány lehet.
 A tetszőleges hossz biztosítására átméretező dekorátorok használhatók.
@@ -883,7 +884,7 @@ A megfelelőség ez esetben két dolgot jelent:
 
 \begin{enumerate}
   \item \textbf{Konzisztencia:}
-        Felépíthető egy olyan tényleges immutábilis relációs adatbázis ($M$),
+        felépíthető egy olyan tényleges immutábilis relációs adatbázis ($M$),
         hogy minden lehetséges relációs lekérdezés esetében, amely a közös sémára ($S$) értelmes,
         a virtuális és a tényleges adatbázis esetében visszaadott eredménytábla megegyezik.
   \item \textbf{Megkötések kielégítése:}
@@ -1344,7 +1345,9 @@ egyúttal könnyen szimulálható típusát:
     rárajzolunk néhány egyszerű alakzatot,
     majd a kívánt vektoros vagy raszteres formátumban szolgáltatjuk
   \item \textbf{Jelszó-hash:}
-    egy valós hash előállításához elég, ha a hash-algoritmust magára a seedre mint bemenetre hívjuk meg
+    a tényleges a hash-algoritmust hívjuk meg valamely rendelkezésre álló adatra,
+    pusztán formai elvárás esetén akár magára a seedre,
+    demózáshoz pedig hasznos lehet a felhasználóvet használni jelszóként
   \item \textbf{Általános BLOB/CLOB:}
     lekéréskor a konfigurációban megadott mérethatárok közötti bájtsort/karaktersort kell visszaadni,
     ami könnyen ellátható random bájtok/karakterek generálásával
@@ -1423,13 +1426,16 @@ A tipikus szcenáriókban főként egyes konkrét rekordok lesznek módosítva, 
 A tömeges módosítások kérdésével itt nem foglalkozom,
 de nem látszik akadálya az ezek optimalizálását célzó továbbfejlesztésnek.
 
+Az írhatósági réteget arra is használhatjuk,
+hogy egy-egy tesztesethez egyéni rekordokat adjunk hozzá,
+ami megkötéseken keresztül nehézkesebb lenne.
+
 A módosítások támogatásához előszöris a \texttt{Table} interfészt magát
 ki kell egészíteni a megfelelő műveletekkel
 (pl. \texttt{isWritable()}, \texttt{applyPatch(TablePatch)}, \texttt{sequence()}).
 A csak-írható implementáció persze az írási műveleteket nem fogja támogatni.
 
-A \texttt{DiffTable} implementáció egy dekorátor,
-mely tetszőleges \texttt{Table} implementáció fölé elhelyezhető.
+A \texttt{DiffTable} egy tetszőleges \texttt{Table} implementáció fölé elhelyezhető dekorátor.
 Teljesen áttetszően működik: amíg nincsenek módosítások,
 minden műveletet egyszerűen továbbít a dekorált tábla felé.
 Módosítás esetén a különbségeket (módosított értékek, beszúrt és törölt sorok) a memóriában tárolja.
@@ -1437,8 +1443,8 @@ A további lekérdezésekkor figyelembe veszi a különbségréteget a továbbh�
 illetve a szükséges mértékben összefésüli az eredményt a különbségekkel.
 
 Olyan táblák is dekorálhatók így, amelyek valós adatbázistáblákat használnak backendként.
-Ezzel a módszerrel akár írhatóan használhatunk egy létező adatbázist,
-mégis az eredeti adatok módosítása nélkül.
+Ezzel a módszerrel írhatóan használhatunk egy létező adatbázist,
+az eredeti adatok módosítása nélkül.
 
 \subsection{Generikus tranzakciókezelés}
 
