@@ -9,7 +9,6 @@
 \usepackage{graphicx}
 \usepackage{colortbl}
 \usepackage{svg}
-\usepackage{todonotes}
 \usepackage{float}
 \usepackage{pgfplots}
 \usepackage{arydshln}
@@ -24,8 +23,6 @@
 \hspace{0.7cm}\parbox[left][][c]{15.8cm}{\linespread{1.2}\selectfont #1}
 \vspace{1em}
 }
-
-\newcommand{\longcomment}[2]{\todo[inline]{Long comment: #1}}
 
 \usepackage[newfloat]{minted}
 \AtBeginEnvironment{minted}{\singlespacing}
@@ -50,9 +47,6 @@
 \begin{document}
 
 \documentlang{hungarian}
-
-\listoftodos
-\cleardoublepage
 
 \makecover
 \cleardoublepage
