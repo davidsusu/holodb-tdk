@@ -107,7 +107,7 @@ ami jellemzően egy másodlagos verziókezelést eredményez a forráskód verzi
 és sorozatos összefésülési problémákhoz vezet, ha az adatok szerkezete vagy szemantikája gyakran változik.
 A jelen dolgozatban nem foglalkozom ennek a kérdésnek a részleteivel,
 de az utolsó fejezetben vázolom majd egy lehetséges megoldás körvonalait,
-ami szervesen következik majd az azt előzőekből.
+ami szervesen következik majd az azt megelőzőekből.
 
 A másik problémakör azzal kapcsolatos, hogy ugyan az életnek kitett produkciós adatbázist
 kénytelenek vagyunk minden erőforrásigényével életben tartani, valamint minden release-zel migrálni,
@@ -174,10 +174,11 @@ A módszer továbbfejleszthető óriás világokra is.
 Ekkor a világteret (sorosan vagy hierarchikusan) szeletekre osztjuk, és biztosítunk egy függvényt,
 mely minden szelethez rendel egy saját seed értéket.
 Legegyszerűbb esetben a seed az adott szelet sorszámából generált hash.
-Amikor szükségünk van valamely szelet tartalmára, az adott szabályrendszer szerint
-a szelet seedjéből kiindulva on-demand legeneráljuk az adott szelet tartalmát.
+Amikor szükségünk van valamely szelet tartalmára, a szelet seedjéből kiindulva,
+az adott szabályrendszer szerint on-demand legeneráljuk az adott szelet tartalmát.
 A sűrűn benépesített világok szomszédos szeleteinek összeillesztése néha nem triviális.
-Felületek generálása esetén gyakran használnak valamilyen eleve interpolált eljárást, például Perlin-zajt,
+Felületszerű, folytonos struktúrák generálása esetén gyakran használnak
+valamilyen eleve interpolált eljárást, például Perlin-zajt,
 így biztosítva a közeli helyeken a közeli értékeket.
 
 Egy közismert korai példa seed alapú módszert alkalmazó szoftverre
@@ -220,7 +221,7 @@ az érzékeny adatok miatt azonban anonimizálásra van szükség.
 Tehát a generáláshoz szükséges számítási igényt összességében
 felcseréljük a másolás és anonimizáció költségeivel.
 
-Úgy tűnik, gyakran anonimizálással együtt is egyszerűbb valós adatokból kiindulni,
+Úgy tűnik, gyakran anonimizálással együtt is egyszerűbb dolog meglévő adatokból kiindulni,
 mint egy komplett generálási folyamatot kiépíteni.
 Egy köztes megoldás lehet a séma és az adatok nagyjábóli jellegének letapogatása,
 és az ez alapján történő újragenerálás.
@@ -279,7 +280,7 @@ az implementáció részleteit pedig a következő fejezetben fogom bemutatni.
 Egyszerű esetben a felhasználói élményben három lényeges fázist különíthetünk el.
 A figyelem először a konfigurációs fájlra irányul:
 egyetlen átlátható, deklaratív, verziókezelhető adatfájlban minden megadható, amire szükség van.
-Majd az adatbázis létrejötte és a szerver elindulásakor látható,
+Majd az adatbázis létrejöttekor és a szerver elindulásakor látható,
 hogy teljesen hiányzik a szokásos másolási, generálási, anonimizálási, inicializálási vagy egyéb folyamat,
 a szerver töredékmásodperc alatt válaszképesen elindul.
 Végül a szerver rendkívül kis memóriaigénnyel fut
@@ -484,7 +485,7 @@ mivel a relációs séma általános normalizációs segédeszköz.
 A legtöbb alkalmazásban van valamilyen fokális entitás, objektumtípus,
 mely alapvető szerepet tölt be az architektúrában
 (egy task manager esetében ilyen lehet a task,
-míg egy könyvtári katalógusban a könyvkötetnek megfelelő típus).
+míg egy könyvtári katalógusban a könyv).
 A tervezés elején hamar arra a megállapításra jutottam,
 hogy esetünkben a legalapvetőbb objektum az \textit{oszlop}.
 Az oszlop alatt azonos típusú adatokat találunk,
@@ -533,7 +534,7 @@ Ha feltesszük, hogy a multihalmaz úgy van ábrázolva,
 hogy a hatékony értéklekérés és keresés-rendezés elvárása teljesül,
 akkor már csak egy (a tábla hosszára értelmezett) invertálható permutációra van szükség,
 hogy az adatokat visszakereshetően szét is szórjuk.
-(Lentebb látni fogjuk, milyen módszerrel tudjuk a multihalmaz egy (eleve rendezett) reprezentációját képezni,
+(Lentebb látni fogjuk, milyen módszerrel tudjuk a multihalmaz egy eleve rendezett reprezentációját képezni,
 amivel az elvárások teljesíthetők.)
 A gyorsan számítható invertálható permutációk tipikus képviselője a modulo szorzásra épül.
 Plusz költség vállalásával pedig sokkal jobb szórást biztosító permutációkat kapunk,
@@ -630,7 +631,7 @@ akkor a \texttt{BigInteger} segítségével hajtja végre a műveletet;
 ha az eredmény mégis kis szám, akkor \texttt{ImplSmall} példányként adja vissza.
 
 Az \texttt{ImplBig} mindig a \texttt{BigInteger}-en keresztül végzi a műveleteket.
-Hasonlóan a másik implementációhoz, szintén ellenőrzi, hogy az eredmény kis szám-e,
+Hasonlóan a másik implementációhoz, szintén ellenőrzi, hogy az eredmény kis szám-e.
 Általában, egy \texttt{LargeInteger} szám akkor és csak akkor csomagolódik \texttt{ImplBig}-ként,
 ha kívül esik a \texttt{long} értékkészletén.
 
@@ -826,7 +827,7 @@ amíg megfelelő értéket nem kap.
 A hossznövelő dekorátor ennek felhasználásával implementálható,
 de a jelentősége kisebb, jellemzően hosszcsökkentés történik.
 Egyes speciális permutációknál az előbbi módszer nagyon sok újrahívással járhat
-(például egy olyannál, ahol az értékek eggyel előre tolása történik),
+(például egy olyannál, ahol az értékek eggyel előre tolása történik).
 Az átméretező metódus bekerült magába az interfészbe,
 hogy az ilyen implementációk maguk kezeljék a helyzetet.
 A jó szétszórást biztosító permutációknál valószínűtlen a sok újrahívás.
@@ -877,14 +878,16 @@ a tömörség kedvéért néhol kicsit vázlatosan:
 
 Bármilyen implementáció legyen is mögötte, a storage API egy relációs adatbázist ír le.
 Tehát ahhoz, hogy a virtuális adatok funkcionálisan egy valódi (csak-olvasható) relációs adathalmaz képét adják,
-nem kell más, mint hogy konzisztens módon elérhetők legyenek a storage API-n keresztül.
-A konzisztencia ez esetben két dolgot jelent:
+nem kell más, mint hogy megfelelő viselkedéssel elérhetők legyenek a storage API-n keresztül.
+A megfelelőség ez esetben két dolgot jelent:
 
 \begin{enumerate}
-  \item Felépíthető egy olyan tényleges immutábilis relációs adatbázis ($M$),
+  \item \textbf{Konzisztencia:}
+        Felépíthető egy olyan tényleges immutábilis relációs adatbázis ($M$),
         hogy minden lehetséges relációs lekérdezés esetében, amely a közös sémára ($S$) értelmes,
         a virtuális és a tényleges adatbázis esetében visszaadott eredménytábla megegyezik.
-  \item Az $S$ séma teljesíti a virtuális adatbázis felhasználói konfigurációját ($C$),
+  \item \textbf{Megkötések kielégítése:}
+        az $S$ séma teljesíti a virtuális adatbázis felhasználói konfigurációját ($C$),
         valamint az $M$-ben szereplő adatok tulajdonságai illeszkednek a $C$-ben leírt megkötésekre.
 \end{enumerate}
 
