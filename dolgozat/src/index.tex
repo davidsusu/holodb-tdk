@@ -939,7 +939,7 @@ amelyek lehetőleg biztosítják az alábbiakat:
 
 \begin{enumerate}
   \item hatékony elérés (random access)
-  \item pozíciótól függő érték (seed + sorindex)
+  \item pozíciótól függő érték (\texttt{TreeRandom} seed)
   \item hatékony kereshetőség valamilyen formában
   \item hatékony rendezés
   \item konzisztencia
@@ -1102,7 +1102,7 @@ Az érték elérése ekkor úgy történik, hogy először lekérjük az érték
 majd meghívjuk az értékválasztó függvényt,
 melynek paraméterei az értéksáv, a sorindex és a \texttt{TreeRandom}-ból vett seed lesznek.
 Egy kézenfekvő megvalósítás,
-hogy a sorindex és a seed alapján inicializált randomgenerátorral
+hogy a seed alapján inicializált randomgenerátorral
 generáltatunk egy véletlen értéket, ami a sávba esik.
 
 Értéksávra való kereséskor vesszük a minimális és a maximális keresett értéket,
@@ -1314,7 +1314,7 @@ Az indexelt oszlopokra vonatkozó elvárások közül így csak az első kettő 
 
 \begin{enumerate}
   \item hatékony elérés (random access)
-  \item pozíciótól függő érték (seed + sorindex)
+  \item pozíciótól függő érték (\texttt{TreeRandom} seed)
 \end{enumerate}
 
 Vagyis elég, ha a \texttt{TreeRandom} által a sorindexhez generált seed alapján
@@ -1346,7 +1346,7 @@ egyúttal könnyen szimulálható típusát:
     majd a kívánt vektoros vagy raszteres formátumban szolgáltatjuk
   \item \textbf{Jelszó-hash:}
     a tényleges a hash-algoritmust hívjuk meg valamely rendelkezésre álló adatra,
-    pusztán formai elvárás esetén akár magára a seedre,
+    pusztán formai elvárás esetén akár magára a \texttt{TreeRandom} seedre,
     demózáshoz pedig hasznos lehet a felhasználóvet használni jelszóként
   \item \textbf{Általános BLOB/CLOB:}
     lekéréskor a konfigurációban megadott mérethatárok közötti bájtsort/karaktersort kell visszaadni,
@@ -1796,8 +1796,6 @@ mindegyik mellett szólnak pro és kontra érvek.
 
 
 
-
-\todo[inline,color=red]{Általában a seed terminológiát tisztázni, inkább a TreeRandomra hivatkozni}
 
 \longcomment{Bírálati szempontok}{
 A dolgozat újszerűsége, a feldolgozás színvonala (8 pont)
