@@ -107,14 +107,14 @@ ami szervesen következik majd az azt megelőzőekből.
 
 A másik problémakör azzal kapcsolatos, hogy ugyan az életnek kitett produkciós adatbázist
 kénytelenek vagyunk minden erőforrásigényével életben tartani, valamint minden release-zel migrálni,
-ám az absztrakt értelemben vett mindenkori adatbázisra számos egyéb helyen is szükségünk van,
+ám az \textit{absztrakt értelemben vett} adatbázisra számos egyéb helyen is szükségünk van,
 ahol ezek a folyamatos költségek igencsak nemkívánatosak.
-Ilyenek jellemzően:
+Ilyenek esetek jellemzően:
 
 \begin{itemize}
-    \item adatfüggő stubok és mockok
-    \item integrációs és egyéb tesztek
-    \item gyors prototípusgyártás, kísérletezés, draft adatbázisok
+    \item adatfüggő mockok és stubok biztosítása
+    \item integrációs és egyéb tesztelés
+    \item gyors prototípusgyártás, kísérletezés draft adatbázisokkal
     \item rövid demonstrációk, prezentációk
 \end{itemize}
 
@@ -129,7 +129,7 @@ melyeket nem használhatunk fel csak úgy (anonimizálás nélkül) egyéb célo
 
 Más területeken is találkozhatunk a fentiekhez hasonló kívánalmakkal.
 Például az adatbázisok oktatásában is jellemző, hogy minden egyes hallgató
-számára elérhető saját izolált adatbázis adatbázist bocsátanak rendelkezésre,
+számára elérhető saját izolált adatbázist bocsátanak rendelkezésre,
 bár mindegyik ilyen adatbázis szükségszerűen ugyanazzal a szerkezettel és adatokkal bír.
 
 Fogalmazzuk meg tehát a problémát, mintegy tézisként:
@@ -223,7 +223,7 @@ Egy köztes megoldás lehet a séma és az adatok nagyjábóli jellegének letap
 és az ez alapján történő újragenerálás.
 
 Azonban a bevezetőben felsorolt szituációk egy részében nem áll rendelkezésre egy létező produkciós adatbázis.
-Emiatt egy általános megoldás aligha épülhet aninimizálásos módszerre.
+Emiatt egy általános megoldás aligha épülhet anonimizálásos módszerre.
 
 \subsection{Nagy teljesítményű megoldások}
 
@@ -297,6 +297,8 @@ Hasonlóan, a virtuális adatbázis könnyen materializálható egy valós adatb
 A könnyűsúlyú jelleg olyan új távlatokat nyit, amelyek korábban föl sem merülhettek.
 Például most már nincs akadálya, hogy bármely füstteszt adatbázis-eléréssel fusson.
 A CI/CD pipeline-okban adathalmazok kívülről való betöltése nélkül is lehet rövid feladatokat futtatni.
+A megoldás adatbázistervező eszközökbe való integrálással lehetővé tudnánk tenni,
+hogy az épp aktuális tervállapot gombnyomásra teljeskörű adatbázisként elinduljon.
 
 Azt hiszem, jogosan merül föl a kérdés, hogy miért nem született és terjedt el még hasonló termék.
 Ennek fő okait az alábbiakban látom:
@@ -1840,7 +1842,8 @@ nagyságrendekkel jobban teljesít, épp ahogyan azt vártuk.
 A vizsgált valószerű szituációban a runtime performancia is
 alig marad el a tényleges adatbázisok mögött.
 
-\section{Konklúzió}
+
+\chapter{Konklúzió}
 
 A dolgozatban az adatbázismockolás egy újszerű megközelítését mutattam be.
 Láthattuk, hogy néhány alapvetően egyszerű ötlet kombinálásával lehetséges
