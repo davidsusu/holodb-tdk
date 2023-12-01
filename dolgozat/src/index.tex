@@ -26,7 +26,6 @@
 }
 
 \usepackage[newfloat]{minted}
-\AtBeginEnvironment{minted}{\singlespacing}
 
 \title{HoloDB: szintetikus adatok on-the-fly szolgáltatása relációs adatbázisként}
 \date{2023}
@@ -82,6 +81,7 @@ illetve a kriptográfiában is használatos megfordítható permutációk adják
 Az új megoldás reményeim szerint további előnyök mellett ötvözi a korábbi megoldások erősségeit,
 míg kikerüli azok fő hátrányait.
 \end{abstract}
+
 
 
 \chapter{Áttekintés}
@@ -143,6 +143,7 @@ Fogalmazzuk meg tehát a problémát, mintegy tézisként:
 }
 
 A következő szekcióban röviden végigveszem, hogyan szokás általában a hasonló problémákat kezelni.
+
 
 \section{Körkép}
 
@@ -239,6 +240,7 @@ Ezek a rendszerek erősen optimalizálják és párhuzamosítják a tesztadatok 
 Csodát viszont nem lehet várni: a számításigény aszimptotikusan,
 a tárhelyigény pedig teljes egészében ugyanaz marad.
 
+
 \section{Egy újfajta megoldás körvonalai}
 
 Az előzőekben tárgyalt megközelítések mindegyikének megvoltak a maga sajátos előnyei ás hátrányai.
@@ -272,6 +274,7 @@ az egyes felhasználásoknál már nincs ezzel kapcsolatos teendő.
 Belátható, hogy a fenti elvárások egyszerre teljesíthetők.
 Az alábbi szekcióban röviden vázolom, milyen előnyöket nyerünk így,
 az implementáció részleteit pedig a következő fejezetben fogom bemutatni.
+
 
 \section{Az új megközelítés előnyei}
 
@@ -396,7 +399,7 @@ A következő táblázat összehasonlítja az új megközelítés és a már eml
   \parbox{\comptableleftwidth}{\rhpad Prod. adatbázis \\ pontos utánzása \rhpad} &
     \comptableicon{Green}{\faCheck} &
     \comptableicon{Red}{\faClose} &
-    \comptableicon{Green}{\faCheck} &
+    \comptableicon{Green}{\faCheck\kern-0.65em\faCheck} &
     \comptableicon{Green}{\faCheck} &
     \comptableicon{Red}{\faClose} &
     \comptableicon{Red}{\faClose} &
@@ -458,11 +461,16 @@ A következő táblázat összehasonlítja az új megközelítés és a már eml
   \arrayrulecolor{black}
   \hline
 \end{tabular}
+\caption[Adatmockolási módszerek összehasonlítása]{
+    Tesztadatok biztosítására használt módszerek általános jellemzőinek összehasonlítása
+}
 \end{center}
 \end{table}
 
 
+
 \chapter{A virtuális adattár konstrukciója}
+
 
 \section{A nagy illúzió}
 
@@ -584,6 +592,7 @@ A virtuális adatbázis dockerben való indításához vagy beágyazott használ
 lényegileg elég egy ilyen konfigurációs fájl.
 Ennek konkrétumaira majd a 3. fejezetben térek ki.
 
+
 \section{Az architektúra alapjai}
 
 \subsection{Segédtípusok}
@@ -598,7 +607,9 @@ A következő osztálydiagram összefoglalja a kiemelt és lentebb tárgyalt int
 \begin{figure}[H]
 \centering
 \includegraphics[width=\textwidth]{diagram/basic-ifaces-uml.png}
-\caption{Néhány segédinterfész, melyek alapvető szerepet töltenek be az architektúrában}
+\caption[Alapvető segédinterfészek]{
+    Néhány segédinterfész, melyek alapvető szerepet töltenek be az architektúrában
+}
 \end{figure}
 
 \subsection{A \texttt{LargeInteger} típus}
@@ -669,7 +680,7 @@ a \texttt{LargeInteger} valamivel gyorsabb.
             \addplot[ybar,fill=cyan] coordinates { (BigInteger,126) };
         \end{axis}
     \end{tikzpicture}
-    \caption{
+    \caption[A \texttt{LargeInteger} teljesítményének összevetése]{
         A \texttt{LargeInteger} teljesítményének összehasonlítása
         egy kis számokon végzett összetett számítás átlagos futási ideje alapján
     }
@@ -781,8 +792,7 @@ A Feistel-háló fő skálázási paramétere (akárcsak a hash-alapú \texttt{T
 a hashelő algoritmus minősége,
 de a háló mérete illetve a permutáció $n$ hossza is lényeges.
 
-A következő ábrán vizuálisan összehasonlítottam néhány permutáció-típus értékeloszlását
-(a közeli értékek színe hasonló; minél összevisszább, annál jobb):
+A következő ábrán vizuálisan összehasonlítottam néhány permutáció-típus értékeloszlását:
 
 \begin{figure}[H]
   \centering
@@ -790,13 +800,13 @@ A következő ábrán vizuálisan összehasonlítottam néhány permutáció-tí
   \begin{minipage}[b]{0.45\textwidth}
     \centering
     \includegraphics[width=0.9\textwidth]{image/permutation-fpe1.png}
-    \caption{Rank-then-encipher FPE\protect\cite{Bellare2009FormatPreservingE}}
+    \par Rank-then-encipher FPE\protect\cite{Bellare2009FormatPreservingE}
   \end{minipage}
   \hspace*{\fill}
   \begin{minipage}[b]{0.45\textwidth}
     \centering
     \includegraphics[width=0.9\textwidth]{image/permutation-mp1.png}
-    \caption{Modulo permutáció}
+    \par Modulo permutáció
   \end{minipage}
   \hspace*{\fill}
   
@@ -806,15 +816,20 @@ A következő ábrán vizuálisan összehasonlítottam néhány permutáció-tí
   \begin{minipage}[b]{0.45\textwidth}
     \centering
     \includegraphics[width=0.9\textwidth]{image/permutation-feif1.png}
-    \caption{Feistel-háló (1-round, fast hash)}
+    \par Feistel-háló (1-round, fast hash)
   \end{minipage}
   \hspace*{\fill}
   \begin{minipage}[b]{0.45\textwidth}
     \centering
     \includegraphics[width=0.9\textwidth]{image/permutation-feis2.png}
-    \caption{Feistel-háló (2-round, SHA256)}
+    \par Feistel-háló (2-round, SHA256)
   \end{minipage}
   \hspace*{\fill}
+  
+  \caption[Permutációk kimeneteinek összehasonlítása]{
+    A \texttt{Permutation} különféle implementációinak kiemenetei \\
+    (a közeli értékek színe hasonló; minél nagyobb a káosz, annál jobb)
+  }
 \end{figure}
 
 A kriptográfiában alkalmazott legtöbb megfordítható permutáció mérete eleve kötött.
@@ -874,6 +889,7 @@ a tömörség kedvéért néhol kicsit vázlatosan:
 \includegraphics[width=\textwidth]{diagram/storage-api-uml.png}
 \caption{A storage API fő interfészei (egy relációs adattár alapontológiája)}
 \end{figure}
+
 
 \section{A csak-olvasható alapréteg}
 
@@ -1024,7 +1040,10 @@ egy \texttt{Permutation} példány segítségével elkeverjük.
 \begin{figure}[H]
 \centering
 \includesvg[width=0.55\textwidth]{diagram/distribution}
-\caption{A kétfázisú értékkiosztás alapelve: egymás után végrehajtott visszafejthető disztribúció és permutáció}
+\caption[A kétfázisú értékkiosztás alapelve]{
+    A kétfázisú értékkiosztás alapelve:
+    egymás után végrehajtott visszafejthető disztribúció és permutáció
+}
 \end{figure}
 
 Láttuk, hogy mindkét függvénytípus interfésze úgy van definiálva, hogy relációként megfordítható.
@@ -1046,7 +1065,7 @@ A következő két ábra szemlélteti az adatlekérés illetve értékkeresés f
   \hspace*{\fill}
   \begin{minipage}[t]{0.42\textwidth}
     \includesvg[width=\textwidth]{diagram/findvalue}
-    \caption{
+    \caption[Keresés a kétfázisú értékkiosztásban]{
       Keresés a kétfázisú értékkiosztásban:
       a rendezett értékkészlet és a leképezések megfordíthatósága
       biztosítja a hatékony kereshetőséget a virtuális listában
@@ -1301,9 +1320,9 @@ sőt, az egy sorban egymás után lévők összevontan is kezelhetők.
 \begin{figure}[H]
 \centering
 \includesvg[width=0.7\textwidth]{diagram/geospatial-search}
-\caption{
-  Geolokációk keresése alakzat alapján, rácsozott gömbfelületen. \\
-  Csak a határvonal által metszett mezőkbe eső pontokkal kell részletesebben foglalkozni.
+\caption[Geolokációk keresése alakzat alapján]{
+    Geolokációk keresése alakzat alapján, rácsozott gömbfelületen. \\
+    Csak a határvonal által metszett mezőkbe eső pontokkal kell részletesebben foglalkozni.
 }
 \end{figure}
 
@@ -1313,8 +1332,8 @@ A nem-indexelt oszlopok szimulálásakor a keresési-rendezési szempontokat egy
 Az indexelt oszlopokra vonatkozó elvárások közül így csak az első kettő releváns:
 
 \begin{enumerate}
-  \item hatékony elérés (random access)
-  \item pozíciótól függő érték (\texttt{TreeRandom} seed)
+    \item hatékony elérés (random access)
+    \item pozíciótól függő érték (\texttt{TreeRandom} seed)
 \end{enumerate}
 
 Vagyis elég, ha a \texttt{TreeRandom} által a sorindexhez generált seed alapján
@@ -1417,6 +1436,7 @@ az egyesített táblában a kisebb tábla adatait pedig redundánsan szerepeltet
 (ez egy oszlopközi összefüggés a fenti értelemben);
 így az összefüggéseket már táblán belül tudjuk értelmezni.
 
+
 \section{Az írhatósági réteg}
 
 \subsection{A \texttt{DiffTable} dekorátor}
@@ -1499,7 +1519,9 @@ párhuzamosan is futtathatunk írási tranzakciókat,
 amíg azok különböző táblákon futnak.
 
 
+
 \chapter{Gyakorlati eredmények}
+
 
 \section{A prototípus}
 
@@ -1558,6 +1580,7 @@ Az architektúra köré sokféle további eszközt fejlesztettem,
 melyek a robusztusság eltérő fokain állnak.
 Ilyenek például: automatikus REST API, GraphQL adapter, authentikációs proxy, Apache Calcite SQL driver stb.
 
+
 \section{Konfiguráció}
 
 A HoloDB egy YAML formátumú konfigurációs fájl segítségével paraméterezhető fel,
@@ -1569,8 +1592,8 @@ ez csak egy dedikált, minimalisztikus csomag függőségként való beemelésé
 
 \begin{figure}[H]
   \centering
-  \begin{minipage}[t]{0.45\textwidth}
-    \begin{Verbatim}[frame=single,fontsize=\small]
+  \begin{minipage}[t]{0.47\textwidth}
+    \begin{minted}[fontsize=\small,framesep=4pt,frame=single,framerule=1.5pt,rulecolor=\color{gray!30}]{yaml}
 seed: 425364
 schemas:
   - name: shop
@@ -1592,23 +1615,23 @@ schemas:
           - name: id
             mode: COUNTER
           - name: cid
-            valuesForeignColumn: [
-              customers, id]
+            valuesForeignColumn:
+              [customers, id]
           - name: product
             valuesBundle: fruits
           - name: quantity
             valuesRange: [1, 10]
-    \end{Verbatim}
+    \end{minted}
   \end{minipage}
   \hspace*{\fill}
-  \begin{minipage}[t]{0.4cm}
-    \vspace{6cm}
+  \begin{minipage}[t]{0.35cm}
+    \vspace{7cm}
     {\Large $\Rightarrow$}
   \end{minipage}
   \hspace*{\fill}
   \begin{minipage}[t]{0.45\textwidth}\begin{center}
   
-    \vspace{0.8cm}
+    \vspace{1.2cm}
     
     \texttt{customers}
     \vspace{0.1cm}
@@ -1660,8 +1683,13 @@ schemas:
   \caption{Egy minimalisztikus konfiguráció és eredménye}
 \end{figure}
 
-A konfiguráció ezen kívül JPA-entitásokra helyezett annotációkkal is beállítható,
-így külső eszközök nélkül is futtathatunk teszteket beágyazott adatbázissal.
+Java projektekben JPA-entitásokra helyezett annotációkkal is beállítható a teljes konfiguráció,
+így beágyazott adatbázissal, külső eszközök nélkül is futtathatunk teszteket.
+Ehhez elegendő a megfelelő JDBC connection stringet megadni,
+a többit (keretrendszertől függően\footnote{
+    A \textit{Spring}, \textit{Micronaut} és \textit{Quarkus} beépítetten támogatott,
+    de elméletileg bármilyen rendszerhez igazítható a megoldás.
+}) automatikusan elvégzi az inicializáló service.
 
 Az egyéni működéssel való kiegészítés több szinten támogatott.
 A beépített értékkiosztási módok esetén is lehetőség van egyéni adatfájl betöltésére,
@@ -1699,6 +1727,7 @@ hiszen néha a meglévő adatok átstruktúrálására van szükség,
 illetve lehetnek a két konfigurációs állapot közötti történetben elbújó lényeges módosítások.
 Úgy vélem, mindkét probléma kezelhető,
 közeljövőbeli tervem egy ilyen migrációs keretrendszer kialakítása.
+
 
 \section{Néhány bővítési példaszcenárió}
 
@@ -1817,7 +1846,10 @@ legegyszerűbb, ha egyszerűen az addigi oszlopokat adjuk vissza
 
 A szisztéma megvalósításához mindössze egy proxy réteg szükséges,
 mely minden beérkező kérés továbbítása előtt megfelelően kiegészíti a konfigurációt,
-és újratölti a virtuális adatbázist.
+és újratölti a virtuális adatbázist, ha szükséges.
+A \texttt{TreeRandom} hierarchia természetéből adódóan a korábbi oszlopok
+továbbra is ugyanazokat a konkrét értékeket fogják szolgáltatni.
+
 
 \section{Empirikus eredmények}
 
@@ -1871,6 +1903,22 @@ mindegyik mellett szólnak pro és kontra érvek.
 
 \pagebreak
 
+% Bibliography (mandatory)
+\phantomsection
+\addcontentsline{toc}{chapter}{\biblabel}
 \printbibliography[title=\biblabel]
+\cleardoublepage
+
+% List of figures (optional) - useful over 3-5 figures
+\phantomsection
+\addcontentsline{toc}{chapter}{\lstfigurelabel}
+\listoffigures
+\cleardoublepage
+
+% List of tables (optional) - useful over 3-5 tables
+\phantomsection
+\addcontentsline{toc}{chapter}{\lsttablelabel}
+\listoftables
+\cleardoublepage
 
 \end{document}
