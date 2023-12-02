@@ -168,7 +168,7 @@ Cserébe erőforrásigénye csekély, nincs szükség az adatok tényleges táro
 \subsection{Seed alapú virtuális világok}
 
 Játékokban és egyszerűbb szimulációkban már igen régóta generálnak kisebb világokat,
-pályákat procedurálisan valamilyen pszeudo-random algoritmus segítségével.
+pályákat procedurálisan valamilyen pszeudovéletlen algoritmus segítségével.
 A módszer továbbfejleszthető óriás világokra is.
 Ekkor a világteret (sorosan vagy hierarchikusan) szeletekre osztjuk, és biztosítunk egy függvényt,
 mely minden szelethez rendel egy saját seed értéket.
@@ -294,7 +294,7 @@ ugyanakkor a lekérdezések futási ideje sem marad el nagyságrendekkel a tény
 
 Az integrált konfigurációs fájl előnye még,
 hogy létező adatbázispéldányokon tanított mesterséges intelligencia segítségével is generálható.
-A gépi tanulással segített konfigurációmenedzsent egyre szélesebb körben alkalmazott módszer,
+A gépi tanulással segített konfigurációmenedzsment egyre szélesebb körben alkalmazott módszer,
 megtaláljuk a SAT-solverektől\cite{Hoos2021AutomatedCA} a felhőarchitektúrákig\cite{Osypanka2022ResourceUC},
 és nem látszik elvi akadálya az adatbázisra vonatkozó konfigurációban való alkalmazásnak.
 
@@ -306,7 +306,7 @@ A könnyűsúlyú jelleg olyan új távlatokat nyit, amelyek korábban föl sem 
 Például most már nincs akadálya, hogy bármely füstteszt adatbázis-eléréssel fusson.
 A CI/CD pipeline-okban adathalmazok kívülről való betöltése nélkül is lehet rövid feladatokat futtatni.
 A megoldás adatbázistervező eszközökbe való integrálással lehetővé tudnánk tenni,
-hogy az épp aktuális tervállapot gombnyomásra teljeskörű adatbázisként elinduljon.
+hogy az épp aktuális tervállapot gombnyomásra teljes értékű adatbázisként elinduljon.
 
 Azt hiszem, jogosan merül föl a kérdés, hogy miért nem született és terjedt el még hasonló termék.
 Ennek fő okait az alábbiakban látom:
@@ -580,7 +580,7 @@ az írhatóság illúzióját kelti.
 Ha a relációs adatmodell objektumait (oszlopok, táblák, indexek stb.) sikeresen implementáltuk,
 a relációs műveletek (és így az SQL nyelv) megvalósítása már a hagyományos módon történhet.
 Ma már elérhető néhány nyílt forrású jól felépített SQL query planner framework,
-ami lehetővé teszi egy teljeskörű SQL-szerver kiépítését.
+ami lehetővé teszi egy teljes körű SQL-szerver kiépítését.
 Ilyen például az általam használt Apache Calcite.
 (Ugyanakkor egy saját SQL-futtatót is implementáltam,
 mely a nyelv limitált verzióját támogatja, de néhány esetben gyorsabban fut.)
@@ -747,7 +747,7 @@ Az eloszlás (beleértve, hogy valamely érték egyáltalán előfordul-e)
 teljesen implementációfüggő lehet.
 Mivel az értékkészlet maga is egy $k$ hosszúsága lista,
 a további leképezési kompozíciók szempontjából rugalmasabb,
-ha az értékindexeket, azaz a $[0..k)$ egész-intervallum számait tesszūk a listába.
+ha az értékindexeket, azaz a $[0..k)$ egész-intervallum számait tesszük a listába.
 
 Követelmény, hogy le tudjuk kérdezni az alábbiakat:
 
@@ -830,7 +830,7 @@ A következő ábrán vizuálisan összehasonlítottam néhány permutáció-tí
   \hspace*{\fill}
   
   \caption[Permutációk kimeneteinek összehasonlítása]{
-    A \texttt{Permutation} különféle implementációinak kiemenetei \\
+    A \texttt{Permutation} különféle implementációinak kimenetei \\
     (a közeli értékek színe hasonló; minél nagyobb a káosz, annál jobb)
   }
 \end{figure}
@@ -1124,14 +1124,14 @@ Az érték elérése ekkor úgy történik, hogy először lekérjük az érték
 majd meghívjuk az értékválasztó függvényt,
 melynek paraméterei az értéksáv, a sorindex és a \texttt{TreeRandom}-ból vett seed lesznek.
 Egy kézenfekvő megvalósítás,
-hogy a seed alapján inicializált randomgenerátorral
+hogy a seed alapján inicializált véletlengenerátorral
 generáltatunk egy véletlen értéket, ami a sávba esik.
 
 Értéksávra való kereséskor vesszük a minimális és a maximális keresett értéket,
 és az inverz rányújtást használva megkeressük a megfelelő sorindexeket, amelyek sávjához az érté tartozik.
 Ezen sorindexek feszítik majd ki a találati sorindexsávot.
 Hogy az alsó érték beletartozik-e, annak eldöntéséhez le kell generálni
-az alső sorindexhez a konkrét értéket, és ellenőrizni, hogy nagyobbegyenlő-e,
+az alsó sorindexhez a konkrét értéket, és ellenőrizni, hogy nagyobbegyenlő-e,
 mint a keresett alsó érték.
 A felső érték esetében hasonlóan kell eljárni.
 
@@ -1152,16 +1152,16 @@ de véletlenszerű, zajos kimenetet szeretnénk látni.
 Ha elengedjük a gyors keresés kritériumát,
 akkor a reguláris kifejezés alapján történő értékkiosztást nagyon könnyen megvalósíthatjuk
 egy véges automatával történő véletlenszerű inverz mintaillesztéssel\footnote{
-  A jelenlegi implementáció a \textit{generex} könyvtárat használja erre.
+  A jelenlegi implementáció a \textit{Generex} könyvtárat használja erre.
 },
 a sorindex és a \texttt{TreeRandom}-ból vett seed figyelembevételével.
 
 Ha azonban fenn szeretnénk tartani a gyors keresés lehetőségét,
-szükséges lesz, hogy képezni tudjuk az adott reguláris kifejezésre illeszkedő összes string virtuális listáját.
-Azaz bármely $n$ sorindexre elő kell tudnunk állítani az $n$-edik illeszkedő stringet
-(méghozzá abc-rendben, nem pedig a reguláris kifejezés szerkezete alapján).
-És fordítva, tetszőleges stringre meg kell tudni mondani,
-hányadik illeszkedő stringgel azonos vagy melyikhez van közel, ha nem illeszkedik.
+szükséges lesz, hogy képezni tudjuk az adott reguláris kifejezésre illeszkedő összes sztring virtuális listáját.
+Azaz bármely $n$ sorindexre elő kell tudnunk állítani az $n$-edik illeszkedő sztringet
+(méghozzá ABC-rendben, nem pedig a reguláris kifejezés szerkezete alapján).
+És fordítva, tetszőleges sztringre meg kell tudni mondani,
+hányadik illeszkedő sztringgel azonos vagy melyikhez van közel, ha nem illeszkedik.
 Ha már van egy ilyen virtuális listánk, azt a kétfázisú értékkiosztással könnyen a kívánt oszloppá alakíthatjuk.
 
 A megoldás a reguláris kifejezések lehetőségeinek csak valamilyen limitált részhalmazát fogja támogatni.
@@ -1169,7 +1169,7 @@ De még így is bőven lefedi az olyan egyszerű eseteket, mint például a tele
 
 Az ilyen típusú szöveggenerálás részletes bemutatása kimutat a jelen dolgozat keretei közül,
 így ennek ismertetését itt mellőzöm\footnote{
-  Egy egyszerű erre készült prototípus a \texttt{strex} könyvtár.
+  Egy egyszerű erre készült prototípus a \texttt{Strex} könyvtár.
 }.
 
 \subsubsection{Full-text indexelt értékkiosztás}
@@ -1370,7 +1370,7 @@ egyúttal könnyen szimulálható típusát:
   \item \textbf{Jelszó-hash:}
     a tényleges a hash-algoritmust hívjuk meg valamely rendelkezésre álló adatra,
     pusztán formai elvárás esetén akár magára a \texttt{TreeRandom} seedre,
-    demózáshoz pedig hasznos lehet a felhasználóvet használni jelszóként
+    demózáshoz pedig hasznos lehet a felhasználónevet használni jelszóként
   \item \textbf{Általános BLOB/CLOB:}
     lekéréskor a konfigurációban megadott mérethatárok közötti bájtsort/karaktersort kell visszaadni,
     ami könnyen ellátható random bájtok/karakterek generálásával
@@ -1485,8 +1485,8 @@ amikor a szerver két állapotát különböztetjük meg,
 a \texttt{READ} és a \texttt{WRITE} státuszokat.
 Feltételezzük, hogy jóval több olvasási kérés érkezik be, mint írási.
 
-Az alapértelmezett \texttt{READ} státuszban feltétel nélkül, konkurrensen
-szolgáljuk ki a beérkező olvasási lekérdezéseket.
+Az alapértelmezett \texttt{READ} státuszban feltétel nélkül,
+konkurensen szolgáljuk ki a beérkező olvasási lekérdezéseket.
 Ha azonban egy módosító lekérdezés illetve tranzakció érkezik,
 elhelyezzük a módosító műveleteknek fenntartott queue-ba,
 és átváltunk \texttt{WRITE} módba.
@@ -1554,7 +1554,7 @@ A testreszabott kép a kis erőforrásigény miatt serverless végpontként is j
 
 A HoloDB a MiniBase projektre épül.
 Utóbbi egy relációsadatbázis-keretrendszer, mely definiálja a storage API-t,
-és annak konkrét implentációjához agnosztikusan viszonyulva
+és annak konkrét implementációjához agnosztikusan viszonyulva
 egy komplett adatbázisszervert épít fölé;
 beleértve a lekérdezések fordítását és futtatását,
 a felhasználói munkamenetek, tranzakciók és változók kezelését,
@@ -1589,7 +1589,7 @@ Ilyenek például: automatikus REST API, GraphQL adapter, authentikációs proxy
 A HoloDB egy YAML formátumú konfigurációs fájl segítségével paraméterezhető fel,
 melyben az adatbázis minden lényeges eleme beállítható.
 A konfigurációhoz formális specifikáció is tartozik,
-így a fájl strukturális és szemantikai helyessége statikusan ellenőrizhező.
+így a fájl strukturális és szemantikai helyessége statikusan ellenőrizhető.
 A konfigurációt hordozó Java-osztályok egy programkódban is használhatók,
 ez csak egy dedikált, minimalisztikus csomag függőségként való beemelését igényli.
 
@@ -1688,7 +1688,7 @@ schemas:
 
 Java projektekben JPA-entitásokra helyezett annotációkkal is beállítható a teljes konfiguráció,
 így beágyazott adatbázissal, külső eszközök nélkül is futtathatunk teszteket.
-Ehhez elegendő a megfelelő JDBC connection stringet megadni,
+Ehhez elegendő a megfelelő JDBC connection sztringet megadni,
 a többit (keretrendszertől függően\footnote{
     A \textit{Spring}, \textit{Micronaut} és \textit{Quarkus} beépítetten támogatott,
     de elméletileg bármilyen rendszerhez igazítható a megoldás.
@@ -1810,7 +1810,7 @@ ahol egy-egy háromszög mindig egy konkrét értéksávba esik, nem nyúlik át
 Vagy akár betölthetünk tényleges domborzati adatokat.
 
 Ha ezt sikerült megoldani, az értékkiosztás működése már triviális.
-Adott rekordhoz a földrajzi koordinátát a korábban ismertett módszerrel generáljuk,
+Adott rekordhoz a földrajzi koordinátát a korábban ismertetett módszerrel generáljuk,
 a kapcsolt adatot ez alapján számítjuk az $F$ függvény szerint.
 A kapcsolt adat valamely egyéni értéksávjára való kereséskor
 lekérjük a sávon teljesen belülre eső illetve a kilógó kontextussávokat,
@@ -1862,7 +1862,7 @@ megvalósítottam ugyanannak a demó alkalmazásnak a tesztkörnyezetét,
 és ezen integrált tesztek egy gyűjteményét futtattam le,
 mérve többek között a preparálási, indítási, runtime, és összesített performanciát,
 illetve a memóriahasználatot.
-A tesztben csak a beépített alaképességeket vettem igénybe,
+A tesztben csak a beépített alapképességeket vettem igénybe,
 melyek idiomatikusnak tekinthetők a HoloDB szempontjából,
 ugyanakkor egy valószerű szituációt igyekeztem modellezni.
 
@@ -1884,7 +1884,7 @@ alig marad el a tényleges adatbázisok mögött.
 
 A dolgozatban az adatbázismockolás egy újszerű megközelítését mutattam be.
 Láthattuk, hogy néhány alapvetően egyszerű ötlet kombinálásával lehetséges
-egy funkcionálisan teljeskörű relációs adatbázist működtetni,
+egy funkcionálisan teljes értékű relációs adatbázist működtetni,
 anélkül, hogy azt ténylegesen tárolni kellene.
 A prototípus a teszteredmények alapján
 valóban drasztikusan csökkenti az erőforráshasználatot,
