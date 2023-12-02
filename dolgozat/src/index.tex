@@ -95,7 +95,8 @@ azaz a mindenkori forráskód \textit{aktuális állapotának} determinisztikus 
 nem függ annak történetiségétől.
 Ezt az átlátható képet bolygatja meg a szoftverhez tartozó produkciós adatbázis,
 mely önálló életet él, a felhasználói világgal való interakcióban folyamatosan változik;
-szerkezete, szemantikája azonban szorosan az alkalmazás mindenkori állapotához kötődik.
+szerkezete, szemantikája azonban szorosan az alkalmazás mindenkori állapotához kötődik
+\cite{Ploski2007DatabaseCentricVersioning}
 
 Ez a kettős természet legalább két nagy problémakört eredményez.
 Az egyik a verziókezelést érinti:
@@ -1353,8 +1354,8 @@ egyúttal könnyen szimulálható típusát:
     közben feljavítva a szövegképet nagybetűs szavakkal és központozással
     (az eredmény tovább javítható kifejezésminták használatával,
     amikor időnként egy többszavas részletre előre adott sablont használunk;
-    de ha a minőség az elsődleges, bevethetünk egyszerűbb Markov-láncokat\cite{Artut2019UsingAM}
-    vagy akár nagyobb nyelvi modelleket)
+    de ha a minőség az elsődleges, bevethetünk akár
+    Markov-láncokra épülő egyszerűbb nyelvi modelleket)
   \item \textbf{Strukturált szöveg:}
     először előállítunk egy általános struktúrát (címek, bekezdések stb.),
     majd ennek elemeit feltöltjük szöveggel (lásd az előző pontot),
