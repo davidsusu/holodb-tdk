@@ -1,0 +1,68 @@
+plugins {
+    id 'com.github.johnrengelman.shadow' version '8.1.1'
+    id 'io.micronaut.application' version '4.2.0'
+    id 'io.micronaut.aot' version '4.2.0'
+}
+
+version = "0.1"
+group = "hu.webarticum.holodb.benchmark"
+
+repositories {
+    mavenCentral()
+    mavenLocal()
+}
+
+dependencies {
+    annotationProcessor 'io.micronaut.data:micronaut-data-processor'
+    annotationProcessor 'io.micronaut:micronaut-http-validation'
+    annotationProcessor 'io.micronaut.serde:micronaut-serde-processor'
+    implementation 'io.micronaut.data:micronaut-data-hibernate-jpa'
+    implementation 'io.micronaut.data:micronaut-data-tx-hibernate'
+    implementation 'io.micronaut.serde:micronaut-serde-jackson'
+    implementation 'io.micronaut.sql:micronaut-hibernate-jpa'
+    implementation 'io.micronaut.sql:micronaut-jdbc-hikari'
+    compileOnly 'io.micronaut:micronaut-http-client'
+    runtimeOnly 'ch.qos.logback:logback-classic'
+    testImplementation 'io.micronaut:micronaut-http-client'
+    implementation 'org.yaml:snakeyaml:2.2'
+    implementation 'com.fasterxml.jackson.core:jackson-core:2.16.0'
+    implementation 'com.fasterxml.jackson.core:jackson-databind:2.16.0'
+    
+    //runtimeOnly("com.h2database:h2")
+    implementation 'hu.webarticum.holodb:embedded:0.4.2-SNAPSHOT'
+    
+}
+
+
+application {
+    mainClass = 'hu.webarticum.holodb.benchmark.micronaut.Application'
+}
+java {
+    sourceCompatibility = JavaVersion.toVersion("17")
+    targetCompatibility = JavaVersion.toVersion("17")
+}
+
+
+graalvmNative.toolchainDetection = false
+micronaut {
+    runtime("netty")
+    testRuntime("junit5")
+    processing {
+        incremental(true)
+        annotations("hu.webarticum.holodb.benchmark.micronaut.*")
+    }
+    aot {
+    // Please review carefully the optimizations enabled below
+    // Check https://micronaut-projects.github.io/micronaut-aot/latest/guide/ for more details
+        optimizeServiceLoading = false
+        convertYamlToJava = false
+        precomputeOperations = true
+        cacheEnvironment = true
+        optimizeClassLoading = true
+        deduceEnvironment = true
+        optimizeNetty = true
+    }
+}
+
+
+

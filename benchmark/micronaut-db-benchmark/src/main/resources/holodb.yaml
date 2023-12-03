@@ -1,0 +1,45 @@
+seed: 9042712
+tableDefaults:
+  writeable: true
+schemas:
+  - name: university
+    tables:
+      - name: subjects
+        size: 3
+        columns:
+          - name: id
+            mode: COUNTER
+          - name: name
+            mode: FIXED
+            values: ['Affective computing', 'Formal semantics', 'Machine Learning']
+          - name: credit
+            values: [3, 2, 3]
+      - name: courses
+        size: 30
+        columns:
+          - name: id
+            mode: COUNTER
+          - name: subject_id
+            valuesForeignColumn: [subjects, id]
+          - name: year
+            valuesRange: [2015, 2022]
+          - name: term
+            values: [1, 2]
+      - name: students
+        size: 10000
+        columns:
+          - name: id
+            mode: COUNTER
+          - name: code
+            valuesPattern: '[A-Z]{2}\-[0-9]{4}'
+          - name: firstname
+            valuesBundle: forenames
+          - name: lastname
+            valuesBundle: surnames
+      - name: course_student
+        size: 3000
+        columns:
+          - name: course_id
+            valuesForeignColumn: [courses, id]
+          - name: student_id
+            valuesForeignColumn: [students, id]

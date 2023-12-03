@@ -95,7 +95,7 @@ azaz a mindenkori forráskód \textit{aktuális állapotának} determinisztikus 
 nem függ annak történetiségétől.
 Ezt az átlátható képet bolygatja meg a szoftverhez tartozó produkciós adatbázis,
 mely önálló életet él, a felhasználói világgal való interakcióban folyamatosan változik;
-szerkezete, szemantikája azonban szorosan az alkalmazás mindenkori állapotához kötődik
+szerkezete, szemantikája azonban szorosan az alkalmazás mindenkori állapotához kötődik.%
 \cite{Ploski2007DatabaseCentricVersioning}
 
 Ez a kettős természet legalább két nagy problémakört eredményez.
@@ -295,7 +295,8 @@ ugyanakkor a lekérdezések futási ideje sem marad el nagyságrendekkel a tény
 
 Az integrált konfigurációs fájl előnye még,
 hogy létező adatbázispéldányokon tanított mesterséges intelligencia segítségével is generálható.\footnote{
-    Ígéretes, hogy mindössze egy példafájl és néhány instrukció után a ChatGPT-4 is meglehetősen jó eredményt generál.
+    Ígéretes, hogy mindössze egy példafájl és pár instrukció után
+    a ChatGPT-4 is meglehetősen jó eredményt generál.
 }
 A gépi tanulással segített konfigurációmenedzsment egyre szélesebb körben alkalmazott módszer,
 megtaláljuk a SAT-solverektől\cite{Hoos2021AutomatedCA} a felhőarchitektúrákig\cite{Osypanka2022ResourceUC},
@@ -659,7 +660,7 @@ A zérusközeli értékek gyorsítótárazva vannak a hatékonyság érdekében.
 
 A Scala standard könyvtárának \texttt{BigInt} típusa szintén a \texttt{long} és \texttt{BigInteger}
 aritmetika váltogatásával oldja meg,
-hogy az óriás számok támogatása mellett kis számokon viszonylag gyorsan fusson.
+hogy az óriás számok támogatása mellett kis számokon viszonylag gyorsan fusson.\cite{Rosset2019ScalaBigInt}
 A két megoldás performanciában hasonló,
 a számunkra releváns esetek egy részében (kisebb számok, sokféle művelet)
 a \texttt{LargeInteger} valamivel gyorsabb.
@@ -1059,6 +1060,10 @@ A \texttt{Permutation} pedig az \textt{indexOf()} metódust biztosítja hasonló
 (illetve inverze maga is permutáció).
 Ezek használatával egy reverse index könnyen implementálható.
 
+A még keveretlen rányújtott adathalmazbeli találati sáv határai
+egyúttal azonnal megadják a találatok számosságát,
+ami egyszerűbb \texttt{COUNT} lekérdezéseknél igen előnyös.
+
 A következő két ábra szemlélteti az adatlekérés illetve értékkeresés folyamatát:
 
 \begin{figure}[H]
@@ -1074,7 +1079,7 @@ A következő két ábra szemlélteti az adatlekérés illetve értékkeresés f
     \caption[Keresés a kétfázisú értékkiosztásban]{
       Keresés a kétfázisú értékkiosztásban:
       a rendezett értékkészlet és a leképezések megfordíthatósága
-      biztosítja a hatékony kereshetőséget a virtuális listában
+      biztosítja a hatékony keresést a virtuális listában
     }
   \end{minipage}
   \hspace*{\fill}
@@ -1357,7 +1362,7 @@ egyúttal könnyen szimulálható típusát:
     (az eredmény tovább javítható kifejezésminták használatával,
     amikor időnként egy többszavas részletre előre adott sablont használunk;
     de ha a minőség az elsődleges, bevethetünk akár
-    Markov-láncokra épülő egyszerűbb nyelvi modelleket)
+    Markov-láncokra épülő egyszerűbb nyelvi modelleket\cite{Amrrs2021MarkovHeadlines})
   \item \textbf{Strukturált szöveg:}
     először előállítunk egy általános struktúrát (címek, bekezdések stb.),
     majd ennek elemeit feltöltjük szöveggel (lásd az előző pontot),
