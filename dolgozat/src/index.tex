@@ -96,7 +96,8 @@ nem függ annak történetiségétől.
 Ezt az átlátható képet bolygatja meg a szoftverhez tartozó produkciós adatbázis,
 mely önálló életet él, a felhasználói világgal való interakcióban folyamatosan változik;
 szerkezete, szemantikája azonban szorosan az alkalmazás mindenkori állapotához kötődik.%
-\cite{Ploski2007DatabaseCentricVersioning}
+\cite{Ploski2007DatabaseCentricVersioning}%
+\cite{Fluri2023DatabaseCiCd}
 
 Ez a kettős természet legalább két nagy problémakört eredményez.
 Az egyik a verziókezelést érinti:
@@ -124,11 +125,6 @@ Ilyenek esetek jellemzően:
 Ezeken kívül, ha egy csak-olvasható adattartalmat akarunk nagy adatforgalomnak kitenni,
 fölmerülhet az adattartalom replikálása, és load-balanceren keresztüli elérhetővé tétele,
 ekkor azonban minden újabb példány jelentősen növeli a tárhelyfoglalást.
-
-Azonban nem mindig áll rendelkezésre egy produkciós adatbázis,
-mikor éppen jól jönne belőle egy másolat.
-És amikor rendelkezésre is áll, tartalma általában érzékeny adatokkal van tele,
-melyeket nem használhatunk fel csak úgy (anonimizálás nélkül) egyéb célokra.
 
 Más területeken is találkozhatunk a fentiekhez hasonló kívánalmakkal.
 Például az adatbázisok oktatásában is jellemző, hogy minden egyes hallgató
@@ -227,7 +223,13 @@ Egy köztes megoldás lehet a séma és az adatok nagyjábóli jellegének letap
 és az ez alapján történő újragenerálás.
 
 Azonban a bevezetőben felsorolt szituációk egy részében nem áll rendelkezésre egy létező produkciós adatbázis.
-Emiatt egy általános megoldás aligha épülhet anonimizálásos módszerre.
+És amikor rendelkezésre is áll, tartalma általában érzékeny adatokkal van tele,
+melyeket nem használhatunk fel csak úgy (anonimizálás nélkül) egyéb célokra.
+További probléma, hogy az adatok megszerzéséhez az éles adatbázist kell felkeresni,
+ami egyfelől az éles környezet nemkívánatos terhelését jelenti,
+másrészt az oda való beauthentikálás konkrét megoldástól függően biztonsági kockázatot rejthet.
+
+Egy általános megoldás tehát aligha épülhet anonimizálásos módszerre.
 
 \subsection{Nagy teljesítményű megoldások}
 
@@ -1068,13 +1070,12 @@ A következő két ábra szemlélteti az adatlekérés illetve értékkeresés f
 
 \begin{figure}[H]
   \centering
-  \hspace*{\fill}
-  \begin{minipage}[t]{0.42\textwidth}
+  \begin{minipage}[t]{0.48\textwidth}
     \includesvg[width=\textwidth]{diagram/getvalue}
     \caption{Adatlekérés a kétfázisú értékkiosztásból}
   \end{minipage}
   \hspace*{\fill}
-  \begin{minipage}[t]{0.42\textwidth}
+  \begin{minipage}[t]{0.48\textwidth}
     \includesvg[width=\textwidth]{diagram/findvalue}
     \caption[Keresés a kétfázisú értékkiosztásban]{
       Keresés a kétfázisú értékkiosztásban:
@@ -1082,7 +1083,6 @@ A következő két ábra szemlélteti az adatlekérés illetve értékkeresés f
       biztosítja a hatékony keresést a virtuális listában
     }
   \end{minipage}
-  \hspace*{\fill}
 \end{figure}
 
 \subsubsection{Kétfázisú értékkiosztás gyakoriságtáblázattal}
@@ -1330,7 +1330,7 @@ sőt, az egy sorban egymás után lévők összevontan is kezelhetők.
 
 \begin{figure}[H]
 \centering
-\includesvg[width=0.7\textwidth]{diagram/geospatial-search}
+\includesvg[height=0.4\textwidth]{diagram/geospatial-search}
 \caption[Geolokációk keresése alakzat alapján]{
     Geolokációk keresése alakzat alapján, rácsozott gömbfelületen. \\
     Csak a határvonal által metszett mezőkbe eső pontokkal kell részletesebben foglalkozni.
@@ -1538,7 +1538,7 @@ amíg azok különböző táblákon futnak.
 
 \begin{figure}[H]
 \centering
-\includesvg{diagram/simplearch}
+\includesvg[height=0.8\textwidth]{diagram/simplearch}
 \caption{A virtuális adatbázis vázlatos architektúrája}
 \end{figure}
 
@@ -1725,7 +1725,8 @@ Ahogy már említettem, a konfiguráció szofisztikáltabb generálásának egy 
 ha a konfigurációt optimalizáló mesterséges intelligenciára épülő módszert vetünk be.
 Ennek kutatása egy izgalmas jövőbeli projektnek ígérkezik.
 Érdekes probléma például, hogyan érdemes számítani a bemeneti adatbázis
-és az előállított konfiguráció közötti megfelelőségi mutatót.
+és az előállított konfiguráció közötti megfelelőségi mutatót.%
+\cite{Erritali2016DocumentSimilarity}
 
 A konfigurációs fájl az adatbázis nagyjábóli definíciójának is felfogható.
 Egy másik ígéretesnek tűnő továbbfejlesztési lehetőség,
