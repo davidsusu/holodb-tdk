@@ -1556,9 +1556,7 @@ más eszközökkel való integrációt illetően még számos felmérendő, kik�
 
 A szerver docker konténerként is futtatható, amihez a Docker Hubon biztosítok egy testreszabott képet.
 A felhasználói Dockerfile mellé csak a konfigurációs fájlt kell elhelyezni az indításhoz.
-A testreszabott kép a kis erőforrásigény miatt serverless végpontként is jól használható.\footnote{
-    Későbbi terv egy erősen optimalizált, GraalVM-re épülő képváltozat fejlesztése.
-}
+A testreszabott kép a kis erőforrásigény miatt serverless végpontként is jól használható.
 
 A HoloDB a MiniBase projektre épül.
 Utóbbi egy relációsadatbázis-keretrendszer, mely definiálja a storage API-t,
@@ -1879,17 +1877,16 @@ ugyanakkor egy valószerű szituációt igyekeztem modellezni.
   \setlength{\unitlength}{1cm}
   \begin{picture}(12,9)(0,0)
     \setlength\fboxsep{0pt}
-    \colorbox{gray!20}{\framebox(12,9){[TODO] Ábra: Teljesítményteszt eredménye három megközelítéssel}}
+    \colorbox{gray!20}{\framebox(12,9){
+        Ábra: Teljesítményteszt eredménye három megközelítéssel
+    }}
   \end{picture}
 \end{center}
 
-Látható, hogy összesített performanciában és memóriahasználatban a HoloDB
-nagyságrendekkel jobban teljesít, épp ahogyan azt vártuk.
-A vizsgált valószerű szituációban a runtime performancia is
-alig marad el a tényleges adatbázisok mögött.
 
+\chapter{Összegzés}
 
-\chapter{Értékelés és konklúzió}
+\section{Az eredmények értékelése}
 
 A dolgozatban az adatbázismockolás egy újszerű megközelítését mutattam be.
 Láthattuk, hogy néhány alapvetően egyszerű ötlet kombinálásával lehetséges
@@ -1904,14 +1901,53 @@ Ha a szoftver, leküzdve gyermekbetegségeit, eljut egy igazán stabil verzióig
 valamint sikerül a koncepció ideáját a fejlesztők szélesebb nyilvánosságával megismertetni,
 úgy természetes következményként nagy népszerűségre lehet számítani.
 
-Az új megoldás esszenciája a meglévő terminológiákkal nehézkesen körülírható (ld. a dolgozat címét),
-így egy megfelelő, jellegzetes és egyszerű megnevezés
+Bizonyítottam, hogy összesített performanciában és memóriahasználatban
+a HoloDB valóban lényegesen jobban teljesít, mint a létező megoldások.
+
+\subsection{Tervek a közeljövőre}
+
+A további munkát több frontvonalra tudom bontani:
+
+\begin{itemize}
+    \item az alapvető működés optimalizálása
+    \item további kiegészítő funkciók, eszközök fejlesztése
+    \item dokumentáció és kommunikáció
+\end{itemize}
+
+Az értékkiosztásokat és lekérdezéseket sok apró alkatrész teljesítményének finomhangolásával,
+elsősorban algoritmuselméleti kutatással lehet feljavítani.
+Ugyanilyen fontos viszont a programkörnyezet hatékonyabbá tétele is,
+különösen a docker-képé (lehetőleg GraalVM alapon).
+Optimalizáláson nem csak a performancia tuningolását,
+de az architekturális célszerűség növelését és a felhasználói élmény javítását is értem.
+Ebbe a logikus, könnyen érthető, lényegretörő konfiguráció éppúgy beletartozik,
+mint a kiegészítő eszközök ergonómiája.
+
+Az új eszközök fejlesztése elsősorban a különféle meglévő technológiákkal történő integrációt jelenti
+(tervezőeszközök, adatbázis-böngészők, programozási környezetek stb.).
+Másodsorban pedig a használat megkönnyítését szeretném megcélozni
+(generálás/materializálás, további REPL-funckiók, telepítőcsomagok, webes API-k stb.).
+
+Az API-dokumentáción túl egy-egy alapvető kalauz megtalálható
+az egyes projektek \texttt{README.md} fájljaiban,
+valamint különféle instant elindítható példaprojektek is segítik az ismerkedést.
+Ezek bővítésén túl tutorial stílusú leírásokra is szükség lesz.
+Felmérendő, hogy milyen eszközökkel lenne hatékony az aktív kapcsolattartás a potenciális ügyfelekkel.
+A bevett online felületeken túl (GitHub, Stackoverflow, BetaPage stb.)
+mind az akadémiai, mind a versenyszféra-közegben tervezem,
+hogy workshopokon és kérdőíves formában is gyűjtsem a visszajelzéseket.
+
+És ha már a kommunikációnál tartunk, maradt itt még egy elsőre talán mellékesnek tűnő,
+valójában azonban égető probléma.
+Nevezetesen, hogy az új megoldás esszenciája a bevett terminológiákkal
+csak tekervényesen fogalmazható meg (ld. a dolgozat címét).
+Egy megfelelő, jellegzetes és egyszerű megnevezés
 szükséges feltétele lesz a szélesebb körű népszerűsítésnek.
-Felmerült jelöltként
+Felmerült jelöltként például
 a \textit{holografikus adatbázis},
 a \textit{fantomadatbázis},
-és a \textit{deklaratív adatbázis} kifejezés;
-mindegyik mellett szólnak pro és kontra érvek.
+és a \textit{deklaratív adatbázis} kifejezés.
+Mindegyik mellett szólnak pro és kontra érvek.
 
 \pagebreak
 
