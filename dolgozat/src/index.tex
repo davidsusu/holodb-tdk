@@ -1881,14 +1881,14 @@ ugyanakkor egy valószerű szituációt igyekeztem modellezni.
                 ybar,
                 axis on top,
                 width=0.9\textwidth,
-                height=10cm,
+                height=11cm,
                 bar width=0.7cm,
                 ymajorgrids,
                 tick align=inside,
                 enlarge y limits={value=.1,upper},
                 enlarge x limits=0.15,
                 ymin=0,
-                ymax=5,
+                ymax=7,
                 axis x line*=bottom,
                 axis y line*=left,
                 tickwidth=1pt,
@@ -1906,36 +1906,47 @@ ugyanakkor egy valószerű szituációt igyekeztem modellezni.
             ]
             \addplot[fill=cyan]
                 coordinates {
-                    (Preparálás,4.2)
-                    (Indítás,3.2) 
-                    (Tesztek,2.2)
-                    (Ebből SQL,1.1)
+                    (Preparálás,5.7)
+                    (Indítás,1.6) 
+                    (Tesztek,6.11)
+                    (Ebből SQL,2.93)
                 };
             \addplot[fill=red]
                 coordinates {
-                    (Preparálás,3.0)
-                    (Indítás,2.0)
-                    (Tesztek,1.0) 
-                    (Ebből SQL,0.5)
+                    (Preparálás,6.88)
+                    (Indítás,1.61)
+                    (Tesztek,6.03) 
+                    (Ebből SQL,2.92)
                 };
             \addplot[fill=orange]
                 coordinates {
                     (Preparálás,0)
-                    (Indítás,0.2)
-                    (Tesztek,4) 
-                    (Ebből SQL,3)
+                    (Indítás,0.32)
+                    (Tesztek,6.42) 
+                    (Ebből SQL,3.24)
                 };
-            \legend{MariaDB gen.,MariaDB anon.,HoloDB}
+            \legend{MariaDB (generálás),MariaDB (anonimizálás),HoloDB}
         \end{axis}
     \end{tikzpicture}
     \caption[Futási idők összehasonlítása]{
-        A különböző megközelítések futási idejének összehasonlítása
+        A különböző megközelítések átlagos futási idejének összehasonlítása
     }
 \end{figure}
 
-A generálásos és anonimizálásos módszerhez is MariaDB adatbázist használtam.
-A generálási folyamatot egy python szkripttel vezéreltem,
-az adatokat a pythonhoz elérhető \textit{Faker} könyvtárral generáltattam.
+A használt tesztszcenárió rendkívül egyszerű,
+és elsősorban arra szolgált, hogy egy nagyságrendi képet kapjak a teljesítmények arányáról.
+Egy JPA-orientált webes \textit{Micronaut} alkalmazást futtattam webszerverként,
+ennek REST végpontjait hívtam meg egy külső, szint Java-alapú kliensből.
+Az adatbázisban tantárgyak, a hozzájuk rendelt kurzusok, valamint hallgatók szerepeltek,
+utóbbiak nagy számban ($10~000$ rekord).
+Ezeken végeztem CRUD műveleteket,
+illetve egy statisztikai végpontról időnként plusz információkat kértem le,
+ezeket valamivel összetettebb SQL-lekérdezések állították elő.
+50 független futtatás eredményét átlagoltam.
+
+A generálásos és anonimizálásos módszerhez is \textit{MariaDB} adatbázist használtam.
+A generálási folyamatot egy Python nyelven írt szkripttel vezéreltem,
+az adatokat a Pythonhoz elérhető \textit{Faker} könyvtárral generáltattam.
 Az anonimizálásnál egy ilyen előre legenerált adathalmazból indultam ki,
 és minden szöveges értéket következetesen egy másikra cseréltem adatbázislekéréseken keresztül,
 szintén python környezetből.
@@ -1956,6 +1967,7 @@ Az SQL lekérdezések nettő futási idejét külön mértem.
 Egy-egy SQL-lekérdezésnél a kérés elküldésétől
 a teljes eredménytábla beérkezéséig eltelt időt mértem,
 ezeket összegeztem.
+Itt az esetleges hálózati overhead szintén az eredmény lényeges része.
 
 
 \chapter{Összegzés}
@@ -1973,7 +1985,7 @@ Bizonyítottam, hogy összesített performanciában és memóriahasználatban
 a HoloDB valóban lényegesen jobban teljesít, mint a vizsgált alternatívák.
 
 A deklaratív konfiguráció átláthatóan, integráltan írja le a sémát és az adatokat,
-kényelmesen verziókezelhető, generálható, előfeldolgoztható.
+kényelmesen verziókezelhető, generálható, előfeldolgozható.
 
 Azzal, hogy nincs jelentős generálási és indítási költség,
 olyan új lehetőségek nyílnak meg, mint a teljes adatbázistartalommal történő füstteszt,
@@ -2013,7 +2025,7 @@ az egyes projektek \texttt{README.md} fájljaiban,
 valamint különféle instant elindítható példaprojektek is segítik az ismerkedést.
 Ezek bővítésén túl tutorial stílusú leírásokra is szükség lesz.
 Felmérendő, hogy milyen eszközökkel lenne hatékony az aktív kapcsolattartás a potenciális ügyfelekkel.
-A bevett online felületeken túl (GitHub, Stackoverflow, BetaPage stb.)
+A bevett online felületeken túl (\textit{GitHub}, \textit{Stack Overflow}, \textit{BetaPage} stb.)
 mind az akadémiai, mind a versenyszféra-közegben tervezem,
 hogy workshopokon és kérdőíves formában is gyűjtsem a visszajelzéseket.
 
