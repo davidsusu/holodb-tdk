@@ -683,7 +683,7 @@ a \texttt{LargeInteger} valamivel gyorsabb.
                 nodes near coords,
                 nodes near coords align={vertical},
             ]
-            \addplot[ybar,fill=cyan] coordinates { (primitive long,27)};
+            \addplot[ybar,fill=cyan] coordinates { (primitive long,27) };
             \addplot[ybar,fill=orange] coordinates { (LargeInteger,32) };
             \addplot[ybar,fill=cyan] coordinates { (BigInt (Scala),42) };
             \addplot[ybar,fill=cyan] coordinates { (BigInteger,126) };
@@ -1873,15 +1873,89 @@ A tesztben csak a beépített alapképességeket vettem igénybe,
 melyek idiomatikusnak tekinthetők a HoloDB szempontjából,
 ugyanakkor egy valószerű szituációt igyekeztem modellezni.
 
-\begin{center}
-  \setlength{\unitlength}{1cm}
-  \begin{picture}(12,9)(0,0)
-    \setlength\fboxsep{0pt}
-    \colorbox{gray!20}{\framebox(12,9){
-        Ábra: Teljesítményteszt eredménye három megközelítéssel
-    }}
-  \end{picture}
-\end{center}
+\begin{figure}[H]
+    \centering
+    \begin{tikzpicture}
+        \begin{axis}[
+                symbolic x coords={Preparálás,Indítás,Tesztek,Ebből SQL},
+                ybar,
+                axis on top,
+                width=0.9\textwidth,
+                height=10cm,
+                bar width=0.7cm,
+                ymajorgrids,
+                tick align=inside,
+                enlarge y limits={value=.1,upper},
+                enlarge x limits=0.15,
+                ymin=0,
+                ymax=5,
+                axis x line*=bottom,
+                axis y line*=left,
+                tickwidth=1pt,
+                legend style={
+                    at={(0.5,-0.2)},
+                    anchor=north,
+                    legend columns=-1,
+                    /tikz/every even column/.append style={column sep=0.3cm}
+                },
+                ylabel={Futási idő (s)},
+                xtick=data,
+                nodes near coords={
+                    \pgfmathprintnumber{\pgfplotspointmeta}
+                }
+            ]
+            \addplot[fill=cyan]
+                coordinates {
+                    (Preparálás,4.2)
+                    (Indítás,3.2) 
+                    (Tesztek,2.2)
+                    (Ebből SQL,1.1)
+                };
+            \addplot[fill=red]
+                coordinates {
+                    (Preparálás,3.0)
+                    (Indítás,2.0)
+                    (Tesztek,1.0) 
+                    (Ebből SQL,0.5)
+                };
+            \addplot[fill=orange]
+                coordinates {
+                    (Preparálás,0)
+                    (Indítás,0.2)
+                    (Tesztek,4) 
+                    (Ebből SQL,3)
+                };
+            \legend{MariaDB gen.,MariaDB anon.,HoloDB}
+        \end{axis}
+    \end{tikzpicture}
+    \caption[Futási idők összehasonlítása]{
+        A különböző megközelítések futási idejének összehasonlítása
+    }
+\end{figure}
+
+A generálásos és anonimizálásos módszerhez is MariaDB adatbázist használtam.
+A generálási folyamatot egy python szkripttel vezéreltem,
+az adatokat a pythonhoz elérhető \textit{Faker} könyvtárral generáltattam.
+Az anonimizálásnál egy ilyen előre legenerált adathalmazból indultam ki,
+és minden szöveges értéket következetesen egy másikra cseréltem adatbázislekéréseken keresztül,
+szintén python környezetből.
+
+A preparálási időbe a generálásos módszer esetében a generáló szkript
+teljes futási idejét számítottam bele.
+Az anonimizálásnál a meglévő adatbázishoz való kapcsolódás indításától
+mértem az időt a kapcsolat zárásáig,
+maga az anonimizálás a kettő között aktív adatbáziskapcsolattal zajlott.
+A HoloDB esetében preparálásra nincs szükség, így itt zéró érték szerepel.
+
+Az indítási időt az adatbázisszerver és az alkalmazás elindulásától
+a sikeres kapcsolódásig számítottam.
+
+Hogy valószerű eredményt kapjak, a teszteket REST API-n keresztül futtattam.
+Ez overheadet jelentett, és csökkentette a különbségeket, de éppen ez volt a cél.
+Az SQL lekérdezések nettő futási idejét külön mértem.
+Egy-egy SQL-lekérdezésnél a kérés elküldésétől
+a teljes eredménytábla beérkezéséig eltelt időt mértem,
+ezeket összegeztem.
 
 
 \chapter{Összegzés}
@@ -1892,19 +1966,25 @@ A dolgozatban az adatbázismockolás egy újszerű megközelítését mutattam b
 Láthattuk, hogy néhány alapvetően egyszerű ötlet kombinálásával lehetséges
 egy funkcionálisan teljes értékű relációs adatbázist működtetni,
 anélkül, hogy azt ténylegesen tárolni kellene.
-A prototípus a teszteredmények alapján
-valóban drasztikusan csökkenti az erőforráshasználatot,
+
+A prototípus a teszteredmények alapján valóban drasztikusan csökkenti az erőforráshasználatot,
 miközben tisztán deklaratív, snapshot jellegű entitássá teszi a nem-produkciós adatbázist.
+Bizonyítottam, hogy összesített performanciában és memóriahasználatban
+a HoloDB valóban lényegesen jobban teljesít, mint a vizsgált alternatívák.
+
+A deklaratív konfiguráció átláthatóan, integráltan írja le a sémát és az adatokat,
+kényelmesen verziókezelhető, generálható, előfeldolgoztható.
+
+Azzal, hogy nincs jelentős generálási és indítási költség,
+olyan új lehetőségek nyílnak meg, mint a teljes adatbázistartalommal történő füstteszt,
+vagy a teljesen izolált automatikus integrációs tesztek.
+
+\section{Tervek a közeljövőre}
 
 A HoloDB egy alapvető, a szoftverfejlesztők többségét érintő probléma megoldását kínálja.
 Ha a szoftver, leküzdve gyermekbetegségeit, eljut egy igazán stabil verzióig,
 valamint sikerül a koncepció ideáját a fejlesztők szélesebb nyilvánosságával megismertetni,
 úgy természetes következményként nagy népszerűségre lehet számítani.
-
-Bizonyítottam, hogy összesített performanciában és memóriahasználatban
-a HoloDB valóban lényegesen jobban teljesít, mint a létező megoldások.
-
-\subsection{Tervek a közeljövőre}
 
 A további munkát több frontvonalra tudom bontani:
 
