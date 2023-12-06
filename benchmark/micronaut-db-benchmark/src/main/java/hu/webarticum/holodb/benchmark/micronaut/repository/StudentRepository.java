@@ -6,4 +6,7 @@ import io.micronaut.data.repository.CrudRepository;
 
 @Repository
 public interface StudentRepository extends CrudRepository<Student, Long> {
+
+    public long countByFirstname(String firstname);
+    
 }

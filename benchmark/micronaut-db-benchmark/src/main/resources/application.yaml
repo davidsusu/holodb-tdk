@@ -11,3 +11,8 @@ datasources:
     #dialect: 'H2'
     driverClassName: 'hu.webarticum.holodb.embedded.HoloEmbeddedDriver'
     #driverClassName: 'org.h2.Driver'
+jpa:
+  default:
+    properties:
+      hibernate:
+        generate_statistics: true

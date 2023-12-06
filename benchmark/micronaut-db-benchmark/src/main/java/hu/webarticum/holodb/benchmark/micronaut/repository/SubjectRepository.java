@@ -6,4 +6,5 @@ import io.micronaut.data.repository.CrudRepository;
 
 @Repository
 public interface SubjectRepository extends CrudRepository<Subject, Long> {
+    
 }

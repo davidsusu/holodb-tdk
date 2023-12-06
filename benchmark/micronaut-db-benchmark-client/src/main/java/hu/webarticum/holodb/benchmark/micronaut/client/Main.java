@@ -1,6 +1,7 @@
 package hu.webarticum.holodb.benchmark.micronaut.client;
 
 import java.io.IOException;
+import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
 import okhttp3.MediaType;
@@ -22,7 +23,7 @@ public class Main {
                 .build();
         //RequestBody body = RequestBody.create(requestBody, JSON_MEDIA_TYPE);
         Request request = new Request.Builder()
-                .url(BACKEND_URL + "/hello")
+                .url(BACKEND_URL + "/stats")
                 .get()
                 //.addHeader(URLConstants.API_KEY_NAME, URLConstants.API_KEY_VALUE)
                 .build();

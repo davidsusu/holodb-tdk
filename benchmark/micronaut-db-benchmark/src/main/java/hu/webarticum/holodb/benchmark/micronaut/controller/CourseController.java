@@ -30,7 +30,7 @@ public class CourseController {
     @Get
     @Produces(MediaType.APPLICATION_JSON)
     public List<Course> index() {
-        return courseService.index();
+        return courseService.getAll();
     }
 
     @Get("/{id}")

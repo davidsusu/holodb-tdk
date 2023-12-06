@@ -25,7 +25,7 @@ public class CourseService {
     }
 
     @Transactional
-    public List<Course> index() {
+    public List<Course> getAll() {
         return courseRepository.findAll();
     }
 
