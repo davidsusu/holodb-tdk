@@ -1,5 +1,8 @@
 backend test-type run(s) queries prepare-sum(s) execute-sum(s)
 
+mysql simple-readonly 7.870093628 10301 0.188987 0.997808
+h2 simple-readonly 5.103988787 10301 0.0230164 0.148127
+
 mysql simple-readonly 10.977849081 10301 0.211743 1.06345
 mysql simple-readonly 10.858103332 10301 0.205553 1.06028
 mysql simple-readonly 10.728288730 10301 0.202732 1.03291
