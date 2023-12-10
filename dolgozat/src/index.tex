@@ -1881,14 +1881,14 @@ A \texttt{complex-writeable} tesztben pedig adatírások,
 majd arra épülő lekérdezések is történtek.
 
 A lekérdezések közvetlen mérésénél az SQL parancsnak a JDBC API-n keresztüli beküldésétől
-a result set végigiterálásnak végéig eltelt időt mértem.
+az eredménytábla végigiterálásnak végéig eltelt időt mértem.
 Különböző bonyolultságú és válaszméretű lekéréseket vizsgáltam.
 A HoloDB teljesítménye igen jó, amíg kevés adat lekéréséről van szó,
 és drasztikusan romlik, ha amikor sok adatot kell visszaadni.
 Vagyis a korábban tárgyalt indexelési technikák valóban jól teljesítenek,
 és kulcsfontosságúak a megfelelő teljesítményhez.
 Ugyanakkor az adatelérés kevésbé optimális,
-feltehetően mind az adatok számítása, mind a result set továbbítása jelentősen javítható még.
+feltehetően mind az adatok számítása, mind az eredménytábla továbbítása jelentősen javítható még.
 
 Az adatok tárhelyigényében a HoloDB természetesen drasztikus csökkenést mutat,
 hiszen eleve így lett tervezve.
