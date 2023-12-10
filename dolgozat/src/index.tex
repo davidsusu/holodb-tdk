@@ -1869,10 +1869,10 @@ mind realisztikus integrált teszt keretében mértem.
 A Docker-képek összehasonlítását leszámítva minden esetben
 a HoloDB beágyazott verzióját használtam.
 Az összehasonlítást MySQL-lel (mint az egyik legelterjedtebb szerveradatbázissal)
-és H2-vel (mint a Java környezetben legelterjedtebb beágyazott adatbázissal) végeztem.
+és H2-vel (mint a Java környezetben legelterjedtebb beágyazott adatbázissal) valósítottam meg.
 
-Az integrált tesztelést egy Micronaut keretrenszerben implementált
-alkalmazás REST API-n keresztüli hivásával futtattam.
+Az integrált tesztelést egy Micronaut keretrendszerben implementált
+alkalmazás REST API-n keresztüli hívásával futtattam.
 A \ref{fig:benchmarkPage}~ábra felső részén
 az integrált teszt három verziójának eredményei láthatók.
 A \texttt{simple-readonly} teszt egyszerűbb csak lekérdezéseket tartalmazott,
@@ -1882,21 +1882,19 @@ majd arra épülő lekérdezések is történtek.
 
 A lekérdezések közvetlen mérésénél az SQL parancsnak a JDBC API-n keresztüli beküldésétől
 a result set végigiterálásnak végéig eltelt időt mértem.
-Megvizsgáltam egyetlen adatmező, egy egyedi kulccsal megtalált teljes rekord,
-kereséssel és limitációval szűrt oszlop, egy teljes tábla, valamint több táblából összeszedtt adatok
-lekérésének performanciáját.
-Látszik, hogy a HoloDB teljesítménye igen jó, amíg kevés adat lekéréséről van szó,
+Különböző bonyolultságú és válaszméretű lekéréseket vizsgáltam.
+A HoloDB teljesítménye igen jó, amíg kevés adat lekéréséről van szó,
 és drasztikusan romlik, ha amikor sok adatot kell visszaadni.
 Vagyis a korábban tárgyalt indexelési technikák valóban jól teljesítenek,
 és kulcsfontosságúak a megfelelő teljesítményhez.
-Ugyanakkor az adatlekérés kevésbé optimális,
+Ugyanakkor az adatelérés kevésbé optimális,
 feltehetően mind az adatok számítása, mind a result set továbbítása jelentősen javítható még.
 
-Az adatok tárhelyigényében a HoloDB természetesn drasztikus csökkenést mutat,
+Az adatok tárhelyigényében a HoloDB természetesen drasztikus csökkenést mutat,
 hiszen eleve így lett tervezve.
 A szerveres kontextust nézve, a HoloDB Docker-képének mérete jóval kisebb, mint a MySQL-é;
 de a base image változtatásával,
-az operaciós rendszer és a JRE testreszabásával ez valószínűleg tovább javítható.
+az operációs rendszer és a JRE testreszabásával ez valószínűleg tovább javítható.
 A minden függőséget tartalmazó Shadow JAR lényegesen nagyobb, mint a H2-nél,
 ám ez minden bizonnyal jelentősen csökkenthető (ezzel eddig egyáltalán nem foglalkoztam).
 
@@ -1950,7 +1948,7 @@ A minden függőséget tartalmazó Shadow JAR lényegesen nagyobb, mint a H2-né
                 };
             \addplot[fill=orange] % HoloDB (default)
                 coordinates {
-                    (simple-readonly,8.182373242
+                    (simple-readonly,8.182373242)
                     (complex-readonly,9.4207860077)
                     (complex-writeable,14.4941282014)
                 };
@@ -2052,8 +2050,6 @@ A minden függőséget tartalmazó Shadow JAR lényegesen nagyobb, mint a H2-né
     \end{tikzpicture}
     
     \vspace{\baselineskip}
-    
-    \hspace*{\fill}
     
     \begin{minipage}[b]{0.25\textwidth}
         \begin{tikzpicture}
@@ -2191,12 +2187,13 @@ A minden függőséget tartalmazó Shadow JAR lényegesen nagyobb, mint a H2-né
             \end{axis}
         \end{tikzpicture}
     \end{minipage}
-    \hspace*{\fill}
     
-    \label{fig:benchmarkPage}
+    \vspace{1.5\baselineskip}
+    
     \caption[Teljesítmény-összehasonlítás]{
         A különböző megközelítések teljesítményének és tárigényének összehasonlítása
     }
+    \label{fig:benchmarkPage}
 \end{figure}
 
 
@@ -2211,8 +2208,12 @@ anélkül, hogy azt ténylegesen tárolni kellene.
 
 A prototípus a teszteredmények alapján valóban drasztikusan csökkenti az erőforráshasználatot,
 miközben tisztán deklaratív, snapshot jellegű entitássá teszi a nem-produkciós adatbázist.
-Bizonyítottam, hogy összesített performanciában és memóriahasználatban
-a HoloDB valóban lényegesen jobban teljesít, mint a vizsgált alternatívák.
+Bizonyítottam, hogy a memóriahasználatban a HoloDB valóban lényegesen jobban teljesít,
+mint a vizsgált alternatívák;
+valamint hogy runtime teljesítménye nem óriás méretű eredménytáblák esetén
+összemérhető a valódi adatbázisokéval;
+ez pedig a generálási, anonimizálási és egyéb inicializáló lépések kikerülése miatt
+összességében gyorsabb tesztfuttatást tesz lehetővé.
 
 A deklaratív konfiguráció átláthatóan, integráltan írja le a sémát és az adatokat,
 kényelmesen verziókezelhető, generálható, előfeldolgozható.
