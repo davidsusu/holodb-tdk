@@ -870,15 +870,15 @@ Az írhatóság problémakörével később foglalkozom.
 Nyilvánvalóan gondoskodni kell az alaphierarchiáról,
 ezek lesznek a \texttt{Schema}, \texttt{Table} és \texttt{Column} típusok.
 Az oszlopok elvont tulajdonságait a \texttt{ColumnDefinition} típus fogja össze.
-Bár az egyes mezők értékeit általában oszloporientáltan állítjuk elő,
-jellemzően az értéklistákat megadó \texttt{Source} objektumok használatával,
+Bár az egyes mezők értékeit általában oszloporientáltan állítjuk elő
+(jellemzően az értéklistákat megadó \texttt{Source} objektumok használatával),
 a lekérésnél több szempontból is intuitívabbnak és előnyösebbnek mutatkozik
 a rekordorientált megközelítés.
 A rekordot a \textt{Row} típus reprezentálja,
 ezen keresztül kérhetőek le a konkrét mezőértékek
 az oszlopnév vagy oszloppozíció megadásával.
 
-Az adatok hatékony keresését indexek segítik, itt három ilyen indexfajtával fogok foglalkozni,
+Az adatok hatékony keresését indexek segítik, itt három ilyen indexfajtával fogok foglalkozni:
 a normál \texttt{TableIndex}, a \texttt{FulltextIndex} és a \texttt{SpatialIndex} típusokkal.
 Ezek keresőmetódusai egy \texttt{TableSelection} példánnyal térnek vissza,
 melyen keresztül a találati listához férünk hozzá.
@@ -1425,9 +1425,9 @@ akkor minden ilyen értéken belül elvégezhetjük a keresést illetve rendezé
 Amíg megmaradunk a read-only szempontoknál,
 a táblák közötti idegenkulcs jellegű kapcsolatokra vonatkozó egyetlen kemény követelmény,
 hogy a hivatkozó tábla érintett oszlopa (vagy oszlop-$n$-ese)
-csak a hivatkozott tábla érintett oszlopának (vagy oszlop-$n$-esének) 
-értékkészletének elemeit vehesse föl.
-Vagyis ($NULL$ értékektől eltekintve),
+csak a hivatkozott tábla érintett oszlopához (vagy oszlop-$n$-eséhez) 
+tartozó értékkészlet elemeit vehesse föl;
+vagyis ($NULL$ értékektől eltekintve),
 a hivatkozó oszlop értékkiosztásakor az alaplista a hivatkozott oszlop tartalma lesz.
 Másként fogalmazva, az értéklistát indextartó módon kell átképezni a másik táblára.
 Ez a fentiek tükrében már egyszerűen biztosítható.
@@ -1865,7 +1865,9 @@ továbbra is ugyanazokat a konkrét értékeket fogják szolgáltatni.
 \section{Empirikus eredmények}
 
 A HoloDB teljesítményét mind egyedi lekérdezések szintjén,
-mind realisztikus integrált teszt keretében mértem.
+mind realisztikus integrált teszt keretében mértem.\footnote{
+    A használt benchmark projekt forráskódjának linkjét megadtam a függelékben.
+}
 A Docker-képek összehasonlítását leszámítva minden esetben
 a HoloDB beágyazott verzióját használtam.
 Az összehasonlítást MySQL-lel (mint az egyik legelterjedtebb szerveradatbázissal)
@@ -1896,7 +1898,7 @@ A szerveres kontextust nézve, a HoloDB Docker-képének mérete jóval kisebb, 
 de a base image változtatásával,
 az operációs rendszer és a JRE testreszabásával ez valószínűleg tovább javítható.
 A minden függőséget tartalmazó shadow JAR lényegesen nagyobb, mint a H2-nél,
-ám ez minden bizonnyal jelentősen csökkenthető (ezzel eddig nem is volt szempont).
+ám ez minden bizonnyal jelentősen csökkenthető (ez eddig nem is volt szempont).
 
 
 \cleardoublepage

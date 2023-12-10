@@ -5,7 +5,7 @@ apt-get install \
     texlive-latex-extra texlive-bibtex-extra texlive-fonts-extra \
     texlive-luatex texlive-pictures texlive-pstricks texlive-science \
     hunspell hunspell-tools hunspell-hu \
-    inkscape \
+    inkscape imagemagick optipng \
 ;
 
 if ! command -v drawio &> /dev/null; then

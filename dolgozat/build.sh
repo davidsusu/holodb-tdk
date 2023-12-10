@@ -14,10 +14,11 @@ cd build/diagram
 
 ls ./ --color=never | egrep '^.*\.drawio$' | while IFS=' ' read -r diagramFilename; do
     diagramPngFilename="$( echo "${diagramFilename}" | sed -E 's/.drawio$/.png/' )"
-    drawio -x -f png -o "${diagramPngFilename}" "${diagramFilename}"
+    drawio --export --format png --scale 2.5 --output "${diagramPngFilename}" "${diagramFilename}"
+    optipng -o7 -zm1-9 "${diagramPngFilename}"
     
     diagramSvgFilename="$( echo "${diagramFilename}" | sed -E 's/.drawio$/.svg/' )"
-    drawio -x -f svg -o "${diagramSvgFilename}" "${diagramFilename}"
+    drawio --export --format svg --output "${diagramSvgFilename}" "${diagramFilename}"
     inkscape "${diagramSvgFilename}" --export-text-to-path --export-overwrite
 done
 
