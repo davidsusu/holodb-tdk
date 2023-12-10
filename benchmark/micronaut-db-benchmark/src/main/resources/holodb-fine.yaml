@@ -1,6 +1,6 @@
 seed: 9042712
 tableDefaults:
-  writeable: false
+  writeable: true
 columnDefaults:
   distributionQuality: HIGH
   shuffleQuality: VERY_HIGH

@@ -1,9 +1,9 @@
 #!/bin/bash
 
-tests='simple-readonly complex-readonly'
-#tests='complex-writeable'
+#tests='simple-readonly complex-readonly'
+tests='complex-writeable'
 backends='mysql h2 holodb-low holodb holodb-fine'
-repeats=3
+repeats=10
 
 date '+%Y-%m-%d %H:%M:%S.%N'
 echo ''

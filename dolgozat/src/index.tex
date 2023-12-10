@@ -1875,8 +1875,30 @@ Az integrált tesztelést egy Micronaut keretrenszerben implementált
 alkalmazás REST API-n keresztüli hivásával futtattam.
 A \ref{fig:benchmarkPage}~ábra felső részén
 az integrált teszt három verziójának eredményei láthatók.
-A \texttt{simple-readonly} teszt egyszerűbb csak lekérdezéseket tartalmazott.
-A \texttt{complex-readonly} teszt néhány összetettebb lekérdezés
+A \texttt{simple-readonly} teszt egyszerűbb csak lekérdezéseket tartalmazott,
+a \texttt{complex-readonly} teszt ezt néhány összetettebb lekérdezéssel egészítette ki.
+A \texttt{complex-writeable} tesztben adatírások,
+majd arra épülő lekérdezések is történtek.
+
+A lekérdezések közvetlen mérésénél az SQL parancsnak a JDBC API-n keresztüli beküldésétől
+a result set végigiterálásnak végéig eltelt időt mértem.
+Megvizsgáltam egyetlen adatmező, egy egyedi kulccsal megtalált teljes rekord,
+kereséssel és limitációval szűrt oszlop, egy teljes tábla, valamint több táblából összeszedtt adatok
+lekérésének performanciáját.
+Látszik, hogy a HoloDB teljesítménye igen jó, amíg kevés adat lekéréséről van szó,
+és drasztikusan romlik, ha amikor sok adatot kell visszaadni.
+Vagyis a korábban tárgyalt indexelési technikák valóban jól teljesítenek,
+és kulcsfontosságúak a megfelelő teljesítményhez.
+Ugyanakkor az adatlekérés kevésbé optimális,
+feltehetően mind az adatok számítása, mind a result set továbbítása jelentősen javítható még.
+
+Az adatok tárhelyigényében a HoloDB természetesn drasztikus csökkenést mutat,
+hiszen eleve így lett tervezve.
+A szerveres kontextust nézve, a HoloDB Docker-képének mérete jóval kisebb, mint a MySQL-é;
+de a base image változtatásával,
+az operaciós rendszer és a JRE testreszabásával ez valószínűleg tovább javítható.
+A minden függőséget tartalmazó Shadow JAR lényegesen nagyobb, mint a H2-nél,
+ám ez minden bizonnyal jelentősen csökkenthető (ezzel eddig egyáltalán nem foglalkoztam).
 
 
 \cleardoublepage
@@ -1922,19 +1944,19 @@ A \texttt{complex-readonly} teszt néhány összetettebb lekérdezés
                 };
             \addplot[fill=yellow] % HoloDB (fapados)
                 coordinates {
-                    (simple-readonly,7.7964152501)
+                    (simple-readonly,6.441775179)
                     (complex-readonly,8.0399578991)
                     (complex-writeable,13.4957423082)
                 };
             \addplot[fill=orange] % HoloDB (default)
                 coordinates {
-                    (simple-readonly,8.1272983535)
+                    (simple-readonly,8.182373242
                     (complex-readonly,9.4207860077)
                     (complex-writeable,14.4941282014)
                 };
             \addplot[fill=red] % HoloDB (extra konf.)
                 coordinates {
-                    (simple-readonly,9.1666814364)
+                    (simple-readonly,8.819935654)
                     (complex-readonly,10.5782986771)
                     (complex-writeable,16.7720866313)
                 };
