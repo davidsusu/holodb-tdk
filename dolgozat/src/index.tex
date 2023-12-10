@@ -1887,7 +1887,7 @@ A HoloDB teljesítménye igen jó, amíg kevés adat lekéréséről van szó,
 és drasztikusan romlik, amikor sok adatot kell visszaadni.
 Vagyis a korábban tárgyalt indexelési technikák valóban jól teljesítenek,
 és kulcsfontosságúak a megfelelő teljesítményhez.
-Ugyanakkor az adatelérés kevésbé optimális,
+Ugyanakkor az adatelérés kevésbé optimális;
 feltehetően mind az adatok számítása, mind az eredménytábla továbbítása jelentősen javítható még.
 
 Az adatok tárhelyigényében a HoloDB természetesen drasztikus csökkenést mutat,
@@ -1895,7 +1895,7 @@ hiszen eleve így lett tervezve.
 A szerveres kontextust nézve, a HoloDB Docker-képének mérete jóval kisebb, mint a MySQL-é;
 de a base image változtatásával,
 az operációs rendszer és a JRE testreszabásával ez valószínűleg tovább javítható.
-A minden függőséget tartalmazó Shadow JAR lényegesen nagyobb, mint a H2-nél,
+A minden függőséget tartalmazó shadow JAR lényegesen nagyobb, mint a H2-nél,
 ám ez minden bizonnyal jelentősen csökkenthető (ezzel eddig egyáltalán nem foglalkoztam).
 
 
