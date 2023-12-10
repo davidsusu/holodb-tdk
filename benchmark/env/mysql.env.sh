@@ -1,0 +1,8 @@
+export JDBC_URL='jdbc:mysql://localhost:3306/tdk_benchmark?sslMode=DISABLED'
+export MYSQL_HOST='localhost'
+export MYSQL_PORT='3306'
+export DB_USERNAME='root'
+export DB_PASSWORD='root'
+export DB_DRIVER='com.mysql.cj.jdbc.Driver'
+export DB_TYPE='holodb'
+export SQL_DIALECT='org.hibernate.dialect.MySQL8Dialect'

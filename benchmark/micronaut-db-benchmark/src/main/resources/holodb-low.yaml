@@ -1,6 +1,9 @@
 seed: 9042712
 tableDefaults:
   writeable: false
+columnDefaults:
+  distributionQuality: LOW
+  shuffleQuality: NOOP
 schemas:
   - name: university
     tables:
@@ -21,7 +24,7 @@ schemas:
             mode: COUNTER
           - name: subject_id
             valuesForeignColumn: [subjects, id]
-          - name: school_year
+          - name: year
             valuesRange: [2015, 2022]
           - name: term
             values: [1, 2]

@@ -14,6 +14,7 @@
 \usepackage{arydshln}
 \usepackage{fontawesome}
 \usepackage{picture,xcolor}
+\usepackage{pdflscape}
 \usepackage{fancyvrb}
 \usepackage[backend=bibtex,style=numeric]{biblatex}
 
@@ -1968,6 +1969,305 @@ Egy-egy SQL-lekérdezésnél a kérés elküldésétől
 a teljes eredménytábla beérkezéséig eltelt időt mértem,
 ezeket összegeztem.
 Itt az esetleges hálózati overhead szintén az eredmény lényeges része.
+
+
+
+\cleardoublepage
+
+\begin{figure}[H]
+    \centering
+    
+    \begin{tikzpicture}
+        \begin{axis}[
+                title={Integrált tesztek futási idejének összehasonlítása (Micronaut$,$ REST)},
+                symbolic x coords={simple-readonly,complex-readonly,complex-writeable},
+                ybar,
+                axis on top,
+                width={\textwidth},
+                height=6cm,
+                bar width=0.8cm,
+                ymajorgrids,
+                tick align=inside,
+                enlarge y limits={value=.1,upper},
+                enlarge x limits=0.2,
+                ymin=0,
+                ymax=17,
+                axis x line*=bottom,
+                axis y line*=left,
+                tickwidth=1pt,
+                ylabel={Futási idő (s)},
+                xtick=data,
+                nodes near coords={
+                    \pgfmathprintnumber{\pgfplotspointmeta}
+                }
+            ]
+            \addplot[fill=cyan] % MySQL
+                coordinates {
+                    (simple-readonly,10.8088775907)
+                    (complex-readonly,9.0179515675)
+                    (complex-writeable,14.3489598653)
+                };
+            \addplot[fill=blue] % H2
+                coordinates {
+                    (simple-readonly,5.7949952945)
+                    (complex-readonly,5.1902669386)
+                    (complex-writeable,8.7714582641)
+                };
+            \addplot[fill=yellow] % HoloDB (fapados)
+                coordinates {
+                    (simple-readonly,7.7964152501)
+                    (complex-readonly,8.0399578991)
+                    (complex-writeable,13.4957423082)
+                };
+            \addplot[fill=orange] % HoloDB (default)
+                coordinates {
+                    (simple-readonly,8.1272983535)
+                    (complex-readonly,9.4207860077)
+                    (complex-writeable,14.4941282014)
+                };
+            \addplot[fill=red] % HoloDB (extra konf.)
+                coordinates {
+                    (simple-readonly,9.1666814364)
+                    (complex-readonly,10.5782986771)
+                    (complex-writeable,16.7720866313)
+                };
+            \legend{}
+        \end{axis}
+    \end{tikzpicture}
+    
+    \vspace{\baselineskip}
+    
+    \begin{tikzpicture}
+        \begin{axis}[
+                title={Néhány lekérdezéstípus futási idejének összehasonlítása (logaritmikus)},
+                title style={
+                    at={(-0.1,1.15)},
+                    anchor=north west
+                },
+                symbolic x coords={Q1,Q2,Q3,Q4,Q5},
+                ybar,
+                axis on top,
+                width={\textwidth},
+                height=6cm,
+                bar width=0.4cm,
+                ymajorgrids,
+                tick align=inside,
+                enlarge y limits={value=.1,upper},
+                enlarge x limits=0.15,
+                ymin=0,
+                ymax=2000000000,
+                ymode=log,
+                point meta=rawy,
+                every node near coord/.append style={
+                    anchor=west,
+                    rotate=90,
+                    font=\small
+                },
+                axis x line*=bottom,
+                axis y line*=left,
+                tickwidth=1pt,
+                legend style={
+                    at={(0.5,-0.2)},
+                    anchor=north,
+                    legend columns=-1,
+                    /tikz/every even column/.append style={column sep=0.3cm}
+                },
+                ylabel={Futási idő (ns)},
+                xtick=data,
+                nodes near coords={
+                    \pgfmathprintnumber{\pgfplotspointmeta}
+                }
+            ]
+            \addplot[fill=cyan] % MySQL
+                coordinates {
+                    (Q1,106276)
+                    (Q2,109819) 
+                    (Q3,146710)
+                    (Q4,146710)
+                    (Q5,1637889)
+                };
+            \addplot[fill=blue] % H2
+                coordinates {
+                    (Q1,12648)
+                    (Q2,13015) 
+                    (Q3,21927)
+                    (Q4,1971234)
+                    (Q5,189958)
+                };
+            \addplot[fill=yellow] % HoloDB (fapados)
+                coordinates {
+                    (Q1,21709)
+                    (Q2,24207) 
+                    (Q3,50474)
+                    (Q4,32271101)
+                    (Q5,481306)
+                };
+            \addplot[fill=orange] % HoloDB (default)
+                coordinates {
+                    (Q1,25941)
+                    (Q2,140232) 
+                    (Q3,293885)
+                    (Q4,1228183178)
+                    (Q5,4030303)
+                };
+            \addplot[fill=red] % HoloDB (extra konf.
+                coordinates {
+                    (Q1,49860)
+                    (Q2,207383) 
+                    (Q3,2543441)
+                    (Q4,1676796378)
+                    (Q5,8121736)
+                };
+            \legend{MySQL,HoloDB (fapados),HoloDB (default),HoloDB (extra konf.)}
+        \end{axis}
+    \end{tikzpicture}
+    
+    \vspace{\baselineskip}
+    
+    \hspace*{\fill}
+    
+    \begin{minipage}[b]{0.25\textwidth}
+        \begin{tikzpicture}
+            \begin{axis}[
+                    symbolic x coords={Docker image},
+                    ybar,
+                    axis on top,
+                    width={\textwidth},
+                    height=7.5cm,
+                    bar width=0.8cm,
+                    ymajorgrids,
+                    tick align=inside,
+                    enlarge y limits={value=.1,upper},
+                    enlarge x limits=0.15,
+                    ymin=0,
+                    ymax=700,
+                    point meta=rawy,
+                    every node near coord/.append style={
+                        anchor=west,
+                        rotate=90,
+                        font=\small
+                    },
+                    axis x line*=bottom,
+                    axis y line*=left,
+                    tickwidth=1pt,
+                    legend style={
+                        at={(0.5,-0.2)},
+                        anchor=north,
+                        legend columns=-1,
+                        /tikz/every even column/.append style={column sep=0.3cm}
+                    },
+                    ylabel={Méret (MB)},
+                    xtick=data,
+                    nodes near coords={
+                        \pgfmathprintnumber{\pgfplotspointmeta}
+                    }
+                ]
+                \addplot[fill=cyan] % MySQL
+                    coordinates { (Docker image,605.3) };
+                \addplot[fill=orange] % HoloDB
+                    coordinates { (Docker image,248.5) };
+                \legend{MySQL,HoloDB}
+            \end{axis}
+        \end{tikzpicture}
+    \end{minipage}
+    \hspace*{\fill}
+    \begin{minipage}[b]{0.25\textwidth}
+        \begin{tikzpicture}
+            \begin{axis}[
+                    symbolic x coords={Shadow JAR},
+                    ybar,
+                    axis on top,
+                    width={\textwidth},
+                    height=7.5cm,
+                    bar width=0.8cm,
+                    ymajorgrids,
+                    tick align=inside,
+                    enlarge y limits={value=.1,upper},
+                    enlarge x limits=0.15,
+                    ymin=0,
+                    ymax=25,
+                    point meta=rawy,
+                    every node near coord/.append style={
+                        anchor=west,
+                        rotate=90,
+                        font=\small
+                    },
+                    axis x line*=bottom,
+                    axis y line*=left,
+                    tickwidth=1pt,
+                    legend style={
+                        at={(0.5,-0.2)},
+                        anchor=north,
+                        legend columns=-1,
+                        /tikz/every even column/.append style={column sep=0.3cm}
+                    },
+                    ylabel={Méret (MB)},
+                    xtick=data,
+                    nodes near coords={
+                        \pgfmathprintnumber{\pgfplotspointmeta}
+                    }
+                ]
+                \addplot[fill=blue] % H2
+                    coordinates { (Shadow JAR,2.49) };
+                \addplot[fill=orange] % HoloDB
+                    coordinates { (Shadow JAR,24.43) };
+                \legend{H2,HoloDB}
+            \end{axis}
+        \end{tikzpicture}
+    \end{minipage}
+    \hspace*{\fill}
+    \begin{minipage}[b]{0.4\textwidth}
+        \begin{tikzpicture}
+            \begin{axis}[
+                    symbolic x coords={Adatméret},
+                    ybar,
+                    axis on top,
+                    width={\textwidth},
+                    height=7.5cm,
+                    bar width=0.8cm,
+                    ymajorgrids,
+                    tick align=inside,
+                    enlarge y limits={value=.1,upper},
+                    enlarge x limits=0.15,
+                    ymin=0,
+                    ymax=2400,
+                    point meta=rawy,
+                    every node near coord/.append style={
+                        anchor=west,
+                        rotate=90,
+                        font=\small
+                    },
+                    axis x line*=bottom,
+                    axis y line*=left,
+                    tickwidth=1pt,
+                    legend style={
+                        at={(0.5,-0.2)},
+                        anchor=north,
+                        legend columns=-1,
+                        /tikz/every even column/.append style={column sep=0.3cm}
+                    },
+                    ylabel={Méret (KB)},
+                    xtick=data,
+                    nodes near coords={
+                        \pgfmathprintnumber{\pgfplotspointmeta}
+                    }
+                ]
+                \addplot[fill=cyan] % MySQL
+                    coordinates { (Adatméret,2324.21) };
+                \addplot[fill=blue] % H2
+                    coordinates { (Adatméret,564) };
+                \addplot[fill=orange] % HoloDB
+                    coordinates { (Adatméret,1.16) };
+                \legend{MySQL,H2,HoloDB}
+            \end{axis}
+        \end{tikzpicture}
+    \end{minipage}
+    \hspace*{\fill}
+    
+    \caption[Teljesítmény-összehasonlítás]{
+        A különböző megközelítések teljesítményének és tárigényének összehasonlítása
+    }
+\end{figure}
 
 
 \chapter{Összegzés}

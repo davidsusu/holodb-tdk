@@ -1,0 +1,47 @@
+2023-12-07 11:28:59.776914399
+mysql 15.918505870 2.13267
+mysql 16.282178049 2.15714
+mysql 15.940191519 2.13885
+holodb-low 24.746847749 12.1621
+holodb-low 25.122978638 12.3061
+holodb-low 24.612469894 12.0907
+holodb 29.061384976 15.6485
+holodb 28.916280987 15.6626
+holodb 29.753160484 15.7439
+holodb-fine 30.163431685 16.6436
+holodb-fine 29.999196005 16.4357
+holodb-fine 30.801703198 17.3386
+2023-12-07 11:41:21.399630573
+
+
+SELECT s.lastname FROM students s
+LEFT JOIN course_student cs ON cs.student_id = s.id
+LEFT JOIN courses c ON c.id = cs.course_id
+LEFT JOIN subjects su ON su.id = c.subject_id
+WHERE s.firstname='Ian' AND su.id=2
+
+
+mysql:
+
+startTime	518635041665865
+endTime	518635043065181
+lastnameLength	140
+elapsedTime	1399316
+
+startTime	518428493857272
+endTime	518428497150986
+lastnameLength	87
+elapsedTime	3293714
+
+
+holodb:
+
+startTime	518693861580897
+endTime	518693862354188
+lastnameLength	120
+elapsedTime	773291
+
+startTime	518496699239666
+endTime	518496720016994
+lastnameLength	180
+elapsedTime	20777328

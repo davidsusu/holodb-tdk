@@ -1,0 +1,37 @@
+no: query
+backend run(s) prepare-avg(ns)
+
+1: SELECT firstname FROM students WHERE id = 30
+mysql       10000     106276
+h2          10000      12648
+holodb-low  10000      21709
+holodb      10000      25941
+holodb-fine 10000      49860
+
+2: SELECT * FROM students WHERE id = 30
+mysql       10000     109819
+h2          10000      13015
+holodb-low  10000      24207
+holodb      10000     140232
+holodb-fine 10000     207383
+
+3: SELECT s.lastname FROM students s WHERE s.firstname='Ian' LIMIT 20
+mysql       10000     146710
+h2          10000      21927
+holodb-low  10000      50474
+holodb      10000     293885
+holodb-fine 10000    2543441
+
+4: SELECT * FROM students
+mysql       10000    4107866
+h2          10000    1971234
+holodb-low  10000   32271101
+holodb       1000 1228183178
+holodb-fine  1000 1676796378
+
+5: SELECT s.lastname FROM students s LEFT JOIN course_student cs ON cs.student_id = s.id LEFT JOIN courses c ON c.id = cs.course_id LEFT JOIN subjects su ON su.id = c.subject_id WHERE s.firstname='Ian' AND su.id=2
+mysql       10000    1637889
+h2          10000     189958
+holodb-low  10000     481306
+holodb      10000    4030303
+holodb-fine 10000    8121736

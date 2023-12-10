@@ -35,6 +35,11 @@ public class StudentService {
     }
 
     @Transactional
+    public void delete(long id) {
+        studentRepository.deleteById(id);
+    }
+
+    @Transactional
     public Student patch(long id, Map<String, Object> data) {
         Student course = studentRepository.findById(id).get(); // NOSONAR
         try {

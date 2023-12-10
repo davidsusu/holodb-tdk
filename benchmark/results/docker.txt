@@ -1,0 +1,14 @@
+df:
+mysql                latest           f7fdab215ab7   6 weeks ago    605.3MB   0B            605.3MB       1
+miniconnect/holodb   0.4.2-SNAPSHOT   475aa7cdd284   53 years ago   248.5MB   247.7MB       848kB         0
+
+holodb-all jar:
+25 612 822 byte
+h2-all jar:
+ 2 614 933 byte
+
+data size:
+    1 198 B (HoloDB)
+2 380 000 B (MySQL)
+  577 536 B (H2)
+

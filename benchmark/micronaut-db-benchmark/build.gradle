@@ -27,21 +27,21 @@ dependencies {
     implementation 'org.yaml:snakeyaml:2.2'
     implementation 'com.fasterxml.jackson.core:jackson-core:2.16.0'
     implementation 'com.fasterxml.jackson.core:jackson-databind:2.16.0'
+    implementation 'org.hibernate.orm:hibernate-community-dialects:6.4.0.Final'
     
-    //runtimeOnly("com.h2database:h2")
     implementation 'hu.webarticum.holodb:embedded:0.4.2-SNAPSHOT'
-    
+    implementation 'mysql:mysql-connector-java:8.0.33'
+    implementation 'com.h2database:h2:2.2.224'
 }
-
 
 application {
     mainClass = 'hu.webarticum.holodb.benchmark.micronaut.Application'
 }
+
 java {
     sourceCompatibility = JavaVersion.toVersion("17")
     targetCompatibility = JavaVersion.toVersion("17")
 }
-
 
 graalvmNative.toolchainDetection = false
 micronaut {
@@ -52,8 +52,6 @@ micronaut {
         annotations("hu.webarticum.holodb.benchmark.micronaut.*")
     }
     aot {
-    // Please review carefully the optimizations enabled below
-    // Check https://micronaut-projects.github.io/micronaut-aot/latest/guide/ for more details
         optimizeServiceLoading = false
         convertYamlToJava = false
         precomputeOperations = true

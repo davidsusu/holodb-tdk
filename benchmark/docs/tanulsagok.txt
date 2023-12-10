@@ -1,0 +1,1 @@
+körülményes volt, hogy nem tudtam env változókkal variálni a konfigurációt
