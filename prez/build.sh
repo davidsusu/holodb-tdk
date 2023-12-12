@@ -5,10 +5,10 @@ outputFileName='presentation.pdf'
 
 mode="$1"
 if [ -z "$mode" ]; then
-    mode='full'
+    mode='final'
 fi
 
-pngScale="$( echo 'draft:1 light:0.5 full:4' | tr ' ' '\n' | egrep "^${mode}:" | sed -E 's/[a-z]+://' )"
+pngScale="$( echo 'draft:1 quick:2 final:4' | tr ' ' '\n' | egrep "^${mode}:" | sed -E 's/[a-z]+://' )"
 
 baseName="$( echo "${inputFileName}" | sed 's/\.[^.]*$//' )"
 
@@ -23,7 +23,7 @@ if ! [ "${mode}" = 'draft' ]; then
     ls ./ --color=never | egrep '^.*\.drawio$' | while IFS=' ' read -r diagramFilename; do
         diagramFilenameBase="$( echo "${diagramFilename}" | sed -E 's/.drawio$//' )"
         
-        if ! [ "${mode}" = 'full' ]; then
+        if ! [ "${mode}" = 'final' ]; then
             if ! fgrep --quiet "${diagramFilenameBase}" "../${inputFileName}"; then
                 echo "${diagramFilenameBase} not found in input"
                 continue
@@ -32,15 +32,15 @@ if ! [ "${mode}" = 'draft' ]; then
         
         diagramPngFilename="${diagramFilenameBase}.png"
         drawio --export --format png --scale "${pngScale}" --output "${diagramPngFilename}" "${diagramFilename}"
-        if [ "${mode}" = 'full' ]; then
+        if [ "${mode}" = 'final' ]; then
             optipng -o7 -zm1-9 "${diagramPngFilename}"
-        elif [ "${mode}" = 'full' ]; then
+        elif [ "${mode}" = 'final' ]; then
             optipng -o7 -zm1-9 "${diagramPngFilename}"
         fi
         
         diagramPngFilename="${diagramFilenameBase}.svg"
         drawio --export --format svg --output "${diagramSvgFilename}" "${diagramFilename}"
-        if [ "${mode}" = 'full' ]; then
+        if [ "${mode}" = 'final' ]; then
             inkscape "${diagramSvgFilename}" --export-text-to-path --export-overwrite
         fi
     done

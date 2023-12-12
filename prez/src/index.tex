@@ -14,11 +14,10 @@
 \institute[ELTE-IK]{ELTE Informatikai Kar, Információs Rendszerek Tanszék}
 \date{2023}
 
-
 \newcommand{\condpause}{\pause}
 %\newcommand{\condpause}{}
 
-\newcommand{\slidetitle}[2]{\frametitle{{\small #1 ~ \ding{226} ~ } #2}}
+\newcommand{\slidetitle}[2]{\frametitle{{\small #1 ~ \ding{226} ~ } \normalsize #2}}
 
 \begin{document}
 \beamertemplatenavigationsymbolsempty
@@ -33,19 +32,49 @@
     \end{frame}
 }
 
-\def\sectiontitle{Motiváció}
-\section{\sectiontitle}
+\section{Bevezetés: adatbázist akarok, most!}
+\def\sectionshorttitle{Bevezetés}
 
 \begin{frame}
-    \slidetitle{\sectiontitle}{TODO}
+    \slidetitle{\sectionshorttitle}{TODO}
     TODO
 \end{frame}
 
-\def\sectiontitle{A megoldás váza}
-\section{\sectiontitle}
+\section{Körkép: a létező (kerülő)megoldások}
+\def\sectionshorttitle{Körkép}
 
 \begin{frame}
-    \slidetitle{\sectiontitle}{Általános kétfázisú értékkiosztás}
+    \slidetitle{\sectionshorttitle}{TODO}
+    TODO
+\end{frame}
+
+\section{Egy új megoldás körvonalai: HoloDB}
+\def\sectionshorttitle{HoloDB}
+
+\begin{frame}
+    \slidetitle{\sectionshorttitle}{TODO}
+    TODO
+\end{frame}
+
+\section{A HoloDB architektúrája}
+\def\sectionshorttitle{Architektúra}
+
+\begin{frame}
+    \slidetitle{\sectionshorttitle}{TODO}
+    TODO
+\end{frame}
+
+\section{A szűk keresztmetszet: értékkiosztások}
+\def\sectionshorttitle{Értékkiosztások}
+
+\begin{frame}
+    \slidetitle{\sectionshorttitle}{XXXXXXXXXXXX}
+
+    Mik ezek? Mit kell megoldjanak?
+\end{frame}
+
+\begin{frame}
+    \slidetitle{\sectionshorttitle}{Általános kétfázisú értékkiosztás}
     
     \centering
     
@@ -56,7 +85,7 @@
 \end{frame}
 
 \begin{frame}
-    \slidetitle{\sectiontitle}{Kétfázisú értékkiosztás: adatlekérés}
+    \slidetitle{\sectionshorttitle}{Kétfázisú értékkiosztás: adatlekérés}
     
     \centering
     
@@ -68,7 +97,7 @@
 \end{frame}
 
 \begin{frame}[noframenumbering]
-    \slidetitle{\sectiontitle}{Kétfázisú értékkiosztás: adatlekérés}
+    \slidetitle{\sectionshorttitle}{Kétfázisú értékkiosztás: adatlekérés}
     
     \centering
     
@@ -80,7 +109,7 @@
 \end{frame}
 
 \begin{frame}[noframenumbering]
-    \slidetitle{\sectiontitle}{Kétfázisú értékkiosztás: adatlekérés}
+    \slidetitle{\sectionshorttitle}{Kétfázisú értékkiosztás: adatlekérés}
     
     \centering
     
@@ -92,7 +121,7 @@
 \end{frame}
 
 \begin{frame}[noframenumbering]
-    \slidetitle{\sectiontitle}{Kétfázisú értékkiosztás: adatlekérés}
+    \slidetitle{\sectionshorttitle}{Kétfázisú értékkiosztás: adatlekérés}
     
     \centering
     
@@ -104,7 +133,7 @@
 \end{frame}
 
 \begin{frame}[noframenumbering]
-    \slidetitle{\sectiontitle}{Kétfázisú értékkiosztás: adatlekérés}
+    \slidetitle{\sectionshorttitle}{Kétfázisú értékkiosztás: adatlekérés}
     
     \centering
     
@@ -116,7 +145,7 @@
 \end{frame}
 
 \begin{frame}
-    \slidetitle{\sectiontitle}{Kétfázisú értékkiosztás: keresés}
+    \slidetitle{\sectionshorttitle}{Kétfázisú értékkiosztás: keresés}
     
     \centering
     
@@ -129,7 +158,7 @@
 \end{frame}
 
 \begin{frame}[noframenumbering]
-    \slidetitle{\sectiontitle}{Kétfázisú értékkiosztás: keresés}
+    \slidetitle{\sectionshorttitle}{Kétfázisú értékkiosztás: keresés}
     
     \centering
     
@@ -142,7 +171,7 @@
 \end{frame}
 
 \begin{frame}[noframenumbering]
-    \slidetitle{\sectiontitle}{Kétfázisú értékkiosztás: keresés}
+    \slidetitle{\sectionshorttitle}{Kétfázisú értékkiosztás: keresés}
     
     \centering
     
@@ -155,7 +184,7 @@
 \end{frame}
 
 \begin{frame}[noframenumbering]
-    \slidetitle{\sectiontitle}{Kétfázisú értékkiosztás: keresés}
+    \slidetitle{\sectionshorttitle}{Kétfázisú értékkiosztás: keresés}
     
     \centering
     
@@ -168,9 +197,46 @@
 \end{frame}
 
 \begin{frame}
-    \slidetitle{\sectiontitle}{TODO}
+    \slidetitle{\sectionshorttitle}{Az értékkészlet interfész-tulajdonságai}
+    
+    \begin{itemize}
+        \setlength\itemsep{1em}
+        \item Rendezett \condpause
+        \item Nincs ismétlődés (unique) \condpause
+        \item Lekérhető a lista hossza \condpause
+        \item Lekérhető az adott pozíción lévő érték (random access) \condpause
+        \item Lekérhető az adott érték pozíciója (reverse index) \condpause \par
+              ~ ~ ~ (ha az érték nem található, akkor a rendezés szerinti helye) \condpause
+        \item A lekérések gyorsan hajtódnak végre
+    \end{itemize}
+\end{frame}
+
+\begin{frame}
+    \slidetitle{\sectionshorttitle}{Tipikus értékkészletek}
+    
+    \begin{itemize}
+        \setlength\itemsep{1em}
+        \item Szavak/kifejezések előre adott, rendezett listája \condpause
+        \item Numerikus sáv (például számok 1-től $n$-ig) \condpause
+        \item Reguláris kifejezésre illeszkedő szövegek \condpause
+        \item 
+    \end{itemize}
+\end{frame}
+
+\section{Eredmények}
+\def\sectionshorttitle{Eredmények}
+
+\begin{frame}
+    \slidetitle{\sectionshorttitle}{TODO}
     TODO
 \end{frame}
 
+\section{Összegzés}
+\def\sectionshorttitle{Összegzés}
+
+\begin{frame}
+    \slidetitle{\sectionshorttitle}{TODO}
+    TODO
+\end{frame}
 
 \end{document}
