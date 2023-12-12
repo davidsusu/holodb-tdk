@@ -1,7 +1,14 @@
 #!/bin/bash
 
 inputFileName='index.tex'
-outputFileName='dolgozat.pdf'
+outputFileName='presentation.pdf'
+
+mode="$1"
+if [ -z "$mode" ]; then
+    mode='full'
+fi
+
+pngScale="$( echo 'draft:1 light:0.5 full:4' | tr ' ' '\n' | egrep "^${mode}:" | sed -E 's/[a-z]+://' )"
 
 baseName="$( echo "${inputFileName}" | sed 's/\.[^.]*$//' )"
 
@@ -12,19 +19,40 @@ cp -R ./src/. ./build
 
 cd build/diagram
 
-ls ./ --color=never | egrep '^.*\.drawio$' | while IFS=' ' read -r diagramFilename; do
-    diagramPngFilename="$( echo "${diagramFilename}" | sed -E 's/.drawio$/.png/' )"
-    drawio --export --format png --scale 2.5 --output "${diagramPngFilename}" "${diagramFilename}"
-    optipng -o7 -zm1-9 "${diagramPngFilename}"
-    
-    diagramSvgFilename="$( echo "${diagramFilename}" | sed -E 's/.drawio$/.svg/' )"
-    drawio --export --format svg --output "${diagramSvgFilename}" "${diagramFilename}"
-    inkscape "${diagramSvgFilename}" --export-text-to-path --export-overwrite
-done
+if ! [ "${mode}" = 'draft' ]; then
+    ls ./ --color=never | egrep '^.*\.drawio$' | while IFS=' ' read -r diagramFilename; do
+        diagramFilenameBase="$( echo "${diagramFilename}" | sed -E 's/.drawio$//' )"
+        
+        if ! [ "${mode}" = 'full' ]; then
+            if ! fgrep --quiet "${diagramFilenameBase}" "../${inputFileName}"; then
+                echo "${diagramFilenameBase} not found in input"
+                continue
+            fi
+        fi
+        
+        diagramPngFilename="${diagramFilenameBase}.png"
+        drawio --export --format png --scale "${pngScale}" --output "${diagramPngFilename}" "${diagramFilename}"
+        if [ "${mode}" = 'full' ]; then
+            optipng -o7 -zm1-9 "${diagramPngFilename}"
+        elif [ "${mode}" = 'full' ]; then
+            optipng -o7 -zm1-9 "${diagramPngFilename}"
+        fi
+        
+        diagramPngFilename="${diagramFilenameBase}.svg"
+        drawio --export --format svg --output "${diagramSvgFilename}" "${diagramFilename}"
+        if [ "${mode}" = 'full' ]; then
+            inkscape "${diagramSvgFilename}" --export-text-to-path --export-overwrite
+        fi
+    done
+fi
 
 cd ..
 
-command="pdflatex --shell-escape -interaction=nonstopmode '${inputFileName}'"
+if [ "${mode}" = 'draft' ]; then
+    command="pdflatex --shell-escape -interaction=nonstopmode '\makeatletter\def\@classoptionslist{draft}\makeatother\input{${inputFileName}}'"
+else
+    command="pdflatex --shell-escape -interaction=nonstopmode '${inputFileName}'"
+fi
 
 eval "${command}"
 bibtex "${baseName}"
