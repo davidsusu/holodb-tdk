@@ -682,7 +682,7 @@ schemas:
 \begin{frame}
     \slidetitle{\sectionshorttitle}{Bővítés: valós postai címek használata}
     
-    Cím hierarchiája:
+    \pause Egy cím hierarchiája:
     
     \begin{center}
         településnév ~ $\rightarrow$ ~
@@ -693,13 +693,16 @@ schemas:
         egyéb
     \end{center}
     
+    \vspace{1em}
+    
     \begin{itemize}
         \setlength\itemsep{0.5em}
-        \pause \item az összes létező címet leképezzük a táblára (pl. kétfázisú értékiosztással)
-        
+        \pause \item az összes létező címet leképezzük a táblára
+        \pause \item szolgáltatunk egy többoszlopos (leftmost prefix) indexet
+        \pause \item a vármegyét, irányítószámot és egyéb adatokat származtatjuk
+        \pause \item utóbbiak a hierarchia különböző szintjeihez tartozhatnak
+        \pause \item XXX
     \end{itemize}
-
-    (TODO: Bővítés: valós címek használata)
 \end{frame}
 
 \begin{frame}
