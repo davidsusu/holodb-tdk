@@ -8,7 +8,7 @@ if [ -z "$mode" ]; then
     mode='final'
 fi
 
-pngScale="$( echo 'draft:1 quick:2 final:4' | tr ' ' '\n' | egrep "^${mode}:" | sed -E 's/[a-z]+://' )"
+pngScale="$( echo 'draft:1 quick:4 final:4' | tr ' ' '\n' | egrep "^${mode}:" | sed -E 's/[a-z]+://' )"
 
 baseName="$( echo "${inputFileName}" | sed 's/\.[^.]*$//' )"
 
