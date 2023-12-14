@@ -655,17 +655,21 @@ schemas:
     
     Egyedi értékkiosztás betöltése saját programkönyvtárból:
     
+    \vspace{0.3em}
+    
     \begin{minted}[fontsize=\small,framesep=4pt,frame=single,framerule=1.5pt,rulecolor=\color{gray!30}]{yaml}
 - name: some_column
-  sourceFactory: org.example.someorganization.data.SomeCustomDataFactory
+  sourceFactory: org.example.myorg.SomeCustomDataFactory
   sourceFactoryData:
       additionalParameter1: 10
       additionalParameter2: 'lorem ipsum'
     \end{minted}
     
-    \vspace{0.5em}
+    \vspace{0.7em}
     
     Egyedi értékkészlet betöltése fájlból:
+    
+    \vspace{0.3em}
     
     \begin{minted}[fontsize=\small,framesep=4pt,frame=single,framerule=1.5pt,rulecolor=\color{gray!30}]{yaml}
 - name: some_column
