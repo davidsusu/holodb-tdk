@@ -264,7 +264,34 @@
 \begin{frame}
     \slidetitle{\sectionshorttitle}{Storage API}
     
-    (TODO: Storage API)
+    \begin{minipage}[c]{0.5\textwidth}
+        \begin{itemize}
+            \item { \only<2>{\color{beamer@blendedblue}} \texttt{Schema} }
+            \item { \only<3>{\color{beamer@blendedblue}} \texttt{Table} }
+            \item { \only<4>{\color{beamer@blendedblue}} \texttt{Column} }
+            \item { \only<5>{\color{beamer@blendedblue}} \texttt{ColumnDefinition} }
+            \item { \only<6>{\color{beamer@blendedblue}} \texttt{Source} }
+            \item { \only<7>{\color{beamer@blendedblue}} \texttt{Row} }
+            \item { \only<8>{\color{beamer@blendedblue}} \texttt{TableIndex} }
+            \item { \only<9>{\color{beamer@blendedblue}} \texttt{FulltextIndex} }
+            \item { \only<10>{\color{beamer@blendedblue}} \texttt{SpatialIndex} }
+            \item { \only<11>{\color{beamer@blendedblue}} \texttt{TableSelection} }
+        \end{itemize}
+    \end{minipage}%
+    \begin{minipage}[c]{0.5\textwidth}
+        \begin{overprint}
+            \onslide<2>\centerline{\includegraphics[width=0.9\textwidth]{diagram/storage-schema}}
+            \onslide<3>\centerline{\includegraphics[width=0.9\textwidth]{diagram/storage-table}}
+            \onslide<4>\centerline{\includegraphics[width=0.9\textwidth]{diagram/storage-column}}
+            \onslide<5>\centerline{\includegraphics[width=0.9\textwidth]{diagram/storage-columndefinition}}
+            \onslide<6>\centerline{\includegraphics[width=0.9\textwidth]{diagram/storage-source}}
+            \onslide<7>\centerline{\includegraphics[width=0.9\textwidth]{diagram/storage-row}}
+            \onslide<8>\centerline{\includegraphics[width=0.9\textwidth]{diagram/storage-tableindex}}
+            \onslide<9>\centerline{\includegraphics[width=0.9\textwidth]{diagram/storage-fulltextindex}}
+            \onslide<10>\centerline{\includegraphics[width=0.9\textwidth]{diagram/storage-spatialindex}}
+            \onslide<11>\centerline{\includegraphics[width=0.9\textwidth]{diagram/storage-tableselection}}
+        \end{overprint}
+    \end{minipage}
 \end{frame}
 
 \begin{frame}
@@ -1078,12 +1105,6 @@ schemas:
         \pause \item füsttesztek teljes értékű adatbázissal
         \pause \item írási rétegként létező adatbázis fölé is elhelyezhető
     \end{itemize}
-\end{frame}
-
-\begin{frame}
-    \slidetitle{\sectionshorttitle}{TODO}
-    
-    (TODO: * Összefoglaláshoz még)
 \end{frame}
 
 \begin{frame}
