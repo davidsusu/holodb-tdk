@@ -471,6 +471,7 @@
         \pause \item minden lényeges paraméter állítható
         \pause \item az igények nagy része lefedhető a beépített lehetőségekkel
         \pause \item ugyanakkor egyedi működés is beemelhető
+        \pause \item megfelelő heurisztikákkal létező adatbázisról is mintázható
     \end{itemize}
 \end{frame}
 
@@ -655,7 +656,7 @@ schemas:
     
     Egyedi értékkiosztás betöltése saját programkönyvtárból:
     
-    \vspace{0.3em}
+    \vspace{0.5em}
     
     \begin{minted}[fontsize=\small,framesep=4pt,frame=single,framerule=1.5pt,rulecolor=\color{gray!30}]{yaml}
 - name: some_column
@@ -665,11 +666,11 @@ schemas:
       additionalParameter2: 'lorem ipsum'
     \end{minted}
     
-    \vspace{0.7em}
+    \vspace{1em}
     
     Egyedi értékkészlet betöltése fájlból:
     
-    \vspace{0.3em}
+    \vspace{0.5em}
     
     \begin{minted}[fontsize=\small,framesep=4pt,frame=single,framerule=1.5pt,rulecolor=\color{gray!30}]{yaml}
 - name: some_column
@@ -679,16 +680,34 @@ schemas:
 \end{frame}
 
 \begin{frame}
-    \slidetitle{\sectionshorttitle}{Bővítés: valós címadatbázis}
+    \slidetitle{\sectionshorttitle}{Bővítés: valós postai címek használata}
     
+    Cím hierarchiája:
+    
+    \begin{center}
+        településnév ~ $\rightarrow$ ~
+        kerület ~ $\rightarrow$ ~
+        közterület neve ~ $\rightarrow$ ~
+        közterület jellege ~ $\rightarrow$ ~
+        házszám ~ $\rightarrow$ ~
+        egyéb
+    \end{center}
+
     (TODO: Bővítés: valós címek használata)
 \end{frame}
 
 \begin{frame}
     \slidetitle{\sectionshorttitle}{Bővítés: on-demand schema}
     
-    (TODO: Bővítés: on-demand schema)
-    (szóban: ez annyira általános, hogy valószínűleg általánosan megcsinálom majd)
+    \begin{itemize}
+        \setlength\itemsep{1em}
+        \pause \item Nincs előre megadott séma
+        \pause \item Ha egy lekérés új táblát/oszlopot tartalmaz, on-demand létrehozzuk
+        \pause \item Új táblából történő wildcardos lekérdezésnél alapértelmezett oszlop
+        \pause \item Táblaméret, oszloptípus, idegen kulcs megállapítása heurisztikákkal
+        \pause \item A \texttt{seed} lehet beégetett vagy az első lekérés függvénye
+        \pause \item Írható adatbázis esetén nehéz megvalósítani
+    \end{itemize}
 \end{frame}
 
 \section{Eredmények}
