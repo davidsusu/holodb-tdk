@@ -54,17 +54,17 @@
     
     \begin{itemize}
         \setlength\itemsep{0.7em}
-        \pause \item \textbf{Mockolás, fejlesztés} \par
+        \pause \item \textbf{mockolás, fejlesztés} \par
             ~~~ csak legyen ott valami, hogy fusson
-        \pause \item \textbf{Integrált tesztelés} \par
+        \pause \item \textbf{integrált tesztelés} \par
             ~~~ kellenének adatok a tesztfuttatáshoz
-        \pause \item \textbf{Prototípusfejlesztés, kísérletezés, adatbázis-tervezés} \par
+        \pause \item \textbf{prototípusfejlesztés, kísérletezés, adatbázis-tervezés} \par
             ~~~ szeretnénk folyamatosan újragondolni
-        \pause \item \textbf{Bemutatók, koncepciótervek} \par
+        \pause \item \textbf{bemutatók, koncepciótervek} \par
             ~~~ jól jönne egy értelmes adathalmaz a prezentációhoz
-        \pause \item \textbf{Oktatás} \par
+        \pause \item \textbf{oktatás} \par
             ~~~ egységes homokozó adatbázis a tanulóknak
-        \pause \item \textbf{Anonimizálás} \par
+        \pause \item \textbf{anonimizálás} \par
             ~~~ csak valami mást rakjon oda, mint az éles adat
     \end{itemize}
 \end{frame}
@@ -95,19 +95,19 @@
     \vspace{0.5em}
 
     \begin{itemize}
-        \pause \item \textbf{Definíció} \par
+        \pause \item \textbf{definíció} \par
             { \small ~~ definiálni kell, milyen sémát és adatokat szeretnénk látni }
-        \pause \item \textbf{Telepítés} \par
+        \pause \item \textbf{telepítés} \par
             { \small ~~ az adatbázisszerver konfigurálása, rendelkezésre állása nem triviális }
-        \pause \item \textbf{Startup} \par
+        \pause \item \textbf{startup} \par
             { \small ~~ el kell indítani az adatbázisszervert (kivéve, ha beágyazott) }
-        \pause \item \textbf{Séma- és indexépítés} \par
+        \pause \item \textbf{séma- és indexépítés} \par
             { \small ~~ a séma és az indexek felépítése is költséget jelent }
-        \pause \item \textbf{Populálás} \par
+        \pause \item \textbf{populálás} \par
             { \small ~~ az összes adat generálása/anonimizálása és lementése erőforrásigényes }
-        \pause \item \textbf{Memória, tárhely kezelése} \par
+        \pause \item \textbf{memória, tárhely kezelése} \par
             { \small ~~ az adatok sok helyet foglalnak (főleg, ha több példány fut párhuzamosan) }
-        \pause \item \textbf{Tisztítás} \par
+        \pause \item \textbf{tisztítás} \par
             { \small ~~ a végén le kell bontani az elhasznált adatbázist }
     \end{itemize}
 \end{frame}
@@ -247,7 +247,27 @@
 \begin{frame}
     \slidetitle{\sectionshorttitle}{Alapvető interfész: TreeRandom}
     
-   (TODO: * TreeRandom ábra)
+    \pause Lényegileg a \texttt{Random} hierarchikus változata.
+    
+    \vspace{0.2cm}
+    
+    \begin{itemize}
+        \pause \item egyenlő példány mindig ugyanazt a (végtelen) bitsorozatot szolgáltatja
+        \pause \item egy kulcs megadásával alpéldányt gyárt (eggyel alacsonyabb szint)
+        \pause \item ugyanazzal a kulcs bájtsorozattal egyenlő példányt ad vissza
+    \end{itemize}
+
+    \vspace{0.7cm}
+    
+    \pause Gyenge követelmények:
+
+    \vspace{0.2cm}
+    
+    \begin{itemize}
+        \pause \item véletlenszerű kimenetet ad
+        \pause \item eltérő példányoknál jellemzően független, különböző kimenetet ad
+    \end{itemize}
+
 \end{frame}
 
 \begin{frame}
@@ -326,12 +346,12 @@
 
     \begin{itemize}
         \setlength\itemsep{1em}
-        \pause \item Oszloporientáltság
-        \pause \item Adatelérés (random access)
-        \pause \item Ha lehet, keresés és rendezés (reverse index)
+        \pause \item oszloporientáltság
+        \pause \item adatelérés (random access)
+        \pause \item ha lehet, keresés és rendezés (reverse index)
         \pause \item $NULL$ értékek
-        \pause \item Előfordulási gyakoriságok
-        \pause \item Esetenként többoszlopos
+        \pause \item előfordulási gyakoriságok
+        \pause \item esetenként többoszlopos
     \end{itemize}
 \end{frame}
 
@@ -341,20 +361,20 @@
     \pause Nem indexelt
     
     \begin{itemize}
-        \pause \item Egyszerű/strukturált szöveg
-        \pause \item Strukturált adat
-        \pause \item Kép
-        \pause \item Jelszó-hash
-        \pause \item Random BLOB/CLOB
+        \pause \item egyszerű/strukturált szöveg
+        \pause \item strukturált adat
+        \pause \item kép
+        \pause \item jelszó-hash
+        \pause \item random BLOB/CLOB
     \end{itemize}
     
     \pause Indexelt
     
     \begin{itemize}
-        \pause \item Számláló (például numerikus kulcsokhoz)
-        \pause \item Időbélyegek, adott eloszlással és zajjal
-        \pause \item Full-text indexelt szövegek
-        \pause \item Általános kétfázisú értékkiosztás
+        \pause \item számláló (például numerikus kulcsokhoz)
+        \pause \item időbélyegek, adott eloszlással és zajjal
+        \pause \item full-text indexelt szövegek
+        \pause \item általános kétfázisú értékkiosztás
     \end{itemize}
     
 \end{frame}
@@ -375,13 +395,13 @@
     
     \begin{itemize}
         \setlength\itemsep{1em}
-        \pause \item Rendezett
-        \pause \item Nincs ismétlődés (unique)
-        \pause \item Lekérhető a lista hossza
-        \pause \item Lekérhető az adott pozíción lévő érték (random access)
-        \pause \item Lekérhető az adott érték pozíciója (reverse index) \par
+        \pause \item rendezett
+        \pause \item nincs ismétlődés (unique)
+        \pause \item lekérhető a lista hossza
+        \pause \item lekérhető az adott pozíción lévő érték (random access)
+        \pause \item lekérhető az adott érték pozíciója (reverse index) \par
               \pause ~ ~ ~ (ha az érték nem található, akkor a rendezés szerinti helye)
-        \pause \item A lekérések gyorsan hajtódnak végre
+        \pause \item a lekérések gyorsan hajtódnak végre
     \end{itemize}
 \end{frame}
 
@@ -390,11 +410,11 @@
     
     \begin{itemize}
         \setlength\itemsep{1em}
-        \pause \item Szavak/kifejezések előre adott halmaza (például keresztnevek)
-        \pause \item Numerikus sáv (például számok 1-től $n$-ig)
-        \pause \item Reguláris kifejezésre illeszkedő szövegek
-        \pause \item Külső forrásból betöltött indexelt értékkészlet
-        \pause \item Összetett értékek (például teljes név, többdimenziós adat)
+        \pause \item szavak/kifejezések előre adott halmaza (például keresztnevek)
+        \pause \item numerikus sáv (például számok 1-től $n$-ig)
+        \pause \item reguláris kifejezésre illeszkedő szövegek
+        \pause \item külső forrásból betöltött indexelt értékkészlet
+        \pause \item összetett értékek (például teljes név, többdimenziós adat)
     \end{itemize}
 \end{frame}
 
@@ -738,12 +758,12 @@ schemas:
     
     \begin{itemize}
         \setlength\itemsep{1em}
-        \pause \item Nincs előre megadott séma
-        \pause \item Ha egy lekérés új táblát/oszlopot tartalmaz, on-demand létrehozzuk
-        \pause \item Új táblából történő wildcardos lekérdezésnél alapértelmezett oszlop
-        \pause \item Táblaméret, oszloptípus, idegen kulcs megállapítása heurisztikákkal
-        \pause \item A \texttt{seed} lehet beégetett vagy az első lekérés függvénye
-        \pause \item Írható adatbázis esetén nehéz megvalósítani
+        \pause \item nincs előre megadott séma
+        \pause \item ha egy lekérés új táblát/oszlopot tartalmaz, on-demand létrehozzuk
+        \pause \item új táblából történő wildcardos lekérdezésnél alapértelmezett oszlop
+        \pause \item táblaméret, oszloptípus, idegen kulcs megállapítása heurisztikákkal
+        \pause \item a \texttt{seed} lehet beégetett vagy az első lekérés függvénye
+        \pause \item írható adatbázis esetén nehéz megvalósítani
     \end{itemize}
 \end{frame}
 
