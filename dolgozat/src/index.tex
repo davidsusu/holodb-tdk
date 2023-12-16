@@ -2092,7 +2092,7 @@ A minden függőséget tartalmazó shadow JAR lényegesen nagyobb, mint a H2-né
                 \addplot[fill=cyan] % MySQL
                     coordinates { (Docker image,605.3) };
                 \addplot[fill=orange] % HoloDB
-                    coordinates { (Docker image,248.5) };
+                    coordinates { (Docker image,231.7) };
                 \legend{MySQL,HoloDB}
             \end{axis}
         \end{tikzpicture}
@@ -2112,7 +2112,7 @@ A minden függőséget tartalmazó shadow JAR lényegesen nagyobb, mint a H2-né
                     enlarge y limits={value=.1,upper},
                     enlarge x limits=0.15,
                     ymin=0,
-                    ymax=25,
+                    ymax=8,
                     point meta=rawy,
                     every node near coord/.append style={
                         anchor=west,
@@ -2137,7 +2137,7 @@ A minden függőséget tartalmazó shadow JAR lényegesen nagyobb, mint a H2-né
                 \addplot[fill=blue] % H2
                     coordinates { (Shadow JAR,2.49) };
                 \addplot[fill=orange] % HoloDB
-                    coordinates { (Shadow JAR,24.43) };
+                    coordinates { (Shadow JAR,7.65) };
                 \legend{H2,HoloDB}
             \end{axis}
         \end{tikzpicture}
@@ -2157,7 +2157,7 @@ A minden függőséget tartalmazó shadow JAR lényegesen nagyobb, mint a H2-né
                     enlarge y limits={value=.1,upper},
                     enlarge x limits=0.15,
                     ymin=0,
-                    ymax=2400,
+                    ymax=2.4,
                     point meta=rawy,
                     every node near coord/.append style={
                         anchor=west,
@@ -2173,18 +2173,18 @@ A minden függőséget tartalmazó shadow JAR lényegesen nagyobb, mint a H2-né
                         legend columns=-1,
                         /tikz/every even column/.append style={column sep=0.3cm}
                     },
-                    ylabel={Méret (KB)},
+                    ylabel={Méret (MB)},
                     xtick=data,
                     nodes near coords={
                         \pgfmathprintnumber{\pgfplotspointmeta}
                     }
                 ]
                 \addplot[fill=cyan] % MySQL
-                    coordinates { (Adatméret,2324.21) };
+                    coordinates { (Adatméret,2.27) };
                 \addplot[fill=blue] % H2
-                    coordinates { (Adatméret,564) };
+                    coordinates { (Adatméret,0.55) };
                 \addplot[fill=orange] % HoloDB
-                    coordinates { (Adatméret,1.16) };
+                    coordinates { (Adatméret,0.001) };
                 \legend{MySQL,H2,HoloDB}
             \end{axis}
         \end{tikzpicture}

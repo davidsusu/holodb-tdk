@@ -52,20 +52,47 @@
 \begin{frame}
     \slidetitle{\sectionshorttitle}{Adatbázist akarok, most!}
     
+    %TODO: Adatbázist akarok: ikonokkal, játékosabban, kisérőszöveg nem kell
+    
     \begin{itemize}
         \setlength\itemsep{0.7em}
-        \pause \item \textbf{mockolás, fejlesztés} \par
+        \item \textbf{mockolás, fejlesztés} \par
             ~~~ csak legyen ott valami, hogy fusson
-        \pause \item \textbf{integrált tesztelés} \par
+        \item \textbf{integrált tesztelés} \par
             ~~~ kellenének adatok a tesztfuttatáshoz
-        \pause \item \textbf{prototípusfejlesztés, kísérletezés, adatbázis-tervezés} \par
+        \item \textbf{prototípusfejlesztés, kísérletezés, adatbázis-tervezés} \par
             ~~~ szeretnénk folyamatosan újragondolni
-        \pause \item \textbf{bemutatók, koncepciótervek} \par
+        \item \textbf{bemutatók, koncepciótervek} \par
             ~~~ jól jönne egy értelmes adathalmaz a prezentációhoz
-        \pause \item \textbf{oktatás} \par
+        \item \textbf{oktatás} \par
             ~~~ egységes homokozó adatbázis a tanulóknak
-        \pause \item \textbf{anonimizálás} \par
-            ~~~ csak valami mást rakjon oda, mint az éles adat
+    \end{itemize}
+\end{frame}
+
+\begin{frame}
+    \slidetitle{\sectionshorttitle}{Visszatérő nehézségek az adatbázissal}
+
+    %TODO: Nehézségek: összevonni az előzővel? (jobb oldalra függőleges folyamatábraként)
+    
+    Egy adatbázisszerver ad hoc odateremtése nem egyszerű. \par
+    
+    \vspace{0.5em}
+
+    \begin{itemize}
+        \item \textbf{definíció} \par
+            { \small ~~ definiálni kell, milyen sémát és adatokat szeretnénk látni }
+        \item \textbf{telepítés} \par
+            { \small ~~ az adatbázisszerver konfigurálása, rendelkezésre állása nem triviális }
+        \item \textbf{startup} \par
+            { \small ~~ el kell indítani az adatbázisszervert (kivéve, ha beágyazott) }
+        \item \textbf{séma- és indexépítés} \par
+            { \small ~~ a séma és az indexek felépítése is költséget jelent }
+        \item \textbf{populálás} \par
+            { \small ~~ az összes adat generálása/anonimizálása és lementése erőforrásigényes }
+        \item \textbf{memória, tárhely kezelése} \par
+            { \small ~~ az adatok sok helyet foglalnak (főleg, ha több példány fut párhuzamosan) }
+        \item \textbf{tisztítás} \par
+            { \small ~~ a végén le kell bontani az elhasznált adatbázist }
     \end{itemize}
 \end{frame}
 
@@ -87,49 +114,28 @@
     \end{minipage}
 \end{frame}
 
-\begin{frame}
-    \slidetitle{\sectionshorttitle}{Visszatérő nehézségek az adatbázissal}
-
-    Egy adatbázisszerver ad hoc odateremtése nem egyszerű. \par
-    
-    \vspace{0.5em}
-
-    \begin{itemize}
-        \pause \item \textbf{definíció} \par
-            { \small ~~ definiálni kell, milyen sémát és adatokat szeretnénk látni }
-        \pause \item \textbf{telepítés} \par
-            { \small ~~ az adatbázisszerver konfigurálása, rendelkezésre állása nem triviális }
-        \pause \item \textbf{startup} \par
-            { \small ~~ el kell indítani az adatbázisszervert (kivéve, ha beágyazott) }
-        \pause \item \textbf{séma- és indexépítés} \par
-            { \small ~~ a séma és az indexek felépítése is költséget jelent }
-        \pause \item \textbf{populálás} \par
-            { \small ~~ az összes adat generálása/anonimizálása és lementése erőforrásigényes }
-        \pause \item \textbf{memória, tárhely kezelése} \par
-            { \small ~~ az adatok sok helyet foglalnak (főleg, ha több példány fut párhuzamosan) }
-        \pause \item \textbf{tisztítás} \par
-            { \small ~~ a végén le kell bontani az elhasznált adatbázist }
-    \end{itemize}
-\end{frame}
-
 \section{Körkép: a létező (kerülő)megoldások}
 \def\sectionshorttitle{Körkép}
 
 \begin{frame}
     \slidetitle{\sectionshorttitle}{Megközelítések}
     
+    %TODO: Megközelítések: ide is ikonokat...
+    
     \begin{itemize}
         \setlength\itemsep{1em}
-        \pause \item produkciós adatbázis másolatának használata
-        \pause \item anonimizálás
-        \pause \item adatgenerálás
-        \pause \item lekérdezések ad hoc mockolása
-        \pause \item (hogyan máshogy?)
+        \item produkciós adatbázis másolatának használata
+        \item anonimizálás
+        \item adatgenerálás
+        \item lekérdezések ad hoc mockolása
+        \item (hogyan máshogy?)
     \end{itemize}
 \end{frame}
 
 \begin{frame}
     \slidetitle{\sectionshorttitle}{Néhány nagyteljesítményű megoldás}
+    
+    %TODO: Néhány nagytelj.: logók?
     
     \begin{itemize}
         \setlength\itemsep{1.3em}
@@ -162,30 +168,34 @@
 \begin{frame}
     \slidetitle{\sectionshorttitle}{Elvárások egy új megoldással szemben}
     
+    %TODO: Elvárások: gyorsan átugorhatóvá tenni: néhány kifejezést plusz dián pirossal kiemelni
+    
     \begin{itemize}
         \setlength\itemsep{0.5em}
-        \pause \item relációs adatmodellre épül
-        \pause \item deklaratív, finomhangolható, könnyen bővíthető
-        \pause \item nem szükséges forrásadatbázis, de mintaként használható
-        \pause \item nincs preparálási folyamat, szinte azonnal elindul
-        \pause \item óriás adatmennyiséget is képes szimulálni, szinte tárhelyigény nélkül
-        \pause \item az adatokat csak elérésükkor, on-the-fly számítja
-        \pause \item indexeket szolgáltat, ahol egyébként is elvárható lenne
-        \pause \item a runtime teljesítmény kielégítő
-        \pause \item determinisztikus, konzisztens, skálázható
-        \pause \item opcionálisan írható
+        \item relációs adatmodellre épül
+        \item deklaratív, finomhangolható, könnyen bővíthető
+        \item nem szükséges forrásadatbázis, de mintaként használható
+        \item nincs preparálási folyamat, szinte azonnal elindul
+        \item óriás adatmennyiséget is képes szimulálni, szinte tárhelyigény nélkül
+        \item az adatokat csak elérésükkor, on-the-fly számítja
+        \item indexeket szolgáltat, ahol egyébként is elvárható lenne
+        \item a runtime teljesítmény kielégítő
+        \item determinisztikus, konzisztens, skálázható
+        \item opcionálisan írható
     \end{itemize}
 \end{frame}
 
 \begin{frame}
     \slidetitle{\sectionshorttitle}{Mit tapasztal a felhasználó?}
     
+    %TODO: Mit tapasztal a felhasználó: ikonok? vagy valami...
+    
     \begin{itemize}
         \setlength\itemsep{1em}
-        \item egyetlen átlátható, deklaratív konfigurációs fájlban minden megadható \pause
-        \item nincs adatgenerálás, anonimizálás vagy egyéb preparálási folyamat \pause
-        \item az adatbázis kis memóriaigénnyel fut \pause
-        \item az adatbázis úgy viselkedik, mint egy valós relációs adatbázis \pause
+        \item egyetlen átlátható, deklaratív konfigurációs fájlban minden megadható
+        \item nincs adatgenerálás, anonimizálás vagy egyéb preparálási folyamat
+        \item az adatbázis kis memóriaigénnyel fut
+        \item az adatbázis úgy viselkedik, mint egy valós relációs adatbázis
         \item a lekérdezések elfogadható idő alatt lefutnak
     \end{itemize}
 \end{frame}
@@ -203,17 +213,20 @@
         
         \begin{itemize}
             \setlength\itemsep{0.5em}
-            \pause \item kis és óriás egészekkel is működik
-            \pause \item a konverzió automatikus és egyértelmű
-            \pause \item kis számokon gyors (\texttt{long} aritmetika)
-            \pause \item memóriaigénye minimális
-            \pause \item duplikálja a \texttt{BigInteger} metódusait
-            \pause \item további hasznos metódusokkal bővíti
-            \pause \item nincsenek függőségei
+            \item kis és óriás egészekkel is működik
+            \item a konverzió automatikus és egyértelmű
+            \item kis számokon gyors (\texttt{long} aritmetika)
+            \item memóriaigénye minimális
+            \item duplikálja a \texttt{BigInteger} metódusait
+            \item további hasznos metódusokkal bővíti
+            \item nincsenek függőségei
         \end{itemize}
     \end{minipage}%
     \begin{minipage}[t]{0.4\textwidth}
-        \centering \pause
+        \centering
+        
+        \vspace{0.05em}
+        
         \begin{tikzpicture}[font=\footnotesize]
             \begin{axis}[
                     symbolic x coords={primitive long,,LargeInteger,,BigInt (Scala),,BigInteger},
@@ -225,7 +238,7 @@
                     height=5cm,
                     ymajorgrids,
                     ymin=0,
-                    ymax=150,
+                    ymax=160,
                     bar width=0.5cm,
                     enlarge x limits=0.2,
                     nodes near coords,
@@ -247,25 +260,27 @@
 \begin{frame}
     \slidetitle{\sectionshorttitle}{Alapvető interfész: TreeRandom}
     
-    \pause Lényegileg a \texttt{Random} hierarchikus változata.
+    %TODO: TreeRandom: könnyebben emészthető, kevesebb szöveg, +ábra, hierarchia: utalás a játékra
+    
+    Lényegileg a \texttt{Random} hierarchikus változata.
     
     \vspace{0.2cm}
     
     \begin{itemize}
-        \pause \item egyenlő példány mindig ugyanazt a (végtelen) bitsorozatot szolgáltatja
-        \pause \item egy kulcs megadásával alpéldányt gyárt (eggyel alacsonyabb szint)
-        \pause \item ugyanazzal a kulcs bájtsorozattal egyenlő példányt ad vissza
+        \item egyenlő példány mindig ugyanazt a (végtelen) bitsorozatot szolgáltatja
+        \item egy kulcs megadásával alpéldányt gyárt (eggyel alacsonyabb szint)
+        \item ugyanazzal a kulcs bájtsorozattal egyenlő példányt ad vissza
     \end{itemize}
 
     \vspace{0.7cm}
     
-    \pause Gyenge követelmények:
+    Gyenge követelmények:
 
     \vspace{0.2cm}
     
     \begin{itemize}
-        \pause \item véletlenszerű kimenetet ad
-        \pause \item eltérő példányoknál jellemzően független, különböző kimenetet ad
+        \item véletlenszerű kimenetet ad
+        \item eltérő példányoknál jellemzően független, különböző kimenetet ad
     \end{itemize}
 
 \end{frame}
@@ -283,6 +298,8 @@
 
 \begin{frame}
     \slidetitle{\sectionshorttitle}{Storage API}
+    
+    %TODO: Storage API: hogy lehetne ez kevesebb idő?
     
     \begin{minipage}[c]{0.5\textwidth}
         \begin{itemize}
@@ -317,24 +334,25 @@
 \begin{frame}
     \slidetitle{\sectionshorttitle}{Írhatósági réteg}
     
-    \pause A \texttt{DiffTable} dekorátor:
+    A \texttt{DiffTable} dekorátor:
     
     \begin{itemize}
-        \pause \item csak olvassa az alárendelt táblaobjektumot
-        \pause \item amíg nincs módosítás, átlátszóan működik
-        \pause \item memóriában tárolja a módosításokat
-        \pause \item szükség szerint kiegészíti a lekérést és összefésüli az eredménytáblát
+        \item csak olvassa az alárendelt táblaobjektumot
+        \item amíg nincs módosítás, átlátszóan működik
+        \item memóriában tárolja a módosításokat
+        \item szükség szerint kiegészíti a lekérést és összefésüli az eredménytáblát
     \end{itemize}
     
     \vspace{0.4cm}
     
+    %TODO: Írhatósági/Tranzakciók.: itt talán jó, ha van egy pause... átgondolni
     \pause Tranzakciókezelés:
     
     \begin{itemize}
-        \pause \item kétféle tranzakciós stratégia: írási ablakok vagy MVCC
-        \pause \item kétféle commit mód: \texttt{AUTOCOMMIT} vagy explicit lockolás
-        \pause \item mindegyik változat ACID-kompatibilis
-        \pause \item nagyon sok írási művelet esetén nem igazán hatékony
+        \item kétféle tranzakciós stratégia: írási ablakok vagy MVCC
+        \item kétféle commit mód: \texttt{AUTOCOMMIT} vagy explicit lockolás
+        \item mindegyik változat ACID-kompatibilis
+        \item nagyon sok írási művelet esetén nem igazán hatékony
     \end{itemize}
 \end{frame}
 
@@ -343,38 +361,40 @@
 
 \begin{frame}
     \slidetitle{\sectionshorttitle}{Az értékkiosztások problémaköre}
-
+    
+    %TODO: Az értékkiosztások problémaköre: valami segítség még: ikonok/ábra?
+    
     \begin{itemize}
         \setlength\itemsep{1em}
-        \pause \item oszloporientáltság
-        \pause \item adatelérés (random access)
-        \pause \item ha lehet, keresés és rendezés (reverse index)
-        \pause \item $NULL$ értékek
-        \pause \item előfordulási gyakoriságok
-        \pause \item esetenként többoszlopos
+        \item oszloporientáltság
+        \item adatelérés (random access)
+        \item ha lehet, keresés és rendezés (reverse index)
+        \item $NULL$ értékek
+        \item előfordulási gyakoriságok
+        \item esetenként többoszlopos
     \end{itemize}
 \end{frame}
 
 \begin{frame}
     \slidetitle{\sectionshorttitle}{Főbb egyoszlopos értékkiosztási típusok}
 
-    \pause Nem indexelt
+    Nem indexelt
     
     \begin{itemize}
-        \pause \item egyszerű/strukturált szöveg
-        \pause \item strukturált adat
-        \pause \item kép
-        \pause \item jelszó-hash
-        \pause \item random BLOB/CLOB
+        \item egyszerű/strukturált szöveg
+        \item strukturált adat
+        \item kép
+        \item jelszó-hash
+        \item random BLOB/CLOB
     \end{itemize}
     
-    \pause Indexelt
+    Indexelt
     
     \begin{itemize}
-        \pause \item számláló (például numerikus kulcsokhoz)
-        \pause \item időbélyegek, adott eloszlással és zajjal
-        \pause \item full-text indexelt szövegek
-        \pause \item általános kétfázisú értékkiosztás
+        \item számláló (például numerikus kulcsokhoz)
+        \item időbélyegek, adott eloszlással és zajjal
+        \item full-text indexelt szövegek
+        \item { \only<2>{\color{red}\textbf} { általános kétfázisú értékkiosztás } }
     \end{itemize}
     
 \end{frame}
@@ -388,34 +408,6 @@
     
     Kétfázisú értékkiosztás alapelve: \par
     visszafejthető disztribúció és permutáció kompozíciója
-\end{frame}
-
-\begin{frame}
-    \slidetitle{\sectionshorttitle}{Az értékkészlet interfész-tulajdonságai}
-    
-    \begin{itemize}
-        \setlength\itemsep{1em}
-        \pause \item rendezett
-        \pause \item nincs ismétlődés (unique)
-        \pause \item lekérhető a lista hossza
-        \pause \item lekérhető az adott pozíción lévő érték (random access)
-        \pause \item lekérhető az adott érték pozíciója (reverse index) \par
-              \pause ~ ~ ~ (ha az érték nem található, akkor a rendezés szerinti helye)
-        \pause \item a lekérések gyorsan hajtódnak végre
-    \end{itemize}
-\end{frame}
-
-\begin{frame}
-    \slidetitle{\sectionshorttitle}{Tipikus kereshető értékkészletek}
-    
-    \begin{itemize}
-        \setlength\itemsep{1em}
-        \pause \item szavak/kifejezések előre adott halmaza (például keresztnevek)
-        \pause \item numerikus sáv (például számok 1-től $n$-ig)
-        \pause \item reguláris kifejezésre illeszkedő szövegek
-        \pause \item külső forrásból betöltött indexelt értékkészlet
-        \pause \item összetett értékek (például teljes név, többdimenziós adat)
-    \end{itemize}
 \end{frame}
 
 \begin{frame}
@@ -729,7 +721,7 @@ schemas:
 \begin{frame}
     \slidetitle{\sectionshorttitle}{Bővítés: valós postai címek használata}
     
-    \pause Egy cím hierarchiája:
+    { \color{beamer@blendedblue} Egy cím hierarchiája: }
     
     \begin{center}
         településnév ~ $\rightarrow$ ~
@@ -740,30 +732,35 @@ schemas:
         egyéb
     \end{center}
     
-    \vspace{1em}
+    \vspace{0.5em}
+    
+    { \color{beamer@blendedblue} Jellemzők: }
     
     \begin{itemize}
-        \setlength\itemsep{0.5em}
-        \pause \item ebben a szcenárióban elengedjük a kis tárhelyigényt
-        \pause \item az összes létező címet fogjuk leképezni a táblára
-        \pause \item szolgáltatunk egy többoszlopos (leftmost prefix) indexet
-        \pause \item alternatív index: implicite üres kerülettel
-        \pause \item a vármegyét, irányítószámot és egyéb adatokat származtatjuk
-        \pause \item utóbbiak a hierarchia különböző szintjeihez tartozhatnak
+        \setlength\itemsep{0.3em}
+        \item ebben a szcenárióban elengedjük a kis tárhelyigényt
+        \item az összes létező címet fogjuk leképezni a táblára
+        \item szolgáltatunk egy többoszlopos (leftmost prefix) indexet
+        \item alternatív index: implicite üres kerülettel
+        \item a vármegyét, irányítószámot és egyéb adatokat származtatjuk
+        \item utóbbiak a hierarchia különböző szintjeihez tartozhatnak
     \end{itemize}
 \end{frame}
 
 \begin{frame}
     \slidetitle{\sectionshorttitle}{Bővítés: on-demand schema}
     
+    %TODO: Bővítés: on-demand schema - ezt még átgondolni
+    
     \begin{itemize}
         \setlength\itemsep{1em}
-        \pause \item nincs előre megadott séma
-        \pause \item ha egy lekérés új táblát/oszlopot tartalmaz, on-demand létrehozzuk
-        \pause \item új táblából történő wildcardos lekérdezésnél alapértelmezett oszlop
-        \pause \item táblaméret, oszloptípus, idegen kulcs megállapítása heurisztikákkal
-        \pause \item a \texttt{seed} lehet beégetett vagy az első lekérés függvénye
-        \pause \item írható adatbázis esetén nehéz megvalósítani
+        \item \textbf{radikális automatizmus}
+        \item nincs előre megadott séma
+        \item ha egy lekérés új táblát/oszlopot tartalmaz, on-demand létrehozzuk
+        \item új táblából történő wildcardos lekérdezésnél alapértelmezett oszlop
+        \item táblaméret, oszloptípus, idegen kulcs megállapítása heurisztikákkal
+        \item a \texttt{seed} lehet beégetett vagy az első lekérés függvénye
+        \item írható adatbázis esetén nehéz megvalósítani
     \end{itemize}
 \end{frame}
 
@@ -789,6 +786,9 @@ schemas:
                     enlarge x limits=0.15,
                     ymin=0,
                     ymax=700,
+                    /pgf/number format/.cd,
+                    use comma,
+                    1000 sep={~},
                     point meta=rawy,
                     every node near coord/.append style={
                         anchor=west,
@@ -819,7 +819,7 @@ schemas:
                 \addplot[fill=cyan] % MySQL
                     coordinates { (Docker image,605.3) };
                 \addplot[fill=orange] % HoloDB
-                    coordinates { (Docker image,248.5) };
+                    coordinates { (Docker image,231.7) };
                 \legend{MySQL,HoloDB}
             \end{axis}
         \end{tikzpicture}
@@ -839,7 +839,10 @@ schemas:
                     enlarge y limits={value=.1,upper},
                     enlarge x limits=0.15,
                     ymin=0,
-                    ymax=25,
+                    ymax=8,
+                    /pgf/number format/.cd,
+                    use comma,
+                    1000 sep={~},
                     point meta=rawy,
                     every node near coord/.append style={
                         anchor=west,
@@ -868,7 +871,7 @@ schemas:
                 \addplot[fill=blue] % H2
                     coordinates { (Shadow JAR,2.49) };
                 \addplot[fill=orange] % HoloDB
-                    coordinates { (Shadow JAR,24.43) };
+                    coordinates { (Shadow JAR,7.65) };
                 \legend{H2,HoloDB}
             \end{axis}
         \end{tikzpicture}
@@ -889,6 +892,9 @@ schemas:
                     enlarge x limits=0.15,
                     ymin=0,
                     ymax=2.4,
+                    /pgf/number format/.cd,
+                    use comma,
+                    1000 sep={~},
                     point meta=rawy,
                     every node near coord/.append style={
                         anchor=west,
@@ -915,9 +921,9 @@ schemas:
                     }
                 ]
                 \addplot[fill=cyan] % MySQL
-                    coordinates { (Adatméret,2.324) };
+                    coordinates { (Adatméret,2.27) };
                 \addplot[fill=blue] % H2
-                    coordinates { (Adatméret,0.564) };
+                    coordinates { (Adatméret,0.55) };
                 \addplot[fill=orange] % HoloDB
                     coordinates { (Adatméret,0.001) };
                 \legend{MySQL,H2,HoloDB}
@@ -977,31 +983,32 @@ schemas:
                     (complex-readonly,5.1902669386)
                     (complex-writeable,8.7714582641)
                 };
-            \addplot[fill=yellow] % HoloDB (fapados)
+            \addplot[fill=yellow] % HoloDB (basic)
                 coordinates {
                     (simple-readonly,6.441775179)
                     (complex-readonly,8.0399578991)
                     (complex-writeable,13.4957423082)
                 };
-            \addplot[fill=orange] % HoloDB (default)
+            \addplot[fill=orange] % HoloDB
                 coordinates {
                     (simple-readonly,8.182373242)
                     (complex-readonly,9.4207860077)
                     (complex-writeable,14.4941282014)
                 };
-            \addplot[fill=red] % HoloDB (extra konf.)
+                
+            \addplot[fill=red] % HoloDB (quality)
                 coordinates {
                     (simple-readonly,8.819935654)
                     (complex-readonly,10.5782986771)
                     (complex-writeable,16.7720866313)
                 };
-            \legend{MySQL,H2,HoloDB (fapados),HoloDB (default),HoloDB (extra konf.)}
+            \legend{MySQL,H2,HoloDB (basic),HoloDB,HoloDB (quality)}
         \end{axis}
     \end{tikzpicture}
 \end{frame}
 
 \begin{frame}
-    \slidetitle{\sectionshorttitle}{Átlagos futási idők összehasonlítása (log.)}
+    \slidetitle{\sectionshorttitle}{SQL-futásidők átlagának összehasonlítása (log.)}
     
     \centering
     
@@ -1011,7 +1018,7 @@ schemas:
                     at={(-0.1,1.15)},
                     anchor=north west
                 },
-                symbolic x coords={Mező,Rekord,Összetett,Teljes tábla,Többtáblás},
+                symbolic x coords={Mező,Teljes rekord,Összetett,Teljes tábla,Többtáblás},
                 ybar,
                 axis on top,
                 width={\textwidth},
@@ -1052,7 +1059,7 @@ schemas:
             \addplot[fill=cyan] % MySQL
                 coordinates {
                     (Mező,106276)
-                    (Rekord,109819) 
+                    (Teljes rekord,109819) 
                     (Összetett,146710)
                     (Teljes tábla,146710)
                     (Többtáblás,1637889)
@@ -1060,36 +1067,36 @@ schemas:
             \addplot[fill=blue] % H2
                 coordinates {
                     (Mező,12648)
-                    (Rekord,13015) 
+                    (Teljes rekord,13015) 
                     (Összetett,21927)
                     (Teljes tábla,1971234)
                     (Többtáblás,189958)
                 };
-            \addplot[fill=yellow] % HoloDB (fapados)
+            \addplot[fill=yellow] % HoloDB (basic)
                 coordinates {
                     (Mező,21709)
-                    (Rekord,24207) 
+                    (Teljes rekord,24207) 
                     (Összetett,50474)
                     (Teljes tábla,32271101)
                     (Többtáblás,481306)
                 };
-            \addplot[fill=orange] % HoloDB (default)
+            \addplot[fill=orange] % HoloDB
                 coordinates {
                     (Mező,25941)
-                    (Rekord,140232) 
+                    (Teljes rekord,140232) 
                     (Összetett,293885)
                     (Teljes tábla,1228183178)
                     (Többtáblás,4030303)
                 };
-            \addplot[fill=red] % HoloDB (extra konf.
+            \addplot[fill=red] % HoloDB (quality)
                 coordinates {
                     (Mező,49860)
-                    (Rekord,207383) 
+                    (Teljes rekord,207383) 
                     (Összetett,2543441)
                     (Teljes tábla,1676796378)
                     (Többtáblás,8121736)
                 };
-            \legend{MySQL,H2,HoloDB (fapados),HoloDB (default),HoloDB (extra konf.)}
+            \legend{MySQL,H2,HoloDB (basic),HoloDB,HoloDB (quality)}
         \end{axis}
     \end{tikzpicture}
 \end{frame}
@@ -1119,11 +1126,11 @@ schemas:
     
     \begin{itemize}
         \setlength\itemsep{1em}
-        \pause \item könnyen verziókezelhető konfigurációs fájl
-        \pause \item könnyű replikálhatóság (csak-olvasható adatbázis esetén)
-        \pause \item teljesen izolált automatikus integrációs tesztelés adatbázissal
-        \pause \item füsttesztek teljes értékű adatbázissal
-        \pause \item írási rétegként létező adatbázis fölé is elhelyezhető
+        \item könnyen verziókezelhető konfigurációs fájl
+        \item könnyű replikálhatóság (csak-olvasható adatbázis esetén)
+        \item teljesen izolált automatikus integrációs tesztelés adatbázissal
+        \item füsttesztek teljes értékű adatbázissal
+        \item írási rétegként létező adatbázis fölé is elhelyezhető
     \end{itemize}
 \end{frame}
 
@@ -1152,11 +1159,13 @@ schemas:
 \begin{frame}
     \slidetitle{\sectionshorttitle}{Jövőbeli tervek}
 
+    %TODO: Jövőbeli tervek: bővíteni
+    
     \begin{itemize}
         \setlength\itemsep{1em}
-        \pause \item az alapvető működés optimalizálása
-        \pause \item további kiegészítő funkciók, eszközök fejlesztése
-        \pause \item dokumentáció és kommunikáció
+        \item az alapvető működés optimalizálása
+        \item további kiegészítő funkciók, eszközök fejlesztése
+        \item dokumentáció és kommunikáció
         \pause \item megfelelő elnevezés megtalálása
             
             \vspace{0.5\baselineskip}
@@ -1200,7 +1209,7 @@ schemas:
             \item Jelen TDK-pályamunka forrásrepója: \par
                     \url{https://github.com/davidsusu/holodb-tdk}
         \end{itemize}
-    
+        
         \vspace{1.5em}
         
         \normalsize
