@@ -11,6 +11,7 @@
 \usepackage{svg}
 \usepackage{t1enc}
 \usepackage{bbding}
+\usepackage{enumitem}
 \usepackage{fontawesome5}
 \usepackage{minted}
 \usepackage[hungarian]{babel}
@@ -21,6 +22,18 @@
     every axis label = {font = {\fontsize{8 pt}{14 pt}\selectfont}},
     label style = {font = {\fontsize{10 pt}{20pt}\selectfont}},
     legend style = {font = {\fontsize{6 pt}{10 pt}\selectfont}},
+}
+
+\setitemize{
+    label=\usebeamerfont*{itemize item}%
+    \usebeamercolor[fg]{itemize item}
+    \usebeamertemplate{itemize item}
+}
+  
+\newlist{logolist}{itemize}{1}
+\setlist[logolist,1]{
+    label={},
+    leftmargin=4em
 }
 
 \titlegraphic{\includegraphics[width=2cm]{elte_cimer_szines}}
@@ -52,7 +65,6 @@
 \begin{frame}
     \slidetitle{\sectionshorttitle}{Adatbázist akarok, most!}
     
-    %TODO: Szóban említeni a fejlesztői tapasztalatomat
     %TODO: Adatbázist akarok: ikonokkal, játékosabban, kisérőszöveg nem kell
     
     \begin{itemize}
@@ -73,7 +85,7 @@
 \begin{frame}
     \slidetitle{\sectionshorttitle}{Visszatérő nehézségek az adatbázissal}
 
-    %TODO: Nehézségek: összevonni az előzővel? (jobb oldalra függőleges folyamatábraként)
+    %TODO: Visszatérő nehézségek: Ide is képeket, könnyebben felfoghatóra
     
     Egy adatbázisszerver ad hoc odateremtése nem egyszerű. \par
     
@@ -98,7 +110,7 @@
 \end{frame}
 
 \begin{frame}
-    \slidetitle{\sectionshorttitle}{Alaptézis}
+    \slidetitle{\sectionshorttitle}{Alapmegállapítás}
     
     \centering
     
@@ -136,19 +148,25 @@
 \begin{frame}
     \slidetitle{\sectionshorttitle}{Néhány nagyteljesítményű megoldás}
     
-    %TODO: Néhány nagytelj.: logók?
-    
-    \begin{itemize}
-        \setlength\itemsep{1.3em}
-        \item \textbf{MOSTLY AI} \par ~~ { \footnotesize
-              ``Synthetic data is more accessible, more flexible, and simply... smarter.'' }
-        \item \textbf{Tonic} \par ~~ { \footnotesize
-              ``Generate data that is both useful and secure for everyone on your team.'' }
-        \item \textbf{GenRocket} \par ~~ { \footnotesize
-              ``Automated Data Delivery in Any Volume, Variety, and Format'' }
-        \item \textbf{Delphix} \par ~~ { \footnotesize
-              ``Your biggest application lifecycle data challenges -- solved'' }
-    \end{itemize}
+    \begin{logolist}
+        \setlength\itemsep{1.7em}
+        \item[{\includegraphics[width=2em,height=2em]{image/mostly-ai.png}}]
+            \begin{minipage}[c]{\linewidth}\textbf{MOSTLY AI} \par ~~ { \footnotesize
+                ``Synthetic data is more accessible, more flexible, and simply... smarter.'' }
+            \end{minipage}
+        \item[{\includegraphics[width=2em,height=2em]{image/tonic.png}}]
+            \begin{minipage}[c]{\linewidth}\textbf{Tonic} \par ~~ { \footnotesize
+                ``Generate data that is both useful and secure for everyone on your team.'' }
+            \end{minipage}
+        \item[{\includegraphics[width=2em,height=2em]{image/genrocket.png}}]
+            \begin{minipage}[c]{\linewidth}\textbf{GenRocket} \par ~~ { \footnotesize
+                ``Automated Data Delivery in Any Volume, Variety, and Format'' }
+            \end{minipage}
+        \item[{\includegraphics[width=2em,height=2em]{image/delphix.png}}]
+            \begin{minipage}[c]{\linewidth}\textbf{Delphix} \par ~~ { \footnotesize
+                ``Your biggest application lifecycle data challenges -- solved'' }
+            \end{minipage}
+    \end{logolist}
 \end{frame}
 
 \begin{frame}
@@ -168,8 +186,6 @@
 
 \begin{frame}
     \slidetitle{\sectionshorttitle}{Elvárások egy új megoldással szemben}
-    
-    %TODO: Elvárások: gyorsan átugorhatóvá tenni: néhány kifejezést plusz dián pirossal kiemelni
     
     \begin{itemize}
         \setlength\itemsep{0.5em}
@@ -195,7 +211,7 @@
         \setlength\itemsep{1em}
         \item egyetlen átlátható, deklaratív konfigurációs fájlban minden megadható
         \item nincs adatgenerálás, anonimizálás vagy egyéb preparálási folyamat
-        \item az adatbázis kis memóriaigénnyel fut
+        \item az adatbázis kis tárhelyigénnyel fut
         \item az adatbázis úgy viselkedik, mint egy valós relációs adatbázis
         \item a lekérdezések elfogadható idő alatt lefutnak
     \end{itemize}
@@ -261,8 +277,7 @@
 \begin{frame}
     \slidetitle{\sectionshorttitle}{Alapvető interfész: TreeRandom}
     
-    %TODO: TreeRandom: könnyebben emészthető, kevesebb szöveg, +ábra, hierarchia: utalás a játékra
-    %TODO: TreeRandom: pl: egyenlő példány -> egyenlő kimenet [???]
+    %TODO: TreeRandom: könnyebben emészthető, kevesebb szöveg, +ábra, pl: egyenlő példány -> egyenlő kimenet [???]
     
     Lényegileg a \texttt{Random} hierarchikus változata.
     
@@ -301,36 +316,43 @@
 \begin{frame}
     \slidetitle{\sectionshorttitle}{Storage API}
     
-    %TODO: Storage API: hogy lehetne ez kevesebb idő?
-    
     \begin{minipage}[c]{0.5\textwidth}
         \begin{itemize}
-            \item { \only<2>{\color{beamer@blendedblue}} \texttt{Schema} }
-            \item { \only<3>{\color{beamer@blendedblue}} \texttt{Table} }
-            \item { \only<4>{\color{beamer@blendedblue}} \texttt{Column} }
-            \item { \only<5>{\color{beamer@blendedblue}} \texttt{ColumnDefinition} }
-            \item { \only<6>{\color{beamer@blendedblue}} \texttt{Source} }
-            \item { \only<7>{\color{beamer@blendedblue}} \texttt{Row} }
-            \item { \only<8>{\color{beamer@blendedblue}} \texttt{TableIndex} }
-            \item { \only<9>{\color{beamer@blendedblue}} \texttt{FulltextIndex} }
-            \item { \only<10>{\color{beamer@blendedblue}} \texttt{SpatialIndex} }
-            \item { \only<11>{\color{beamer@blendedblue}} \texttt{TableSelection} }
+            \item \texttt{Schema}
+            \item \texttt{Table}
+            \item \texttt{Column}
+            \item \texttt{ColumnDefinition}
+            \item { \only<2>{\color{beamer@blendedblue}} \texttt{Source} }
+            \item \texttt{Row}
+            \item \texttt{TableIndex}
+            \item \texttt{FulltextIndex}
+            \item \texttt{SpatialIndex}
+            \item \texttt{TableSelection}
         \end{itemize}
     \end{minipage}%
     \begin{minipage}[c]{0.5\textwidth}
         \begin{overprint}
-            \onslide<2>\centerline{\includegraphics[width=0.9\textwidth]{diagram/storage-schema}}
-            \onslide<3>\centerline{\includegraphics[width=0.9\textwidth]{diagram/storage-table}}
-            \onslide<4>\centerline{\includegraphics[width=0.9\textwidth]{diagram/storage-column}}
-            \onslide<5>\centerline{\includegraphics[width=0.9\textwidth]{diagram/storage-columndefinition}}
-            \onslide<6>\centerline{\includegraphics[width=0.9\textwidth]{diagram/storage-source}}
-            \onslide<7>\centerline{\includegraphics[width=0.9\textwidth]{diagram/storage-row}}
-            \onslide<8>\centerline{\includegraphics[width=0.9\textwidth]{diagram/storage-tableindex}}
-            \onslide<9>\centerline{\includegraphics[width=0.9\textwidth]{diagram/storage-fulltextindex}}
-            \onslide<10>\centerline{\includegraphics[width=0.9\textwidth]{diagram/storage-spatialindex}}
-            \onslide<11>\centerline{\includegraphics[width=0.9\textwidth]{diagram/storage-tableselection}}
+            \onslide<2>\centerline{\includegraphics[width=0.9\textwidth]{diagram/storage-source}}
         \end{overprint}
     \end{minipage}
+\end{frame}
+
+\begin{frame}
+    \slidetitle{\sectionshorttitle}{Csak-olvasható réteg}
+    
+    %TODO: Csak-olvasható réteg: ide még valami?
+    
+    \begin{itemize}
+        \setlength\itemsep{1em}
+        \item \textbf{Konzisztencia}:
+            felépíthető egy olyan tényleges immutábilis relációs adatbázis (M),
+            hogy minden lehetséges relációs lekérdezés esetében,
+            amely a közös sémára (S) értelmes, a virtuális és a tényleges adatbázis
+            esetében visszaadott eredménytábla megegyezik.
+        \item \textbf{Megkötések kielégítése}:
+            az S séma teljesíti a virtuális adatbázis felhasználói konfigurációját (C),
+            valamint az M-ben szereplő adatok tulajdonságai illeszkednek a C-ben leírt megkötésekre.
+    \end{itemize}
 \end{frame}
 
 \begin{frame}
@@ -347,7 +369,6 @@
     
     \vspace{0.4cm}
     
-    %TODO: Írhatósági/Tranzakciók.: itt talán jó, ha van egy pause... átgondolni
     \pause {\color{beamer@blendedblue}Tranzakciókezelés}
     
     \begin{itemize}
@@ -364,10 +385,9 @@
 \begin{frame}
     \slidetitle{\sectionshorttitle}{Az értékkiosztások problémaköre}
     
-    %TODO: Az értékkiosztások problémaköre: valami segítség még: ikonok/ábra?
-    
     \begin{itemize}
         \setlength\itemsep{1em}
+        \item \texttt{Source} interfész
         \item oszloporientáltság
         \item adatelérés (random access)
         \item ha lehet, keresés és rendezés (reverse index)
@@ -430,6 +450,8 @@
     
     \hspace{0.7cm}
     
+    %TODO: Kétfázisú értékkiosztás: adatlekérés: a szöveget is változtatni
+    
     Adatlekérés a kétfázisú értékkiosztásból
 \end{frame}
 
@@ -446,6 +468,8 @@
     \end{overprint}
     
     \vspace{0.5cm}
+    
+    %TODO: Kétfázisú értékkiosztás: keresés: a szöveget is változtatni
     
     Keresés a kétfázisú értékkiosztásban: \par
     A megfordíthatóság biztosítja a hatékony keresést
@@ -665,8 +689,6 @@ schemas:
 
 \begin{frame}
     \slidetitle{\sectionshorttitle}{Bővítés: on-demand schema}
-    
-    %TODO: Bővítés: on-demand schema - ezt még átgondolni
     
     \begin{itemize}
         \setlength\itemsep{1em}
@@ -1075,8 +1097,6 @@ schemas:
 \begin{frame}
     \slidetitle{\sectionshorttitle}{Jövőbeli tervek}
 
-    %TODO: Jövőbeli tervek: bővíteni
-    
     \begin{itemize}
         \setlength\itemsep{1em}
         \item az alapvető működés optimalizálása
