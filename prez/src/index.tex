@@ -575,30 +575,30 @@
         ]{yaml}
 seed: 425364
 schemas:
-- name: shop
+  - name: shop
     tables:
-    - name: customers
+      - name: customers
         size: 5
         columns:
-        - name: id
+          - name: id
             mode: COUNTER
-        - name: firstname
+          - name: firstname
             valuesBundle: forenames
-        - name: lastname
+          - name: lastname
             valuesBundle: surnames
-        - name: birth
+          - name: birth
             valuesRange: [1950, 2000]
-    - name: orders
+      - name: orders
         size: 12
         columns:
-        - name: id
+          - name: id
             mode: COUNTER
-        - name: cid
+          - name: cid
             valuesForeignColumn:
                 [customers, id]
-        - name: product
+          - name: product
             valuesBundle: fruits
-        - name: quantity
+          - name: quantity
             valuesRange: [1, 10]
         \end{minted}
         
