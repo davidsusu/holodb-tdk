@@ -1,5 +1,7 @@
 \pdfsuppresswarningpagegroup=1
 
+\PassOptionsToPackage{dvipsnames}{xcolor}
+
 \documentclass[
     %handout,
 ]{beamer}
@@ -24,6 +26,12 @@
     legend style = {font = {\fontsize{6 pt}{10 pt}\selectfont}},
 }
 
+\setenumerate{
+    label=\arabic*.,
+    itemsep=3pt,
+    topsep=3pt,
+}
+  
 \setitemize{
     label=\usebeamerfont*{itemize item}%
     \usebeamercolor[fg]{itemize item}
@@ -65,21 +73,39 @@
 \begin{frame}
     \slidetitle{\sectionshorttitle}{Adatbázist akarok, most!}
     
-    %TODO: Adatbázist akarok: ikonokkal, játékosabban, kisérőszöveg nem kell
+    \begin{logolist}
+        \setlength\itemsep{1.2em}
+        \item[\raisebox{-0.75em}{\includegraphics[width=2em,height=2em]{image/dbnow-mock}}]
+            \begin{minipage}[c]{\linewidth}~~\textbf{mockolás, fejlesztés} \par ~~~~
+                csak legyen ott valami, hogy fusson
+            \end{minipage}
+        \item[\raisebox{-0.75em}{\includegraphics[width=2em,height=2em]{image/dbnow-test}}]
+            \begin{minipage}[c]{\linewidth}~~\textbf{integrált tesztelés} \par ~~~~
+                kellenének adatok a tesztfuttatáshoz
+            \end{minipage}
+        \item[\raisebox{-0.75em}{\includegraphics[width=2em,height=2em]{image/dbnow-prot}}]
+            \begin{minipage}[c]{\linewidth}~~\textbf{prototípusfejlesztés, kísérletezés, adatbázis-tervezés} \par ~~~~
+                szeretnénk folyamatosan újragondolni
+            \end{minipage}
+        \item[\raisebox{-0.75em}{\includegraphics[width=2em,height=2em]{image/dbnow-pres}}]
+            \begin{minipage}[c]{\linewidth}~~\textbf{bemutatók, koncepciótervek} \par ~~~~
+                jól jönne egy értelmes adathalmaz a prezentációhoz
+            \end{minipage}
+        \item[\raisebox{-0.75em}{\includegraphics[width=2em,height=2em]{image/dbnow-stud}}]
+            \begin{minipage}[c]{\linewidth}~~\textbf{oktatás} \par ~~~~
+                egységes homokozó adatbázis a tanulóknak
+            \end{minipage}
+    \end{logolist}
+\end{frame}
+
+\begin{frame}
+    \slidetitle{\sectionshorttitle}{Tesztadatbázis biztosításának nehézségei}
     
-    \begin{itemize}
-        \setlength\itemsep{0.7em}
-        \item \textbf{mockolás, fejlesztés} \par
-            ~~~ csak legyen ott valami, hogy fusson
-        \item \textbf{integrált tesztelés} \par
-            ~~~ kellenének adatok a tesztfuttatáshoz
-        \item \textbf{prototípusfejlesztés, kísérletezés, adatbázis-tervezés} \par
-            ~~~ szeretnénk folyamatosan újragondolni
-        \item \textbf{bemutatók, koncepciótervek} \par
-            ~~~ jól jönne egy értelmes adathalmaz a prezentációhoz
-        \item \textbf{oktatás} \par
-            ~~~ egységes homokozó adatbázis a tanulóknak
-    \end{itemize}
+    Egy adatbázisszerver ad hoc odateremtése nem egyszerű.
+    
+    \vspace{1em}
+
+    \includegraphics[height=0.4\textwidth]{diagram/database-tasks}
 \end{frame}
 
 \begin{frame}
@@ -131,17 +157,14 @@
 \def\sectionshorttitle{Körkép}
 
 \begin{frame}
-    \slidetitle{\sectionshorttitle}{Megközelítések}
-    
-    %TODO: Megközelítések: ide is ikonokat...
+    \slidetitle{\sectionshorttitle}{Bevett megközelítések}
     
     \begin{itemize}
-        \setlength\itemsep{1em}
+        \setlength\itemsep{1.5em}
         \item produkciós adatbázis másolatának használata
         \item anonimizálás
         \item adatgenerálás
         \item lekérdezések ad hoc mockolása
-        \item (hogyan máshogy?)
     \end{itemize}
 \end{frame}
 
@@ -150,19 +173,19 @@
     
     \begin{logolist}
         \setlength\itemsep{1.7em}
-        \item[{\includegraphics[width=2em,height=2em]{image/mostly-ai.png}}]
+        \item[{\includegraphics[width=2em,height=2em]{image/mostly-ai}}]
             \begin{minipage}[c]{\linewidth}\textbf{MOSTLY AI} \par ~~ { \footnotesize
                 ``Synthetic data is more accessible, more flexible, and simply... smarter.'' }
             \end{minipage}
-        \item[{\includegraphics[width=2em,height=2em]{image/tonic.png}}]
+        \item[{\includegraphics[width=2em,height=2em]{image/tonic}}]
             \begin{minipage}[c]{\linewidth}\textbf{Tonic} \par ~~ { \footnotesize
                 ``Generate data that is both useful and secure for everyone on your team.'' }
             \end{minipage}
-        \item[{\includegraphics[width=2em,height=2em]{image/genrocket.png}}]
+        \item[{\includegraphics[width=2em,height=2em]{image/genrocket}}]
             \begin{minipage}[c]{\linewidth}\textbf{GenRocket} \par ~~ { \footnotesize
                 ``Automated Data Delivery in Any Volume, Variety, and Format'' }
             \end{minipage}
-        \item[{\includegraphics[width=2em,height=2em]{image/delphix.png}}]
+        \item[{\includegraphics[width=2em,height=2em]{image/delphix}}]
             \begin{minipage}[c]{\linewidth}\textbf{Delphix} \par ~~ { \footnotesize
                 ``Your biggest application lifecycle data challenges -- solved'' }
             \end{minipage}
@@ -174,7 +197,7 @@
     
     \centering
     
-    \includegraphics[height=0.55\textwidth]{image/nomanssky.png}
+    \includegraphics[height=0.55\textwidth]{image/nomanssky}
     
     \smallskip
     
@@ -205,16 +228,14 @@
 \begin{frame}
     \slidetitle{\sectionshorttitle}{Mit tapasztal a felhasználó?}
     
-    %TODO: Mit tapasztal a felhasználó: ikonok? vagy valami...
-    
-    \begin{itemize}
+    \begin{enumerate}
         \setlength\itemsep{1em}
-        \item egyetlen átlátható, deklaratív konfigurációs fájlban minden megadható
-        \item nincs adatgenerálás, anonimizálás vagy egyéb preparálási folyamat
-        \item az adatbázis kis tárhelyigénnyel fut
-        \item az adatbázis úgy viselkedik, mint egy valós relációs adatbázis
-        \item a lekérdezések elfogadható idő alatt lefutnak
-    \end{itemize}
+        \item egyetlen átlátható, deklaratív {\color{red}konfigurációs fájl}ban minden megadható
+        \item {\color{red}nincs adatgenerálás}, anonimizálás vagy egyéb preparálási folyamat
+        \item az adatbázis {\color{red}kis tárhelyigénnyel} fut
+        \item az adatbázis úgy viselkedik, {\color{red}mint egy valós} relációs adatbázis
+        \item a lekérdezések {\color{red}elfogadható idő} alatt lefutnak
+    \end{enumerate}
 \end{frame}
 
 \section{A HoloDB architektúrája}
@@ -275,31 +296,57 @@
 \end{frame}
 
 \begin{frame}
-    \slidetitle{\sectionshorttitle}{Alapvető interfész: TreeRandom}
+    \slidetitle{\sectionshorttitle}{Alapvető adattípus: TreeRandom}
     
-    %TODO: TreeRandom: könnyebben emészthető, kevesebb szöveg, +ábra, pl: egyenlő példány -> egyenlő kimenet [???]
-    
-    Lényegileg a \texttt{Random} hierarchikus változata.
-    
-    \vspace{0.2cm}
-    
-    \begin{itemize}
-        \item egyenlő példány mindig ugyanazt a (végtelen) bitsorozatot szolgáltatja
-        \item egy kulcs megadásával alpéldányt gyárt (eggyel alacsonyabb szint)
-        \item ugyanazzal a kulcs bájtsorozattal egyenlő példányt ad vissza
-    \end{itemize}
+    \begin{minipage}[c]{0.5\textwidth}
+        \vspace{0.5em}
+        
+        {\color{beamer@blendedblue}Hierarchikus véletlengenerátor}
+        
+        \vspace{0.2cm}
+        
+        \begin{itemize}
+            \item egyenlő példány: egyező kimenet
+            \item kulcs megadásával alpéldány
+            \item egyenlő kulcs: egyenlő alpéldány
+        \end{itemize}
 
-    \vspace{0.7cm}
-    
-    Gyenge követelmények:
+        \vspace{0.7cm}
+        
+        {\color{beamer@blendedblue}Gyenge követelmények}
 
-    \vspace{0.2cm}
-    
-    \begin{itemize}
-        \item véletlenszerű kimenetet ad
-        \item eltérő példányoknál jellemzően független, különböző kimenetet ad
-    \end{itemize}
+        \vspace{0.2cm}
+        
+        \begin{itemize}
+            \item véletlenszerű kimenetet ad
+            \item eltérő példány: eltérő kimenet
+        \end{itemize}
 
+        \begin{overprint}
+            \onslide<7>\begin{flushright}
+                \vspace{2.5em}
+                
+                { \tiny \color{BrickRed}
+                    \texttt{871121}{\color{RoyalPurple},}%
+                    \texttt{"schema1"}{\color{RoyalPurple},}%
+                    \texttt{"table1"}{\color{RoyalPurple},}%
+                    \texttt{"description"}{\color{RoyalPurple},}%
+                    \texttt{3}{\color{RoyalPurple},}%
+                    \texttt{"text"} {\color{RoyalPurple}$\rightarrow$}
+                    seed
+                }
+            \end{flushright}
+        \end{overprint}
+    \end{minipage}%
+    \begin{minipage}[c]{0.5\textwidth}
+        \begin{overprint}
+            \onslide<2>\centerline{\includegraphics[width=0.9\textwidth]{diagram/treerandom-0}}
+            \onslide<3>\centerline{\includegraphics[width=0.9\textwidth]{diagram/treerandom-1}}
+            \onslide<4>\centerline{\includegraphics[width=0.9\textwidth]{diagram/treerandom}}
+            \onslide<5>\centerline{\includegraphics[width=0.9\textwidth]{diagram/treerandom-indexed}}
+            \onslide<6->\centerline{\includegraphics[width=0.9\textwidth]{diagram/treerandom-nonindexed}}
+        \end{overprint}
+    \end{minipage}
 \end{frame}
 
 \begin{frame}
@@ -322,7 +369,7 @@
             \item \texttt{Table}
             \item \texttt{Column}
             \item \texttt{ColumnDefinition}
-            \item { \only<2>{\color{beamer@blendedblue}} \texttt{Source} }
+            \item {\only<2>{\color{beamer@blendedblue}}\texttt{Source}}
             \item \texttt{Row}
             \item \texttt{TableIndex}
             \item \texttt{FulltextIndex}
@@ -340,10 +387,12 @@
 \begin{frame}
     \slidetitle{\sectionshorttitle}{Csak-olvasható réteg}
     
-    %TODO: Csak-olvasható réteg: ide még valami?
+    A teljes storage API-t valósítja meg a következő követelmények mellett:
+    
+    \vspace{0.5cm}
     
     \begin{itemize}
-        \setlength\itemsep{1em}
+        \setlength\itemsep{1.5em}
         \item \textbf{Konzisztencia}:
             felépíthető egy olyan tényleges immutábilis relációs adatbázis (M),
             hogy minden lehetséges relációs lekérdezés esetében,
@@ -412,7 +461,7 @@
     
     \vspace{0.4cm}
     
-    {\color{beamer@blendedblue}Indexelt}
+    \pause {\color{beamer@blendedblue}Indexelt}
     
     \begin{itemize}
         \item számláló (például numerikus kulcsokhoz)
@@ -450,9 +499,7 @@
     
     \hspace{0.7cm}
     
-    %TODO: Kétfázisú értékkiosztás: adatlekérés: a szöveget is változtatni
-    
-    Adatlekérés a kétfázisú értékkiosztásból
+    Lekövetjük, melyik érték képződik a virtuális értéklista adott pozíciójára
 \end{frame}
 
 \begin{frame}
@@ -467,12 +514,9 @@
         \onslide<4->\centerline{\includegraphics[height=0.45\textwidth]{diagram/findvalue-3}}
     \end{overprint}
     
-    \vspace{0.5cm}
+    \vspace{0.7cm}
     
-    %TODO: Kétfázisú értékkiosztás: keresés: a szöveget is változtatni
-    
-    Keresés a kétfázisú értékkiosztásban: \par
-    A megfordíthatóság biztosítja a hatékony keresést
+    Eset: az érték szerepel az oszlop virtuális értéklistájában
 \end{frame}
 
 \begin{frame}
@@ -486,10 +530,9 @@
         \onslide<3>\centerline{\includegraphics[height=0.45\textwidth]{diagram/findvalue2-2}}
     \end{overprint}
     
-    \vspace{0.5cm}
+    \vspace{0.7cm}
     
-    Keresés a kétfázisú értékkiosztásban: \par
-    A megfordíthatóság biztosítja a hatékony keresést
+    Eset: az érték nem található, mert nincs kiosztva
 \end{frame}
 
 \begin{frame}
@@ -503,10 +546,9 @@
         \onslide<3>\centerline{\includegraphics[height=0.45\textwidth]{diagram/findvaluenone-2}}
     \end{overprint}
     
-    \vspace{0.5cm}
+    \vspace{0.7cm}
     
-    Keresés a kétfázisú értékkiosztásban: \par
-    A megfordíthatóság biztosítja a hatékony keresést
+    Eset: a keresett érték nincs az értékkészletben
 \end{frame}
 
 \begin{frame}
@@ -516,10 +558,9 @@
     
     \includegraphics[height=0.45\textwidth]{diagram/findvaluerange}
     
-    \vspace{0.5cm}
+    \vspace{0.7cm}
     
-    Keresés a kétfázisú értékkiosztásban: \par
-    A megfordíthatóság biztosítja a hatékony keresést
+    Eset: keresés értéksávra; a hiányzó határoló érték pozíciója is fontos
 \end{frame}
 
 \section{Konfiguráció és bővítés}
