@@ -1,4 +1,4 @@
-<mxfile host="Electron" modified="2023-12-18T05:43:35.060Z" agent="Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) draw.io/22.1.2 Chrome/114.0.5735.289 Electron/25.9.4 Safari/537.36" etag="CbKmWU1sBj65Xueq9_h7" version="22.1.2" type="device">
+<mxfile host="Electron" modified="2023-12-18T05:51:54.738Z" agent="Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) draw.io/22.1.2 Chrome/114.0.5735.289 Electron/25.9.4 Safari/537.36" etag="teBpQfFyVat34lEOzMM2" version="22.1.2" type="device">
   <diagram name="1 oldal" id="9zMQckgTDTX1H3_rx6Bh">
     <mxGraphModel dx="1509" dy="897" grid="1" gridSize="10" guides="0" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
       <root>
@@ -122,7 +122,7 @@
           <mxGeometry x="620" y="410" width="150" height="50" as="geometry" />
         </mxCell>
         <mxCell id="zfLJLM9meec-aZf0jVdz-1" value="Vincellér: a különböző fejlesztési ciklusokban eltérű tesztkörnyezet kell" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;whiteSpace=wrap;rounded=0;" vertex="1" parent="1">
-          <mxGeometry x="620" y="570" width="150" height="50" as="geometry" />
+          <mxGeometry x="620" y="560" width="150" height="50" as="geometry" />
         </mxCell>
         <mxCell id="zfLJLM9meec-aZf0jVdz-2" value="" style="labelPosition=right;align=left;strokeWidth=3;shape=mxgraph.mockup.markup.curlyBrace;html=1;shadow=0;dashed=0;strokeColor=#4C0099;direction=north;" vertex="1" parent="1">
           <mxGeometry x="490" y="140" width="30" height="200" as="geometry" />
@@ -147,6 +147,9 @@
         </mxCell>
         <mxCell id="zfLJLM9meec-aZf0jVdz-9" value="leszármazás szerint generált..." style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;whiteSpace=wrap;rounded=0;" vertex="1" parent="1">
           <mxGeometry x="620" y="460" width="150" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="zfLJLM9meec-aZf0jVdz-10" value="specializáció &amp;amp; általánosítás" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;whiteSpace=wrap;rounded=0;" vertex="1" parent="1">
+          <mxGeometry x="620" y="620" width="150" height="30" as="geometry" />
         </mxCell>
       </root>
     </mxGraphModel>
