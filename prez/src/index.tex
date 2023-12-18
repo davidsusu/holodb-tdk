@@ -59,13 +59,18 @@
 
 \frame{\titlepage}
 
-\AtBeginSection[]
-{
-    \begin{frame}
-        \frametitle{Tartalom}
-        \tableofcontents[currentsection]
-    \end{frame}
-}
+% \AtBeginSection[]
+% {
+%     \begin{frame}
+%         \frametitle{Tartalom}
+%         \tableofcontents[currentsection]
+%     \end{frame}
+% }
+
+\begin{frame}
+    \frametitle{Tartalom}
+    \tableofcontents
+\end{frame}
 
 \section{Bevezetés: adatbázist akarok, most!}
 \def\sectionshorttitle{Bevezetés}
@@ -110,23 +115,23 @@
     \includegraphics[height=0.4\textwidth]{diagram/database-tasks}
 \end{frame}
 
-\begin{frame}
-    \slidetitle{\sectionshorttitle}{Alapmegállapítás}
-    
-    \centering
-    
-    \includegraphics[height=0.22\textwidth]{diagram/test-with-data}
-    
-    \vspace{1cm}
-    
-    \begin{minipage}[b]{0.8\textwidth}
-        \justifying
-        Igen gyakran ütközünk abba a problémába,
-        hogy adott struktúrájú és szemantikájú,
-        viszonylag rövid életű adatbázist kell biztosítani,
-        a produkciós adatokra vonatkozó speciális követelmények nélkül.
-    \end{minipage}
-\end{frame}
+% \begin{frame}
+%     \slidetitle{\sectionshorttitle}{Alapmegállapítás}
+%     
+%     \centering
+%     
+%     \includegraphics[height=0.22\textwidth]{diagram/test-with-data}
+%     
+%     \vspace{1cm}
+%     
+%     \begin{minipage}[b]{0.8\textwidth}
+%         \justifying
+%         Igen gyakran ütközünk abba a problémába,
+%         hogy adott struktúrájú és szemantikájú,
+%         viszonylag rövid életű adatbázist kell biztosítani,
+%         a produkciós adatokra vonatkozó speciális követelmények nélkül.
+%     \end{minipage}
+% \end{frame}
 
 \section{Körkép: a létező (kerülő)megoldások}
 \def\sectionshorttitle{Körkép}
@@ -179,8 +184,11 @@
     Részlet a \textit{No Man's Sky Origins} játékból (hivatalos trailer)
 \end{frame}
 
-\section{Egy új megoldás körvonalai: HoloDB}
-\def\sectionshorttitle{HoloDB}
+% \section{Egy új megoldás körvonalai: HoloDB}
+% \def\sectionshorttitle{HoloDB}
+
+\section{A HoloDB architektúrája}
+\def\sectionshorttitle{Architektúra}
 
 \begin{frame}
     \slidetitle{\sectionshorttitle}{Elvárások egy új megoldással szemben}
@@ -191,7 +199,7 @@
         \item {\color{red}deklaratív}, finomhangolható, könnyen bővíthető
         \item nem szükséges forrásadatbázis, de mintaként használható
         \item {\color{red}nincs preparálás}i folyamat, szinte azonnal elindul
-        \item óriás adatmennyiséget is képes szimulálni, szinte { \color{red} tárhelyigény nélkül }
+        \item óriás adatmennyiséget is képes szimulálni, szinte {\color{red}tárhelyigény nélkül}
         \item az adatokat csak elérésükkor, on-the-fly számítja
         \item indexeket szolgáltat, ahol egyébként is elvárható lenne
         \item a runtime teljesítmény kielégítő
@@ -200,21 +208,21 @@
     \end{itemize}
 \end{frame}
 
-\begin{frame}
-    \slidetitle{\sectionshorttitle}{Mit tapasztal a felhasználó?}
-    
-    \begin{enumerate}
-        \setlength\itemsep{1em}
-        \item egyetlen átlátható, deklaratív {\color{red}konfigurációs fájl}ban minden megadható
-        \item {\color{red}nincs adatgenerálás}, anonimizálás vagy egyéb preparálási folyamat
-        \item az adatbázis {\color{red}kis tárhelyigénnyel} fut
-        \item az adatbázis úgy viselkedik, {\color{red}mint egy valós} relációs adatbázis
-        \item a lekérdezések {\color{red}elfogadható idő} alatt lefutnak
-    \end{enumerate}
-\end{frame}
+% \begin{frame}
+%     \slidetitle{\sectionshorttitle}{Mit tapasztal a felhasználó?}
+%     
+%     \begin{enumerate}
+%         \setlength\itemsep{1em}
+%         \item egyetlen átlátható, deklaratív {\color{red}konfigurációs fájl}ban minden megadható
+%         \item {\color{red}nincs adatgenerálás}, anonimizálás vagy egyéb preparálási folyamat
+%         \item az adatbázis {\color{red}kis tárhelyigénnyel} fut
+%         \item az adatbázis úgy viselkedik, {\color{red}mint egy valós} relációs adatbázis
+%         \item a lekérdezések {\color{red}elfogadható idő} alatt lefutnak
+%     \end{enumerate}
+% \end{frame}
 
-\section{A HoloDB architektúrája}
-\def\sectionshorttitle{Architektúra}
+% \section{A HoloDB architektúrája}
+% \def\sectionshorttitle{Architektúra}
 
 \begin{frame}
     \slidetitle{\sectionshorttitle}{Alapvető adattípus: LargeInteger}
@@ -393,7 +401,7 @@
     
     \vspace{0.4cm}
     
-    \pause {\color{beamer@blendedblue}Tranzakciókezelés}
+    {\color{beamer@blendedblue}Tranzakciókezelés}
     
     \begin{itemize}
         \item kétféle tranzakciós stratégia: írási ablakok vagy MVCC
@@ -406,20 +414,20 @@
 \section{A szűk keresztmetszet: értékkiosztások}
 \def\sectionshorttitle{Értékkiosztások}
 
-\begin{frame}
-    \slidetitle{\sectionshorttitle}{Az értékkiosztások problémaköre}
-    
-    \begin{itemize}
-        \setlength\itemsep{1em}
-        \item \texttt{Source} interfész
-        \item oszloporientáltság
-        \item adatelérés (random access)
-        \item ha lehet, keresés és rendezés (reverse index)
-        \item $NULL$ értékek
-        \item előfordulási gyakoriságok
-        \item esetenként többoszlopos
-    \end{itemize}
-\end{frame}
+% \begin{frame}
+%     \slidetitle{\sectionshorttitle}{Az értékkiosztások problémaköre}
+%     
+%     \begin{itemize}
+%         \setlength\itemsep{1em}
+%         \item \texttt{Source} interfész
+%         \item oszloporientáltság
+%         \item adatelérés (random access)
+%         \item ha lehet, keresés és rendezés (reverse index)
+%         \item $NULL$ értékek
+%         \item előfordulási gyakoriságok
+%         \item esetenként többoszlopos
+%     \end{itemize}
+% \end{frame}
 
 \begin{frame}
     \slidetitle{\sectionshorttitle}{Főbb egyoszlopos értékkiosztási típusok}
@@ -436,7 +444,7 @@
     
     \vspace{0.4cm}
     
-    \pause {\color{beamer@blendedblue}Indexelt}
+    {\color{beamer@blendedblue}Indexelt}
     
     \begin{itemize}
         \item számláló (például numerikus kulcsokhoz)
@@ -594,8 +602,7 @@ schemas:
           - name: id
             mode: COUNTER
           - name: cid
-            valuesForeignColumn:
-                [customers, id]
+            valuesForeignColumn: [customers, id]
           - name: product
             valuesBundle: fruits
           - name: quantity
@@ -684,49 +691,49 @@ schemas:
     
 \end{frame}
 
-\begin{frame}
-    \slidetitle{\sectionshorttitle}{Bővítés: valós postai címek használata}
-    
-    {\color{beamer@blendedblue}Egy cím hierarchiája}
-    
-    \begin{center}
-        településnév ~ $\rightarrow$ ~
-        kerület ~ $\rightarrow$ ~
-        közterület neve ~ $\rightarrow$ ~
-        közterület jellege ~ $\rightarrow$ ~
-        házszám ~ $\rightarrow$ ~
-        egyéb
-    \end{center}
-    
-    \vspace{0.5em}
-    
-    {\color{beamer@blendedblue}Jellemzők}
-    
-    \begin{itemize}
-        \setlength\itemsep{0.3em}
-        \item ebben a szcenárióban elengedjük a kis tárhelyigényt
-        \item az összes létező címet fogjuk leképezni a táblára
-        \item szolgáltatunk egy többoszlopos (leftmost prefix) indexet
-        \item alternatív index: implicite üres kerülettel
-        \item a vármegyét, irányítószámot és egyéb adatokat származtatjuk
-        \item utóbbiak a hierarchia különböző szintjeihez tartozhatnak
-    \end{itemize}
-\end{frame}
-
-\begin{frame}
-    \slidetitle{\sectionshorttitle}{Bővítés: on-demand schema}
-    
-    \begin{itemize}
-        \setlength\itemsep{1em}
-        \item {\color{red} radikális automatizmus}
-        \item nincs előre megadott séma
-        \item ha egy lekérés új táblát/oszlopot tartalmaz, on-demand létrehozzuk
-        \item új táblából történő wildcardos lekérdezésnél alapértelmezett oszlop
-        \item táblaméret, oszloptípus, idegen kulcs megállapítása heurisztikákkal
-        \item a \texttt{seed} lehet beégetett vagy az első lekérés függvénye
-        \item írható adatbázis esetén nehéz megvalósítani
-    \end{itemize}
-\end{frame}
+% \begin{frame}
+%     \slidetitle{\sectionshorttitle}{Bővítés: valós postai címek használata}
+%     
+%     {\color{beamer@blendedblue}Egy cím hierarchiája}
+%     
+%     \begin{center}
+%         településnév ~ $\rightarrow$ ~
+%         kerület ~ $\rightarrow$ ~
+%         közterület neve ~ $\rightarrow$ ~
+%         közterület jellege ~ $\rightarrow$ ~
+%         házszám ~ $\rightarrow$ ~
+%         egyéb
+%     \end{center}
+%     
+%     \vspace{0.5em}
+%     
+%     {\color{beamer@blendedblue}Jellemzők}
+%     
+%     \begin{itemize}
+%         \setlength\itemsep{0.3em}
+%         \item ebben a szcenárióban elengedjük a kis tárhelyigényt
+%         \item az összes létező címet fogjuk leképezni a táblára
+%         \item szolgáltatunk egy többoszlopos (leftmost prefix) indexet
+%         \item alternatív index: implicite üres kerülettel
+%         \item a vármegyét, irányítószámot és egyéb adatokat származtatjuk
+%         \item utóbbiak a hierarchia különböző szintjeihez tartozhatnak
+%     \end{itemize}
+% \end{frame}
+% 
+% \begin{frame}
+%     \slidetitle{\sectionshorttitle}{Bővítés: on-demand schema}
+%     
+%     \begin{itemize}
+%         \setlength\itemsep{1em}
+%         \item {\color{red} radikális automatizmus}
+%         \item nincs előre megadott séma
+%         \item ha egy lekérés új táblát/oszlopot tartalmaz, on-demand létrehozzuk
+%         \item új táblából történő wildcardos lekérdezésnél alapértelmezett oszlop
+%         \item táblaméret, oszloptípus, idegen kulcs megállapítása heurisztikákkal
+%         \item a \texttt{seed} lehet beégetett vagy az első lekérés függvénye
+%         \item írható adatbázis esetén nehéz megvalósítani
+%     \end{itemize}
+% \end{frame}
 
 \section{Eredmények}
 \def\sectionshorttitle{Eredmények}
@@ -1068,20 +1075,37 @@ schemas:
 \section{Összegzés}
 \def\sectionshorttitle{Összegzés}
 
+% \begin{frame}
+%     \slidetitle{\sectionshorttitle}{Elvárások teljesítése}
+%     
+%     \begin{itemize}
+%         \setlength\itemsep{0.5em}
+%         \item[] \onslide<2->{\greencheck} relációs adatmodellre épül
+%         \item[] \onslide<3->{\greencheck} deklaratív, finomhangolható, könnyen bővíthető
+%         \item[] \onslide<4->{\greencheck} nem szükséges forrásadatbázis, de mintaként használható
+%         \item[] \onslide<5->{\greencheck} nincs preparálási folyamat, szinte azonnal elindul
+%         \item[] \onslide<6->{\greencheck} óriás adatmennyiséget is képes szimulálni, szinte tárhelyigény nélkül
+%         \item[] \onslide<7->{\greencheck} az adatokat csak elérésükkor, on-the-fly számítja
+%         \item[] \onslide<8->{\greencheck} a runtime teljesítmény kielégítő
+%         \item[] \onslide<9->{\greencheck} determinisztikus, konzisztens, skálázható
+%         \item[] \onslide<10->{\greencheck} opcionálisan írható
+%     \end{itemize}
+% \end{frame}
+
 \begin{frame}
     \slidetitle{\sectionshorttitle}{Elvárások teljesítése}
     
     \begin{itemize}
         \setlength\itemsep{0.5em}
-        \item[] \onslide<2->{\greencheck} relációs adatmodellre épül
-        \item[] \onslide<3->{\greencheck} deklaratív, finomhangolható, könnyen bővíthető
-        \item[] \onslide<4->{\greencheck} nem szükséges forrásadatbázis, de mintaként használható
-        \item[] \onslide<5->{\greencheck} nincs preparálási folyamat, szinte azonnal elindul
-        \item[] \onslide<6->{\greencheck} óriás adatmennyiséget is képes szimulálni, szinte tárhelyigény nélkül
-        \item[] \onslide<7->{\greencheck} az adatokat csak elérésükkor, on-the-fly számítja
-        \item[] \onslide<8->{\greencheck} a runtime teljesítmény kielégítő
-        \item[] \onslide<9->{\greencheck} determinisztikus, konzisztens, skálázható
-        \item[] \onslide<10->{\greencheck} opcionálisan írható
+        \item[\greencheck] relációs adatmodellre épül
+        \item[\greencheck] deklaratív, finomhangolható, könnyen bővíthető
+        \item[\greencheck] nem szükséges forrásadatbázis, de mintaként használható
+        \item[\greencheck] nincs preparálási folyamat, szinte azonnal elindul
+        \item[\greencheck] óriás adatmennyiséget is képes szimulálni, szinte tárhelyigény nélkül
+        \item[\greencheck] az adatokat csak elérésükkor, on-the-fly számítja
+        \item[\greencheck] a runtime teljesítmény kielégítő
+        \item[\greencheck] determinisztikus, konzisztens, skálázható
+        \item[\greencheck] opcionálisan írható
     \end{itemize}
 \end{frame}
 
