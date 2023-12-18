@@ -562,8 +562,17 @@
     \slidetitle{\sectionshorttitle}{Konfiguráció-példa}
     
     \centering
+    
     \begin{minipage}[c]{0.47\textwidth}
-        \begin{minted}[fontsize=\tiny,framesep=4pt,frame=single,framerule=1.5pt,rulecolor=\color{gray!30}]{yaml}
+        \centering
+        
+        \begin{minted}[
+            fontsize=\tiny,
+            framesep=4pt,
+            frame=single,
+            framerule=1.5pt,
+            rulecolor=\color{gray!30}
+        ]{yaml}
 seed: 425364
 schemas:
 - name: shop
@@ -592,7 +601,8 @@ schemas:
         - name: quantity
             valuesRange: [1, 10]
         \end{minted}
-        \pause
+        
+        {\footnotesize\texttt{config.yaml}} \pause
     \end{minipage}%
     \hspace*{\fill}
     \begin{minipage}[c]{0.35cm}
