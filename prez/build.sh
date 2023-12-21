@@ -38,7 +38,7 @@ if ! [ "${mode}" = 'draft' ]; then
             optipng -o7 -zm1-9 "${diagramPngFilename}"
         fi
         
-        diagramPngFilename="${diagramFilenameBase}.svg"
+        diagramSvgFilename="${diagramFilenameBase}.svg"
         drawio --export --format svg --output "${diagramSvgFilename}" "${diagramFilename}"
         if [ "${mode}" = 'final' ]; then
             inkscape "${diagramSvgFilename}" --export-text-to-path --export-overwrite
