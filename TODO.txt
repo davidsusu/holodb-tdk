@@ -1,0 +1,3 @@
+lehetséges továbbfejlesztésnél ilyeneket:
+- memóriában tárolt módosítások megosztása több példány között
+- stb.
