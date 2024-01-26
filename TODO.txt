@@ -1,7 +1,7 @@
 lehetséges továbbfejlesztésnél ilyeneket:
 - memóriában tárolt módosítások megosztása több példány között
 - teljes Calcite-integráció
-- beépített SQL-futtató továbbfejlesztése
+- beépített SQL-futtató továbbfejlesztése (rel. alg. teljesség elérése)
 - rugalmasabb tranzakciókezelő
 - stb.
 
