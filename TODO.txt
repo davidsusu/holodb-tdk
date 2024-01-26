@@ -3,6 +3,7 @@ lehetséges továbbfejlesztésnél ilyeneket:
 - teljes Calcite-integráció
 - beépített SQL-futtató továbbfejlesztése (rel. alg. teljesség elérése)
 - rugalmasabb tranzakciókezelő
+- rendszertáblák (INFORMATION_SCHEMA) (--> schema dekorátor)
 - stb.
 
 lekérdezés, logikai, fizikai szint (a logikai az API)
