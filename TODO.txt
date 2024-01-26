@@ -1,3 +1,9 @@
 lehetséges továbbfejlesztésnél ilyeneket:
 - memóriában tárolt módosítások megosztása több példány között
+- teljes Calcite-integráció
+- beépített SQL-futtató továbbfejlesztése
+- rugalmasabb tranzakciókezelő
 - stb.
+
+lekérdezés, logikai, fizikai szint (a logikai az API)
+CODD 12
