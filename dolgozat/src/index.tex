@@ -2,7 +2,6 @@
     parspace,
     noindent,
     nohyp,
-    %final, % hide todos
 ]{elteiktdk}[2023/04/10]
 
 \usepackage[dvipsnames]{xcolor}
@@ -17,6 +16,8 @@
 \usepackage{pdflscape}
 \usepackage{fancyvrb}
 \usepackage[backend=bibtex,style=numeric]{biblatex}
+
+\usepackage{todonotes}
 
 \newcommand{\rhpad}{\vspace{0.6\baselineskip}}
 
@@ -48,6 +49,9 @@
 \begin{document}
 
 \documentlang{hungarian}
+
+\listoftodos
+\cleardoublepage
 
 \makecover
 \cleardoublepage
@@ -89,6 +93,8 @@ míg kikerüli azok fő hátrányait.
 
 
 \section{Egy mindennapi probléma}
+
+\todo[inline]{Hangsúlyozni és kifejteni, hogy a relációs algebrával itt nem foglalkozunk, és az integrált teszt PoC célú}
 
 A szoftverfejlesztési és -release-elési folyamatok lényeges előfeltevése,
 hogy az alkalmazás mint absztrakt entitás snapshot jellegű,
@@ -1085,6 +1091,8 @@ A következő két ábra szemlélteti az adatlekérés illetve értékkeresés f
     }
   \end{minipage}
 \end{figure}
+
+\todo[inline]{Függetlenül paraméterezhető és skálázható (a gyakoriságtáblázatot is ehhez)}
 
 \subsubsection{Kétfázisú értékkiosztás gyakoriságtáblázattal}
 
