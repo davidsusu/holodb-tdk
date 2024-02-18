@@ -338,6 +338,8 @@ Ennek fő okait az alábbiakban látom:
           nincs tehát nyomás jelentősen más típusú termékkel való kísérletezésre
 \end{itemize}
 
+\todo[inline]{Nagytáblázat: az egész nem kell, szövegesen úgyis le volt írva előtte (kérdés, hogy mindenáron kellenek-e táblázatok)}
+
 A következő táblázat összehasonlítja az új megközelítés és a már említett megoldások fő jellemzőit:
 
 \newcommand{\comptableleftwidth}{3.2cm}
@@ -758,7 +760,7 @@ rendre visszaadott bájtokat használjuk.
 Gyakran egy adott értékkészlet elemeiből akarunk képezni egy $n$ hosszúságú rendezett listát.
 Az eloszlás (beleértve, hogy valamely érték egyáltalán előfordul-e)
 teljesen implementációfüggő lehet.
-Mivel az értékkészlet maga is egy $k$ hosszúsága lista,
+Mivel az értékkészlet maga is egy $k$ hosszúságú lista,
 a további leképezési kompozíciók szempontjából rugalmasabb,
 ha az értékindexeket, azaz a $[0..k)$ egész-intervallum számait tesszük a listába.
 
@@ -799,6 +801,8 @@ de akár közvetlenül is alkalmazhatjuk egy diszkrét lineáris vetítéssel.
 \subsection{A \texttt{Permutation} és implementációi}
 
 Gyorsan számítható invertálható permutációk például modulo szorzásból kiindulva valósíthatók meg.
+
+\todo[inline]{Permutációk: egyszerűen a Feiste-háló rugalmasságával, teljesen kontrollálható paramétereivel, sokrétű skálázhatóságával érvelni}
 
 Költségesebb, de erősen véletlenszerű összevisszaságot biztosító invertálható permutációk
 különféle kriptográfiai módszerekkel állíthatók elő.
