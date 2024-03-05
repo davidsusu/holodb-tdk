@@ -1,0 +1,40 @@
+Milyen adatokra vonatkozó szempontokat tartasz legfontosabbnak(/rangsor) egy unit/integrációs/stb. teszt esetében jelenlegi munkakörödben/általában?
+éles adatok felhasználása nélkül előállítható
+internális és externális szempontok:
+- kis tárhelyigény
+- kis memóriaigény
+- könnyen/átláthatóan konfigurálható
+- skálázható
+- terhelhető
+- könnyen replikálható (read-only)
+- load-balance-olható (writeable)
+- lekérdezési konzisztencia
+- anonim
+- gyorsan elindul
+- gyorsan reagál (query-futtstás)
+- sok SQL feature
+- SQL conformance modes (strict/specific/lenient)
+- tooling
+    - automatikus generálás létező adatbázisból
+    - adatbázis renderelése
+    - JDBC, java connection etc.
+    - cli repl
+    - gui
+- az adatok jó minőségűek
+    - megfelelnek néhány alapvető típuskövetelménynek
+    - állítható formátum-követelmények (range, regex, stb.)
+    - általános statisztikai szempontok is állíthatók
+    - korrelációs szempontok is állíthatók
+    - egyedi működést támogat
+- gyorsan tanulható
+- szabványos interfészei vannak
+- open-source
+- támogatás van
+- aktív fejlesztés
+- akadémiai háttér
+- versenyszféra-próbát kiállt
+- 
+
+
+
+
