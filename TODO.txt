@@ -1,3 +1,12 @@
+# TODO
+
+## A pontos teendők
+
+TODO...
+
+
+## Régi
+
 lehetséges továbbfejlesztésnél ilyeneket:
 - memóriában tárolt módosítások megosztása több példány között
 - teljes Calcite-integráció
@@ -5,6 +14,19 @@ lehetséges továbbfejlesztésnél ilyeneket:
 - rugalmasabb tranzakciókezelő
 - rendszertáblák (INFORMATION_SCHEMA) (--> schema dekorátor)
 - stb.
+
+cache:
+a lekéréskor cache-elhetjük azokat a mezőértékeket, amelyekkel már dolgoztunk
+  például ha eleve az 'alma' értékre kerestem, akkor kár a végén minden sorra lekérni ezt az értéket, újra és újra végigfuttatva az értékkiosztási pipeline-t
+  és csak azokat kell a végére hagyni, amelyek csak a lekért mezők listájában
+  kellene valami szofisztikáltam átmeneti row objektum
+  ez a row objektum lehetne egy függőségi lánc más row objektumokhoz, és a lánc egyes elemei megoszthatók
+    például a lekért táblák illetve mezők, illetve expressionök, vagy akár konkrét értékek, például az 'alma' egy megosztott row-ban lennének
+    egy függő row hivatkozhat erre, és például lecserélhet egy bizonyos értéket (és ez is lehet megosztott)
+ez a megosztási lánc fontos, a dolgozatban is ki lehetne emelni, sőt a prezenetációban is
+(a prezentációból az általánosságok egy részét ki lehetne venni)
+
+mégiscsak csatolni kellene néhány algoritmust (monotonic, permutation, fasthash)
 
 lekérdezés, logikai, fizikai szint (a logikai az API)
 CODD 12

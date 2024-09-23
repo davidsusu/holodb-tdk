@@ -1,0 +1,192 @@
+\documentclass[
+    parspace,
+    noindent,
+    nohyp,
+]{elteiktdk}[2023/04/10]
+
+\usepackage[dvipsnames]{xcolor}
+\usepackage{graphicx}
+\usepackage{colortbl}
+\usepackage{svg}
+\usepackage{float}
+\usepackage{pgfplots}
+\usepackage{arydshln}
+\usepackage{fontawesome}
+\usepackage{picture,xcolor}
+\usepackage{pdflscape}
+\usepackage{fancyvrb}
+\usepackage[backend=bibtex,style=numeric]{biblatex}
+
+\usepackage{todonotes}
+
+\newcommand{\rhpad}{\vspace{0.6\baselineskip}}
+
+\newcommand{\thesispar}[1]{
+\vspace{1em}
+\hspace{0.7cm}\parbox[left][][c]{15.8cm}{\linespread{1.2}\selectfont #1}
+\vspace{1em}
+}
+
+\usepackage[newfloat]{minted}
+
+\title{HoloDB: szintetikus adatok on-the-fly szolgáltatása relációs adatbázisként}
+\date{2024}
+\author{Horváth Dávid \\ {\small\href{mailto:horvathdown@student.elte.hu}{horvathdown@student.elte.hu}} }
+\degree{Programtervező Informatikus BSc}
+
+\supervisor{Dr. Vincellér Zoltán}
+\affiliation{Mesteroktató}
+
+\university{Eötvös Loránd Tudományegyetem}
+\faculty{Informatikai Kar}
+\department{Információs Rendszerek Tanszék}
+\city{Budapest}
+\logo{elte_cimer_szines}
+
+
+\addbibresource{references.bib}
+
+\begin{document}
+
+\documentlang{hungarian}
+
+\listoftodos
+\cleardoublepage
+
+\makecover
+\cleardoublepage
+
+\maketitle
+
+\tableofcontents
+\cleardoublepage
+
+
+\begin{abstract}
+ABSTRACT
+\end{abstract}
+
+
+
+\chapter{STORAGE API}
+
+\section{ARCHITEKTÚRA}
+
+\section{REFERENCIA-IMPLEMENTÁCIÓK}
+
+\subsection{KÉTLÉPÉSES ÉRTÉKKIOSZTÁS}
+
+\subsection{PERMUTÁCIÓK}
+
+A \texttt{Permutation} interfész megvalósításához olyan eljárást keresünk, amellyel változó (és akár óriás) tartományon értelmezett,
+seed szerint variálható permutációfüggvény és annak inverze előáll, ahol mindkét függvény hatékony.
+
+\subsubsection{EGYSZERŰ}
+
+Triviális implementációként használhatjuk egyszerűen az azonosságfüggvényt:
+
+$$
+P_{id}(i) = i (0 \leq i < n)
+$$
+
+Gyorsan számolható, de ránézésre már jó keveredést adó permutációt nyerünk, ha kihasználjuk, hogy az $ai \equiv p \pmod{n}$ lineáris kongruencia
+$i$-re és $p$-re nézve egy permutációt ad, ha $a$ és $n$ relatív prímek:
+
+$$
+P_n(a,b)(i) = ai + b \mod n
+$$
+
+Az $a$ és $b$ számot előre, a seed alapján határozzuk meg.
+Az $a$ szám relatív prím kell legyen $n$-re nézve, amit úgy érünk el, hogy ciklusban az euklideszi algoritmussal ellenőrizzük, hogy a legnagyobb közös osztójuk 1-e,
+és amíg nem, addig meghívjuk a számot tároló \texttt{LargeInteger} példány \texttt{nextProbablePrime()} metódusát az új jelölt lekéréséhez.
+Ez a háttérben a \texttt{BigInteger} osztály ugyanilyen nevű metódusát hívja, amely a Java beépített heurisztikus megoldása a következő valószínű prím megkeresésére.
+Nekünk csak egy relatív prím kell, tehát nincs szükség valódi prímtesztre, elég a gyors heurisztika és aztán a legnagyobb közös osztó ellenőrzése.
+
+\subsubsection{FEISTEL}
+
+Az invertálható, változtatható méretű, seed alapján újrakeverhető permutációk könnyen analógiába állíthatók kriptográfiai titkosítófüggvényekkel.
+Ezek általában dekódolhatóak, változtatható blokkméretűek és kulcs alapján újrakeverhetőek.
+Felmerül a gondolat, hogy közvetlenül egy ilyen kriptográfiai módszert alkalmazzunk a permutáció megvalósításához.
+Mindenképpen olyan megoldásra van szükség, amelynél a blokkméret tetszőlegesen megadható, és kellően flexibilis, skálázható.
+
+A Feistel-hálózatok pontosan ilyenek, és emiatt gyakran használják is őket összetett titkosító eljárások keretrendszereként.
+A Fesitel-hálózat egy többkörös eljárás, ahol minden körben az adat egyik felének bitjeit módosítjuk.
+Ez alapesetben megköveteli a páros blokkméretet, de mindjárt kitérek arra, hogyan lehet ezen enyhíteni.
+
+Az egyes körökben felváltva a bitsorozat bal illetve jobb oldali felét változtatjuk; nevezzük ezt célhelynek, a másik fél tartalmát pedig forrásbiteknek.
+A kör abból áll, hogy a forrásbitekre meghívunk egy az adott körhöz dedikált hossztartó hash-függvényt,
+és az így kapott eredményt XOR-ral ráfésüljük a célhelyre.
+Vegyük észre, hogy ez reverzibilis művelet (bármi legyen is a hash-függvény), ugyanis ha újra alkalmazzuk, az eredeti bitsorozatot kapjuk vissza.
+Tehát a Feistel-hálózattal kapott kód visszafejtése úgy történik, hogy a lépéseket visszafelé újra végrehajtjuk.
+Általában nem szükséges, hogy az egyes körökhöz különböző hash-függvényt használjunk,
+számunkra bőven elég, ha a páros és páratlan körökhöz eltérő függvényt alkalmazunk (szigorúan még ez sem lenne szükséges).
+
+A páros blokkméret követelménye enyhíthető a következőképpen.
+Páratlan blokkméret esetén adjunk még egy zéróval feltöltött bitet az adathoz.
+Ezzel biztosítjuk, hogy a jobb oldali bitmező is a megfelelő méretű legyen.
+Minden olyan kör végén, ahol a jobb felet írtuk felül, az utolsó bitet nullázzuk.
+A legvégén pedig csak az utolsó bit nélküli részt adjuk vissza.
+Az utolsó bit ekkor nem befolyásolja a számítást, tehát a dekódolás is determinisztikus marad.
+Ha egyúttal páros számú kört követelünk meg,
+akkor az utolsó kör végére garantáltan ugyanabba a fázisba kerülünk, mint az első kör kezdete előtt;
+vagyis a dekódolás folyamata teljesen egyezni fog az elkódolással, ami egyszerűsíti az eljárást.
+
+\todo[inline]{kell egyáltalán a páros számú kör követelménye?}
+
+\todo[inline]{algoritmust csatolni}
+
+Persze, még ha a páros blokkméret követelményét így sikerült is eliminálni,
+továbbra is adott a probléma, hogy az $n$ blokkmérethez mindig $2^n$ méretű permutáció tartozik.
+Vagyis, ha nem csak 2-hatvány méretű permutációkat akarunk támogatni, méretigazítás szükséges.
+Ezt a rejection sampling technika alkalmazásával érjük el.
+Az adott $n$ mérethez olyan veszük azt a legkisebb $N$ 2-hatványt, amely $n$-nél nem kisebb.
+Amikor egy adott $i$ értékre olyan $p$-t kapunk, amelyre $p \geq n$ ($p < N$),
+akkor újra meghívjuk a permutáló függvényt $p$-re.
+Addig ismételjük a hívást, míg végre $n$-nél kisebb szám nem születik.
+
+Itt érdemes megjegyezni, hogy más implementációknál a rejection sampling esetleg nem hatékony,
+de pontosan ezért vezettük be a $resized(newSize)$ metódust magán a $Permutation$ interfészen.
+Így minden implementáció maga döntheti el, hogyan kell átméretezni.
+Extrém példa: ha a $P_{+1}(i) = i + 1 \mod N$ permutációt $n$-re kell átméreteznünk,
+akkor $i = n$ esetén $N - n$ számú extra iterációt kellene végrehajtani, ami nagy méret esetén rendkívül költséges.
+Helyette viszont egyszerűen áttérhetünk modulo $n$-re: $P_{+k}(k)(i) = i + k \mod n$.
+
+\subsubsection{XXXX}
+
+\todo[inline]{egy trükkös saját permutáció, ami elég jó szórást ad (ha sikerül megoldani)}
+
+\subsection{HOSSZKORREKCIÓ (???)}
+
+Hello lorem ipsum.
+
+\pagebreak
+
+\appendix
+
+\phantomsection
+\addcontentsline{toc}{chapter}{\biblabel}
+\printbibliography[title=\biblabel]
+\cleardoublepage
+
+\phantomsection
+\addcontentsline{toc}{chapter}{\lstfigurelabel}
+\listoffigures
+\cleardoublepage
+
+\phantomsection
+\addcontentsline{toc}{chapter}{\lsttablelabel}
+\listoftables
+\cleardoublepage
+
+\chapter{Projektlinkek}
+
+\begin{itemize}
+    \item GitHub organization: \par \url{https://github.com/miniconnect/}
+    \item Használati példák: \par \url{https://github.com/miniconnect/general-docs/tree/main/examples}
+    \item HoloDB projekt: \par \url{https://github.com/miniconnect/holodb}
+    \item Docker Hub repository: \par \url{https://hub.docker.com/r/miniconnect/holodb/tags}
+    \item \texttt{LargeInteger} benchmark: \par \url{https://github.com/miniconnect/miniconnect-api/tree/master/projects/lang/src/jmh/java/hu/webarticum/miniconnect/lang}
+    \item HoloDB benchmark: \par \url{https://github.com/davidsusu/holodb-tdk/tree/main/benchmark}
+\end{itemize}
+
+\end{document}
