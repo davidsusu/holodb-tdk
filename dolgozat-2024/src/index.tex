@@ -114,9 +114,11 @@ A Fesitel-hálózat egy többkörös eljárás, ahol minden körben az adat egyi
 Ez alapesetben megköveteli a páros blokkméretet, de mindjárt kitérek arra, hogyan lehet ezen enyhíteni.
 
 Az egyes körökben felváltva a bitsorozat bal illetve jobb oldali felét változtatjuk; nevezzük ezt célhelynek, a másik fél tartalmát pedig forrásbiteknek.
-A kör abból áll, hogy a forrásbitekre meghívunk egy az adott körhöz dedikált hossztartó hash-függvényt,
+Egy-egy kör abból áll, hogy a forrásbitekre meghívunk egy az adott körhöz dedikált hossztartó hash-függvényt,
 és az így kapott eredményt XOR-ral ráfésüljük a célhelyre.
-Vegyük észre, hogy ez reverzibilis művelet (bármi legyen is a hash-függvény), ugyanis ha újra alkalmazzuk, az eredeti bitsorozatot kapjuk vissza.
+Vegyük észre, hogy az XOR művelet tulajdonságai miatt ez reverzibilis művelet (bármi legyen is a hash-függvény),
+ha újra alkalmazzuk, az eredeti bitsorozatot kapjuk vissza,
+és a forrásbitek még rendelkezésre állnak, mivel azokat ezen a ponton még nem írtuk felül.
 Tehát a Feistel-hálózattal kapott kód visszafejtése úgy történik, hogy a lépéseket visszafelé újra végrehajtjuk.
 Általában nem szükséges, hogy az egyes körökhöz különböző hash-függvényt használjunk,
 számunkra bőven elég, ha a páros és páratlan körökhöz eltérő függvényt alkalmazunk (szigorúan még ez sem lenne szükséges).
@@ -157,7 +159,9 @@ Helyette viszont egyszerűen áttérhetünk modulo $n$-re: $P_{+k}(k)(i) = i + k
 
 \subsection{HOSSZKORREKCIÓ (???)}
 
-Hello lorem ipsum.
+\subsection{HASH-FÜGGVÉNYEK}
+
+\todo[inline]{Utalni a Fesitel-hálózatban (és egyebütt) történt használatra}
 
 \pagebreak
 
