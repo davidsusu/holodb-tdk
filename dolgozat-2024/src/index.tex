@@ -123,13 +123,13 @@ Tehát a Feistel-hálózattal kapott kód visszafejtése úgy történik, hogy a
 Általában nem szükséges, hogy az egyes körökhöz különböző hash-függvényt használjunk,
 számunkra bőven elég, ha a páros és páratlan körökhöz eltérő függvényt alkalmazunk (szigorúan még ez sem lenne szükséges).
 
-A páros blokkméret követelménye enyhíthető a következőképpen.
-Páratlan blokkméret esetén adjunk még egy zéróval feltöltött bitet az adathoz.
-Ezzel biztosítjuk, hogy a jobb oldali bitmező is a megfelelő méretű legyen.
-Minden olyan kör végén, ahol a jobb felet írtuk felül, az utolsó bitet nullázzuk.
+A Feistel-hálózatokkal való kísérletezés során rájöttem, hogy a páros blokkméret követelménye enyhíthető a következőképpen.
+Páratlan blokkméret esetén vegyünk még egy zéró bitet az adat végéhez,
+amivel biztosítjuk, hogy a jobb oldali bitmező is a megfelelő méretű legyen.
+Minden olyan kör végén, ahol a jobb oldali biteket írtuk felül, az utolsó bitet ezután nullázzuk.
 A legvégén pedig csak az utolsó bit nélküli részt adjuk vissza.
 Az utolsó bit ekkor minden művelet előtt és után is fixen zéró,
-ami visszafelé haladva ugyanúgy teljesul, tehát a dekódolás is determinisztikus marad.
+ami természetesen visszafelé haladva ugyanúgy teljesül, tehát a dekódolás is determinisztikus marad.
 Ha egyúttal páros számú kört követelünk meg,
 akkor az utolsó kör végére garantáltan ugyanabba a fázisba kerülünk, mint az első kör kezdete előtt;
 vagyis a dekódolás folyamata teljesen egyezni fog az elkódolással, ami egyszerűsíti az eljárást.
@@ -160,6 +160,8 @@ Helyette viszont egyszerűen áttérhetünk modulo $n$-re: $P_{+k}(k)(i) = i + k
 \subsubsection{XXXX}
 
 \todo[inline]{egy trükkös saját permutáció, ami elég jó szórást ad (ha sikerül megoldani)}
+
+\todo[inline]{bitkeverés, kétfelől átfedő 2-hatványos permutálás stb.}
 
 \subsection{HOSSZKORREKCIÓ (???)}
 
