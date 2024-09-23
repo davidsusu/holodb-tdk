@@ -123,7 +123,7 @@ Tehát a Feistel-hálózattal kapott kód visszafejtése úgy történik, hogy a
 Általában nem szükséges, hogy az egyes körökhöz különböző hash-függvényt használjunk,
 számunkra bőven elég, ha a páros és páratlan körökhöz eltérő függvényt alkalmazunk (szigorúan még ez sem lenne szükséges).
 
-A Feistel-hálózatokkal való kísérletezés során rájöttem, hogy a páros blokkméret követelménye enyhíthető a következőképpen.
+A Feistel-hálózatokkal való kísérletezés során rájöttem,hogy a páros blokkméret követelménye enyhíthető a következőképpen.
 Páratlan blokkméret esetén vegyünk még egy zéró bitet az adat végéhez,
 amivel biztosítjuk, hogy a jobb oldali bitmező is a megfelelő méretű legyen.
 Minden olyan kör végén, ahol a jobb oldali biteket írtuk felül, az utolsó bitet ezután nullázzuk.
@@ -145,9 +145,12 @@ továbbra is adott a probléma, hogy az $n$ blokkmérethez mindig $2^n$ méretű
 Vagyis, ha nem csak 2-hatvány méretű permutációkat akarunk támogatni, méretigazítás szükséges.
 Ezt a rejection sampling technika alkalmazásával érjük el.
 Az adott $n$ mérethez vesszük azt a legkisebb $N$ 2-hatványt, amely $n$-nél nem kisebb.
-Amikor egy adott $i$ értékre a Feistel-hálótól olyan $p$ eredményt kapunk, amelyre $p \geq n$ ($p < N$),
-akkor újra meghívjuk a permutáló függvényt $p$-re.
+Amikor egy adott $i$ értékre a Feistel-hálótól az intervallumon kívül eső $p$-t kapunk,
+azaz amelyre $p \geq n$ ($p < N$), akkor újra meghívjuk a permutáló függvényt $p$-re.
 Addig ismételjük a hívást, míg végre $n$-nél kisebb szám nem születik.
+A páratlan blokkméret lehetősége a hatékonyság szempontjából is fontos,
+mivel jelentősen csökkentheti az intervallumon kívülre esés esélyét,
+és így a Feistel-hálózatra történő hívások számát.
 
 Itt érdemes megjegyezni, hogy más implementációknál a rejection sampling potenciálisan nem hatékony,
 de pontosan ezért vezettük be a $resized(newSize)$ metódust magán a $Permutation$ interfészen.
