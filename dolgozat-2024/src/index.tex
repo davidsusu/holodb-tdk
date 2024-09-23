@@ -128,12 +128,15 @@ Páratlan blokkméret esetén adjunk még egy zéróval feltöltött bitet az ad
 Ezzel biztosítjuk, hogy a jobb oldali bitmező is a megfelelő méretű legyen.
 Minden olyan kör végén, ahol a jobb felet írtuk felül, az utolsó bitet nullázzuk.
 A legvégén pedig csak az utolsó bit nélküli részt adjuk vissza.
-Az utolsó bit ekkor nem befolyásolja a számítást, tehát a dekódolás is determinisztikus marad.
+Az utolsó bit ekkor minden művelet előtt és után is fixen zéró,
+ami visszafelé haladva ugyanúgy teljesul, tehát a dekódolás is determinisztikus marad.
 Ha egyúttal páros számú kört követelünk meg,
 akkor az utolsó kör végére garantáltan ugyanabba a fázisba kerülünk, mint az első kör kezdete előtt;
 vagyis a dekódolás folyamata teljesen egyezni fog az elkódolással, ami egyszerűsíti az eljárást.
 
 \todo[inline]{kell egyáltalán a páros számú kör követelménye?}
+
+\todo[inline]{volt már tárgyalva ez a speciális padding technika?}
 
 \todo[inline]{algoritmust csatolni}
 
@@ -141,16 +144,17 @@ Persze, még ha a páros blokkméret követelményét így sikerült is eliminá
 továbbra is adott a probléma, hogy az $n$ blokkmérethez mindig $2^n$ méretű permutáció tartozik.
 Vagyis, ha nem csak 2-hatvány méretű permutációkat akarunk támogatni, méretigazítás szükséges.
 Ezt a rejection sampling technika alkalmazásával érjük el.
-Az adott $n$ mérethez olyan veszük azt a legkisebb $N$ 2-hatványt, amely $n$-nél nem kisebb.
-Amikor egy adott $i$ értékre olyan $p$-t kapunk, amelyre $p \geq n$ ($p < N$),
+Az adott $n$ mérethez vesszük azt a legkisebb $N$ 2-hatványt, amely $n$-nél nem kisebb.
+Amikor egy adott $i$ értékre a Feistel-hálótól olyan $p$ eredményt kapunk, amelyre $p \geq n$ ($p < N$),
 akkor újra meghívjuk a permutáló függvényt $p$-re.
 Addig ismételjük a hívást, míg végre $n$-nél kisebb szám nem születik.
 
-Itt érdemes megjegyezni, hogy más implementációknál a rejection sampling esetleg nem hatékony,
+Itt érdemes megjegyezni, hogy más implementációknál a rejection sampling potenciálisan nem hatékony,
 de pontosan ezért vezettük be a $resized(newSize)$ metódust magán a $Permutation$ interfészen.
 Így minden implementáció maga döntheti el, hogyan kell átméretezni.
 Extrém példa: ha a $P_{+1}(i) = i + 1 \mod N$ permutációt $n$-re kell átméreteznünk,
-akkor $i = n$ esetén $N - n$ számú extra iterációt kellene végrehajtani, ami nagy méret esetén rendkívül költséges.
+akkor rejection sampling módszerrel $i = n$ esetén $N - n$ számú extra iterációt kellene végrehajtani,
+ami nagy méret esetén rendkívül költséges.
 Helyette viszont egyszerűen áttérhetünk modulo $n$-re: $P_{+k}(k)(i) = i + k \mod n$.
 
 \subsubsection{XXXX}
