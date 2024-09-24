@@ -76,12 +76,51 @@ ABSTRACT
 
 \subsection{KÉTLÉPÉSES ÉRTÉKKIOSZTÁS}
 
-\subsection{PERMUTÁCIÓK}
+\subsection{A monoton méretigazítás megvalósítása}
+
+A \texttt{Monotonic} interfész példánya egy függvényt reprezentál,
+amely az első $n$ nemnegatív egész számot értékkészletként nem monoton növekvő módon hozzárendeli az első $N$ nemnegatív egész számhoz.
+Ez arra használható, hogy egy $n$ elemű, rendezetten tárolt értékkészetet egy $N$ méretű adatbázistábla oszlopához igazítsunk méretben,
+Tehát a példány $M(i) = m$ függvényt valósítja meg, ahol $0 \leq i < N$ illetve $0 \leq m < n$, továbbá $i_1 < i_2 \implies M(i_1) < M(i_2)$.
+Ugyanakkor indexelt elérést is biztosít, azaz lekérdezhető, hogy egy adott érték mely indexsávhoz rendelődik,
+azaz megvalósítja az $M^{-1}(m) = [i, j)$ függvényt is, ahol $0 \leq m < n$ illetve $0 \leq i \leq j \leq N$, és teljesülnek az alábbiak:
+
+\begin{itemize}
+\item $x < i \implies M(x) < M(i)$
+\item $i \leq x < j \implies M(i) \leq M(x) < M(j)$.
+\item $i < x \implies M(i) < M(x)$
+\end{itemize}
+
+Az indexelt elérés az \texttt{indicesOf(value)} metóduson keresztül biztosított, amely egy \texttt{Range} objektumot ad vissza.
+De ennek egy metódusnak van egy olyan variánsa is, amely maga is egy \texttt{Range} példányt vár, és értelemszerűen általánosítja az előbbit.
+
+\subsubsection{Triviális implementációk}
+
+\todo[inline]{Monotonic: triviális implementációk}
+
+\todo[inline]{Monotonic: egyszerű diszkrét lineáris interpoláció: általában ez is elég, a permutáció majd úgyis elkeveri}
+
+\subsubsection{Szimulált mintavétel}
+
+\todo[inline]{Monotonic: szimulált mintavétel (jó ez a cím?)}
+
+\todo[inline]{Monotonic: szimulált mintavétel: a lényeg, hogy bizonyos mértékű véletlenszerűséget ad}
+
+\subsubsection{Gyakoriságtáblázat használata}
+
+A fenti implementációk mindegyike általánosítható úgy, hogy figyelembe vegyen egy gyakoriságtáblázatot,
+mely az értékkészlet elemeihez azok relatív gyakoriságát rendeli.
+
+\todo[inline]{Monotonic: gyakoriságtáblázat}
+
+\subsection{Permutációk megvalósítása}
 
 A \texttt{Permutation} interfész megvalósításához olyan eljárást keresünk, amellyel változó (és akár óriás) tartományon értelmezett,
 seed szerint variálható permutációfüggvény és annak inverze előáll, ahol mindkét függvény hatékony.
 
-\subsubsection{EGYSZERŰ}
+Az inverz függvényhívás az \texttt{indexOf(value)} metódus biztosítja.
+
+\subsubsection{Triviális implementációk}
 
 Triviális implementációként használhatjuk egyszerűen az azonosságfüggvényt:
 
@@ -134,11 +173,11 @@ Ha egyúttal páros számú kört követelünk meg,
 akkor az utolsó kör végére garantáltan ugyanabba a fázisba kerülünk, mint az első kör kezdete előtt;
 vagyis a dekódolás folyamata teljesen egyezni fog az elkódolással, ami egyszerűsíti az eljárást.
 
-\todo[inline]{kell egyáltalán a páros számú kör követelménye?}
+\todo[inline]{Feistel: kell egyáltalán a páros számú kör követelménye?}
 
-\todo[inline]{volt már tárgyalva ez a speciális padding technika?}
+\todo[inline]{Feistel: volt már tárgyalva ez a speciális padding technika?}
 
-\todo[inline]{algoritmust csatolni}
+\todo[inline]{Feistel: algoritmust csatolni}
 
 Persze, még ha a páros blokkméret követelményét így sikerült is eliminálni,
 továbbra is adott a probléma, hogy az $n$ blokkmérethez mindig $2^n$ méretű permutáció tartozik.
@@ -151,6 +190,8 @@ Addig ismételjük a hívást, míg végre $n$-nél kisebb szám nem születik.
 A páratlan blokkméret lehetősége a hatékonyság szempontjából is fontos,
 mivel jelentősen csökkentheti az intervallumon kívülre esés esélyét,
 és így a Feistel-hálózatra történő hívások számát.
+
+\subsubsection{Permutációk méretigazítása}
 
 Itt érdemes megjegyezni, hogy más implementációknál a rejection sampling potenciálisan nem hatékony,
 de pontosan ezért vezettük be a $resized(newSize)$ metódust magán a $Permutation$ interfészen.
@@ -165,8 +206,6 @@ Helyette viszont egyszerűen áttérhetünk modulo $n$-re: $P_{+k}(k)(i) = i + k
 \todo[inline]{egy trükkös saját permutáció, ami elég jó szórást ad (ha sikerül megoldani)}
 
 \todo[inline]{bitkeverés, kétfelől átfedő 2-hatványos permutálás stb.}
-
-\subsection{Monoton méretigazítás}
 
 \subsection{HASH-FÜGGVÉNYEK}
 
