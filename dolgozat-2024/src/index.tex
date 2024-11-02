@@ -279,7 +279,7 @@ Először a korlátlan repetíciót (\texttt{*}, \texttt{+} stb.) elmináljuk re
 \begin{enumerate}
     \item \texttt{$A$+} ~ $\longrightarrow$ ~ \texttt{$A$\{1,\}}
     \item \texttt{$A$\{$n$,\}} ~ $\longrightarrow$ ~ \textt{$A$\{$n$\}$A$*}
-    \item \texttt{$A$*} ~ $\longrightarrow$ ~ \texttt{$A$\{$c$\}} ~~~ (ahol $c$ előre definiált konstans)
+    \item \texttt{$A$*} ~ $\longrightarrow$ ~ \texttt{$A$\{$c$\}} ~~~~~ (ahol $c$ előre definiált konstans)
 \end{enumerate}
 
 A fix repetíció egyszerű konkatenációvá alakul,
@@ -287,7 +287,7 @@ az opcionális repetíció kifejtése pedig a következő rekurzív módon tört
 
 \begin{enumerate}
     \item $R_1~=$ \texttt{$A$\{,1\}} ~ $\longrightarrow$ ~ \texttt{($A$|)}
-    \item $R_n~=$ \texttt{$A$\{,$n$\}} ~ $\longrightarrow$ ~ \texttt{($AR_{n-1}$|)} ~~~ (ahol $n>1$)
+    \item $R_n~=$ \texttt{$A$\{,$n$\}} ~ $\longrightarrow$ ~ \texttt{($AR_{n-1}$|)} ~~~~~ (ahol $n>1$)
 \end{enumerate}
 
 Az opcionális előfordulás (\texttt{?}) az $R_1$ esettel egyenlő.
