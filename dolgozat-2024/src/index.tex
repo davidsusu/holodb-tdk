@@ -274,24 +274,25 @@ A repetíciós operátorok explicite kifejtés által kerülnek visszavezetésre
 A kifejtés természetesen egyes esetekben lényegesen növeli a fa méretét a bemenethez képest.
 Ennek kioptimalizálásával most nem foglalkozom.
 
-Először a korlátlan repetíciót elmináljuk az rendre alábbi szabályokkal:
+Először a korlátlan repetíciót (\texttt{*}, \texttt{+} stb.) elmináljuk rendre az alábbi szabályokkal:
 
 \begin{enumerate}
-    \item \texttt{$A$+} ~ arr ~ \textt{$A$\{1,\}}
-    \item \texttt{$A$\{$n$,\}} ~ arr ~ \textt{$A$\{$n$\}$A$*}
-    \item \texttt{$A$*} ~ arr ~ \textt{$A$\{$c$\}} ~~~ (ahol $c$ előre definiált konstans)
+    \item \texttt{$A$+} ~ $\longrightarrow$ ~ \texttt{$A$\{1,\}}
+    \item \texttt{$A$\{$n$,\}} ~ $\longrightarrow$ ~ \textt{$A$\{$n$\}$A$*}
+    \item \texttt{$A$*} ~ $\longrightarrow$ ~ \texttt{$A$\{$c$\}} ~~~ (ahol $c$ előre definiált konstans)
 \end{enumerate}
 
-Az opcionális előfordulás az üres minta és az opcionális minta alternációjává alakul,
-a fix repetíció pedig egyszerű konkatenációvá.
-Az opcionális repetíció kifejtése pedig a következő rekurzív módon történik:
+A fix repetíció egyszerű konkatenációvá alakul,
+az opcionális repetíció kifejtése pedig a következő rekurzív módon történik:
 
 \begin{enumerate}
-    \item $R_1~=$ \texttt{$A${,1}} ~ arr ~ \textt{($A$|)} ~~~ (mint az opcionális előfordulás)
-    \item $R_n~=$ \texttt{$A${,$n$}} ~ arr ~ \textt{($A$~$R_{n-1}$|)} ~~~ (ahol $n>1$)
+    \item $R_1~=$ \texttt{$A$\{,1\}} ~ $\longrightarrow$ ~ \texttt{($A$|)}
+    \item $R_n~=$ \texttt{$A$\{,$n$\}} ~ $\longrightarrow$ ~ \texttt{($AR_{n-1}$|)} ~~~ (ahol $n>1$)
 \end{enumerate}
 
-Horgonyokat is implementálhatunk (például kezdet vagy szóhatár).
+Az opcionális előfordulás (\texttt{?}) az $R_1$ esettel egyenlő.
+
+Horgonyokat is implementálhatunk, mint például szövegvég (\texttt{\$}) vagy szóhatár \texttt{\\b}).
 Ezeket a kezdeti feldolgozáskor úgy tekintjük,
 mint az átementi üres csomópontokat, tehát elimináljuk őket,
 de közben megjegyezzük megjegyezzük és sorban kikényszerítjük a teljesülésüket.
