@@ -187,7 +187,7 @@ Az adott $n$ mérethez vesszük azt a legkisebb $N$ 2-hatványt, amely $n$-nél 
 Amikor egy adott $i$ értékre a Feistel-hálótól az intervallumon kívül eső $p$-t kapunk,
 azaz amelyre $p \geq n$ ($p < N$), akkor újra meghívjuk a permutáló függvényt $p$-re.
 Addig ismételjük a hívást, míg végre $n$-nél kisebb szám nem születik.
-A páratlan blokkméret lehetősége a hatékonyság szempontjából is fontos,
+A páratlan blokkméret megengedettsége a hatékonyság szempontjából is fontos,
 mivel jelentősen csökkentheti az intervallumon kívülre esés esélyét,
 és így a Feistel-hálózatra történő hívások számát.
 
@@ -211,7 +211,7 @@ Helyette viszont egyszerűen áttérhetünk modulo $n$-re: $P_{+k}(k)(i) = i + k
 
 \todo[inline]{Utalni a Fesitel-hálózatban (és egyebütt) történt használatra}
 
-\subsection{VIRTUÁLISÉRTÉKKÉSZLETEK}
+\subsection{VIRTUÁLIS ÉRTÉKKÉSZLETEK}
 
 \subsubsection{EGYSZERŰEK...}
 
@@ -219,11 +219,156 @@ Helyette viszont egyszerűen áttérhetünk modulo $n$-re: $P_{+k}(k)(i) = i + k
 
 \subsubsection{Reguláris kifejezések}
 
-\todo[inline]{nem kereshető: random reverse regex generátor beépítése}
+Véletlenszerű karakterláncok reguláris kifejezés alapján történő generálására
+számos könyvtár elérhető a Java környezethez
+(például a \textit{xeger} és a \textit{generex}).
+Ezek olyan automaták, melyek az állapotgráfot véletlenszerű választásokkal járják be.
+Ez a megközelítés önmagában nem alkalmas arra,
+hogy az összes illeszkedő karakterláncból álló virtuális értékkészletet
+a számunkra megfelelő módon implementálni lehessen vele.
+Nem tudjuk ugyanis lekérni a rendezett értékkészlet $n$-edik elemét,
+és nem tudjuk kikeresni, hogy adott érték mely pozíción található.
 
-\todo[inline]{trie használata: nem nagyon bonyolult}
+Nézzük most meg, hogyan tudjuk mégis implementáltni rendezett értékkészletet.
+Első megközelítésben a reguláris kifejezéssel kapcsolatban az alábbi megszorításokat tesszük:
 
-\todo[inline]{az előbbi általánosítása a háromszintű rendezéshez}
+\begin{itemize}
+    \item a reguláris kifejezés csak konstans karaktereket, karakterosztályokat, csoportokat és alternációt tartalmaz
+    \item a rendezés karakterenkénti, azaz nincs másodlagos, harmadlagos stb. összehasonlítási szempont
+\end{itemize}
+
+Ilyen megkötések mellett a reguláris kifejezéshez egyértelműen rendelhető egy
+irányított körmentes szógráf (DAWG),
+melyben egy érték nélküli kiinduló elemből érjük el a karaktereket reprezentáló csomópontokat,
+és kizárólag a szóvég csomópontokon (EOW) terminálhatunk,
+melyekből már nem érhető el további csomópont.
+A gráf tömöríthető úgy, hogy konstans karakterek helyett karakterosztályokat engedünk meg.
+Ekkor egy adott csomópontból elérhető csomópontok listájára az alábbiak érvényesek:
+
+\begin{itemize}
+    \item a lista elemei diszjunkt karakterosztályok
+    \item bármely listaelem minden tartalmazott karaktere későbbi, mint bármely megelőző elem bármely tartalmazott karaktere
+\end{itemize}
+
+\todo[inline]{egyszerű DAWG példa}
+
+A gráf lényegileg egy prefix fa, ahol egyes azonos részfákat újrahasznosítunk.
+Az újrahasznosítás miatt a fa tárhelyigénye a reguláris kifejezéshez képest lineáris.
+A szóvég csomópontok lesznek a fa levelei.
+A prefix fa könnyen felépíthető a reguláris kifejezés szintaxisfájából (AST)
+a következő módon:
+
+\todo[inline]{prefix fa algoritmusa (szövegesen és/vagy kóddal), kivételkezelés is}
+
+Rekurzív módon a fa minden csomópontjához könnyen hozzárendelhetjük
+a hozzá tartozó részfa leveleinek számát.
+Ez az információ már elegendő ahhoz, hogy kikeressük az $n$-edik elemet,
+illetve hogy megkeressük egy adott karakterlánc (megtalált vagy beillesztési) pozícióját,
+valamint hogy tetszőleges pozíciótól kezdve iteráljunk az illeszkedő karakterláncokon.
+
+\todo[inline]{iteráció stb. algoritmusa}
+
+Most pedig nézzük hogyan tudunk engedni a fenti megszorításokon.
+
+A repetíciós operátorok explicite kifejtés által kerülnek visszavezetésre a fentiekre.
+A kifejtés természetesen egyes esetekben lényegesen növeli a fa méretét a bemenethez képest.
+Ennek kioptimalizálásával most nem foglalkozom.
+
+Először a korlátlan repetíciót elmináljuk az rendre alábbi szabályokkal:
+
+\begin{enumerate}
+    \item \texttt{$A$+} ~ arr ~ \textt{$A$\{1,\}}
+    \item \texttt{$A$\{$n$,\}} ~ arr ~ \textt{$A$\{$n$\}$A$*}
+    \item \texttt{$A$*} ~ arr ~ \textt{$A$\{$c$\}} ~~~ (ahol $c$ előre definiált konstans)
+\end{enumerate}
+
+Az opcionális előfordulás az üres minta és az opcionális minta alternációjává alakul,
+a fix repetíció pedig egyszerű konkatenációvá.
+Az opcionális repetíció kifejtése pedig a következő rekurzív módon történik:
+
+\begin{enumerate}
+    \item $R_1~=$ \texttt{$A${,1}} ~ arr ~ \textt{($A$|)} ~~~ (mint az opcionális előfordulás)
+    \item $R_n~=$ \texttt{$A${,$n$}} ~ arr ~ \textt{($A$~$R_{n-1}$|)} ~~~ (ahol $n>1$)
+\end{enumerate}
+
+Horgonyokat is implementálhatunk (például kezdet vagy szóhatár).
+Ezeket a kezdeti feldolgozáskor úgy tekintjük,
+mint az átementi üres csomópontokat, tehát elimináljuk őket,
+de közben megjegyezzük megjegyezzük és sorban kikényszerítjük a teljesülésüket.
+A horgonynak ellentmondó gyermekelemeket eltávolítjuk,
+ha ezután nem marad gyermekelem, a teljesíthetetlen ágat jelző kivételt dobunk.
+
+\todo[inline]{példa}
+
+Az igazi nehézségek akkor kezdődnek,
+amikor elengedjük a karakterenkénti rendezés megszorítását.
+Erre például ékezetes karakterek vagy kis- és nagybetűk keveredése esetén lehet szükségünk.
+Ekkor ugyanis esetleg csak egy későbbi eltérés dönti el,
+hogy egy korábbi ékezet vagy nagybetűsség számít-e.
+Vagyis nem elegendő a karakterenkénti prefix-fa a rendezettség biztosításához.
+
+Megjegyzem, hogy továbbra is csak egy egységesített (nyelvfüggetlen) rendezési sémát tekintünk,
+és a többkarakteres betűk felismerésétől is eltekintünk.
+A Unicode Collation Algorithm (UCA) szabvány egy nyelvfüggő többszintű összehasonlítási sémát definiál,
+de ezek között van olyan általános séma is, mely tekinthető egy nyelvfüggetlen összehasonlításnak.
+Ennek egy egyszerűsített háromszintű változatát fogjuk alapul venni.
+
+Minden karaktert három komponens,
+nevezetesen az alapkarakter, a diakritikus jel és a kis-/nagybetűsség együttesének tekintünk.
+Alapkarakternek a karakter diakritikus jelektől megfosztott kisbetűs alakját nevezzük.
+Tehát például az '\texttt{Á}' karakter az '\texttt{a}' alapkarakterre,
+a '\texttt{´}' ékezetre és a nagybetűsségre bontható.
+Komponensenként egyértelmű és független lesz a rendezés,
+ennek konkrét szabályait most nem részletezem.
+
+Maguk a karakterláncok is három rétegre esnek szét, és komponensenként hasonlítandók össze.
+Egy későbbi komponens csak akkor vizsgálandó,
+ha az azt megelőző komponensek a két karakterláncban egyeznek.
+A pozícionált diakritikus jeleket és nagybetűsség-jelzéseket speciális karaktereknek is tekinthetjük,
+ekkor lényegileg karakterenkénti összehasonlításra is visszavezethetjük az eljárást.
+Például:
+
+\begin{verbatim}
+AL      =   al   __   __     =   al<U:0><U:1>
+alom    =   alom ____ ____   =   alom
+Alom    =   alom ____ U___   =   alom<U:0>
+álom    =   alom ´___ ____   =   alom<D:´:0>
+BAL     =   bal  ___  UUU    =   bal<U:0><U:1><U:2>
+báL     =   bal  _´_  __U    =   bal<D:´:1><U:2>
+\end{verbatim}
+
+A jobb oldalon a karakterláncoknak egy normálalakja látható,
+mely csak az alapkarakterek után csak a módosításokat tartalmazza,
+és a kisbetűsséget alapértelmezettnek tekinti.
+Természetesen másfajta normálalakot is választhatunk (például ahol a nagybetűsség az alapértelmezett),
+akár a reguláris kifejezés tulajdonságaitól függően,
+de mindenképpen rendelkeznünk kell bizonyos, egymással konzisztens algoritmusokkal,
+amelyek együtt implementálják az értékkészlethez tartozó rendezési kollációt:
+
+\begin{enumerate}
+    \item karakterláncot és normálalakot egymásba alakító függvényekkel
+    \item normálalakban lévő karakterláncokat összehasonlító komparátorral
+    \item reguláris kifejezést a normálalak szerinti prefix-gráfba alakító algoritmussal
+    \item a prefix-gráfot bejáró, kereső stb. algoritmusokkal
+\end{enumerate}
+
+\todo[inline]{a háromrétegű prefix-fa leírása}
+% Az ötlet az, hogy egyetlen prefix-fa helyett hármat hozunk létre.
+% A harmadik a normál prefix-fa, mely az eredeti karaktereket tartalmazza, karakterenként rendezve.
+% A második ennek topológiai egyszerűsítése úgy, hogy a kis-nagybetű különbségeket összevonjuk.
+% Ahol az összevonásnál azonos gyermekelemeket találunk, azok közül csak az egyiket tartjuk meg,
+% de beiktatunk egy szorzó csomópontot (TODO: megmagyarázni).
+% Az első fa szintén a normál prefix-fa egyszerűsítése,
+% de itt minden azonos alapkarakterű karaktert összevonunk.
+% A csomópontok számításánál figyelembe kell venni a szorzókat,
+% amelyek felszorozzák a részfák levél-számát.
+
+% az algoritmus:
+    % - az első fát normál módon érjük el, azonban a leveleknél 1-nél nagyobb számosságok fognak maradni a szorzók miatt
+    % - a második fát le kell szűkíteni az alapkarakterek szerint, ez alternatív számosságokat fog adni, ez alapján tudjuk számolni az alapkarater-fán belüli pozíciókat, itt is 1-nél nagyobb számosságokra lyukadhatunk ki
+    % - a harmadik fát szintén szűkítjük a kisbetűs karakterek szerint
+% a számosságok csak az érintett karakterekre számítandók, és cache-elhetők
+% így elég hatékony algoritmust kapunk
 
 \pagebreak
 
