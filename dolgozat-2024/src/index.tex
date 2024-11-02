@@ -292,14 +292,15 @@ az opcionális repetíció kifejtése pedig a következő rekurzív módon tört
 
 Az opcionális előfordulás (\texttt{?}) az $R_1$ esettel egyenlő.
 
-Horgonyokat is implementálhatunk, mint például szövegvég (\texttt{\$}) vagy szóhatár \texttt{\\b}).
+Horgonyokat is implementálhatunk,
+mint például szövegvég (\texttt{\$}) vagy szóhatár (\texttt{{\textbackslash}b}).
 Ezeket a kezdeti feldolgozáskor úgy tekintjük,
 mint az átementi üres csomópontokat, tehát elimináljuk őket,
 de közben megjegyezzük megjegyezzük és sorban kikényszerítjük a teljesülésüket.
 A horgonynak ellentmondó gyermekelemeket eltávolítjuk,
 ha ezután nem marad gyermekelem, a teljesíthetetlen ágat jelző kivételt dobunk.
 
-\todo[inline]{példa}
+\todo[inline]{prefix-fa példa}
 
 Az igazi nehézségek akkor kezdődnek,
 amikor elengedjük a karakterenkénti rendezés megszorítását.
