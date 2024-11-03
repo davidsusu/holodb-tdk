@@ -69,6 +69,224 @@ ABSTRACT
 % TODO: a bevezetőben utalni mindenféle korábbi generáló-módszerre
 % PI-jegyek, fraktálok stb.
 
+% TODO: https://www.cs.cmu.edu/afs/cs/academic/class/15451-s06/www/lectures/scrabble.pdf
+
+\chapter{INTRO}
+
+\section{Bevezetés}
+
+
+\section{Koncepció}
+
+\subsection{Konfiguráció}
+
+% TODO: rendesen szövegezni, ide tenni a konfigurációs részt az eredetiből
+
+A virtuális adatbázis felépítése a felhasználó számára legegyszerűbben
+egy konfigurációs fájl segítségével történik,
+melyben megadja az adatbázis-séma egyes elemeit, megkötéseit.
+Az oszlopok tartalmának keverési módja és értékkészlete kényelmesen állítható,
+például előre adott értéklistákkal, reguláris kifejezéssel,
+vagy akár a felhasználó által implementált Java-osztállyal.
+A virtuális adatbázis Dockerben való indításához vagy beágyazott használatához
+lényegileg elég egy ilyen konfigurációs fájl.
+
+% TODO: ide a konfigfájl-példát
+
+\subsection{ALKALMAZHATÓSÁG}
+
+% ha mindezt meg tudjuk valósítani...
+
+\todo[inline]{előnyöket itt tárgyalni: azonnali indulás, minimális memóriafogyasztás}
+
+% TODO: azonnali indulás: lazy init-en még dolgozni!
+
+\subsection{ÚJONNAN MEGNYÍLÓ LEHETŐSÉGEK}
+
+\todo[inline]{serverless}
+
+\todo[inline]{dev mode}
+
+\todo[inline]{JPA annotációk}
+
+\todo[inline]{letapogatás és renderelés, AI általi generálás}
+
+
+
+
+
+
+\chapter{ALAPOK}
+
+\section{A nagy illúzió: adatok a semmiből}
+
+Olyan adattár felépítésére vállalkozunk,
+mely egy \textbf{tetszőlegesen nagy méretű, koherens és kereshető} adattárat imitál,
+miközben valójában mindebből semmi sem létezik, az egész mintegy illúzió.
+Hogy az illúziót elérjük, egyfelől meg kell találni azt az univerzális modellt,
+mely a lehető legrugalmasabb felhasználásra alkalmassá teszi;
+másrészt a cél eléréséhez, mint majd látjuk, apró eszközök egész tárát kell összeverbuválni,
+akár olyan távol eső területekről mint az automataelmélet vagy a kriptográfia.
+
+\todo[inline]{itt leírni az alapötletet a lehető legvilágosabban, ez lesz a legtömörebb, fő bekezdés}
+
+Alapvetésként egy \textbf{relációs adatbázist leíró API}-t fogunk definiálni.
+Aligha érdemes más megközelítést választani,
+hiszen a relációs adatmodell nem csak tradicionálisan megkerülhetetlen
+és máig a legnépszerűbb adattárolási módszer,
+de egyúttal közös nevezőként szolgál bármely más modellhez.
+Egy relációs struktúrával gyakorlatilag bármilyen interpretált adathalmazt le tudunk írni,
+mivel a relációs séma általános normalizációs segédeszköz.
+
+A legtöbb alkalmazásban van valamilyen fokális entitástípus,
+mely alapvető szerepet tölt be az architektúrában
+(mint például egy könyvtári katalógusban a könyv).
+Célszerű lehet egy ilyet esetünkben is meghatározni,
+hogy súlypontként, viszonyulási alapként, segítse az architektúrában való eligazodást.
+A tervezés elején hamar arra a megállapításra jutottam,
+hogy esetünkben a legalapvetőbb objektum az \textbf{\textit{értéklista}}.
+Ennek legegyszerűbb esete egy \textit{értékkészlet},
+az API-ban megjelenő esete pedig egy-egy \textit{oszlop} értéklistája.
+Az oszlop alatt azonos típusú adatokat találunk,
+az alapfeladat mindig ezen adatok értékkészletének megadása lehet.
+Általában egy index is egy (esetleg néhány) konkrét oszlophoz köthető.
+
+Természetesen hamar ki kell lépnünk a szigorú oszlop-orientáltságból.
+Lehetnek például összefüggések egy táblán belüli oszlopok között.
+Ezt azonban még mindig egyszerűbb az oszlopos megközelítés megfelelő kiterjesztésével elérni,
+mintsem áttérni valamiféle rekordonkénti generálásra.
+Úgy is mondhatjuk, hogy az oszlopok alatti mezők jó jelöltek arra, hogy ``világszeletek'' legyenek,
+míg egész rekordok nem.
+
+Lehetnek továbbá megkötések táblák között is.
+Ezek kezelése is könnyen elvégezhető az oszlopos alapvetésre építve.
+Az egyoszlopos idegen kulcsoknál például csak annyit kell biztosítani,
+hogy a hivatkozó oszlop értékkészletét a hivatkozott oszlop tartalma adja.
+
+A mindenkori módszert, amivel egy oszlop értéklistáját biztosítjuk,
+\textit{értékkiosztás}nak fogom nevezni.
+A virtuális értékkiosztások olyan függvényt valósítanak meg,
+mellyel egy adott mező értéke determinisztikusan előállítható.
+De az igazán lényeges kihívást az jelenti, hogy szeretnénk,
+hogy az értéklistában keresni is tudnánk, méghozzá hatékonyan.
+Lentebb elsősorban olyan megoldásokat fogok bemutatni,
+amelyek teljesítik ezt az erősebb feltételt is,
+azaz \textbf{kereshető virtuális értékkiosztások}.
+
+A legtöbb oszlop értékkészlete jól behatárolható.
+A tényleges értékek egy efölötti multihalmazt alkotnak,
+néha ehhez valamilyen statisztikai megkötés is tartozik ($NULL$-ok száma, értékgyakoriság stb.).
+Továbbá a multihalmaz valamilyen konkrét sorrendben helyezkedik el az oszlop alatt.
+Itt jegyzem meg, hogy a tábla rekordjait sorrendezettnek fogom tekinteni:
+azonos táblabeli valamely két oszlop értéklistájából kiválasztott egy-egy mező
+azonos rekordhoz tartozik pontosan akkor, ha a sorrendbeli pozíciójuk (sorindexük) megegyezik.
+
+Vegyük észre, hogy két független problémával szembesülünk:
+
+\begin{enumerate}
+    \item az oszlopértékek multihalmazának előállítása
+    \item az értékek összekeverése
+\end{enumerate}
+
+
+
+
+% TODO: az első is két részre bontható
+% ekkor a cél: eljutni egy értékkészlettől egy oszlop-értéklistáig
+
+Ezeket úgy kell megvalósítani, hogy a végső értéklista adott pozíciójú eleme is gyorsan lekérhető legyen,
+valamint egy adott érték vagy értéksáv előfordulási pozíciói is
+(utóbbi esetben lehetőleg rendezetten).
+
+Ha feltesszük, hogy a multihalmaz úgy van ábrázolva,
+hogy a hatékony értéklekérés és keresés-rendezés elvárása teljesül,
+akkor már csak egy (a tábla hosszára értelmezett) invertálható permutációra van szükség,
+hogy az adatokat visszakereshetően szét is szórjuk.
+(Lentebb látni fogjuk, milyen módszerrel tudjuk a multihalmaz egy eleve rendezett reprezentációját képezni,
+amivel az elvárások teljesíthetők.)
+A gyorsan számítható invertálható permutációk tipikus képviselője a modulo szorzásra épül.
+Plusz költség vállalásával pedig sokkal jobb szórást biztosító permutációkat kapunk,
+ha kriptográfiai módszereket vetünk be.
+
+A \textbf{kétfázisú értékkiosztásnak} ezzel az ötletével
+egy egyszerűbb adatbázis szimulációjának kívánalmait már tulajdonképpen le is fedtük,
+de néhány további hasznos értékkiosztási módszert is be fogok majd mutatni.
+
+Ha oszlopokat elő tudunk állítani,
+akkor a táblák és egyéb objektumok köréépítése nem jelent kihívást.
+Ha pedig a relációs adatmodell ezen objektumait sikeresen implementáltuk,
+a relációs műveletek és \textbf{az SQL lekérdezések megvalósítása már a hagyományos módon történhet}.
+Éppen ezért a továbbiakban a lekérdezések problémakörével csak érintőlegesen foglalkozom.
+Ma már elérhető néhány nyílt forrású jól felépített SQL query planner framework is,
+melyek megkönnyítik egy teljes körű SQL-szerver kiépítését.
+Ilyen például az általam használt Apache Calcite.
+Ugyanakkor egy saját SQL-futtatót is implementáltam, mely sok esetben gyorsabban fut,
+cserébe csak egy limitált SQL-t támogat.
+
+\section{Hatékony számítások}
+
+Mivel a szoftver létező prototípusa, a \textit{HoloDB}
+(és a hozzá kapcsolódó segédeszközök, könyvtárak nagy része) Java programnyelven íródott,
+a továbbiakban felteszem, hogy Java környezetben vagyunk.
+
+A hagyományos, tényleges adatbázisokban az egyik szűk keresztmetszetet
+az adatok fizikai elérése jelenti.
+Esetünkben ezt a virtuális értékkiosztások fenti függvényei helyettesítik.
+A blokkbetöltés, keresési index-struktúrák, materializált nézetek frissítése
+és hasonló problémák helyett a virtuális adattárban
+a visszaadandó adatok hatékony kiszámítását kell megoldani,
+ami általában az oszlopok értékeinek on-the-fly produkálását és keresését jelenti.
+
+Az on-the-fly értékszámítás során gyakran fordulnak elő átmeneti óriás számok,
+ám nehezen jósolható előre, hogy pontosan mikor.
+Például eleve egy értékkészlet is lehet óriási
+(gondoljunk például az \texttt{{\textbackslash}w{30}}
+reguláris kifejezés alapján kitöltött oszlop lehetséges értékeinek számára),
+miközben szükségünk van bármely pozíció közvetlen hivatkozására.
+Az adatbázis méretére vonatkozóan nem akartam megkötéseket tenni.
+Nem lett volna célszerű explicit ellenőrzések tömegét beépíteni
+a problémás számítások, potenciális túlcsordulások földerítésére.
+Továbbá az egész számokat egységesen szerettem volna kezelni, függetlenül azok méretétől.
+Így a beépített \texttt{BigInteger} típust egy idő után elvetettem,
+mivel az kisebb számokra a \texttt{long} típushoz képest rendkívül rossz performanciájú.
+
+\todo[inline]{ide a hashert, és bármit, ami még jöhet}
+
+\todo[inline]{skálázhatóságról (FastHasher, LinearMonotonic, noop permutation)}
+
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+Az értékkiosztási trükkökkel egy statikus adatbázist írunk le,
+ami értelemszerűen önmagában csak-olvashatóan érhető el.
+Látni fogjuk, hogyan lehet egy csak-olvasható tábla fölé olyan dekorátort helyezni,
+mely a változások megfelelő adatstruktúrában történő számontartásával
+az írhatóság illúzióját kelti.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 \chapter{STORAGE API}
 
 \section{ARCHITEKTÚRA}
