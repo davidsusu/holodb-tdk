@@ -75,6 +75,9 @@ ABSTRACT
 
 \section{Bevezetés}
 
+\section{A holografikus adatbázis jelentése}
+
+\todo[inline]{nem lehet pontos definíciót adni, legfeljebb bizonyos követelményeket, inkább körülírjuk}
 
 \section{Koncepció}
 
@@ -111,6 +114,8 @@ lényegileg elég egy ilyen konfigurációs fájl.
 
 \todo[inline]{letapogatás és renderelés, AI általi generálás}
 
+\todo[inline]{zero mode}
+
 
 
 
@@ -128,7 +133,7 @@ mely a lehető legrugalmasabb felhasználásra alkalmassá teszi;
 másrészt a cél eléréséhez, mint majd látjuk, apró eszközök egész tárát kell összeverbuválni,
 akár olyan távol eső területekről mint az automataelmélet vagy a kriptográfia.
 
-\todo[inline]{itt leírni az alapötletet a lehető legvilágosabban, ez lesz a legtömörebb, fő bekezdés}
+\todo[inline]{itt leírni az implementációs alapötletet a lehető legvilágosabban, ez lesz a legtömörebb, fő bekezdés}
 
 Alapvetésként egy \textbf{relációs adatbázist leíró API}-t fogunk definiálni.
 Aligha érdemes más megközelítést választani,
@@ -137,16 +142,19 @@ hiszen a relációs adatmodell nem csak tradicionálisan megkerülhetetlen
 de egyúttal közös nevezőként szolgál bármely más modellhez.
 Egy relációs struktúrával gyakorlatilag bármilyen interpretált adathalmazt le tudunk írni,
 mivel a relációs séma általános normalizációs segédeszköz.
+A célunk lényegében a relációs API implementálása lesz, konfigurálható módon.
 
 A legtöbb alkalmazásban van valamilyen fokális entitástípus,
 mely alapvető szerepet tölt be az architektúrában
-(mint például egy könyvtári katalógusban a könyv).
+(például egy könyvtári katalógusban a \textit{könyv}).
 Célszerű lehet egy ilyet esetünkben is meghatározni,
 hogy súlypontként, viszonyulási alapként, segítse az architektúrában való eligazodást.
 A tervezés elején hamar arra a megállapításra jutottam,
-hogy esetünkben a legalapvetőbb objektum az \textbf{\textit{értéklista}}.
-Ennek legegyszerűbb esete egy \textit{értékkészlet},
-az API-ban megjelenő esete pedig egy-egy \textit{oszlop} értéklistája.
+hogy a virtuális adattár legalapvetőbb objektuma az \textbf{\textit{értéklista}}.
+Az értéklista egyszerű esete valamely egyszerű \textit{értékkészlet},
+az API-ban pedig egy-egy \textit{oszlop} értéklistájával fogunk találkozni.
+
+% FIXME: mi ez a szöveg?
 Az oszlop alatt azonos típusú adatokat találunk,
 az alapfeladat mindig ezen adatok értékkészletének megadása lehet.
 Általában egy index is egy (esetleg néhány) konkrét oszlophoz köthető.
