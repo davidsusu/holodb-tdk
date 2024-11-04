@@ -389,7 +389,8 @@ Tehát a Feistel-hálózattal kapott kód visszafejtése úgy történik, hogy a
 Általában nem szükséges, hogy az egyes körökhöz különböző hash-függvényt használjunk,
 számunkra bőven elég, ha a páros és páratlan körökhöz eltérő függvényt alkalmazunk (szigorúan még ez sem lenne szükséges).
 
-A Feistel-hálózatokkal való kísérletezés során rájöttem,hogy a páros blokkméret követelménye enyhíthető a következőképpen.
+A Feistel-hálózatokkal való kísérletezés során észre vettem,
+hogy a páros blokkméret követelménye enyhíthető a következőképpen.
 Páratlan blokkméret esetén vegyünk még egy zéró bitet az adat végéhez,
 amivel biztosítjuk, hogy a jobb oldali bitmező is a megfelelő méretű legyen.
 Minden olyan kör végén, ahol a jobb oldali biteket írtuk felül, az utolsó bitet ezután nullázzuk.
@@ -399,10 +400,6 @@ ami természetesen visszafelé haladva ugyanúgy teljesül, tehát a dekódolás
 Ha egyúttal páros számú kört követelünk meg,
 akkor az utolsó kör végére garantáltan ugyanabba a fázisba kerülünk, mint az első kör kezdete előtt;
 vagyis a dekódolás folyamata teljesen egyezni fog az elkódolással, ami egyszerűsíti az eljárást.
-
-\todo[inline]{Feistel: kell egyáltalán a páros számú kör követelménye?}
-
-\todo[inline]{Feistel: volt már tárgyalva ez a speciális padding technika?}
 
 \todo[inline]{Feistel: algoritmust csatolni}
 
@@ -420,11 +417,11 @@ mivel jelentősen csökkentheti az intervallumon kívülre esés esélyét,
 
 \subsubsection{Permutációk méretigazítása}
 
-Itt érdemes megjegyezni, hogy más implementációknál a rejection sampling potenciálisan nem hatékony,
+A rejection sampling nem minden implementációnál hatékony,
 de pontosan ezért vezettük be a $resized(newSize)$ metódust magán a $Permutation$ interfészen.
 Így minden implementáció maga döntheti el, hogyan kell átméretezni.
-Extrém példa: ha a $P_{+1}(i) = i + 1 \mod N$ permutációt $n$-re kell átméreteznünk,
-akkor rejection sampling módszerrel $i = n$ esetén $N - n$ számú extra iterációt kellene végrehajtani,
+Egy extrém eset például, amikor a $P_{+1}(i) = (i + 1) \mod N$ permutációt $n$-re kell átméreteznünk.
+Rejection sampling módszerrel $i = n$ esetén $N - n$ számú extra iterációt kellene végrehajtani,
 ami nagy méret esetén rendkívül költséges.
 Helyette viszont egyszerűen áttérhetünk modulo $n$-re: $P_{+k}(k)(i) = i + k \mod n$.
 
@@ -445,6 +442,11 @@ Helyette viszont egyszerűen áttérhetünk modulo $n$-re: $P_{+k}(k)(i) = i + k
 \todo[inline]{Számsávok, felsorolások stb.}
 
 \subsubsection{Értékkészlet reguláris kifejezésből}
+
+Karakterláncokból álló értékkészletnek egy reguláris kifejezés alapján történő generálása
+talán a legáltalánosabb és legrugalmasabb módja az értékek definiálásának.
+Emiatt ezzel a résztémával fogok a legrészletesebben foglalkozni,
+és közlöm a fontosabb algoritmusok pszeudokódját is.
 
 Véletlenszerű karakterláncok reguláris kifejezés alapján történő generálására
 számos könyvtár elérhető a Java környezethez
@@ -469,6 +471,12 @@ irányított körmentes szógráf (DAWG),
 melyben egy érték nélküli kiinduló elemből érjük el a karaktereket reprezentáló csomópontokat,
 és kizárólag a szóvég csomópontokon (EOW) terminálhatunk,
 melyekből már nem érhető el további csomópont.
+
+A gráf lényegileg egy prefix fa, ahol egyes azonos részfákat újrahasznosítunk.
+Az újrahasznosítás miatt a fa tárhelyigénye a reguláris kifejezéshez képest lineáris.
+A szóvég csomópontok lesznek a fa levelei.
+A prefix fa könnyen felépíthető a reguláris kifejezés szintaxisfájából (AST).
+
 A gráf tömöríthető úgy, hogy konstans karakterek helyett karakterosztályokat engedünk meg.
 Ekkor egy adott csomópontból elérhető csomópontok listájára az alábbiak érvényesek:
 
@@ -477,18 +485,31 @@ Ekkor egy adott csomópontból elérhető csomópontok listájára az alábbiak 
     \item bármely listaelem minden tartalmazott karaktere későbbi, mint bármely megelőző elem bármely tartalmazott karaktere
 \end{itemize}
 
-\todo[inline]{egyszerű DAWG példa}
+Világos, hogy ezek biztosításához átalakításokat kell nyerni a reguláris kifejezésekből
+kapott nyers karakterosztályok listáján.
+Ahol egymásnak alternatíváját jelentő két karakterosztály között átfedés van,
+ott mindkét karakterosztályt szét kell bontani úgy,
+hogy a kapott karakterosztályokból képzett halmazra a fentiek érvényesek legyenek.
+Például ha az \texttt{[a-c]}, \texttt{[cf]} és \texttt{[c-e]} jelennek meg alternatívaként,
+akkor ezek szétbomlanak a \texttt{[ab]}, \texttt{[c]}, \texttt{[de]} és \texttt{[f]}
+karaketerosztályokra, és átveszik a korábbiakból elérhető csomópontokat.
+A \texttt{[c]} karakterosztály egy alternációt vesz át a három eredeti csomópontból.
+A fát érdemes egyúttal úgy normalizálni, hogy megszüntetjük az alternációk miatti üres értékű,
+pusztán az elágazás kedvéért felvett csomópontokat (gyermekelemeket),
+ez természetesen az egyenlő csomópontok részfáinak összefésülését vonja maga után.
 
-A gráf lényegileg egy prefix fa, ahol egyes azonos részfákat újrahasznosítunk.
-Az újrahasznosítás miatt a fa tárhelyigénye a reguláris kifejezéshez képest lineáris.
-A szóvég csomópontok lesznek a fa levelei.
-A prefix fa könnyen felépíthető a reguláris kifejezés szintaxisfájából (AST)
-a következő módon:
+Egy egyszerű reguláris kifejezés teljes szófája így néz ki:
 
-\todo[inline]{prefix fa generálásának algoritmusa (szövegesen és/vagy kóddal), kivételkezelés is}
+\begin{figure}[H]
+\centering
+\includesvg[width=0.9\textwidth]{diagram/trie-simple}
+\caption[Egyszerű reguláris kifejezés szófája]{
+    A \texttt{([a-c]z(tt|uu)|a[s-z])} reguláris kifejezés szófája
+}
+\end{figure}
 
-Rekurzív módon a fa minden csomópontjához könnyen hozzárendelhetjük
-a hozzá tartozó részfa leveleinek számát.
+Látható, hogy minden csomóponthoz hozzárendeltük a hozzá tartozó részfa leveleinek számát.
+Ez rekurzióval könnyen számítható.
 Ez az információ már elegendő ahhoz, hogy kikeressük az $n$-edik elemet,
 illetve hogy megkeressük egy adott karakterlánc (megtalált vagy beillesztési) pozícióját,
 valamint hogy tetszőleges pozíciótól kezdve iteráljunk az illeszkedő karakterláncokon.
@@ -525,7 +546,9 @@ Ezeket a kezdeti feldolgozáskor úgy tekintjük,
 mint az átementi üres csomópontokat, tehát elimináljuk őket,
 de közben megjegyezzük megjegyezzük és sorban kikényszerítjük a teljesülésüket.
 A horgonynak ellentmondó gyermekelemeket eltávolítjuk,
-ha ezután nem marad gyermekelem, a teljesíthetetlen ágat jelző kivételt dobunk.
+ha ezután nem marad gyermekelem, a teljesíthetetlen ágat jelző kivételt dobunk,
+a kivételt elkapó szint el fogja dobni az ágat mint lehetetlent,
+ami újabb kivételdobást eredményezhet, ha az ottani gyermekelemek emiatt elfogytak.
 
 \todo[inline]{prefix-fa példa}
 
@@ -536,8 +559,6 @@ Ekkor ugyanis esetleg csak egy későbbi eltérés dönti el,
 hogy egy korábbi ékezet vagy nagybetűsség számít-e.
 Vagyis nem elegendő a karakterenkénti prefix-fa a rendezettség biztosításához.
 
-Megjegyzem, hogy továbbra is csak egy egységesített (nyelvfüggetlen) rendezési sémát tekintünk,
-és a többkarakteres betűk felismerésétől is eltekintünk.
 A Unicode Collation Algorithm (UCA) szabvány egy nyelvfüggő többszintű összehasonlítási sémát definiál,
 de ezek között van olyan általános séma is, mely tekinthető egy nyelvfüggetlen összehasonlításnak.
 Ennek egy egyszerűsített háromszintű változatát fogjuk alapul venni.
