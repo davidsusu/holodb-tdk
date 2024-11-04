@@ -542,8 +542,8 @@ Az opcionális előfordulás (\texttt{?}) az $R_1$ esettel egyenlő.
 Horgonyokat is implementálhatunk,
 mint például szövegvég (\texttt{\$}) vagy szóhatár (\texttt{{\textbackslash}b}).
 Ezeket a kezdeti feldolgozáskor úgy tekintjük,
-mint az átementi üres csomópontokat, tehát elimináljuk őket,
-de közben megjegyezzük megjegyezzük és sorban kikényszerítjük a teljesülésüket.
+mint az átementi üres csomópontokat, tehát elimináljuk és megjegyezzük őket,
+de utána sorban kikényszerítjük a teljesülésüket.
 A horgonynak ellentmondó gyermekelemeket eltávolítjuk,
 ha ezután nem marad gyermekelem, a teljesíthetetlen ágat jelző kivételt dobunk,
 a kivételt elkapó szint el fogja dobni az ágat mint lehetetlent,
@@ -587,7 +587,7 @@ báL     =   bal  _´_  __U    =   bal<D:´:1><U:2>
 \end{verbatim}
 
 A jobb oldalon a karakterláncoknak egy normálalakja látható,
-mely csak az alapkarakterek után csak a módosításokat tartalmazza,
+mely az alapkarakterek után csak a módosításokat tartalmazza,
 és a kisbetűsséget alapértelmezettnek tekinti.
 Természetesen másfajta normálalakot is választhatunk (például ahol a nagybetűsség az alapértelmezett),
 akár a reguláris kifejezés tulajdonságaitól függően,
