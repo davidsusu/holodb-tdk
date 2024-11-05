@@ -1,8 +1,8 @@
 #!/bin/bash
 
 latexFile='src/index.tex'
-plainOutFile="/tmp/$( uuidgen )"
-wordOutFile="/tmp/$( uuidgen )"
+plainOutFile="/tmp/latex-check-plain-$( uuidgen )"
+wordOutFile="/tmp/latex-check-words-$( uuidgen )"
 
 hunChars='í|Í|ó|Ó|ö|Ö|ő|Ő|ú|Ú|ü|Ü|ű|Ű'
 

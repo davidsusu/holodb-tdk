@@ -307,7 +307,7 @@ az írhatóság illúzióját kelti.
 
 A \texttt{Monotonic} interfész példánya egy függvényt reprezentál,
 amely az első $n$ nemnegatív egész számot értékkészletként nem monoton növekvő módon hozzárendeli az első $N$ nemnegatív egész számhoz.
-Ez arra használható, hogy egy $n$ elemű, rendezetten tárolt értékkészetet egy $N$ méretű adatbázistábla oszlopához igazítsunk méretben,
+Ez arra használható, hogy egy $n$ elemű, rendezetten tárolt értékkészletet egy $N$ méretű adatbázistábla oszlopához igazítsunk méretben,
 Tehát a példány $M(i) = m$ függvényt valósítja meg, ahol $0 \leq i < N$ illetve $0 \leq m < n$, továbbá $i_1 < i_2 \implies M(i_1) < M(i_2)$.
 Ugyanakkor indexelt elérést is biztosít, azaz lekérdezhető, hogy egy adott érték mely indexsávhoz rendelődik,
 azaz megvalósítja az $M^{-1}(m) = [i, j)$ függvényt is, ahol $0 \leq m < n$ illetve $0 \leq i \leq j \leq N$, és teljesülnek az alábbiak:
@@ -566,7 +566,7 @@ A repetíciós operátorok explicite kifejtés által kerülnek visszavezetésre
 A kifejtés természetesen egyes esetekben lényegesen növeli a fa méretét a bemenethez képest.
 Ennek kioptimalizálásával most nem foglalkozom.
 
-Először a korlátlan repetíciót (\texttt{*}, \texttt{+} stb.) elmináljuk rendre az alábbi szabályokkal:
+Először a korlátlan repetíciót (\texttt{*}, \texttt{+} stb.) elimináljuk rendre az alábbi szabályokkal:
 
 \begin{enumerate}
     \item \texttt{$A$+} ~ $\longrightarrow$ ~ \texttt{$A$\{1,\}}
@@ -591,7 +591,7 @@ Az opcionális előfordulás (\texttt{?}) az $R_1$ esettel egyenlő.
 Horgonyokat is implementálhatunk,
 mint például szövegvég (\texttt{\$}) vagy szóhatár (\texttt{{\textbackslash}b}).
 Ezeket a kezdeti feldolgozáskor úgy tekintjük,
-mint az átementi üres csomópontokat, tehát elimináljuk és megjegyezzük őket,
+mint az átmeneti üres csomópontokat, tehát elimináljuk és megjegyezzük őket,
 de utána sorban kikényszerítjük a teljesülésüket.
 A horgonynak ellentmondó gyermekelemeket eltávolítjuk,
 ha ezután nem marad gyermekelem, a teljesíthetetlen ágat jelző kivételt dobunk,
@@ -622,7 +622,7 @@ Komponensenként egyértelmű és független lesz a rendezés.
 Maguk a karakterláncok is három rétegre esnek szét, és komponensenként hasonlítandók össze.
 Összehasonlításkor a későbbi komponens csak akkor vizsgálandó,
 ha az azt megelőző komponensek a két karakterláncban egyeznek.
-A pozícionált diakritikus jeleket és nagybetűsség-jelzéseket speciális karaktereknek is tekinthetjük,
+A pozicionált diakritikus jeleket és nagybetűsség-jelzéseket speciális karaktereknek is tekinthetjük,
 ekkor lényegileg karakterenkénti összehasonlításra is visszavezethetjük az eljárást.
 Például:
 
@@ -638,11 +638,11 @@ báL     =   bal  _´_  __U    =   bal<D:´:1><U:2>
 A jobb oldalon a karakterláncoknak egy normálalakja látható,
 mely az alapkarakterek után csak a módosításokat tartalmazza,
 és a kisbetűsséget alapértelmezettnek tekinti.
-Az ilyen nomálalak karakterenkénti rendezése problémamentes:
+Az ilyen normálalak karakterenkénti rendezése problémamentes:
 
 \begin{itemize}
     \item egy előbbi komponenshez tartozó karakter mindig megelőzi a későbbit.
-    \item az alapkaraterek rendezése egymáshoz képest: 
+    \item az alapkarakterek rendezése egymáshoz képest: 
 \end{itemize}
 
 Természetesen másfajta normálalakot is választhatunk (például ahol a nagybetűsség az alapértelmezett),

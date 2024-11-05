@@ -6,6 +6,7 @@ apt-get install \
     texlive-luatex texlive-pictures texlive-pstricks texlive-science \
     hunspell hunspell-tools hunspell-hu \
     inkscape imagemagick optipng \
+    uuid-runtime \
 ;
 
 if ! command -v drawio &> /dev/null; then
