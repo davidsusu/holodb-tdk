@@ -349,29 +349,30 @@ Az inverz függvényhívás az \texttt{indexOf(value)} metódus biztosítja.
 
 \subsubsection{Triviális implementációk}
 
-Triviális implementációként használhatjuk egyszerűen az azonosságfüggvényt:
-
-$$
-P_{id}(i) = i (0 \leq i < n)
-$$
+Megjegyzem, hogy triviális implementációként használhatjuk egyszerűen az azonosságfüggvényt is.
+Ekkor nem keverednek az adatok, cserébe viszont performanciában verhetetlen.
 
 Gyorsan számolható, de ránézésre már jó keveredést adó permutációt nyerünk, ha kihasználjuk, hogy az $ai \equiv p \pmod{n}$ lineáris kongruencia
 $i$-re és $p$-re nézve egy permutációt ad, ha $a$ és $n$ relatív prímek:
 
 $$
-P_n(a,b)(i) = ai + b \mod n
+\sigma_L^{n(a,b)}(i) = (ai + b) \bmod n
 $$
 
 Az $a$ és $b$ számot előre, a seed alapján határozzuk meg.
-Az $a$ szám relatív prím kell legyen $n$-re nézve, amit úgy érünk el, hogy ciklusban az euklideszi algoritmussal ellenőrizzük, hogy a legnagyobb közös osztójuk 1-e,
-és amíg nem, addig meghívjuk a számot tároló \texttt{LargeInteger} példány \texttt{nextProbablePrime()} metódusát az új jelölt lekéréséhez.
+A $b$ eltolás értéke tetszőleges lehet.
+Az $a$ szám relatív prím kell legyen $n$-re nézve.
+A megkereséséhez először választunk egy jelöltet,
+majd megvizsgáljuk (például az euklideszi algoritmussal), hogy relatív prím-e $n$-re.
+Ha igen, kész vagyunk.
+Ha nem, a számot tároló \texttt{LargeInteger} példány
+\texttt{nextProbablePrime()} metódusát hívva előállítjuk a következő jelöltet.
 Ez a háttérben a \texttt{BigInteger} osztály ugyanilyen nevű metódusát hívja, amely a Java beépített heurisztikus megoldása a következő valószínű prím megkeresésére.
-Nekünk csak egy relatív prím kell, tehát nincs szükség valódi prímtesztre, elég a gyors heurisztika és aztán a legnagyobb közös osztó ellenőrzése.
 
 \subsubsection{Feistel-hálózatok alkalmazása}
 
 Az invertálható, változtatható méretű, seed alapján újrakeverhető permutációk könnyen analógiába állíthatók kriptográfiai titkosítófüggvényekkel.
-Ezek általában dekódolhatóak, változtatható blokkméretűek és kulcs alapján újrakeverhetőek.
+Ezek általában változtatható blokkméretűek, kulcs alapján újrakeverhetőek és természetesen dekódolhatóak.
 Felmerül a gondolat, hogy közvetlenül egy ilyen kriptográfiai módszert alkalmazzunk a permutáció megvalósításához.
 Mindenképpen olyan megoldásra van szükség, amelynél a blokkméret tetszőlegesen megadható, és kellően flexibilis, skálázható.
 
@@ -389,7 +390,7 @@ Tehát a Feistel-hálózattal kapott kód visszafejtése úgy történik, hogy a
 Általában nem szükséges, hogy az egyes körökhöz különböző hash-függvényt használjunk,
 számunkra bőven elég, ha a páros és páratlan körökhöz eltérő függvényt alkalmazunk (szigorúan még ez sem lenne szükséges).
 
-A Feistel-hálózatokkal való kísérletezés során észre vettem,
+A Feistel-hálózatokkal való kísérletezés során észrevettem,
 hogy a páros blokkméret követelménye enyhíthető a következőképpen.
 Páratlan blokkméret esetén vegyünk még egy zéró bitet az adat végéhez,
 amivel biztosítjuk, hogy a jobb oldali bitmező is a megfelelő méretű legyen.
@@ -401,7 +402,7 @@ Ha egyúttal páros számú kört követelünk meg,
 akkor az utolsó kör végére garantáltan ugyanabba a fázisba kerülünk, mint az első kör kezdete előtt;
 vagyis a dekódolás folyamata teljesen egyezni fog az elkódolással, ami egyszerűsíti az eljárást.
 
-\todo[inline]{Feistel: algoritmust csatolni}
+\todo[inline]{ALGORITMUS: Feistel: last-zero algoritmus-változat}
 
 Persze, még ha a páros blokkméret követelményét így sikerült is eliminálni,
 továbbra is adott a probléma, hogy az $n$ blokkmérethez mindig $2^n$ méretű permutáció tartozik.
@@ -415,15 +416,17 @@ A páratlan blokkméret megengedettsége a hatékonyság szempontjából is font
 mivel jelentősen csökkentheti az intervallumon kívülre esés esélyét,
 és így a Feistel-hálózatra történő hívások számát.
 
+\todo[inline]{Feistel leírásához igazítani a hasher-implementációk tárgyalását}
+
 \subsubsection{Permutációk méretigazítása}
 
 A rejection sampling nem minden implementációnál hatékony,
 de pontosan ezért vezettük be a $resized(newSize)$ metódust magán a $Permutation$ interfészen.
 Így minden implementáció maga döntheti el, hogyan kell átméretezni.
-Egy extrém eset például, amikor a $P_{+1}(i) = (i + 1) \mod N$ permutációt $n$-re kell átméreteznünk.
+Egy extrém eset például, amikor a $P_{+1}(i) = (i + 1) \bmod N$ permutációt $n$-re kell átméreteznünk.
 Rejection sampling módszerrel $i = n$ esetén $N - n$ számú extra iterációt kellene végrehajtani,
 ami nagy méret esetén rendkívül költséges.
-Helyette viszont egyszerűen áttérhetünk modulo $n$-re: $P_{+k}(k)(i) = i + k \mod n$.
+Helyette viszont egyszerűen áttérhetünk modulo $n$-re: $P_{+k}(k)(i) = (i + k) \bmod n$.
 
 \subsubsection{XXXX}
 
@@ -445,8 +448,7 @@ Helyette viszont egyszerűen áttérhetünk modulo $n$-re: $P_{+k}(k)(i) = i + k
 
 Karakterláncokból álló értékkészletnek egy reguláris kifejezés alapján történő generálása
 talán a legáltalánosabb és legrugalmasabb módja az értékek definiálásának.
-Emiatt ezzel a résztémával fogok a legrészletesebben foglalkozni,
-és közlöm a fontosabb algoritmusok pszeudokódját is.
+Emiatt ezzel a résztémával fogok a legrészletesebben foglalkozni.
 
 Véletlenszerű karakterláncok reguláris kifejezés alapján történő generálására
 számos könyvtár elérhető a Java környezethez
@@ -456,7 +458,7 @@ Ez a megközelítés önmagában nem alkalmas arra,
 hogy az összes illeszkedő karakterláncból álló virtuális értékkészletet
 a számunkra megfelelő módon implementálni lehessen vele.
 Nem tudjuk ugyanis lekérni a rendezett értékkészlet $n$-edik elemét,
-és nem tudjuk kikeresni, hogy adott érték mely pozíción található.
+és nem tudjuk kikeresni, hogy adott érték mely pozíción található az értéklistában.
 
 Lássuk, hogyan tudnánk valami módon mégis egy rendezett értékkészletet implementálni.
 Első megközelítésben a reguláris kifejezéssel kapcsolatban az alábbi megszorításokat tesszük:
@@ -466,27 +468,55 @@ Első megközelítésben a reguláris kifejezéssel kapcsolatban az alábbi megs
     \item a rendezés karakterenkénti, azaz nincs másodlagos, harmadlagos stb. összehasonlítási szempont
 \end{itemize}
 
-Ilyen megkötések mellett a reguláris kifejezéshez egyértelműen rendelhető egy
+Ilyen megkötések mellett a reguláris kifejezéshez problémamentesen rendelhető egy
 irányított körmentes szógráf (DAWG),
 melyben egy érték nélküli kiinduló elemből érjük el a karaktereket reprezentáló csomópontokat,
 és kizárólag a szóvég csomópontokon (EOW) terminálhatunk,
 melyekből már nem érhető el további csomópont.
 
 A gráf lényegileg egy prefix fa, ahol egyes azonos részfákat újrahasznosítunk.
+Ezért a továbbiakban az egyszerűség kedvéért néha faként fogok a gráfra hivatkozni.
 Az újrahasznosítás miatt a fa tárhelyigénye a reguláris kifejezéshez képest lineáris.
 A szóvég csomópontok lesznek a fa levelei.
 A prefix fa könnyen felépíthető a reguláris kifejezés szintaxisfájából (AST).
-
 A gráf tömöríthető úgy, hogy konstans karakterek helyett karakterosztályokat engedünk meg.
-Ekkor egy adott csomópontból elérhető csomópontok listájára az alábbiak érvényesek:
+
+A felépítés két lépcsőben történik.
+Először egy nyers fát állítunk elő, ami közvetlenül reprezentálja a reguláris kifejezést.
+
+\todo[inline]{nyers szófa előállításának rövid leírása}
+
+\todo[inline]{ALGORITMUS: nyers szófa előállítása}
+
+Például a \texttt{([a-c]z(tt|uu)|a[s-z])} reguláris kifejezés nyers szófája így néz ki:
+
+\begin{figure}[H]
+\centering
+\includesvg[width=0.9\textwidth]{diagram/trie-simple-raw}
+\caption{Egyszerű reguláris kifejezés nyers szófája}
+\end{figure}
+
+A szóvég csomópontokat az átláthatóság kedvéért mindenütt külön-külön szerepel,
+de a gráfot úgy is rajzolhattuk volna,
+hogy az összes utolsó karakterosztály egyetlen közös szóvég csomópontba csatlakozik tovább.
+Látható, hogy a szekvenciákból láncolás lett,
+az alternációkból pedig egy több elágazással (gyermekelemmel) rendelkező üres csomópont.
+Az is látható, hogy néhány rákövetkező karakter duplikáltan szerepel egyes elágazásokban
+(például az \texttt{a} betű rögtön az elején).
+
+Ezen problémák kiküszöbölésére második lépésben egy normalizálási eljárást hajtunk végre,
+mely után a gráfban adott csomópontból elérhető csomópontok listájára az alábbiak érvényesek:
 
 \begin{itemize}
-    \item a lista elemei diszjunkt karakterosztályok
-    \item bármely listaelem minden tartalmazott karaktere későbbi, mint bármely megelőző elem bármely tartalmazott karaktere
+    \item a lista opcionális első eleme a szóvég csomópont, ami kötelező, ha nincs más a listában
+    \item a lista elemei ezen kívül diszjunkt karakterosztályok
+    \item bármely karakterosztály listaelem minden tartalmazott karaktere későbbi, mint bármely megelőző karakterosztály elem bármely tartalmazott karaktere
 \end{itemize}
 
-Világos, hogy ezek biztosításához átalakításokat kell nyerni a reguláris kifejezésekből
-kapott nyers karakterosztályok listáján.
+Ezek a szabályok biztosítják, hogy a gráf bejárása rendezett sztringeket ad,
+valamint egy trie-szerű adatstruktúrát kényszerítenek ki, amelyben hatékonyan tudunk keresni.
+
+Az átalakítás rekurzív módon történik.
 Ahol egymásnak alternatíváját jelentő két karakterosztály között átfedés van,
 ott mindkét karakterosztályt szét kell bontani úgy,
 hogy a kapott karakterosztályokból képzett halmazra a fentiek érvényesek legyenek.
@@ -494,26 +524,32 @@ Például ha az \texttt{[a-c]}, \texttt{[cf]} és \texttt{[c-e]} jelennek meg al
 akkor ezek szétbomlanak az \texttt{[ab]}, \texttt{[c]}, \texttt{[de]} és \texttt{[f]}
 karaketerosztályokra, és átveszik a korábbiakból elérhető csomópontokat.
 A \texttt{[c]} karakterosztály egy alternációt vesz át a három eredeti csomópontból.
-A fát érdemes egyúttal úgy normalizálni, hogy megszüntetjük az alternációk miatti üres értékű,
-pusztán az elágazás kedvéért felvett csomópontokat (gyermekelemeket),
+A fát egyúttal célszerű úgy továbbalakítani, hogy megszüntetjük az alternációk miatti üres értékű,
+pusztán az elágazás kedvéért felvett csomópontokat,
 ez természetesen az egyenlő csomópontok részfáinak összefésülését vonja maga után.
+Nevezzük az így nyert gráfot a reguláris kifejezés kompakt szófájának.
 
-Egy egyszerű reguláris kifejezés teljes szófája így néz ki:
+\todo[inline]{ALGORITMUS: kompakt szófa előállítása}
+
+A \texttt{([a-c]z(tt|uu)|a[s-z])} reguláris kifejezés fenti nyers szófájából
+az alábbi kompakt szófát nyerjük:
 
 \begin{figure}[H]
 \centering
-\includesvg[width=0.9\textwidth]{diagram/trie-simple}
-\caption[Egyszerű reguláris kifejezés szófája]{
-    A \texttt{([a-c]z(tt|uu)|a[s-z])} reguláris kifejezés szófája
-}
+\includesvg[width=0.9\textwidth]{diagram/trie-simple-compact}
+\caption{Egyszerű reguláris kifejezés kompakt szófája}
 \end{figure}
+
+\todo[inline]{kompakt szófa előállítása a reguláris kifejezésből lineáris tárhely- és időigényű}
 
 Látható, hogy minden csomóponthoz hozzárendeltük a hozzá tartozó részfa leveleinek számát.
 Ez rekurzióval könnyen számítható.
 Ez az információ már elegendő ahhoz, hogy kikeressük az $n$-edik elemet,
 illetve hogy megkeressük egy adott karakterlánc (megtalált vagy beillesztési) pozícióját.
 
-\todo[inline]{iteráció stb. algoritmusa}
+\todo[inline]{ALGORITMUS: iteráció stb.}
+
+% TODO: bizonyítsuk, hogy a fenti átalakításokkal kapott regexhez képest a 
 
 Most pedig nézzük hogyan tudunk engedni a fenti megszorításokon.
 
@@ -538,6 +574,10 @@ az opcionális repetíció kifejtése pedig a következő rekurzív módon tört
 \end{enumerate}
 
 Az opcionális előfordulás (\texttt{?}) az $R_1$ esettel egyenlő.
+
+% TODO: a komplexitásnövekedésről pár szó (lehet optimalizálni a repetíciókat, de ezzel most nem foglalkozom)
+
+% TODO: a horgonyok valójában már más téma
 
 Horgonyokat is implementálhatunk,
 mint például szövegvég (\texttt{\$}) vagy szóhatár (\texttt{{\textbackslash}b}).
