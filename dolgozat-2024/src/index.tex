@@ -490,13 +490,20 @@ Először egy nyers fát állítunk elő, ami közvetlenül reprezentálja a reg
 
 \todo[inline]{ALGORITMUS: nyers szófa előállítása}
 
-Például a \texttt{([a-c]z(tt|uu)|a[s-z])} reguláris kifejezés nyers szófája így néz ki:
+Például a \texttt{([a-c]z(tt|uu)r|a[s-z])} reguláris kifejezés nyers szófája így néz ki:
 
 \begin{figure}[H]
 \centering
 \includesvg[width=0.9\textwidth]{diagram/trie-simple-raw}
 \caption{Egyszerű reguláris kifejezés nyers szófája}
 \end{figure}
+
+A nyers fa nagyon hasonlít egy szintaxisfához,
+a fő különbség, hogy az alternációk vége tovább van csatlakoztatva a külső szekvencia
+következő eleméhez tartozó csomóponthoz
+(a példában a \texttt{[t]} és az \texttt{[u]} csatlakozik így az \texttt{[r]}-hez).
+Ebből világos, hogy a nyers fa mérete és előállításának költsége
+a reguláris kifejezés méretével egyenesen arányos.
 
 A szóvég csomópontokat az átláthatóság kedvéért mindenütt külön-külön szerepel,
 de a gráfot úgy is rajzolhattuk volna,
@@ -533,7 +540,7 @@ Nevezzük az így nyert gráfot a reguláris kifejezés kompakt szófájának.
 
 \todo[inline]{ALGORITMUS: kompakt szófa előállítása}
 
-A \texttt{([a-c]z(tt|uu)|a[s-z])} reguláris kifejezés fenti nyers szófájából
+A \texttt{([a-c]z(tt|uu)r|a[s-z])} reguláris kifejezés fenti nyers szófájából
 az alábbi kompakt szófát nyerjük:
 
 \begin{figure}[H]
@@ -542,10 +549,10 @@ az alábbi kompakt szófát nyerjük:
 \caption{Egyszerű reguláris kifejezés kompakt szófája}
 \end{figure}
 
-\todo[inline]{kompakt szófa előállítása a reguláris kifejezésből lineáris tárhely- és időigényű}
+\todo[inline]{mi a kompakt szófa előállítása komplexitása?}
 
-Látható, hogy minden csomóponthoz hozzárendeltük a hozzá tartozó részfa leveleinek számát.
-Ez rekurzióval könnyen számítható.
+Minden csomóponthoz hozzárendeltük a hozzá tartozó részfa leveleinek effektív számát,
+ami rekurzióval könnyen számítható.
 Ez az információ már elegendő ahhoz, hogy kikeressük az $n$-edik elemet,
 illetve hogy megkeressük egy adott karakterlánc (megtalált vagy beillesztési) pozícióját.
 
@@ -610,8 +617,7 @@ nevezetesen az \textit{alapkarakter}, a \textit{diakritikus jel}
 Alapkarakternek a karakter diakritikus jelektől megfosztott kisbetűs alakját nevezzük.
 Tehát például az '\texttt{Á}' karakter az '\texttt{a}' alapkarakterre,
 a '\texttt{´}' ékezetre és a nagybetűsségre bontható.
-Komponensenként egyértelmű és független lesz a rendezés,
-ennek konkrét szabályait most nem részletezem.
+Komponensenként egyértelmű és független lesz a rendezés.
 
 Maguk a karakterláncok is három rétegre esnek szét, és komponensenként hasonlítandók össze.
 Összehasonlításkor a későbbi komponens csak akkor vizsgálandó,
@@ -632,6 +638,13 @@ báL     =   bal  _´_  __U    =   bal<D:´:1><U:2>
 A jobb oldalon a karakterláncoknak egy normálalakja látható,
 mely az alapkarakterek után csak a módosításokat tartalmazza,
 és a kisbetűsséget alapértelmezettnek tekinti.
+Az ilyen nomálalak karakterenkénti rendezése problémamentes:
+
+\begin{itemize}
+    \item egy előbbi komponenshez tartozó karakter mindig megelőzi a későbbit.
+    \item az alapkaraterek rendezése egymáshoz képest: 
+\end{itemize}
+
 Természetesen másfajta normálalakot is választhatunk (például ahol a nagybetűsség az alapértelmezett),
 akár a reguláris kifejezés tulajdonságaitól függően,
 de mindenképpen rendelkeznünk kell bizonyos, egymással konzisztens algoritmusokkal,
@@ -644,8 +657,11 @@ amelyek együtt implementálják az értékkészlethez tartozó rendezési koll�
     \item a prefix-gráfot bejáró, kereső stb. algoritmusokkal
 \end{enumerate}
 
-\todo[inline]{a háromrétegű prefix-fa leírása}
-% Az ötlet az, hogy egyetlen prefix-fa helyett hármat hozunk létre.
+\todo[inline]{a két- vagy háromrétegű prefix-fa leírása}
+
+\todo[inline]{továbbfejlesztés: az UCA még részletesebb és konfigurálható megvalósítása}
+
+% Az ötlet az, hogy egyetlen prefix-fa helyett többet hozunk létre.
 % A harmadik a normál prefix-fa, mely az eredeti karaktereket tartalmazza, karakterenként rendezve.
 % A második ennek topológiai egyszerűsítése úgy, hogy a kis-nagybetű különbségeket összevonjuk.
 % Ahol az összevonásnál azonos gyermekelemeket találunk, azok közül csak az egyiket tartjuk meg,
