@@ -526,12 +526,12 @@ Ezek a szabályok biztosítják, hogy a gráf bejárása rendezett sztringeket a
 valamint egy trie-szerű adatstruktúrát kényszerítenek ki, amelyben hatékonyan tudunk keresni.
 
 Az átalakítás rekurzív módon történik.
-Ahol egymásnak alternatíváját jelentő két karakterosztály között átfedés van,
+Ahol egymásnak alternatíváját jelentő két karakterosztály között átfedés vagy átugrás van,
 ott mindkét karakterosztályt szét kell bontani úgy,
 hogy a kapott karakterosztályokból képzett halmazra a fentiek érvényesek legyenek.
 Például ha az \texttt{[a-c]}, \texttt{[cf]} és \texttt{[c-e]} jelennek meg alternatívaként,
 akkor ezek szétbomlanak az \texttt{[ab]}, \texttt{[c]}, \texttt{[de]} és \texttt{[f]}
-karaketerosztályokra, és átveszik a korábbiakból elérhető csomópontokat.
+karakterosztályokra, és átveszik a korábbiakból elérhető csomópontokat.
 A \texttt{[c]} karakterosztály egy alternációt vesz át a három eredeti csomópontból.
 A fát egyúttal célszerű úgy továbbalakítani, hogy megszüntetjük az alternációk miatti üres értékű,
 pusztán az elágazás kedvéért felvett csomópontokat,
