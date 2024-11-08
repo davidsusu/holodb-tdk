@@ -635,6 +635,18 @@ BAL     =   bal  ___  UUU    =   bal<U:0><U:1><U:2>
 báL     =   bal  _´_  __U    =   bal<D:´:1><U:2>
 \end{verbatim}
 
+% FIXME ez a megközelítés jobban adaptálható később a svéd collation-höz
+Vagy:
+
+\begin{verbatim}
+AL      =   al.al.AL         =   al<U:0><U:1>
+alom    =   alom.alom.alom   =   alom
+Alom    =   alom.alom.Alom   =   alom<U:0>
+álom    =   alom.álom.álom   =   alom<D:´:0>
+BAL     =   bal.bal.BAL      =   bal<U:0><U:1><U:2>
+báL     =   bal.bál.báL      =   bal<D:´:1><U:2>
+\end{verbatim}
+
 A jobb oldalon a karakterláncoknak egy normálalakja látható,
 mely az alapkarakterek után csak a módosításokat tartalmazza,
 és a kisbetűsséget alapértelmezettnek tekinti.
@@ -642,7 +654,7 @@ Az ilyen normálalak karakterenkénti rendezése problémamentes:
 
 \begin{itemize}
     \item egy előbbi komponenshez tartozó karakter mindig megelőzi a későbbit.
-    \item az alapkarakterek rendezése egymáshoz képest: 
+    \item a komponensen belüli rendezés %TODO
 \end{itemize}
 
 Természetesen másfajta normálalakot is választhatunk (például ahol a nagybetűsség az alapértelmezett),
@@ -660,6 +672,9 @@ amelyek együtt implementálják az értékkészlethez tartozó rendezési koll�
 \todo[inline]{a két- vagy háromrétegű prefix-fa leírása}
 
 \todo[inline]{FUTURE PLAN: az UCA még részletesebb és konfigurálható megvalósítása}
+
+% TODO: svédek: å, ä, ö: base characters
+% https://en.wikipedia.org/wiki/Swedish_alphabet
 
 % Az ötlet az, hogy egyetlen prefix-fa helyett többet hozunk létre.
 % A harmadik a normál prefix-fa, mely az eredeti karaktereket tartalmazza, karakterenként rendezve.
