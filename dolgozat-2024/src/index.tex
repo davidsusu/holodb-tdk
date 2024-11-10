@@ -478,6 +478,8 @@ melyekből már nem érhető el további csomópont.
 
 A gráf lényegileg egy prefix fa, ahol egyes azonos részfákat újrahasznosítunk.
 Ezért a továbbiakban az egyszerűség kedvéért néha faként fogok a gráfra hivatkozni.
+A gyökértől az adott részfáig vezető útvonalra
+néha az adott részfa \textit{prefixeként} fogok hivatkozni.
 Az újrahasznosítás miatt a fa tárhelyigénye a reguláris kifejezéshez képest lineáris.
 A szóvég csomópontok lesznek a fa levelei.
 A prefix fa könnyen felépíthető a reguláris kifejezés szintaxisfájából (AST).
@@ -554,6 +556,25 @@ illetve hogy megkeressük egy adott karakterlánc (megtalált vagy beillesztési
 \todo[inline]{ALGORITMUS: iteráció stb.}
 
 \todo[inline]{mi a kompakt szófa előállítása komplexitása?}
+
+A kompakt szófában megtalálható különböző részfák száma
+a nyers szófa különböző részfáinak számához képest exponenciálisan megnőhet.
+Induljunk ki ugyanis egy $n$-elemű $C$ karakterhalmazból,
+és képezzük rendre a $C_1, C_2, \cdot, C_{n-1}, C_n$ karakterosztályokat úgy,
+hogy $C_i = C \textbackslash x$.
+
+
+A kompakt szófa előállítása nem von maga után exponenciális komplexitást.
+Ennek részletes bizonyítását mellőzöm,
+de gond nélkül elvégezhető a következő megfontolásokból kiindulva.
+A kompakt szófa azokon a helyeken tartalmaz eltéréseket a nyers szófához képest,
+ahol több ág közötti összefésülés kezdeményezésére van szükség,
+ami egyező prefixű de egymástól különböző részfák esetében fordul elő.
+Tehát exponenciálisan ilyen hely kellene szerepeljen a reguláris kifejezés nyers szófájában.
+Ahhoz azonban, hogy exponenciálisan sok azonos prefixű hely keletkezzen,
+valamilyen elágazások (karakterosztályok vagy alternációk) szekvenciájára van szükég.
+Mivel azonban a szekvencia végén ezek a prefixek egy közös ponton találkoznak,
+
 
 
 
