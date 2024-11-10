@@ -505,9 +505,6 @@ következő eleméhez tartozó csomóponthoz
 Ebből világos, hogy a nyers fa mérete és előállításának költsége
 a reguláris kifejezés méretével egyenesen arányos.
 
-A szóvég csomópontokat az átláthatóság kedvéért mindenütt külön-külön szerepel,
-de a gráfot úgy is rajzolhattuk volna,
-hogy az összes utolsó karakterosztály egyetlen közös szóvég csomópontba csatlakozik tovább.
 Látható, hogy a szekvenciákból láncolás lett,
 az alternációkból pedig egy több elágazással (gyermekelemmel) rendelkező üres csomópont.
 Az is látható, hogy néhány rákövetkező karakter duplikáltan szerepel egyes elágazásokban
@@ -549,8 +546,6 @@ az alábbi kompakt szófát nyerjük:
 \caption{Egyszerű reguláris kifejezés kompakt szófája}
 \end{figure}
 
-\todo[inline]{mi a kompakt szófa előállítása komplexitása?}
-
 Minden csomóponthoz hozzárendeltük a hozzá tartozó részfa leveleinek effektív számát,
 ami rekurzióval könnyen számítható.
 Ez az információ már elegendő ahhoz, hogy kikeressük az $n$-edik elemet,
@@ -558,7 +553,9 @@ illetve hogy megkeressük egy adott karakterlánc (megtalált vagy beillesztési
 
 \todo[inline]{ALGORITMUS: iteráció stb.}
 
-% TODO: bizonyítsuk, hogy a fenti átalakításokkal kapott regexhez képest a 
+\todo[inline]{mi a kompakt szófa előállítása komplexitása?}
+
+
 
 Most pedig nézzük hogyan tudunk engedni a fenti megszorításokon.
 
@@ -584,8 +581,6 @@ az opcionális repetíció kifejtése pedig a következő rekurzív módon tört
 
 Az opcionális előfordulás (\texttt{?}) az $R_1$ esettel egyenlő.
 
-% TODO: a komplexitásnövekedésről pár szó (lehet optimalizálni a repetíciókat, de ezzel most nem foglalkozom)
-
 % TODO: a horgonyok valójában már más téma
 
 Horgonyokat is implementálhatunk,
@@ -601,11 +596,17 @@ ami újabb kivételdobást eredményezhet, ha az ottani gyermekelemek emiatt elf
 \todo[inline]{prefix-fa példa}
 
 Az igazi nehézségek akkor kezdődnek,
-amikor elengedjük a karakterenkénti rendezés megszorítását.
-Erre például ékezetes karakterek vagy kis- és nagybetűk keveredése esetén lehet szükségünk.
+amikor elengedjük a karakterenkénti rendezés megszorítását,
+amire például ékezetes karakterek vagy kis- és nagybetűk keveredése esetén lehet szükségünk.
 Ekkor ugyanis esetleg csak egy későbbi eltérés dönti el,
 hogy egy korábbi ékezet vagy nagybetűsség számít-e.
-Vagyis nem elegendő a karakterenkénti prefix-fa a rendezettség biztosításához.
+Vagyis az egyszerű, karakterenkénti prefix-fa sem elég a rendezettség biztosításához.
+
+
+
+
+
+% TODO: ezt újraszervezni
 
 A Unicode Collation Algorithm (UCA) szabvány egy nyelvfüggő többszintű összehasonlítási sémát definiál,
 de ezek között van olyan általános séma is, mely tekinthető egy nyelvfüggetlen összehasonlításnak.
