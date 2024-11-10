@@ -555,28 +555,25 @@ illetve hogy megkeressük egy adott karakterlánc (megtalált vagy beillesztési
 
 \todo[inline]{ALGORITMUS: iteráció stb.}
 
-\todo[inline]{mi a kompakt szófa előállítása komplexitása?}
-
 A kompakt szófában megtalálható különböző részfák száma
 a nyers szófa különböző részfáinak számához képest exponenciálisan megnőhet.
-Induljunk ki ugyanis egy $n$-elemű $C$ karakterhalmazból,
-és képezzük rendre a $C_1, C_2, \cdot, C_{n-1}, C_n$ karakterosztályokat úgy,
-hogy $C_i = C \textbackslash x$.
+Induljunk ki ugyanis egy $n$ elemű $C$ karakterhalmazból,
+és képezzük rendre a $C_1, C_2, \cdots, C_{n-1}, C_n$ karakterosztályokat úgy,
+hogy $C_i$-t $C$-ből az $i$-edik karakter kihagyásával nyerjük.
+Képezzük azt az $n$ ágú alternációt,
+ahol az $i$-edik ág $C_i$\texttt{\{}$n$\texttt{\}} alakú.
+Világos, hogy a reguláris kifejezés által megengedett összes $n-1$ hosszú prefixekben
+szereplő karakterek lehetséges halmazai kiadják
+$C$ összes legfeljebb $n-1$ elemű halmazait,
+ami exponenciálisan növekszik $n$ növelésével.
+Minden ilyen halmazhoz eltér a lehetséges utolsó betűk halmaza,
+tehát egyúttal legalább ennyi különböző részfa is van.
 
-
-A kompakt szófa előállítása nem von maga után exponenciális komplexitást.
-Ennek részletes bizonyítását mellőzöm,
-de gond nélkül elvégezhető a következő megfontolásokból kiindulva.
-A kompakt szófa azokon a helyeken tartalmaz eltéréseket a nyers szófához képest,
-ahol több ág közötti összefésülés kezdeményezésére van szükség,
-ami egyező prefixű de egymástól különböző részfák esetében fordul elő.
-Tehát exponenciálisan ilyen hely kellene szerepeljen a reguláris kifejezés nyers szófájában.
-Ahhoz azonban, hogy exponenciálisan sok azonos prefixű hely keletkezzen,
-valamilyen elágazások (karakterosztályok vagy alternációk) szekvenciájára van szükég.
-Mivel azonban a szekvencia végén ezek a prefixek egy közös ponton találkoznak,
-
-
-
+Az előbbi reguláris kifejezés lényegileg azt fejezi ki,
+hogy a karakterláncban nem szerepelhet $C$ összes eleme, ezen kívül bármit megengedünk.
+Az ehhez hasonló konfigurációk szerencsére meglehetősen életszerűtelenek.
+Az ilyen szempontból problémás alternációkat akár előre is detektálhatjuk,
+és túl nagy becsült növekedés esetén hibát dobhatunk.
 
 Most pedig nézzük hogyan tudunk engedni a fenti megszorításokon.
 
@@ -602,9 +599,7 @@ az opcionális repetíció kifejtése pedig a következő rekurzív módon tört
 
 Az opcionális előfordulás (\texttt{?}) az $R_1$ esettel egyenlő.
 
-% TODO: a horgonyok valójában már más téma
-
-Horgonyokat is implementálhatunk,
+A támogatott konstrukciókat könnyen tovább bővíthetjük az egyszerűbb horgonyokkal,
 mint például szövegvég (\texttt{\$}) vagy szóhatár (\texttt{{\textbackslash}b}).
 Ezeket a kezdeti feldolgozáskor úgy tekintjük,
 mint az átmeneti üres csomópontokat, tehát elimináljuk és megjegyezzük őket,
@@ -612,9 +607,8 @@ de utána sorban kikényszerítjük a teljesülésüket.
 A horgonynak ellentmondó gyermekelemeket eltávolítjuk,
 ha ezután nem marad gyermekelem, a teljesíthetetlen ágat jelző kivételt dobunk,
 a kivételt elkapó szint el fogja dobni az ágat mint lehetetlent,
-ami újabb kivételdobást eredményezhet, ha az ottani gyermekelemek emiatt elfogytak.
-
-\todo[inline]{prefix-fa példa}
+ami újabb kivételdobást eredményezhet, ha az ottani gyermekelemek emiatt elfogytak,
+és így tovább.
 
 Az igazi nehézségek akkor kezdődnek,
 amikor elengedjük a karakterenkénti rendezés megszorítását,
