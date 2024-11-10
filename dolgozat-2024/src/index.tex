@@ -566,14 +566,15 @@ Világos, hogy a reguláris kifejezés által megengedett összes $n-1$ hosszú 
 szereplő karakterek lehetséges halmazai kiadják
 $C$ összes legfeljebb $n-1$ elemű halmazait,
 ami exponenciálisan növekszik $n$ növelésével.
-Minden ilyen halmazhoz eltér a lehetséges utolsó betűk halmaza,
+Minden ilyen halmaz az alternáló ágak egyedi kombinációját azonosítja
+(ebben a konkrét esetben ez azt jelenti, hogy különböző lesz a lehetséges utolsó betűk halmaza),
 tehát egyúttal legalább ennyi különböző részfa is van.
 
 Az előbbi reguláris kifejezés lényegileg azt fejezi ki,
 hogy a karakterláncban nem szerepelhet $C$ összes eleme, ezen kívül bármit megengedünk.
-Az ehhez hasonló konfigurációk szerencsére meglehetősen életszerűtelenek.
+Az ehhez hasonló konfigurációk szerencsére meglehetősen életszerűtelennek tűnnek.
 Az ilyen szempontból problémás alternációkat akár előre is detektálhatjuk,
-és túl nagy becsült növekedés esetén hibát dobhatunk.
+és túl nagy becsült növekedés esetén expliciten hibát dobhatunk.
 
 Most pedig nézzük hogyan tudunk engedni a fenti megszorításokon.
 
