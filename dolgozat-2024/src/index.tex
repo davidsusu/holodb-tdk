@@ -71,6 +71,26 @@ ABSTRACT
 
 % TODO: https://www.cs.cmu.edu/afs/cs/academic/class/15451-s06/www/lectures/scrabble.pdf
 
+% TODO: az elején tisztázni, hogy ez nem implementáció-tanulmány,
+%       hanem egy "proposal" (és egyúttal prototípus)
+%       -- ezt az absztrakban is hangsúlyozni;
+%       mindennapi probléma, de nem mindennapi megoldás;
+%       sokféle helyzet, ugyanaz az "absztrakt" probléma
+% TODO: alapkövetelményeket felsorolni, majd tételesen kifejteni
+% TODO: az "Implementációs kérdések" kiemelt részletek csokra,
+%       amelyeket a legfontosabbnak tűnik részletesen tárgyalni,
+%       illetve megvalósíthatóságukat igazolni
+
+--------------------------------------------
+
+- Bevezetés (kezdés: egy mindennapi probléma arcai/inkarnációi/??? [???])
+- A rendszer architektúrája
+- Implementációs kérdések
+- Proof of Concept / Gyakorlati eredmények / ??? (tényleg működik ez az egész, legalább nagyjából?)
+- Összegzés
+
+--------------------------------------------
+
 \chapter{INTRO}
 
 \section{Bevezetés}
@@ -377,7 +397,7 @@ Felmerül a gondolat, hogy közvetlenül egy ilyen kriptográfiai módszert alka
 Mindenképpen olyan megoldásra van szükség, amelynél a blokkméret tetszőlegesen megadható, és kellően flexibilis, skálázható.
 
 A Feistel-hálózatok pontosan ilyenek, és emiatt gyakran használják is őket összetett titkosító eljárások keretrendszereként.
-A Fesitel-hálózat egy többkörös eljárás, ahol minden körben az adat egyik felének bitjeit módosítjuk.
+A Feistel-hálózat egy többkörös eljárás, ahol minden körben az adat egyik felének bitjeit módosítjuk.
 Ez alapesetben megköveteli a páros blokkméretet, de mindjárt kitérek arra, hogyan lehet ezen enyhíteni.
 
 Az egyes körökben felváltva a bitsorozat bal illetve jobb oldali felét változtatjuk; nevezzük ezt célhelynek, a másik fél tartalmát pedig forrásbiteknek.
@@ -438,7 +458,7 @@ Helyette viszont egyszerűen áttérhetünk modulo $n$-re: $P_{+k}(k)(i) = (i + 
 
 \subsection{HASH-FÜGGVÉNYEK}
 
-\todo[inline]{Utalni a Fesitel-hálózatban (és egyebütt) történt használatra}
+\todo[inline]{Utalni a Feistel-hálózatban (és egyebütt) történt használatra}
 
 \subsection{VIRTUÁLIS ÉRTÉKKÉSZLETEK}
 
@@ -484,6 +504,8 @@ Az újrahasznosítás miatt a fa tárhelyigénye a reguláris kifejezéshez kép
 A szóvég csomópontok lesznek a fa levelei.
 A prefix fa könnyen felépíthető a reguláris kifejezés szintaxisfájából (AST).
 A gráf tömöríthető úgy, hogy konstans karakterek helyett karakterosztályokat engedünk meg.
+
+\todo[inline]{tisztázni, hogy a "szó"-fa teljes sztringekre vonatkozik}
 
 A felépítés két lépcsőben történik.
 Először egy nyers fát állítunk elő, ami közvetlenül reprezentálja a reguláris kifejezést.
@@ -572,7 +594,7 @@ tehát egyúttal legalább ennyi különböző részfa is van.
 
 Az előbbi reguláris kifejezés lényegileg azt fejezi ki,
 hogy a karakterláncban nem szerepelhet $C$ összes eleme, ezen kívül bármit megengedünk.
-Az ehhez hasonló konfigurációk szerencsére meglehetősen életszerűtelennek tűnnek.
+Az ehhez hasonló konfigurációk szerencsére meglehetősen életszerűtlennek tűnnek.
 Az ilyen szempontból problémás alternációkat akár előre is detektálhatjuk,
 és túl nagy becsült növekedés esetén expliciten hibát dobhatunk.
 
@@ -643,12 +665,14 @@ ahol a codepointok között egyúttal egyedi sorrendezést definiál.
 A UCA öt alapértelmezett rendezési szintet különböztet meg:
 
 \begin{itemize}
-    \item \textbf{L1}: alapkaraterek (Base characters)
+    \item \textbf{L1}: alapkarakterek (Base characters)
     \item \textbf{L2}: diakritikus jelek (Accents)
     \item \textbf{L3}: kis-/nagybetűsség (Case/Variants)
     \item \textbf{L4}: központozás (Punctuation)
     \item \textbf{Ln}: kódolási különbségek (Identical)
 \end{itemize}
+
+\todo[inline]{példa a szintekbeli nézetre, esetleg a lista helyett táblázat (legalább lenne táblázat)}
 
 Például a normál magyar kollációban a '\texttt{Kör!}' karakterlánc L1-es alakja '\texttt{kor}'
 ahol minden diakritikus jel, nagybetűsség, központozás stb. eltávolításra került.
@@ -662,19 +686,89 @@ míg az egyik szerint különbséget nem találunk.
 Ekkor egyszerűen a kollációselem-listák elemenkénti összehasonlítása szerint
 kerül megállapításra a két karakterlánc egymáshoz képesti sorrendje.
 
-% TODO: itt rögtön rátérhetünk a megvalósításra
+A kompakt szófa fentebbi implementációját a következő ötlettel tudjuk kibővíteni
+a többszintű rendezés támogatásához.
+Minden rendezési szinthez külön szófát készítünk, melyeket az eredeti szófa egyszerűsítésével nyerünk
+(az életszerűség csorbítása nélkül feltehetjük,
+hogy a reguláris kifejezés olyan, hogy ez problémamentesen megtehető).
+Ekkor az egyszerűsített fákban egy-egy maximális útvonalhoz 1-nél több eredeti karakterlánc tartozhat
+(az egyszerűsítés éppen ezt az összevonást jelenti
+az adott szinten egyenlőnek számító karakterláncok között).
+Ezeket a szófákat aztán (virtuális értelemben) egymás alá fűzzük,
+azaz effektíve minden előző szint EOW csomópontja után konkatenáljuk a következő szint fáját.
+Az összevont (például egybeolvadó karakterekhez tartozó) részfák
+többszörös számossággal számítanak, amit jelezni kell.
 
-...
+\todo[inline]{ÁBRA: többszintű kompakt fa}
 
-...
+\todo[inline]{ALGORITMUS: többszintű kompakt fa}
 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+Az n-edik karakterlánc lekérése úgy történik,
+hogy az egymás alá fűzött fák rendszerében (ami maga is egy nagy faként értelmezhető) navigálunk.
+Az első fában normál módon keresünk, azzal a kiegészítéssel,
+hogy a szorzó csomópontok egyszerűen olyan részfák listájaként értelmezendők,
+melyek a szorzó csomópont gyermekelemeihez tartozó részfákkal egyenlők,
+azonban minden méretükben a szorzóval növelve.
+A levélhez érve a szorzók miatt egy 1-nél nagyobb számosságot kaphatunk.
+Ezt a számosságot a további szintek részfái fogják tovább-bontani.
+Az utolsó szint kivételével mindegyik fában megengedett (sőt, a dolog lényegéhez tartozik)
+a többszörös számosság.
+
+Világos, hogy (a szorzókat figyelembe véve) egy-egy szint fája
+a teljes eredeti értékkészlet számosságával bír.
+Amikor azonban már a többedik fában kezdünk továbbmenni,
+valójában a fa olyan szűkített nézetét kell vennünk,
+amely kompatibilis az összes már előbbi szint fájában bejárt útvonallal.
+Például (magyarral kompatibilis kollációs szabályokat feltéve),
+ha az első szinten a ``\texttt{tarol}'' karakterláncot kaptuk,
+a második szint fája megengedheti a ``\texttt{tarol}'', ``\texttt{tárol}'', ``\texttt{táról}'' stb.
+karakterláncokhoz tartozó útvonalakat,
+de mondjuk a (tegyük föl, eredetileg megengedett) "hasonlít" útvonalát már nem.
+
+\todo[inline]{ÁBRA: lekérés a többszintű fából (szűkített fával)}
+
+Ez a szűkítés a bemenettől függ.
+Vagyis nem tudjuk előre generálni, a futási idejű performanciát fogja befolyásolni.
+A előbb bemutatott adatszerkezet alkalmas arra, hogy ezt hatékonnyá tegye,
+de ehhez szükség van egy lényeges megkötésre,
+nevezetesen, hogy az egyszerűsítés pozíciótartó legyen,
+azaz egy adott karakterlánc összes szintbeli nézetének hossza egyezzen az eredeti hosszal,
+és bármely karaktere a vele azonos pozíción található eredeti karakter derivátuma legyen.
+Ezt a megkötést a UCA kollációi nem biztosítják,
+mivel a két utolsó alapértelmezett szint nem pozíciótartó.
+Ezért egyelőre csak az első három szintet tartjuk szem előtt
+(a központozó karakterek egyszerűen normál alapkaraktereknek számítanak).
+
+\todo[inline]{ALGORITMUS: lekérés a többszintű fából (fa szűkítésével)}
+
+Megjegyzem, az előbbi megkötés áthidalása nem végzetes az eddigi megközelítésünkre.
+Ha például a központozó karakterekből álló maximális szubsztringeket
+az utánuk következő első normál alapkarakter (illetve a szóvég) diakritikus jeleként értelmezzük,
+az egyszerűsítés újra pozíciótartó lesz.
+Hasonló érvényes a kódolási variánsokra.
+
+\todo[inline]{megjegyezni a negyedik szint nem is feltétlen hasznos}
+% TODO: különösen ha a szóköz is központozásnak számít (vs. szavankénti rendezés),
+%       illetve ha a speciális karakterek dominálnak illetve fontosak}
+
+Karakterlánc keresésekor is a fenti szempontokkal egészítjük ki
+a többszintű rendezést nem támogató kompakt fánál látott algoritmus-sémát.
+A fő eltérés, hogy a kereséskor nem az addigi útvonalakkal,
+hanem a keresett eredeti karakterlánccal való kompatibilitás számít,
+nyilván már az első szinttől kezdve.
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 
 
 
 
 
+
+
+
+\subsubsection{OLD XXX}
 
 A UCA egy nyelvfüggő többszintű összehasonlítási sémát definiál,
 de ezek között van olyan általános séma is, mely tekinthető egy nyelvfüggetlen összehasonlításnak.
@@ -741,6 +835,12 @@ amelyek együtt implementálják az értékkészlethez tartozó rendezési koll�
 \todo[inline]{a két- vagy háromrétegű prefix-fa leírása}
 
 \todo[inline]{FUTURE PLAN: az UCA még részletesebb és konfigurálható megvalósítása}
+
+
+
+
+
+
 
 % TODO: svédek: å, ä, ö: base characters
 % https://en.wikipedia.org/wiki/Swedish_alphabet
