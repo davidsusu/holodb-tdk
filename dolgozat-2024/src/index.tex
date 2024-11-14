@@ -611,20 +611,72 @@ a kivételt elkapó szint el fogja dobni az ágat mint lehetetlent,
 ami újabb kivételdobást eredményezhet, ha az ottani gyermekelemek emiatt elfogytak,
 és így tovább.
 
+\subsubsection{Unicode karakterláncok és többszintű rendezés reguláris kifejezésekkel}
+
 Az igazi nehézségek akkor kezdődnek,
-amikor elengedjük a karakterenkénti rendezés megszorítását,
-amire például ékezetes karakterek vagy kis- és nagybetűk keveredése esetén lehet szükségünk.
+amikor elengedjük a karakterenkénti rendezés megszorítását
+(ami természetesen további többletköltségeket fog eredményezni,
+ezért érdemes opcionálissá, konfigurálhatóvá tenni).
+Erre például ékezetes karakterek vagy kis- és nagybetűk keveredése esetén lehet szükségünk.
 Ekkor ugyanis esetleg csak egy későbbi eltérés dönti el,
 hogy egy korábbi ékezet vagy nagybetűsség számít-e.
 Vagyis az egyszerű, karakterenkénti prefix-fa sem elég a rendezettség biztosításához.
 
+Ha egy ilyen szofisztikáltabb rendezési elvet akarunk megvalósítani,
+az Unicode Collation Algorithm (UCA) szabványból érdemes kiindulni.
+A UCA azonban rendkívül összetett,
+így egyelőre csak az alapvető szempontok implementálását fogom bemutatni.
+Ki-kitérek majd arra, hogyan lehet ezeket a későbbiekben bővíteni, továbbfejleszteni,
+hogy még részletesebben lefedje a szabvány által tárgyalt lehetőségeket.
+
+A UCA mindenekelőtt definiál egy általános keretrendszert,
+mely egy sémát ad arra, hogyan kell többszintű rendezéseket megvalósítani Unicode karakterláncokon.
+A sémát implementáló konkrét algoritmusokat \textit{kollációknak} nevezzük.
+Egy Unicode karakterlánc lényegileg Unicode codepoint-ok tömbjét jelenti
+(Java környezetben a \texttt{char} adattípus ilyen codepointot tárol).
+Egy kolláció egy-egy ilyen tömbhöz rendezési szintenként hozzárendel egy-egy
+kollációselem-listát (\textit{Collation Element Array}).
+A kollációs elemek lényegileg codepointok, de a kolláció által definiált súlyozás szerint átszámozva.
+Tehát úgy is felfoghatjuk, hogy a kolláció a Unicode karakterlánchoz
+szintenként egy másik Unicode karakterlánc nézetet rendel,
+ahol a codepointok között egyúttal egyedi sorrendezést definiál.
+A UCA öt alapértelmezett rendezési szintet különböztet meg:
+
+\begin{itemize}
+    \item \textbf{L1}: alapkaraterek (Base characters)
+    \item \textbf{L2}: diakritikus jelek (Accents)
+    \item \textbf{L3}: kis-/nagybetűsség (Case/Variants)
+    \item \textbf{L4}: központozás (Punctuation)
+    \item \textbf{Ln}: kódolási különbségek (Identical)
+\end{itemize}
+
+Például a normál magyar kollációban a '\texttt{Kör!}' karakterlánc L1-es alakja '\texttt{kor}'
+ahol minden diakritikus jel, nagybetűsség, központozás stb. eltávolításra került.
+Ellenben például a svéd nyelvben az '\texttt{ö}' betű az ABC végén
+teljesen különálló betűként szerepel,
+így a normál svéd kollációban a fenti karakterlánc L1-es alakja '\texttt{kör}',
+és a rendezésben is egészen máshogy fog viselkedni.
+
+A UCA szerint két karakterlánc összehasonlításakor sorban vizsgálandók az egyes szintek,
+míg az egyik szerint különbséget nem találunk.
+Ekkor egyszerűen a kollációselem-listák elemenkénti összehasonlítása szerint
+kerül megállapításra a két karakterlánc egymáshoz képesti sorrendje.
+
+% TODO: itt rögtön rátérhetünk a megvalósításra
+
+...
+
+...
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 
 
 
-% TODO: ezt újraszervezni
 
-A Unicode Collation Algorithm (UCA) szabvány egy nyelvfüggő többszintű összehasonlítási sémát definiál,
+
+
+A UCA egy nyelvfüggő többszintű összehasonlítási sémát definiál,
 de ezek között van olyan általános séma is, mely tekinthető egy nyelvfüggetlen összehasonlításnak.
 Ennek egy egyszerűsített háromszintű változatát fogjuk alapul venni.
 
