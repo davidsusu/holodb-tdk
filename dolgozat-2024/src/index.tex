@@ -645,7 +645,7 @@ hogy egy korábbi ékezet vagy nagybetűsség számít-e.
 Vagyis az egyszerű, karakterenkénti prefix-fa sem elég a rendezettség biztosításához.
 
 Ha egy ilyen szofisztikáltabb rendezési elvet akarunk megvalósítani,
-az Unicode Collation Algorithm (UCA) szabványból érdemes kiindulni.
+az \textit{Unicode Collation Algorithm} (UCA) szabványból érdemes kiindulni.
 A UCA azonban rendkívül összetett,
 így egyelőre csak az alapvető szempontok implementálását fogom bemutatni.
 Ki-kitérek majd arra, hogyan lehet ezeket a későbbiekben bővíteni, továbbfejleszteni,
@@ -668,14 +668,14 @@ A UCA öt alapértelmezett rendezési szintet különböztet meg:
     \item \textbf{L1}: alapkarakterek (Base characters)
     \item \textbf{L2}: diakritikus jelek (Accents)
     \item \textbf{L3}: kis-/nagybetűsség (Case/Variants)
-    \item \textbf{L4}: központozás (Punctuation)
+    \item \textbf{L4}: írásjelek (Punctuation)
     \item \textbf{Ln}: kódolási különbségek (Identical)
 \end{itemize}
 
 \todo[inline]{példa a szintekbeli nézetre, esetleg a lista helyett táblázat (legalább lenne táblázat)}
 
-Például a normál magyar kollációban a '\texttt{Kör!}' karakterlánc L1-es alakja '\texttt{kor}'
-ahol minden diakritikus jel, nagybetűsség, központozás stb. eltávolításra került.
+Például a normál magyar kollációban a '\texttt{Kör}' karakterlánc L1-es alakja '\texttt{kor}'
+ahol a diakritikus jel és nagybetűsség stb. ignorálásra (eltávolításra) került.
 Ellenben például a svéd nyelvben az '\texttt{ö}' betű az ABC végén
 teljesen különálló betűként szerepel,
 így a normál svéd kollációban a fenti karakterlánc L1-es alakja '\texttt{kör}',
@@ -685,6 +685,19 @@ A UCA szerint két karakterlánc összehasonlításakor sorban vizsgálandók az
 míg az egyik szerint különbséget nem találunk.
 Ekkor egyszerűen a kollációselem-listák elemenkénti összehasonlítása szerint
 kerül megállapításra a két karakterlánc egymáshoz képesti sorrendje.
+
+Az \textit{International Components for Unicode} a Unicode Consortium hivatalos
+referenciaimplementációja általában a Unicode szabványhoz,
+beleértve számos konkrét kollációt a világ nyelveihez.
+Konkrét szabályok kialakításához ebből érdemes kiindulni.
+Az ICU általában (beleértve a standard, európai és magyar kollációkat is)
+teljesen az L1 szinten kezeli az írásjeleket is
+(az egymás utáni több írásjel is külön-külön elsődleges karakternek számít).
+Ez logikusabb, mint az írásjeleket egyátalán nem figyelembe venni a betűk vizsgálatakor,
+hiszen akkor a szavak tagolása sem történik meg
+(például az ``\texttt{ab:cd}'' előrébb kerül, mint az ``\textttt{a:cd}'').
+Ezt is figyelembe véve, mi most csak az első három szinttel foglalkozunk,
+legalábbis kizárólag pozíciótartó összehasonlításokkal.
 
 A kompakt szófa fentebbi implementációját a következő ötlettel tudjuk kibővíteni
 a többszintű rendezés támogatásához.
@@ -734,21 +747,13 @@ de ehhez szükség van egy lényeges megkötésre,
 nevezetesen, hogy az egyszerűsítés pozíciótartó legyen,
 azaz egy adott karakterlánc összes szintbeli nézetének hossza egyezzen az eredeti hosszal,
 és bármely karaktere a vele azonos pozíción található eredeti karakter derivátuma legyen.
-Ezt a megkötést a UCA kollációi nem biztosítják,
-mivel a két utolsó alapértelmezett szint nem pozíciótartó.
-Ezért egyelőre csak az első három szintet tartjuk szem előtt
-(a központozó karakterek egyszerűen normál alapkaraktereknek számítanak).
+Mivel csak pozciótartó összehasonlításokra szorítkoztunk,
+ez a megkötés eleve biztosított.
 
 \todo[inline]{ALGORITMUS: lekérés a többszintű fából (fa szűkítésével)}
 
-Megjegyzem, az előbbi megkötés áthidalása nem végzetes az eddigi megközelítésünkre.
-Ha például a központozó karakterekből álló maximális szubsztringeket
-az utánuk következő első normál alapkarakter (illetve a szóvég) diakritikus jeleként értelmezzük,
-az egyszerűsítés újra pozíciótartó lesz.
-Hasonló érvényes a kódolási variánsokra.
-
 \todo[inline]{megjegyezni a negyedik szint nem is feltétlen hasznos}
-% TODO: különösen ha a szóköz is központozásnak számít (vs. szavankénti rendezés),
+% TODO: különösen ha a szóköz is írásjelnek számít (vs. szavankénti rendezés),
 %       illetve ha a speciális karakterek dominálnak illetve fontosak}
 
 Karakterlánc keresésekor is a fenti szempontokkal egészítjük ki
