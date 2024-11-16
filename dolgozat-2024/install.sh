@@ -1,12 +1,12 @@
 #!/bin/bash
 
 apt-get install \
+    curl uuid-runtime \
     texlive-latex-base texlive-latex-recommended texlive-lang-european \
     texlive-latex-extra texlive-bibtex-extra texlive-fonts-extra \
     texlive-luatex texlive-pictures texlive-pstricks texlive-science \
     hunspell hunspell-tools hunspell-hu \
     inkscape imagemagick optipng \
-    uuid-runtime \
 ;
 
 if ! command -v drawio &> /dev/null; then
