@@ -29,7 +29,7 @@
 
 \usepackage[newfloat]{minted}
 
-\title{HoloDB: Relációs demóadatok konzisztens on-the-fly generálása deklaratív konfigurációból}
+\title{HoloDB: Relációs demóadatok on-the-fly generálása deklaratív konfigurációból}
 \date{2024}
 \author{Horváth Dávid \\ {\small\href{mailto:horvathdown@student.elte.hu}{horvathdown@student.elte.hu}} }
 \degree{Programtervező Informatikus BSc}
@@ -117,17 +117,15 @@ vagy a serverless adatbázis-szolgáltatás.
 
 --------------------------------------------
 
-\chapter{NEW INTRO}
+\chapter{(+++) Bevezetés}
 
-\section{Bevezetés}
-
-\section{A holografikus adatbázis jelentése}
+\section{(+++) A holografikus adatbázis jelentése}
 
 \todo[inline]{nem lehet pontos definíciót adni, legfeljebb bizonyos követelményeket, inkább körülírjuk}
 
-\section{Koncepció}
+\section{(+++) Koncepció}
 
-\subsection{Konfiguráció}
+\subsection{(+++) Konfiguráció}
 
 % TODO: rendesen szövegezni, ide tenni a konfigurációs részt az eredetiből
 
@@ -142,7 +140,7 @@ lényegileg elég egy ilyen konfigurációs fájl.
 
 % TODO: ide a konfigfájl-példát
 
-\subsection{ALKALMAZHATÓSÁG}
+\subsection{(+++) ALKALMAZHATÓSÁG}
 
 % ha mindezt meg tudjuk valósítani...
 
@@ -150,7 +148,7 @@ lényegileg elég egy ilyen konfigurációs fájl.
 
 % TODO: azonnali indulás: lazy init-en még dolgozni!
 
-\subsection{ÚJONNAN MEGNYÍLÓ LEHETŐSÉGEK}
+\subsection{(+++) ÚJONNAN MEGNYÍLÓ LEHETŐSÉGEK}
 
 \todo[inline]{serverless}
 
@@ -167,7 +165,258 @@ lényegileg elég egy ilyen konfigurációs fájl.
 
 
 
-\chapter{ALAPOK}
+\chapter{(???) Áttekintés}
+
+
+\section{(???) Egy mindennapi probléma}
+
+\todo[inline]{Hangsúlyozni és kifejteni, hogy a relációs algebrával itt nem foglalkozunk, és az integrált teszt PoC célú}
+
+A szoftverfejlesztési és -release-elési folyamatok lényeges előfeltevése,
+hogy az alkalmazás mint absztrakt entitás snapshot jellegű,
+azaz a mindenkori forráskód \textit{aktuális állapotának} determinisztikus derivátuma,
+nem függ annak történetiségétől.
+Ezt az átlátható képet bolygatja meg a szoftverhez tartozó produkciós adatbázis,
+mely önálló életet él, a felhasználói világgal való interakcióban folyamatosan változik;
+szerkezete, szemantikája azonban szorosan az alkalmazás mindenkori állapotához kötődik.%
+\cite{Ploski2007DatabaseCentricVersioning}%
+\cite{Fluri2023DatabaseCiCd}
+
+Ez a kettős természet legalább két nagy problémakört eredményez.
+Az egyik a verziókezelést érinti:
+a produkciós adatbázist csak differencia-szkriptek végrehajtásával tudjuk módosítani,
+ami jellemzően egy másodlagos verziókezelést eredményez a forráskód verziókezelésén belül
+(ilyen megoldás például a Flyway vagy a Liquibase),
+és sorozatos összefésülési problémákhoz vezet, ha az adatok szerkezete vagy szemantikája gyakran változik.
+A jelen dolgozatban nem foglalkozom ennek a kérdésnek a részleteivel,
+de az utolsó fejezetben vázolom majd egy lehetséges megoldás körvonalait,
+ami szervesen következik majd az azt megelőzőekből.
+
+A másik problémakör azzal kapcsolatos, hogy ugyan az életnek kitett produkciós adatbázist
+kénytelenek vagyunk minden erőforrásigényével életben tartani, valamint minden release-zel migrálni,
+ám az \textit{absztrakt értelemben vett} adatbázisra számos egyéb helyen is szükségünk van,
+ahol ezek a folyamatos költségek igencsak nemkívánatosak.
+Ilyenek esetek jellemzően:
+
+\begin{itemize}
+    \item adatfüggő mockok és stubok biztosítása
+    \item integrációs és egyéb tesztelés
+    \item gyors prototípusgyártás, kísérletezés draft adatbázisokkal
+    \item rövid demonstrációk, prezentációk
+\end{itemize}
+
+Ezeken kívül, ha egy csak-olvasható adattartalmat akarunk nagy adatforgalomnak kitenni,
+fölmerülhet az adattartalom replikálása, és load-balanceren keresztüli elérhetővé tétele,
+ekkor azonban minden újabb példány jelentősen növeli a tárhelyfoglalást.
+
+Más területeken is találkozhatunk a fentiekhez hasonló kívánalmakkal.
+Például az adatbázisok oktatásában is jellemző, hogy minden egyes hallgató
+számára saját izolált adatbázist bocsátanak rendelkezésre,
+bár mindegyik ilyen adatbázis szükségszerűen ugyanazzal a szerkezettel és adatokkal bír.
+
+Fogalmazzuk meg tehát a problémát, mintegy tézisként:
+
+\thesispar{
+    \textbf{Alapmegállapítás:} Igen gyakran ütközünk abba a helyzetbe,
+    hogy adott struktúrájú és szemantikájú, viszonylag rövid életű adatbázist kell biztosítani,
+    a produkciós adatokra vonatkozó speciális követelmények nélkül.
+}
+
+A következő szekcióban röviden végigveszem, hogyan szokás általában a hasonló problémákat kezelni.
+
+
+\section{(???) Körkép}
+
+\subsection{(???) Kérések mockolása on-the-fly}
+
+Főként webes API-k által szolgáltatott adathalmazok mockolásakor találkozunk olyan megoldással,
+mely a lekérés (és persze az előre beállított szabályok)
+alapján generálja a válaszként visszaadandó adatstruktúrát
+(például egy rekordot vagy dokumentumot JSON formátumban).
+Az adatok véletlenszerűen kerülnek kitöltésre a lekérés szerkezete alapján megállapított séma keretébe.
+
+A módszer SQL-lekérdezések közvetlen mockolásához is adaptálható,
+a lekérdezés (és ha ismert, akkor a séma) alapján meg kell állapítani
+a visszaadandó eredménytábla szerkezetét, adattípusait,
+az egy-egy oszlopba kerülő adatok jellegét,
+majd random jelleggel elő kell állítani bizonyos számú, ezeknek a követelményeknek megfelelő eredményrekordot.
+
+Ez a megoldás természetesen nem fog konzisztens eredményt adni több lekérés esetén,
+így csak olyan esetben használható, ahol a lekérések nem épülnek egymásra.
+Cserébe erőforrásigénye csekély, nincs szükség az adatok tényleges tárolására.
+
+\subsection{(???) Seed-alapú virtuális világok}
+
+Játékokban és egyszerűbb szimulációkban már igen régóta generálnak kisebb világokat,
+pályákat procedurálisan valamilyen pszeudovéletlen algoritmus segítségével.
+A módszer továbbfejleszthető óriás világokra is.
+Ekkor a világteret (sorosan vagy hierarchikusan) szeletekre osztjuk, és biztosítunk egy függvényt,
+mely minden szelethez rendel egy saját seed értéket.
+Legegyszerűbb esetben a seed az adott szelet sorszámából generált hash.
+Amikor szükségünk van valamely szelet tartalmára, a szelet seedjéből kiindulva,
+az adott szabályrendszer szerint on-demand legeneráljuk az adott szelet tartalmát.
+A sűrűn benépesített világok szomszédos szeleteinek összeillesztése néha nem triviális.
+Felületszerű, folytonos struktúrák generálása esetén gyakran használnak
+valamilyen eleve interpolált eljárást, például Perlin-zajt,
+így biztosítva a közeli helyeken a közeli értékeket.
+
+Egy közismert korai példa seed-alapú módszert alkalmazó szoftverre
+az \textit{Elite} nevű 1984-ben kiadott űrhajós videójáték.
+A játékban meglátogatható bolygók kapnak egy-egy seedet, mely már teljesen meghatározza a felépítésüket,
+így elég a bolygó meglátogatásakor legenerálni a tartalmát.
+A módszert utána számtalan óriástérképes játék vette át.
+
+Ha elvonatkoztatunk a játékoktól és szimulációktól,
+ez a generálási módszer közel tetszőleges jellegű virtuális adathalmaz böngészését képes biztosítani.
+De azonnal szembeötlik a legfőbb hátrány is: a virtuális világ-adathalmaz nem kereshető.
+Nem tudjuk például hatékonyan lekérdezni, mely világszeletekben lelhető föl egy adott típusú objektum.
+
+\subsection{(???) Relációs adatok generálása}
+
+Amikor adatokat generálunk egy relációs modellbe, azt legegyszerűbb megközelítésben fölfoghatjuk úgy is,
+mint az előbb bemutatott virtuális világ materializációját egy relációs adatbázisszerveren.
+Milyen előnyöket nyerünk ezzel? Lássunk néhányat:
+
+\begin{itemize}
+    \item utófeldolgozás: utólag holisztikus módosításokat eszközölhetünk az adathalmazon
+    \item egynemű módosíthatóság: minden eleve tárolva van, nem kell külön kezelni a változásokat
+    \item kereshetőség: az adatbázis-kezelő biztosítja az indexeket
+\end{itemize}
+
+A fő hátrány egyértelmű: a nagy tárhelyigény.
+Vegyük észre, hogy még a kereshetőség is az indexek által foglalt további tárhely által valósul meg
+(az adatok eleve nagy tárhelyfoglalása mellett tűnhet esetleg elhanyagolhatónak).
+Ha pedig nem materializált adatok mellé gyártunk indexeket,
+akkor ki kell dolgoznunk valamilyen módszert a módosulások detektálására, ami általában nem triviális.
+
+Egyes generátorok a séma és az adatok jellegének deklaratív leírását is támogatják. Ez a leírás tárolható egy konfigurációs fájlban, ami verziókezelhető, dokumentálható, könnyen szerkeszthető.
+
+\subsection{(???) Relációs adatok anonimizálása}
+
+Ha már rendelkezésre áll egy éles adatbázis, kézenfekvőnek látszik,
+hogy ennek replikáit használjuk a teszt- vagy mockadatbázis kiindulópontjaként.
+Így rögtön egy valószerű adathalmazzal indulunk,
+az érzékeny adatok miatt azonban anonimizálásra van szükség.
+Tehát a generáláshoz szükséges számítási igényt összességében
+felcseréljük a másolás és anonimizáció költségeivel.
+
+Úgy tűnik, gyakran anonimizálással együtt is egyszerűbb dolog meglévő adatokból kiindulni,
+mint egy komplett generálási folyamatot kiépíteni.
+Egy köztes megoldás lehet a séma és az adatok nagyjábóli jellegének letapogatása,
+és az ez alapján történő újragenerálás.
+
+Azonban a bevezetőben felsorolt szituációk egy részében
+nem is áll rendelkezésre egy létező produkciós adatbázis.
+És ha rendelkezésre is áll, további probléma,
+hogy az adatok megszerzéséhez az éles adatbázist kell felkeresni,
+ami egyfelől az éles környezet nemkívánatos terhelését jelenti,
+másrészt az oda való beauthentikálás (a konkrét megoldástól függően) biztonsági kockázatot rejthet.
+
+Egy általános megoldás tehát aligha épülhet anonimizálásos módszerre.
+
+\subsection{(???) Nagy teljesítményű megoldások}
+
+Számos nagyteljesítményű szolgáltatás érhető el a piacon szintetikus adatok generálásához.
+A MOSTLY AI megoldása az akkurátus adatokra helyezi a hangsúlyt.
+Az adatok statisztikai jellemzői és mintázatának lényeges elemei
+jól illeszkednek a valós adatoknál látható mintázatokra.
+
+Egyes platformok általános megoldást nyújtanak az adatgenerálásra, anonimizációra és CI/CD-integrációra.
+Ilyen például a Tonic, a GenRocket és a Delphix.
+
+Ezek a rendszerek erősen optimalizálják és párhuzamosítják a tesztadatok előállításának egyes lépéseit,
+így a fapados megoldásokhoz képest költséghatékonyak.
+Csodát viszont nem lehet várni: a számításigény aszimptotikusan,
+a tárhelyigény pedig teljes egészében ugyanaz marad.
+
+
+\section{(???) Egy újfajta megoldás körvonalai}
+
+Az előzőekben tárgyalt megközelítések mindegyikének megvoltak a maga sajátos előnyei ás hátrányai.
+Fölmerül a kérdés: létezhet-e olyan megoldás, amely egyesíti az előnyöket és kikerüli a fő hátrányokat;
+vagy pedig ez eleve lehetetlen?
+Nincs-e itt egy beöltésre váró hézag?
+
+Először szedjük össze tételesen, milyen követelményeket várnánk el
+egy (egyelőre hipotetikus) ideális készterméktől:
+
+\begin{itemize}
+    \item támogatja a relációs adatmodellt, mint legáltalánosabbat
+    \item determinisztikus, konzisztens, és egy root seed módosításával újrakeverhető
+    \item azonnal elindul, nincs számottevő preparálási folyamat
+    \item az adatokat csak elérésükkor, on-the-fly számítja
+    \item indexeket szolgáltat, ahol az egyébként is elvárható lenne
+    \item könnyen és rugalmasan konfigurálható, fájlon keresztül is
+    \item óriás adatmennyiséget is képes szimulálni
+    \item skálázható, finomhangolható
+    \item egyedi működéssel könnyen bővíthető
+    \item opcionálisan írható
+\end{itemize}
+
+Az utolsó, írhatósági követelménynél föltehetjük, hogy az ilyen adatbázis viszonylag rövid életű,
+tehát jellemzően nincs szükség sem nagy mennyiségű módosítás megjegyzésére,
+sem azok hosszú távú perzisztálására.
+Így az egynemű módosíthatóság fentebb említett előnyét nyugodtan elvethetjük:
+ha egyszer a módosítási réteg megfelelően és univerzálisan implementálva van,
+az egyes felhasználásoknál már nincs ezzel kapcsolatos teendő.
+
+Belátható, hogy a fenti elvárások egyszerre teljesíthetők.
+Az alábbi szekcióban röviden vázolom, milyen előnyöket nyerünk így,
+az implementáció részleteit pedig a következő fejezetben fogom bemutatni.
+
+
+\section{(???) Az új megközelítés előnyei}
+
+Egyszerű esetben a felhasználói élményben három lényeges fázist különíthetünk el.
+A figyelem először a konfigurációs fájlra irányul:
+egyetlen átlátható, deklaratív, verziókezelhető adatfájlban minden megadható, amire szükség van.
+Majd az adatbázis létrejöttekor és a szerver elindulásakor látható,
+hogy teljesen hiányzik a szokásos másolási, generálási, anonimizálási, inicializálási vagy egyéb folyamat,
+a szerver töredékmásodperc alatt válaszképesen elindul.
+Végül a szerver rendkívül kis memóriaigénnyel fut\footnote{
+    Ami persze a betöltött plusz adatforrások és az adatmódosítások arányában megnövekedhet.
+},
+ugyanakkor a lekérdezések futási ideje sem marad el nagyságrendekkel a tényleges adatbázisétól.
+
+Az integrált konfigurációs fájl előnye még,
+hogy létező adatbázispéldányokon tanított mesterséges intelligencia segítségével is generálható.\footnote{
+    Ígéretes, hogy mindössze egy példafájl és pár instrukció után
+    a ChatGPT-4 is meglehetősen jó eredményt generál.
+}
+A gépi tanulással segített konfigurációmenedzsment egyre szélesebb körben alkalmazott módszer,
+megtaláljuk a SAT-solverektől\cite{Hoos2021AutomatedCA} a felhőarchitektúrákig\cite{Osypanka2022ResourceUC},
+és nem látszik elvi akadálya az adatbázisra vonatkozó konfigurációban való alkalmazásnak.
+
+De ilyen vaskos módszerek nélkül, egyszerűbb heurisztikákkal is lehetséges
+egy létező adatbázis jó közelítéssel történő letapogatása.
+Hasonlóan, a virtuális adatbázis könnyen materializálható egy valós adatbázisba.
+
+A könnyűsúlyú jelleg olyan új távlatokat nyit, amelyek korábban föl sem merülhettek.
+Például most már nincs akadálya, hogy bármely füstteszt adatbázis-eléréssel fusson.
+A CI/CD pipeline-okban adathalmazok kívülről való betöltése nélkül is lehet rövid feladatokat futtatni.
+A megoldás adatbázistervező eszközökbe való integrálással lehetővé tudnánk tenni,
+hogy az épp aktuális tervállapot gombnyomásra teljes értékű adatbázisként elinduljon.
+
+Azt hiszem, jogosan merül föl a kérdés, hogy miért nem született és terjedt el még hasonló termék.
+Ennek fő okait az alábbiakban látom:
+
+\begin{itemize}
+    \item \textbf{kontraintuitivitás}: előzetes feltevésemmel szemben úgy tűnik,
+          nem olyan egyszerű átlátni a koncepciót, és megérteni hogy ``hol is vannak az adatok''
+    \item \textbf{megfelelő SQL plannerek eddigi hiánya}: az Apache Calcite például
+          csak az utóbbi néhány évben vált népszerűvé, és inkább elsősorban adatintegrátorként
+    \item \textbf{bejáratott alternatívák}: az on-the-fly mockolás lehetősége,
+          a NoSQL adatbázisok és felhőmegoldások fejlődése stb.
+          sztenderdképző kerülőmegoldásokként elfedték a problémát
+    \item \textbf{érdekhiány}: a releváns területen működő nagyobb vendorok elsősorban
+          erőforrásokat adnak bérbe, és az általuk fejlesztett architektúrák (történetileg érthetően)
+          elsősorban az ezeken futó tényleges adatbázisok kezelését kell megoldják;
+          nincs tehát nyomás jelentősen más típusú termékkel való kísérletezésre
+\end{itemize}
+
+
+
+\chapter{(XXX) ALAPOK}
 
 \section{A nagy illúzió: adatok a semmiből}
 
@@ -277,529 +526,8 @@ Ilyen például az általam használt Apache Calcite.
 Ugyanakkor egy saját SQL-futtatót is implementáltam, mely sok esetben gyorsabban fut,
 cserébe csak egy limitált SQL-t támogat.
 
-\section{Hatékony számítások}
 
-Mivel a szoftver létező prototípusa, a \textit{HoloDB}
-(és a hozzá kapcsolódó segédeszközök, könyvtárak nagy része) Java programnyelven íródott,
-a továbbiakban felteszem, hogy Java környezetben vagyunk.
-
-A hagyományos, tényleges adatbázisokban az egyik szűk keresztmetszetet
-az adatok fizikai elérése jelenti.
-Esetünkben ezt a virtuális értékkiosztások fenti függvényei helyettesítik.
-A blokkbetöltés, keresési index-struktúrák, materializált nézetek frissítése
-és hasonló problémák helyett a virtuális adattárban
-a visszaadandó adatok hatékony kiszámítását kell megoldani,
-ami általában az oszlopok értékeinek on-the-fly produkálását és keresését jelenti.
-
-Az on-the-fly értékszámítás során gyakran fordulnak elő átmeneti óriás számok,
-ám nehezen jósolható előre, hogy pontosan mikor.
-Például eleve egy értékkészlet is lehet óriási
-(gondoljunk például az \texttt{{\textbackslash}w{30}}
-reguláris kifejezés alapján kitöltött oszlop lehetséges értékeinek számára),
-miközben szükségünk van bármely pozíció közvetlen hivatkozására.
-Az adatbázis méretére vonatkozóan nem akartam megkötéseket tenni.
-Nem lett volna célszerű explicit ellenőrzések tömegét beépíteni
-a problémás számítások, potenciális túlcsordulások földerítésére.
-Továbbá az egész számokat egységesen szerettem volna kezelni, függetlenül azok méretétől.
-Így a beépített \texttt{BigInteger} típust egy idő után elvetettem,
-mivel az kisebb számokra a \texttt{long} típushoz képest rendkívül rossz performanciájú.
-
-\todo[inline]{ide a hashert, és bármit, ami még jöhet}
-
-\todo[inline]{skálázhatóságról (FastHasher, LinearMonotonic, noop permutation)}
-
-
-
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
-Az értékkiosztási trükkökkel egy statikus adatbázist írunk le,
-ami értelemszerűen önmagában csak-olvashatóan érhető el.
-Látni fogjuk, hogyan lehet egy csak-olvasható tábla fölé olyan dekorátort helyezni,
-mely a változások megfelelő adatstruktúrában történő számontartásával
-az írhatóság illúzióját kelti.
-
-\chapter{Áttekintés}
-
-
-\section{Egy mindennapi probléma}
-
-\todo[inline]{Hangsúlyozni és kifejteni, hogy a relációs algebrával itt nem foglalkozunk, és az integrált teszt PoC célú}
-
-A szoftverfejlesztési és -release-elési folyamatok lényeges előfeltevése,
-hogy az alkalmazás mint absztrakt entitás snapshot jellegű,
-azaz a mindenkori forráskód \textit{aktuális állapotának} determinisztikus derivátuma,
-nem függ annak történetiségétől.
-Ezt az átlátható képet bolygatja meg a szoftverhez tartozó produkciós adatbázis,
-mely önálló életet él, a felhasználói világgal való interakcióban folyamatosan változik;
-szerkezete, szemantikája azonban szorosan az alkalmazás mindenkori állapotához kötődik.%
-\cite{Ploski2007DatabaseCentricVersioning}%
-\cite{Fluri2023DatabaseCiCd}
-
-Ez a kettős természet legalább két nagy problémakört eredményez.
-Az egyik a verziókezelést érinti:
-a produkciós adatbázist csak differencia-szkriptek végrehajtásával tudjuk módosítani,
-ami jellemzően egy másodlagos verziókezelést eredményez a forráskód verziókezelésén belül
-(ilyen megoldás például a Flyway vagy a Liquibase),
-és sorozatos összefésülési problémákhoz vezet, ha az adatok szerkezete vagy szemantikája gyakran változik.
-A jelen dolgozatban nem foglalkozom ennek a kérdésnek a részleteivel,
-de az utolsó fejezetben vázolom majd egy lehetséges megoldás körvonalait,
-ami szervesen következik majd az azt megelőzőekből.
-
-A másik problémakör azzal kapcsolatos, hogy ugyan az életnek kitett produkciós adatbázist
-kénytelenek vagyunk minden erőforrásigényével életben tartani, valamint minden release-zel migrálni,
-ám az \textit{absztrakt értelemben vett} adatbázisra számos egyéb helyen is szükségünk van,
-ahol ezek a folyamatos költségek igencsak nemkívánatosak.
-Ilyenek esetek jellemzően:
-
-\begin{itemize}
-    \item adatfüggő mockok és stubok biztosítása
-    \item integrációs és egyéb tesztelés
-    \item gyors prototípusgyártás, kísérletezés draft adatbázisokkal
-    \item rövid demonstrációk, prezentációk
-\end{itemize}
-
-Ezeken kívül, ha egy csak-olvasható adattartalmat akarunk nagy adatforgalomnak kitenni,
-fölmerülhet az adattartalom replikálása, és load-balanceren keresztüli elérhetővé tétele,
-ekkor azonban minden újabb példány jelentősen növeli a tárhelyfoglalást.
-
-Más területeken is találkozhatunk a fentiekhez hasonló kívánalmakkal.
-Például az adatbázisok oktatásában is jellemző, hogy minden egyes hallgató
-számára saját izolált adatbázist bocsátanak rendelkezésre,
-bár mindegyik ilyen adatbázis szükségszerűen ugyanazzal a szerkezettel és adatokkal bír.
-
-Fogalmazzuk meg tehát a problémát, mintegy tézisként:
-
-\thesispar{
-    \textbf{Alapmegállapítás:} Igen gyakran ütközünk abba a helyzetbe,
-    hogy adott struktúrájú és szemantikájú, viszonylag rövid életű adatbázist kell biztosítani,
-    a produkciós adatokra vonatkozó speciális követelmények nélkül.
-}
-
-A következő szekcióban röviden végigveszem, hogyan szokás általában a hasonló problémákat kezelni.
-
-
-\section{Körkép}
-
-\subsection{Kérések mockolása on-the-fly}
-
-Főként webes API-k által szolgáltatott adathalmazok mockolásakor találkozunk olyan megoldással,
-mely a lekérés (és persze az előre beállított szabályok)
-alapján generálja a válaszként visszaadandó adatstruktúrát
-(például egy rekordot vagy dokumentumot JSON formátumban).
-Az adatok véletlenszerűen kerülnek kitöltésre a lekérés szerkezete alapján megállapított séma keretébe.
-
-A módszer SQL-lekérdezések közvetlen mockolásához is adaptálható,
-a lekérdezés (és ha ismert, akkor a séma) alapján meg kell állapítani
-a visszaadandó eredménytábla szerkezetét, adattípusait,
-az egy-egy oszlopba kerülő adatok jellegét,
-majd random jelleggel elő kell állítani bizonyos számú, ezeknek a követelményeknek megfelelő eredményrekordot.
-
-Ez a megoldás természetesen nem fog konzisztens eredményt adni több lekérés esetén,
-így csak olyan esetben használható, ahol a lekérések nem épülnek egymásra.
-Cserébe erőforrásigénye csekély, nincs szükség az adatok tényleges tárolására.
-
-\subsection{Seed-alapú virtuális világok}
-
-Játékokban és egyszerűbb szimulációkban már igen régóta generálnak kisebb világokat,
-pályákat procedurálisan valamilyen pszeudovéletlen algoritmus segítségével.
-A módszer továbbfejleszthető óriás világokra is.
-Ekkor a világteret (sorosan vagy hierarchikusan) szeletekre osztjuk, és biztosítunk egy függvényt,
-mely minden szelethez rendel egy saját seed értéket.
-Legegyszerűbb esetben a seed az adott szelet sorszámából generált hash.
-Amikor szükségünk van valamely szelet tartalmára, a szelet seedjéből kiindulva,
-az adott szabályrendszer szerint on-demand legeneráljuk az adott szelet tartalmát.
-A sűrűn benépesített világok szomszédos szeleteinek összeillesztése néha nem triviális.
-Felületszerű, folytonos struktúrák generálása esetén gyakran használnak
-valamilyen eleve interpolált eljárást, például Perlin-zajt,
-így biztosítva a közeli helyeken a közeli értékeket.
-
-Egy közismert korai példa seed-alapú módszert alkalmazó szoftverre
-az \textit{Elite} nevű 1984-ben kiadott űrhajós videójáték.
-A játékban meglátogatható bolygók kapnak egy-egy seedet, mely már teljesen meghatározza a felépítésüket,
-így elég a bolygó meglátogatásakor legenerálni a tartalmát.
-A módszert utána számtalan óriástérképes játék vette át.
-
-Ha elvonatkoztatunk a játékoktól és szimulációktól,
-ez a generálási módszer közel tetszőleges jellegű virtuális adathalmaz böngészését képes biztosítani.
-De azonnal szembeötlik a legfőbb hátrány is: a virtuális világ-adathalmaz nem kereshető.
-Nem tudjuk például hatékonyan lekérdezni, mely világszeletekben lelhető föl egy adott típusú objektum.
-
-\subsection{Relációs adatok generálása}
-
-Amikor adatokat generálunk egy relációs modellbe, azt legegyszerűbb megközelítésben fölfoghatjuk úgy is,
-mint az előbb bemutatott virtuális világ materializációját egy relációs adatbázisszerveren.
-Milyen előnyöket nyerünk ezzel? Lássunk néhányat:
-
-\begin{itemize}
-    \item utófeldolgozás: utólag holisztikus módosításokat eszközölhetünk az adathalmazon
-    \item egynemű módosíthatóság: minden eleve tárolva van, nem kell külön kezelni a változásokat
-    \item kereshetőség: az adatbázis-kezelő biztosítja az indexeket
-\end{itemize}
-
-A fő hátrány egyértelmű: a nagy tárhelyigény.
-Vegyük észre, hogy még a kereshetőség is az indexek által foglalt további tárhely által valósul meg
-(az adatok eleve nagy tárhelyfoglalása mellett tűnhet esetleg elhanyagolhatónak).
-Ha pedig nem materializált adatok mellé gyártunk indexeket,
-akkor ki kell dolgoznunk valamilyen módszert a módosulások detektálására, ami általában nem triviális.
-
-Egyes generátorok a séma és az adatok jellegének deklaratív leírását is támogatják. Ez a leírás tárolható egy konfigurációs fájlban, ami verziókezelhető, dokumentálható, könnyen szerkeszthető.
-
-\subsection{Relációs adatok anonimizálása}
-
-Ha már rendelkezésre áll egy éles adatbázis, kézenfekvőnek látszik,
-hogy ennek replikáit használjuk a teszt- vagy mockadatbázis kiindulópontjaként.
-Így rögtön egy valószerű adathalmazzal indulunk,
-az érzékeny adatok miatt azonban anonimizálásra van szükség.
-Tehát a generáláshoz szükséges számítási igényt összességében
-felcseréljük a másolás és anonimizáció költségeivel.
-
-Úgy tűnik, gyakran anonimizálással együtt is egyszerűbb dolog meglévő adatokból kiindulni,
-mint egy komplett generálási folyamatot kiépíteni.
-Egy köztes megoldás lehet a séma és az adatok nagyjábóli jellegének letapogatása,
-és az ez alapján történő újragenerálás.
-
-Azonban a bevezetőben felsorolt szituációk egy részében
-nem is áll rendelkezésre egy létező produkciós adatbázis.
-És ha rendelkezésre is áll, további probléma,
-hogy az adatok megszerzéséhez az éles adatbázist kell felkeresni,
-ami egyfelől az éles környezet nemkívánatos terhelését jelenti,
-másrészt az oda való beauthentikálás (a konkrét megoldástól függően) biztonsági kockázatot rejthet.
-
-Egy általános megoldás tehát aligha épülhet anonimizálásos módszerre.
-
-\subsection{Nagy teljesítményű megoldások}
-
-Számos nagyteljesítményű szolgáltatás érhető el a piacon szintetikus adatok generálásához.
-A MOSTLY AI megoldása az akkurátus adatokra helyezi a hangsúlyt.
-Az adatok statisztikai jellemzői és mintázatának lényeges elemei
-jól illeszkednek a valós adatoknál látható mintázatokra.
-
-Egyes platformok általános megoldást nyújtanak az adatgenerálásra, anonimizációra és CI/CD-integrációra.
-Ilyen például a Tonic, a GenRocket és a Delphix.
-
-Ezek a rendszerek erősen optimalizálják és párhuzamosítják a tesztadatok előállításának egyes lépéseit,
-így a fapados megoldásokhoz képest költséghatékonyak.
-Csodát viszont nem lehet várni: a számításigény aszimptotikusan,
-a tárhelyigény pedig teljes egészében ugyanaz marad.
-
-
-\section{Egy újfajta megoldás körvonalai}
-
-Az előzőekben tárgyalt megközelítések mindegyikének megvoltak a maga sajátos előnyei ás hátrányai.
-Fölmerül a kérdés: létezhet-e olyan megoldás, amely egyesíti az előnyöket és kikerüli a fő hátrányokat;
-vagy pedig ez eleve lehetetlen?
-Nincs-e itt egy beöltésre váró hézag?
-
-Először szedjük össze tételesen, milyen követelményeket várnánk el
-egy (egyelőre hipotetikus) ideális készterméktől:
-
-\begin{itemize}
-    \item támogatja a relációs adatmodellt, mint legáltalánosabbat
-    \item determinisztikus, konzisztens, és egy root seed módosításával újrakeverhető
-    \item azonnal elindul, nincs számottevő preparálási folyamat
-    \item az adatokat csak elérésükkor, on-the-fly számítja
-    \item indexeket szolgáltat, ahol az egyébként is elvárható lenne
-    \item könnyen és rugalmasan konfigurálható, fájlon keresztül is
-    \item óriás adatmennyiséget is képes szimulálni
-    \item skálázható, finomhangolható
-    \item egyedi működéssel könnyen bővíthető
-    \item opcionálisan írható
-\end{itemize}
-
-Az utolsó, írhatósági követelménynél föltehetjük, hogy az ilyen adatbázis viszonylag rövid életű,
-tehát jellemzően nincs szükség sem nagy mennyiségű módosítás megjegyzésére,
-sem azok hosszú távú perzisztálására.
-Így az egynemű módosíthatóság fentebb említett előnyét nyugodtan elvethetjük:
-ha egyszer a módosítási réteg megfelelően és univerzálisan implementálva van,
-az egyes felhasználásoknál már nincs ezzel kapcsolatos teendő.
-
-Belátható, hogy a fenti elvárások egyszerre teljesíthetők.
-Az alábbi szekcióban röviden vázolom, milyen előnyöket nyerünk így,
-az implementáció részleteit pedig a következő fejezetben fogom bemutatni.
-
-
-\section{Az új megközelítés előnyei}
-
-Egyszerű esetben a felhasználói élményben három lényeges fázist különíthetünk el.
-A figyelem először a konfigurációs fájlra irányul:
-egyetlen átlátható, deklaratív, verziókezelhető adatfájlban minden megadható, amire szükség van.
-Majd az adatbázis létrejöttekor és a szerver elindulásakor látható,
-hogy teljesen hiányzik a szokásos másolási, generálási, anonimizálási, inicializálási vagy egyéb folyamat,
-a szerver töredékmásodperc alatt válaszképesen elindul.
-Végül a szerver rendkívül kis memóriaigénnyel fut\footnote{
-    Ami persze a betöltött plusz adatforrások és az adatmódosítások arányában megnövekedhet.
-},
-ugyanakkor a lekérdezések futási ideje sem marad el nagyságrendekkel a tényleges adatbázisétól.
-
-Az integrált konfigurációs fájl előnye még,
-hogy létező adatbázispéldányokon tanított mesterséges intelligencia segítségével is generálható.\footnote{
-    Ígéretes, hogy mindössze egy példafájl és pár instrukció után
-    a ChatGPT-4 is meglehetősen jó eredményt generál.
-}
-A gépi tanulással segített konfigurációmenedzsment egyre szélesebb körben alkalmazott módszer,
-megtaláljuk a SAT-solverektől\cite{Hoos2021AutomatedCA} a felhőarchitektúrákig\cite{Osypanka2022ResourceUC},
-és nem látszik elvi akadálya az adatbázisra vonatkozó konfigurációban való alkalmazásnak.
-
-De ilyen vaskos módszerek nélkül, egyszerűbb heurisztikákkal is lehetséges
-egy létező adatbázis jó közelítéssel történő letapogatása.
-Hasonlóan, a virtuális adatbázis könnyen materializálható egy valós adatbázisba.
-
-A könnyűsúlyú jelleg olyan új távlatokat nyit, amelyek korábban föl sem merülhettek.
-Például most már nincs akadálya, hogy bármely füstteszt adatbázis-eléréssel fusson.
-A CI/CD pipeline-okban adathalmazok kívülről való betöltése nélkül is lehet rövid feladatokat futtatni.
-A megoldás adatbázistervező eszközökbe való integrálással lehetővé tudnánk tenni,
-hogy az épp aktuális tervállapot gombnyomásra teljes értékű adatbázisként elinduljon.
-
-Azt hiszem, jogosan merül föl a kérdés, hogy miért nem született és terjedt el még hasonló termék.
-Ennek fő okait az alábbiakban látom:
-
-\begin{itemize}
-    \item \textbf{kontraintuitivitás}: előzetes feltevésemmel szemben úgy tűnik,
-          nem olyan egyszerű átlátni a koncepciót, és megérteni hogy ``hol is vannak az adatok''
-    \item \textbf{megfelelő SQL plannerek eddigi hiánya}: az Apache Calcite például
-          csak az utóbbi néhány évben vált népszerűvé, és inkább elsősorban adatintegrátorként
-    \item \textbf{bejáratott alternatívák}: az on-the-fly mockolás lehetősége,
-          a NoSQL adatbázisok és felhőmegoldások fejlődése stb.
-          sztenderdképző kerülőmegoldásokként elfedték a problémát
-    \item \textbf{érdekhiány}: a releváns területen működő nagyobb vendorok elsősorban
-          erőforrásokat adnak bérbe, és az általuk fejlesztett architektúrák (történetileg érthetően)
-          elsősorban az ezeken futó tényleges adatbázisok kezelését kell megoldják;
-          nincs tehát nyomás jelentősen más típusú termékkel való kísérletezésre
-\end{itemize}
-
-\todo[inline]{Nagytáblázat: az egész nem kell, szövegesen úgyis le volt írva előtte (kérdés, hogy mindenáron kellenek-e táblázatok)}
-
-A következő táblázat összehasonlítja az új megközelítés és a már említett megoldások fő jellemzőit:
-
-\newcommand{\comptableleftwidth}{3.2cm}
-\newcommand{\comptablelinesep}{\hdashline[0.7pt/3pt]}
-\newcommand{\comptableicon}[2]{\raisebox{-0.5\height}{\fontsize{15}{17}\selectfont \textcolor{#1}{#2}}}
-\begin{table}[H]
-\settowidth\rotheadsize{mmmmmmmmmmmm}
-\begin{center}
-\begin{tabular}{ |p{3.2cm}|c c c c c:c c| }
-  \hline
-  \parbox{2.9cm}{\rhpad ~ \\ ~ \\ ~ \\ \raggedleft Megoldás \\ \centering \textbackslash \\ \raggedright Tulajdonság \rhpad} &
-    \rothead{Adatgenerálás \\ \textit{külső} adatbázissal} &
-    \rothead{Adatgenerálás \\ \textit{beágyazott} adatbázissal} &
-    \rothead{Produkciós adatbázis \\ másolatának használata} &
-    \rothead{Anonimizálás a \\ produkciós adatbázisból} &
-    \rothead{Ad hoc on-the-fly \\ SQL mocking} &
-    \rothead{A jelen megoldás \\ \textit{konténerben} futtatva}&
-    \rothead{A jelen megoldás \\ \textit{beágyazva}} \\
-  \hline
-  \arrayrulecolor{black!40}
-  \parbox{\comptableleftwidth}{\rhpad Forrásadatbázis \\ szükséges \rhpad} &
-    \comptableicon{Green}{\faClose} &
-    \comptableicon{Green}{\faClose} &
-    \comptableicon{Red}{\faExclamationTriangle} &
-    \comptableicon{Red}{\faExclamationTriangle} &
-    \comptableicon{Green}{\faClose} &
-    \comptableicon{Green}{\faClose} &
-    \comptableicon{Green}{\faClose} \\
-  \comptablelinesep
-  \parbox{\comptableleftwidth}{\rhpad Adatbázisból \\ előállítható \rhpad} &
-    \comptableicon{SkyBlue}{\faCheck} &
-    \comptableicon{SkyBlue}{\faCheck} &
-    \comptableicon{Green}{\faCheck} &
-    \comptableicon{Green}{\faCheck} &
-    \comptableicon{Red}{\faClose} &
-    \comptableicon{SkyBlue}{\faCheck} &
-    \comptableicon{SkyBlue}{\faCheck} \\
-  \comptablelinesep
-  \parbox{\comptableleftwidth}{\rhpad Előállítás költsége \rhpad} &
-    \comptableicon{Red}{\faCogs} &
-    \comptableicon{Red}{\faCogs} &
-    \comptableicon{Apricot}{\faCog} &
-    \comptableicon{Red}{\faCogs} &
-    \comptableicon{Green}{\faEnvira} &
-    \comptableicon{Green}{\faEnvira} &
-    \comptableicon{Green}{\faEnvira} \\
-  \comptablelinesep
-  \parbox{\comptableleftwidth}{\rhpad Indítás költsége \rhpad} &
-    \comptableicon{Apricot}{\faCog} &
-    \comptableicon{Red}{\faCogs} &
-    \comptableicon{Apricot}{\faCog} &
-    \comptableicon{Apricot}{\faCog} &
-    \comptableicon{Green}{\faEnvira} &
-    \comptableicon{Green}{\faEnvira} &
-    \comptableicon{Green}{\faEnvira} \\
-  \comptablelinesep
-  \parbox{\comptableleftwidth}{\rhpad Runtime \\ tárhelyigény \rhpad} &
-    \comptableicon{Red}{\faDatabase} &
-    \comptableicon{Red}{\faDatabase} &
-    \comptableicon{Red}{\faDatabase} &
-    \comptableicon{Red}{\faDatabase} &
-    \comptableicon{Green}{\faEnvira} &
-    \comptableicon{Green}{\faEnvira} &
-    \comptableicon{Green}{\faEnvira} \\
-  \comptablelinesep
-  \parbox{\comptableleftwidth}{\rhpad Runtime \\ performancia \rhpad} &
-    \comptableicon{Green}{\faBolt \faBolt \faBolt} &
-    \comptableicon{Green}{\faBolt \faBolt} &
-    \comptableicon{Green}{\faBolt \faBolt \faBolt} &
-    \comptableicon{Green}{\faBolt \faBolt \faBolt} &
-    \comptableicon{Green}{\faBolt \faBolt \faBolt} &
-    \comptableicon{Green}{\faBolt} &
-    \comptableicon{Green}{\faBolt} \\
-  \comptablelinesep
-  \parbox{\comptableleftwidth}{\rhpad Prod. adatbázis \\ pontos utánzása \rhpad} &
-    \comptableicon{Green}{\faCheck} &
-    \comptableicon{Red}{\faClose} &
-    \comptableicon{Green}{\faCheck\kern-0.65em\faCheck} &
-    \comptableicon{Green}{\faCheck} &
-    \comptableicon{Red}{\faClose} &
-    \comptableicon{Red}{\faClose} &
-    \comptableicon{Red}{\faClose} \\
-  \comptablelinesep
-  \parbox{\comptableleftwidth}{\rhpad Kérések között \\ konzisztens \rhpad} &
-    \comptableicon{Green}{\faCheck} &
-    \comptableicon{Green}{\faCheck} &
-    \comptableicon{Green}{\faCheck} &
-    \comptableicon{Green}{\faCheck} &
-    \comptableicon{Red}{\faClose} &
-    \comptableicon{Green}{\faCheck} &
-    \comptableicon{Green}{\faCheck} \\
-  \comptablelinesep
-  \parbox{\comptableleftwidth}{\rhpad Beágyazható \rhpad} &
-    \comptableicon{Red}{\faClose} &
-    \comptableicon{Green}{\faCheck} &
-    \comptableicon{Red}{\faClose} &
-    \comptableicon{Red}{\faClose} &
-    \comptableicon{Green}{\faCheck} &
-    \comptableicon{Red}{\faClose} &
-    \comptableicon{Green}{\faCheck} \\
-  \comptablelinesep
-  \parbox{\comptableleftwidth}{\rhpad Írható \rhpad} &
-    \comptableicon{Green}{\faCheck} &
-    \comptableicon{Green}{\faCheck} &
-    \comptableicon{Green}{\faCheck} &
-    \comptableicon{Green}{\faCheck} &
-    \comptableicon{Red}{\faClose} &
-    \comptableicon{Green}{\faCheck} &
-    \comptableicon{Green}{\faCheck} \\
-  \comptablelinesep
-  \parbox{\comptableleftwidth}{\rhpad Deklaratív, \\ determinisztikus \rhpad} &
-    \comptableicon{Red}{\faClose} &
-    \comptableicon{Red}{\faClose} &
-    \comptableicon{Red}{\faClose} &
-    \comptableicon{Red}{\faClose} &
-    \comptableicon{Red}{\faClose} &
-    \comptableicon{Green}{\faCheck} &
-    \comptableicon{Green}{\faCheck} \\
-  \comptablelinesep
-  \parbox{\comptableleftwidth}{\rhpad Indítható pusztán \\ ORM alapján \rhpad} &
-    \comptableicon{Red}{\faClose} &
-    \comptableicon{Red}{\faClose} &
-    \comptableicon{Red}{\faClose} &
-    \comptableicon{Red}{\faClose} &
-    \comptableicon{SkyBlue}{\faCheck} &
-    \comptableicon{Red}{\faClose} &
-    \comptableicon{Green}{\faCheck} \\
-  \comptablelinesep
-  \parbox{\comptableleftwidth}{\rhpad Kétirányú \\ skálázhatóság \rhpad} &
-    \comptableicon{Red}{\faClose} &
-    \comptableicon{Red}{\faClose} &
-    \comptableicon{Red}{\faClose} &
-    \comptableicon{Red}{\faClose} &
-    \comptableicon{Red}{\faClose} &
-    \comptableicon{Green}{\faCheck} &
-    \comptableicon{Green}{\faCheck} \\
-  \arrayrulecolor{black}
-  \hline
-\end{tabular}
-\caption[Tesztadatok biztosítására használt módszerek összehasonlítása]{
-    Tesztadatok biztosítására használt módszerek általános jellemzőinek összehasonlítása
-}
-\end{center}
-\end{table}
-
-
-
-\chapter{A virtuális adattár konstrukciója}
-
-
-\section{A nagy illúzió}
-
-Olyan adattár felépítésére vállalkozunk most,
-mely egy tetszőlegesen nagy méretű, konzisztens és kereshető adattárat imitál,
-miközben valójában mindebből semmi sem létezik,
-az egész mintegy illúzió.
-Hogy az illúziót elérjük, egyfelől meg kell találni azt az univerzális modellt,
-mely a lehető legrugalmasabb felhasználásra alkalmassá teszi;
-másrészt a cél eléréséhez, mint majd látjuk, apró eszközök egész tárát kell összeverbuválni
-különféle területekről, a relációktól az automataelméleten át a kriptográfiáig.
-
-Megoldásom alapvetésként egy relációs adatbázist leíró API-t fog definiálni illetve megvalósítani.
-Aligha érdemes más megközelítést választani,
-hiszen a relációs adatmodell nem csak tradicionálisan megkerülhetetlen
-és máig a legnépszerűbb adattárolási módszer\cite{Akhtar2023PopularityRO},
-de egyúttal közös nevezőként szolgál bármely más modellhez.
-Egy relációs struktúrával gyakorlatilag bármilyen interpretált adathalmazt le tudunk írni,
-mivel a relációs séma általános normalizációs segédeszköz.
-
-A legtöbb alkalmazásban van valamilyen fokális entitás, objektumtípus,
-mely alapvető szerepet tölt be az architektúrában
-(egy task manager esetében ilyen lehet a task,
-míg egy könyvtári katalógusban a könyv).
-A tervezés elején hamar arra a megállapításra jutottam,
-hogy esetünkben a legalapvetőbb objektum az \textit{oszlop}.
-Az oszlop alatt azonos típusú adatokat találunk,
-az alapfeladat mindig ezen adatok értékkészletének megadása lehet.
-Általában egy index is egy (esetleg néhány) konkrét oszlophoz köthető.
-
-Természetesen hamar ki kell lépnünk a szigorú oszlop-orientáltságból.
-Lehetnek például összefüggések egy táblán belüli oszlopok között.
-Ezt azonban még mindig egyszerűbb az oszlopos megközelítés megfelelő kiterjesztésével elérni,
-mintsem áttérni valamiféle rekordonkénti generálásra.
-Úgy is mondhatjuk, hogy az oszlopok alatti mezők jó jelöltek arra, hogy ``világszeletek'' legyenek,
-míg egész rekordok nem.
-
-Lehetnek továbbá megkötések táblák között is.
-Ezek kezelése is könnyen elvégezhető az oszlopos alapvetésre építve.
-Az egyoszlopos idegen kulcsoknál például csak annyit kell biztosítani,
-hogy a hivatkozó oszlop értékkészlete a hivatkozottnak a tartalma legyen.
-
-A mindenkori módszert, amivel egy oszlop értéklistáját biztosítjuk,
-\textit{értékkiosztás}nak fogom nevezni.
-A virtuális értékkiosztások olyan függvényt valósítanak meg,
-mellyel egy adott mező értéke determinisztikusan előállítható;
-illetve ezzel konzisztensen az értékek lehetőleg kereshetők is.
-Az ilyen függvény az adat fizikai elérését helyettesíti,
-ami a tényleges adatbázisok egyik szűk keresztmetszete.
-
-A legtöbb oszlop értékkészlete jól behatárolható.
-A tényleges értékek egy efölötti multihalmazt alkotnak,
-néha ehhez valamilyen statisztikai megkötés is tartozik ($NULL$-ok száma, értékgyakoriság stb.).
-Továbbá a multihalmaz valamilyen konkrét sorrendben helyezkedik el az oszlop alatt.
-Itt jegyzem meg, hogy a tábla rekordjait sorrendezettnek fogom tekinteni:
-azonos táblabeli valamely két oszlop értéklistájából kiválasztott egy-egy mező
-azonos rekordhoz tartozik pontosan akkor, ha a sorrendbeli pozíciójuk (sorindexük) megegyezik.
-
-Vegyük észre, hogy két független problémával szembesülünk:
-
-\begin{enumerate}
-    \item az oszlopértékek multihalmazának előállítása
-    \item az értékek összekeverése
-\end{enumerate}
-
-Ezeket úgy kell megvalósítani, hogy a végső értéklista adott pozíciójú eleme is gyorsan lekérhető legyen,
-valamint egy adott érték vagy értéksáv előfordulási pozíciói is
-(utóbbi esetben lehetőleg rendezetten).
-Ha feltesszük, hogy a multihalmaz úgy van ábrázolva,
-hogy a hatékony értéklekérés és keresés-rendezés elvárása teljesül,
-akkor már csak egy (a tábla hosszára értelmezett) invertálható permutációra van szükség,
-hogy az adatokat visszakereshetően szét is szórjuk.
-(Lentebb látni fogjuk, milyen módszerrel tudjuk a multihalmaz egy eleve rendezett reprezentációját képezni,
-amivel az elvárások teljesíthetők.)
-A gyorsan számítható invertálható permutációk tipikus képviselője a modulo szorzásra épül.
-Plusz költség vállalásával pedig sokkal jobb szórást biztosító permutációkat kapunk,
-ha kriptográfiai módszereket vetünk be.
-
-A kétfázisú értékkiosztásnak ezzel az ötletével
-egy egyszerűbb adatbázis szimulációjának kívánalmait már tulajdonképpen le is fedtük,
-de néhány további hasznos értékkiosztási módszert is be fogok majd mutatni.
+\section{(---) A nagy illúzió (RÉGI VERZIÓ VÉGE)}
 
 A szoftver létező prototípusa, a \textit{HoloDB}
 (és a hozzá kapcsolódó segédeszközök, könyvtárak nagy része) Java programnyelven íródott,
@@ -841,9 +569,54 @@ lényegileg elég egy ilyen konfigurációs fájl.
 Ennek konkrétumaira majd a 3. fejezetben térek ki.
 
 
-\section{Az architektúra alapjai}
 
-\subsection{Segédtípusok}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+Az értékkiosztási trükkökkel egy statikus adatbázist írunk le,
+ami értelemszerűen önmagában csak-olvashatóan érhető el.
+Látni fogjuk, hogyan lehet egy csak-olvasható tábla fölé olyan dekorátort helyezni,
+mely a változások megfelelő adatstruktúrában történő számontartásával
+az írhatóság illúzióját kelti.
+
+\chapter{(XXX) A virtuális adattár konstrukciója}
+
+\section{(+++) Hatékony számítások}
+
+Mivel a szoftver létező prototípusa, a \textit{HoloDB}
+(és a hozzá kapcsolódó segédeszközök, könyvtárak nagy része) Java programnyelven íródott,
+a továbbiakban felteszem, hogy Java környezetben vagyunk.
+
+A hagyományos, tényleges adatbázisokban az egyik szűk keresztmetszetet
+az adatok fizikai elérése jelenti.
+Esetünkben ezt a virtuális értékkiosztások fenti függvényei helyettesítik.
+A blokkbetöltés, keresési index-struktúrák, materializált nézetek frissítése
+és hasonló problémák helyett a virtuális adattárban
+a visszaadandó adatok hatékony kiszámítását kell megoldani,
+ami általában az oszlopok értékeinek on-the-fly produkálását és keresését jelenti.
+
+Az on-the-fly értékszámítás során gyakran fordulnak elő átmeneti óriás számok,
+ám nehezen jósolható előre, hogy pontosan mikor.
+Például eleve egy értékkészlet is lehet óriási
+(gondoljunk például az \texttt{{\textbackslash}w{30}}
+reguláris kifejezés alapján kitöltött oszlop lehetséges értékeinek számára),
+miközben szükségünk van bármely pozíció közvetlen hivatkozására.
+Az adatbázis méretére vonatkozóan nem akartam megkötéseket tenni.
+Nem lett volna célszerű explicit ellenőrzések tömegét beépíteni
+a problémás számítások, potenciális túlcsordulások földerítésére.
+Továbbá az egész számokat egységesen szerettem volna kezelni, függetlenül azok méretétől.
+Így a beépített \texttt{BigInteger} típust egy idő után elvetettem,
+mivel az kisebb számokra a \texttt{long} típushoz képest rendkívül rossz performanciájú.
+
+\todo[inline]{ide a hashert, és bármit, ami még jöhet}
+
+\todo[inline]{skálázhatóságról (FastHasher, LinearMonotonic, noop permutation)}
+
+\section{(???) Az architektúra alapjai}
+
+\subsection{(???) Segédtípusok}
+
+\todo[inline]{"relációs ontológia" stb.: ezeket a kifejezéseket mellőzni}
 
 Mielőtt rátérnék a relációs ontológiát leíró storage API tárgyalására,
 röviden áttekintem azokat a segédinterfészeket,
@@ -860,7 +633,7 @@ A következő osztálydiagram összefoglalja a kiemelt és lentebb tárgyalt int
 }
 \end{figure}
 
-\subsection{A \texttt{LargeInteger} típus}
+\subsection{(???) A \texttt{LargeInteger} típus}
 
 Az adatok on-the-fly számításakor a szűk keresztmetszet
 a tárolás és elérés problémáiról a kalkulációkra helyeződik át.
@@ -934,7 +707,7 @@ a \texttt{LargeInteger} valamivel gyorsabb.
     }
 \end{figure}
 
-\subsection{A \texttt{TreeRandom} és implementációi}
+\subsection{(???) A \texttt{TreeRandom} és implementációi}
 
 Az adatbázist egy hierarchikus képződményként is fölfoghatjuk,
 ahol a sémákon belül táblák, azokon belül oszlopok,
@@ -985,7 +758,7 @@ A további bitek ennek derivátumai, aminek legegyszerűbb algoritmusa,
 ha a hash alapján előállított seeddel inicializált \texttt{Random} példánnyal
 rendre visszaadott bájtokat használjuk.
 
-\subsection{A \texttt{Monotonic} és implementációi}
+\subsection{(???) A \texttt{Monotonic} és implementációi}
 
 Gyakran egy adott értékkészlet elemeiből akarunk képezni egy $n$ hosszúságú rendezett listát.
 Az eloszlás (beleértve, hogy valamely érték egyáltalán előfordul-e)
@@ -1028,7 +801,7 @@ mely minden értékkészletbeli értékre tartalmazza annak várható előfordul
 Ezeket az előre definiált gyakoriságokat használhatjuk a mintavételezésben,
 de akár közvetlenül is alkalmazhatjuk egy diszkrét lineáris vetítéssel.
 
-\subsection{A \texttt{Permutation} és implementációi}
+\subsection{(???) A \texttt{Permutation} és implementációi}
 
 Gyorsan számítható invertálható permutációk például modulo szorzásból kiindulva valósíthatók meg.
 
@@ -1098,7 +871,7 @@ Az átméretező metódus bekerült magába az interfészbe,
 hogy az ilyen implementációk maguk kezeljék a helyzetet.
 A jó szétszórást biztosító permutációknál valószínűtlen a sok újrahívás.
 
-\subsection{A storage API}
+\subsection{(???) A storage API}
 
 Ha definiáltuk a relációs ontológia fő elemeit,
 akkor ezek megfelelő implementációi már megvalósítanak egy relációs adattárat,
@@ -1141,7 +914,7 @@ a tömörség kedvéért néhol kicsit vázlatosan:
 \end{figure}
 
 
-\section{A csak-olvasható alapréteg}
+\section{(XXX) A csak-olvasható alapréteg}
 
 Bármilyen implementáció legyen is mögötte, a storage API egy relációs adatbázist ír le.
 Tehát ahhoz, hogy a virtuális adatok funkcionálisan egy valódi (csak-olvasható) relációs adathalmaz képét adják,
@@ -1180,7 +953,7 @@ hogy a keresésen kívül még néhány további funkciót is támogatnia kellje
 például a rendezést és a $NULL$ értékek kezelését.
 Külön kitérek majd az ezzel kapcsolatos problémákra, ahol szükséges.
 
-\subsection{Keretrendszer az értékkiosztásokhoz}
+\subsection{(???) Keretrendszer az értékkiosztásokhoz}
 
 Virtuális adatok alatt elsősorban az egy-egy oszlop alá besorakozó,
 közös típussal rendelkező mezőértékeket értem.
@@ -1196,7 +969,7 @@ amennyiben az egy-egy oszlophoz tartozó listanézetek biztosítottak.
 Majd a több oszlopot érintő megkötések esetében ez lesz a helyzet.
 De lássuk először az egyoszlopos értékkiosztások lehetséges módszereit.
 
-\subsection{Indexelt egyoszlopos értékkiosztások}
+\subsection{(???) Indexelt egyoszlopos értékkiosztások}
 
 \subsubsection{Előzetes megfontolások}
 
@@ -1287,9 +1060,9 @@ a kimenetet szigorúan monoton módon állítsa elő.
 %%%%%%% BEGIN NEW
 
 
-\subsection{KÉTLÉPÉSES ÉRTÉKKIOSZTÁS}
+\subsection{(+++) KÉTLÉPÉSES ÉRTÉKKIOSZTÁS}
 
-\subsection{A monoton méretigazítás megvalósítása}
+\subsection{(+++) A monoton méretigazítás megvalósítása}
 
 A \texttt{Monotonic} interfész példánya egy függvényt reprezentál,
 amely az első $n$ nemnegatív egész számot értékkészletként nem monoton növekvő módon hozzárendeli az első $N$ nemnegatív egész számhoz.
@@ -1307,33 +1080,33 @@ azaz megvalósítja az $M^{-1}(m) = [i, j)$ függvényt is, ahol $0 \leq m < n$ 
 Az indexelt elérés az \texttt{indicesOf(value)} metóduson keresztül biztosított, amely egy \texttt{Range} objektumot ad vissza.
 A metódus egy variánsa maga is egy \texttt{Range} példányt vár, és értelemszerűen általánosítja az előbbit.
 
-\subsubsection{Triviális implementációk}
+\subsubsection{(+++) Triviális implementációk}
 
 \todo[inline]{Monotonic: triviális implementációk}
 
 \todo[inline]{Monotonic: egyszerű diszkrét lineáris interpoláció: általában ez is elég, a permutáció majd úgyis elkeveri}
 
-\subsubsection{Szimulált mintavétel}
+\subsubsection{(+++) Szimulált mintavétel}
 
 \todo[inline]{Monotonic: szimulált mintavétel (jó ez a cím?)}
 
 \todo[inline]{Monotonic: szimulált mintavétel: a lényeg, hogy bizonyos mértékű véletlenszerűséget ad}
 
-\subsubsection{Gyakoriságtáblázat használata}
+\subsubsection{(+++) Gyakoriságtáblázat használata}
 
 A fenti implementációk mindegyike általánosítható úgy, hogy figyelembe vegyen egy gyakoriságtáblázatot,
 mely az értékkészlet elemeihez azok relatív gyakoriságát rendeli.
 
 \todo[inline]{Monotonic: gyakoriságtáblázat}
 
-\subsection{Permutációk megvalósítása}
+\subsection{(+++) Permutációk megvalósítása}
 
 A \texttt{Permutation} interfész megvalósításához olyan eljárást keresünk, amellyel változó (és akár óriás) tartományon értelmezett,
 seed szerint variálható permutációfüggvény és annak inverze előáll, ahol mindkét függvény hatékony.
 
 Az inverz függvényhívás az \texttt{indexOf(value)} metódus biztosítja.
 
-\subsubsection{Triviális implementációk}
+\subsubsection{(+++) Triviális implementációk}
 
 Megjegyzem, hogy triviális implementációként használhatjuk egyszerűen az azonosságfüggvényt is.
 Ekkor nem keverednek az adatok, cserébe viszont performanciában verhetetlen.
@@ -1355,7 +1128,7 @@ Ha nem, a számot tároló \texttt{LargeInteger} példány
 \texttt{nextProbablePrime()} metódusát hívva előállítjuk a következő jelöltet.
 Ez a háttérben a \texttt{BigInteger} osztály ugyanilyen nevű metódusát hívja, amely a Java beépített heurisztikus megoldása a következő valószínű prím megkeresésére.
 
-\subsubsection{Feistel-hálózatok alkalmazása}
+\subsubsection{(+++) Feistel-hálózatok alkalmazása}
 
 Az invertálható, változtatható méretű, seed alapján újrakeverhető permutációk könnyen analógiába állíthatók kriptográfiai titkosítófüggvényekkel.
 Ezek általában változtatható blokkméretűek, kulcs alapján újrakeverhetőek és természetesen dekódolhatóak.
@@ -1404,7 +1177,7 @@ mivel jelentősen csökkentheti az intervallumon kívülre esés esélyét,
 
 \todo[inline]{Feistel leírásához igazítani a hasher-implementációk tárgyalását}
 
-\subsubsection{Permutációk méretigazítása}
+\subsubsection{(+++) Permutációk méretigazítása}
 
 \todo[inline]{Rejection sampling}
 
@@ -1416,13 +1189,13 @@ Rejection sampling módszerrel $i = n$ esetén $N - n$ számú extra iterációt
 ami nagy méret esetén rendkívül költséges.
 Helyette viszont egyszerűen áttérhetünk modulo $n$-re: $P_{+k}(k)(i) = (i + k) \bmod n$.
 
-\subsubsection{XXXX}
+\subsubsection{(+++) XXXX}
 
 \todo[inline]{egy trükkös saját permutáció, ami elég jó szórást ad (ha sikerül megoldani)}
 
 \todo[inline]{bitkeverés, kétfelől átfedő 2-hatványos permutálás stb.}
 
-\subsection{HASH-FÜGGVÉNYEK}
+\subsection{(+++) HASH-FÜGGVÉNYEK}
 
 \todo[inline]{Utalni a Feistel-hálózatban (és egyebütt) történt használatra}
 
@@ -1449,7 +1222,7 @@ Helyette viszont egyszerűen áttérhetünk modulo $n$-re: $P_{+k}(k)(i) = (i + 
 
 
 
-\subsubsection{Általános kétfázisú értékkiosztás}
+\subsubsection{(???) Általános kétfázisú értékkiosztás}
 
 Talán a leggyakoribb eset,
 hogy előre ismert véges értékkészlet elemeit szeretnénk viszontlátni az oszlopban,
@@ -1598,7 +1371,7 @@ de véletlenszerű, zajos kimenetet szeretnénk látni.
 
 %%%%%%% BEGIN NEW
 
-\subsubsection{Értékkészlet reguláris kifejezésből}
+\subsubsection{(+++) Értékkészlet reguláris kifejezésből}
 
 Karakterláncokból álló értékkészletnek egy reguláris kifejezés alapján történő generálása
 talán a legáltalánosabb és legrugalmasabb módja az értékek definiálásának.
@@ -1765,7 +1538,7 @@ a kivételt elkapó szint el fogja dobni az ágat mint lehetetlent,
 ami újabb kivételdobást eredményezhet, ha az ottani gyermekelemek emiatt elfogytak,
 és így tovább.
 
-\subsubsection{Unicode karakterláncok és többszintű rendezés reguláris kifejezésekkel}
+\subsubsection{(+++) Unicode karakterláncok és többszintű rendezés reguláris kifejezésekkel}
 
 Az igazi nehézségek akkor kezdődnek,
 amikor elengedjük a karakterenkénti rendezés megszorítását
@@ -1905,7 +1678,7 @@ nyilván már az első szinttől kezdve.
 
 
 
-\subsubsection{OLD XXX}
+\subsubsection{(+++) (???) OLD XXX}
 
 A UCA egy nyelvfüggő többszintű összehasonlítási sémát definiál,
 de ezek között van olyan általános séma is, mely tekinthető egy nyelvfüggetlen összehasonlításnak.
@@ -2014,7 +1787,7 @@ amelyek együtt implementálják az értékkészlethez tartozó rendezési koll�
 
 
 
-\subsubsection{Értékkiosztás reguláris kifejezés alapján}
+\subsubsection{(???) Értékkiosztás reguláris kifejezés alapján}
 
 Ha elengedjük a gyors keresés kritériumát,
 akkor a reguláris kifejezés alapján történő értékkiosztást nagyon könnyen megvalósíthatjuk
@@ -2449,7 +2222,7 @@ melyek a robusztusság eltérő fokain állnak.
 Ilyenek például: automatikus REST API, GraphQL adapter, authentikációs proxy, Apache Calcite SQL driver stb.
 
 
-\section{Konfiguráció}
+\section{(XXX) Konfiguráció}
 
 A HoloDB egy YAML formátumú konfigurációs fájl segítségével paraméterezhető fel,
 melyben az adatbázis minden lényeges eleme beállítható.

@@ -1,5 +1,8 @@
 #!/bin/bash
 
+# $1: mode: [draft|spare|final] (default: final)
+
+
 inputFileName='index.tex'
 outputFileName='dolgozat.pdf'
 
@@ -20,8 +23,16 @@ cd build/diagram
 if ! [ "${mode}" = 'draft' ]; then
     ls ./ --color=never | egrep '^.*\.drawio$' | while IFS=' ' read -r diagramFilename; do
         diagramPngFilename="$( echo "${diagramFilename}" | sed -E 's/.drawio$/.png/' )"
-        drawio --export --format png --scale 2.5 --output "${diagramPngFilename}" "${diagramFilename}"
-        optipng -o7 -zm1-9 "${diagramPngFilename}"
+        diagramPngScale='1'
+        if [ "${mode}" = 'final' ]; then
+            diagramPngScale='2.5'
+        fi
+        
+        drawio --export --format png --scale "${diagramPngScale}" --output "${diagramPngFilename}" "${diagramFilename}"
+        
+        if [ "${mode}" = 'final' ]; then
+            optipng -o7 -zm1-9 "${diagramPngFilename}"
+        fi
         
         diagramSvgFilename="$( echo "${diagramFilename}" | sed -E 's/.drawio$/.svg/' )"
         drawio --export --format svg --output "${diagramSvgFilename}" "${diagramFilename}"
