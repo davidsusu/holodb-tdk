@@ -1,3 +1,58 @@
+\iffalse
+
+Bevezetés[?]
+
+Architektúra
+  architekturális áttekintés
+  hatékony számítások / segédtípusok / LargeInteger
+  írási réteg
+  ...
+  konfiguráció
+
+A virtuális adattár
+  hasher
+  treerandom
+  ...
+  értékkiosztások
+  ...
+  egyéb értékkiosztásokkal kapcsolatos dolgok
+
+Gyakorlat
+  szcenáriók
+  empirikus eredmények
+
+összegzés
+  az eredmények értékelése
+  tervek a közeljövőre
+
+függelékek
+
+.........................
+
+KEDD
+  fejezet-struktúra
+  algoritmusok helyét elkülöníteni
+  szövegeket kiigazítani, kiegészíteni
+  algoritmusokat implementációnak nekikezdeni
+.........................
+SZERDA
+  algoritmusokat befejezni
+  bevezetőt megírni
+
+\fi
+
+
+
+% TODO:
+%-------
+% H)   1. "A prototípus" és "Konfiguráció" fejezetek taratlmának logikai helyét tisztázni + ténylegesen átrendezni
+% H)   2. a nem-bevezetés fejezeteket teljesen teljesen elrendezni
+% H)   3. a nem-bevezetés fejezetek szövegeit nagyjából véglegesíteni
+% H)   4. az empirikus mérések módszertanáról írni valamit
+% K)   5. a bevezető fejezeteket megírni
+% K-S) 6. algoritmusok, ha van rá idő
+% S)   7. a bírálat alapján újra átnézni az egészet, amit lehet, még javítani, bővíteni
+
 \documentclass[
     parspace,
     noindent,
@@ -5,9 +60,11 @@
 ]{elteiktdk}[2023/04/10]
 
 \usepackage[dvipsnames]{xcolor}
-\usepackage{graphicx}
 \usepackage{colortbl}
+\usepackage{graphicx}
 \usepackage{svg}
+\usepackage{hyperref}
+\usepackage{appendix}
 \usepackage{float}
 \usepackage{pgfplots}
 \usepackage{arydshln}
@@ -15,6 +72,7 @@
 \usepackage{picture,xcolor}
 \usepackage{pdflscape}
 \usepackage{fancyvrb}
+\usepackage{algorithm2e}
 \usepackage[backend=bibtex,style=numeric]{biblatex}
 
 \usepackage{todonotes}
@@ -47,6 +105,9 @@
 \addbibresource{references.bib}
 
 \begin{document}
+
+\setcounter{tocdepth}{4}
+\setcounter{secnumdepth}{4}
 
 \documentlang{hungarian}
 
@@ -95,8 +156,6 @@ vagy a serverless adatbázis-szolgáltatás.
 % TODO: a bevezetőben utalni mindenféle korábbi generáló-módszerre
 % PI-jegyek, fraktálok stb.
 
-% TODO: https://www.cs.cmu.edu/afs/cs/academic/class/15451-s06/www/lectures/scrabble.pdf
-
 % TODO: az elején tisztázni, hogy ez nem implementáció-tanulmány,
 %       hanem egy "proposal" (és egyúttal prototípus)
 %       -- ezt az absztrakban is hangsúlyozni;
@@ -123,24 +182,7 @@ vagy a serverless adatbázis-szolgáltatás.
 
 \todo[inline]{nem lehet pontos definíciót adni, legfeljebb bizonyos követelményeket, inkább körülírjuk}
 
-\section{(+++) Koncepció}
-
-\subsection{(+++) Konfiguráció}
-
-% TODO: rendesen szövegezni, ide tenni a konfigurációs részt az eredetiből
-
-A virtuális adatbázis felépítése a felhasználó számára legegyszerűbben
-egy konfigurációs fájl segítségével történik,
-melyben megadja az adatbázis-séma egyes elemeit, megkötéseit.
-Az oszlopok tartalmának keverési módja és értékkészlete kényelmesen állítható,
-például előre adott értéklistákkal, reguláris kifejezéssel,
-vagy akár a felhasználó által implementált Java-osztállyal.
-A virtuális adatbázis Dockerben való indításához vagy beágyazott használatához
-lényegileg elég egy ilyen konfigurációs fájl.
-
-% TODO: ide a konfigfájl-példát
-
-\subsection{(+++) ALKALMAZHATÓSÁG}
+\section{(+++) ALKALMAZHATÓSÁG}
 
 % ha mindezt meg tudjuk valósítani...
 
@@ -148,7 +190,7 @@ lényegileg elég egy ilyen konfigurációs fájl.
 
 % TODO: azonnali indulás: lazy init-en még dolgozni!
 
-\subsection{(+++) ÚJONNAN MEGNYÍLÓ LEHETŐSÉGEK}
+\section{(+++) ÚJONNAN MEGNYÍLÓ LEHETŐSÉGEK}
 
 \todo[inline]{serverless}
 
@@ -165,7 +207,7 @@ lényegileg elég egy ilyen konfigurációs fájl.
 
 
 
-\chapter{(???) Áttekintés}
+\chapter{(???) RÉGI BEVEZETÉS}
 
 
 \section{(???) Egy mindennapi probléma}
@@ -416,7 +458,7 @@ Ennek fő okait az alábbiakban látom:
 
 
 
-\chapter{(XXX) ALAPOK}
+\chapter{Architektúra}
 
 \section{A nagy illúzió: adatok a semmiből}
 
@@ -579,9 +621,416 @@ Látni fogjuk, hogyan lehet egy csak-olvasható tábla fölé olyan dekorátort 
 mely a változások megfelelő adatstruktúrában történő számontartásával
 az írhatóság illúzióját kelti.
 
-\chapter{(XXX) A virtuális adattár konstrukciója}
 
-\section{(+++) Hatékony számítások}
+
+
+
+
+
+\section{(XXX) (MÁS CÍM!!!!) A prototípus}
+
+\begin{figure}[H]
+\centering
+\includesvg[height=0.8\textwidth]{diagram/simplearch}
+\caption{A virtuális adatbázis vázlatos architektúrája}
+\end{figure}
+
+A virtuális adatbázist megvalósító szoftvert HoloDB néven tettem elérhetővé.
+Az elnevezés a hologramokra utal:
+a konfigurációból leképzett, ``kivetített'' virtuális adatbázis hasonlóan illuzórikus,
+mint a hologramból előhívott térbeli látvány.
+
+A HoloDB sok tekintetben már kinőtte a prototípus státuszt,
+hiszen egy nagyívű rétegelt architektúráról van szó,
+mely kellően megszilárdult alapvonalakkal rendelkezik a hosszútávú fejlesztéshez.
+Ugyanakkor stabil verzióról még nem beszélhetünk;
+az implementációs részleteket, valós használati eseteket,
+más eszközökkel való integrációt illetően még számos felmérendő, kikísérletezendő dolog adódik.
+
+A szerver Docker konténerként is futtatható, amihez a Docker Hubon biztosítok egy testreszabott képet.
+A felhasználói Dockerfile mellé csak a konfigurációs fájlt kell elhelyezni az indításhoz.
+A testreszabott kép a kis erőforrásigény miatt serverless végpontként is jól használható.
+
+A HoloDB a MiniBase projektre épül.
+Utóbbi egy relációsadatbázis-keretrendszer, mely definiálja a storage API-t,
+és annak konkrét implementációjához agnosztikusan viszonyulva
+egy komplett adatbázisszervert épít fölé;
+beleértve a lekérdezések fordítását és futtatását,
+a felhasználói munkamenetek, tranzakciók és változók kezelését,
+a runtime sémamódosításokat illetve új táblákat és más felelősségi köröket.
+A HoloDB ehhez a storage API virtuális implementációját,
+a konfiguráció kezelését
+és a megfelelő futtatási környezetet adja hozzá.
+
+\todo[inline]{JDBC kritikája: ne jegyzetbe, lenyesni/tárgyilagosítani, akár elhagyni}
+
+A MiniBase közvetlenül biztosít egy SQL-futtató felületet, a MiniConnect API megvalósításával.
+A MiniConnect testvérprojekt célja egy egyszerű és egyértelmű adatbázis-elérési API definiálása,
+melyet a JDBC nehézkessége inspirált.\footnote{
+    Nem áll módomban ehelyt a JDBC részletes kritikájába bocsátkozni.
+    De milyen problémát is old meg a \texttt{nativeSQL()} metódus?
+    Egyáltalán miként egyszerűsítené a helyzetet ez a kellemetlenül rengeteg függvény?
+    Miért származik a \texttt{PreparedStatement} a \texttt{Statement} típusból?
+    Hosszan folytathatjuk a sort.
+}
+A MiniConnecthez különféle middleware változatok is elérhetők, például hálózaton keresztül is használható,
+illetve letisztultsága miatt könnyen írhatók hozzá dekorátorok, proxyk.
+Egy (deb csomagként is elérhető) REPL is tartozik hozzá,
+mellyel parancssorból tudunk hálózaton keresztül csatlakozni a MiniConnectet támogató tetszőleges adatbázishoz.
+Ez egyúttal a HoloDB kipróbálásának legkényelmesebb módja,
+számos kényelmi funkciót támogat (szép kimenet, syntax highlight, parancstörténet stb.).
+
+Az architektúra köré sokféle további eszközt fejlesztettem,
+melyek a robusztusság eltérő fokain állnak.
+Ilyenek például: automatikus REST API, GraphQL adapter, authentikációs proxy, Apache Calcite SQL driver stb.
+
+
+
+
+\section{(???) A storage API}
+
+\todo[inline]{A storage API: itt utalni a későbbi kifejtésre}
+
+Ha definiáltuk a relációs ontológia fő elemeit,
+akkor ezek megfelelő implementációi már megvalósítanak egy relációs adattárat,
+mely funkcionálisan megfelel egy tényleges adatbázisnak.
+De melyek legyenek ezek az elemek?
+A kérdést elsőként a \textit{hozzáférés} szempontjából érdemes megközelíteni.
+Az írhatóság problémakörével később foglalkozom.
+
+Nyilvánvalóan gondoskodni kell az alaphierarchiáról,
+ezek lesznek a \texttt{Schema}, \texttt{Table} és \texttt{Column} típusok.
+Az oszlopok elvont tulajdonságait a \texttt{ColumnDefinition} típus fogja össze.
+Bár az egyes mezők értékeit általában oszloporientáltan állítjuk elő
+(jellemzően az értéklistákat megadó \texttt{Source} objektumok használatával),
+a lekérésnél több szempontból is intuitívabbnak és előnyösebbnek mutatkozik
+a rekordorientált megközelítés.
+A rekordot a \textt{Row} típus reprezentálja,
+ezen keresztül kérhetőek le a konkrét mezőértékek
+az oszlopnév vagy oszloppozíció megadásával.
+
+Az adatok hatékony keresését indexek segítik, itt három ilyen indexfajtával fogok foglalkozni:
+a normál \texttt{TableIndex}, a \texttt{FulltextIndex} és a \texttt{SpatialIndex} típusokkal.
+Ezek keresőmetódusai egy \texttt{TableSelection} példánnyal térnek vissza,
+melyen keresztül a találati listához férünk hozzá.
+
+A \texttt{TableIndex} a szokásos rendezett indextípus,
+mely egyúttal teljes kontrollal rendelkezik a találati lista rendezése
+és a $NULL$ értékek kezelése fölött.
+Ha többoszlopos, akkor az oszloplista bármely prefixére is indexként működik (leftmost prefix lookup).
+
+A másik két típus találatainak rendezése definiálatlan.
+Egyik sem ad vissza $NULL$ mezőket.
+
+A következő osztálydiagramon a fenti interfészeket foglaltam össze,
+a tömörség kedvéért néhol kicsit vázlatosan:
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=\textwidth]{diagram/storage-api-uml.png}
+\caption{A storage API fő interfészei (egy relációs adattár alapontológiája)}
+\end{figure}
+
+
+
+
+
+\section{Az írhatósági réteg (EGYBEVENNI!)}
+
+\todo[inline]{Az írhatósági réteg: nem kellenek alfejezetek}
+
+\subsection{A \texttt{DiffTable} dekorátor}
+
+A virtuális adattár egy-egy példánya várhatóan viszonylag rövid élettartamú lesz.
+Feltehetjük, hogy az írási műveletek összességében kevés módosítást eredményeznek.
+A tipikus szcenáriókban főként egyes konkrét rekordok lesznek módosítva, hozzáadva, törölve.
+A tömeges módosítások kérdésével itt nem foglalkozom,
+de nem látszik akadálya az ezek optimalizálását célzó továbbfejlesztésnek.
+
+Az írhatósági réteget arra is használhatjuk,
+hogy egy-egy tesztesethez egyéni rekordokat adjunk hozzá,
+ami megkötéseken keresztül nehézkesebb lenne.
+
+A módosítások támogatásához előszöris a \texttt{Table} interfészt magát
+ki kell egészíteni a megfelelő műveletekkel
+(pl. \texttt{isWritable()}, \texttt{applyPatch(TablePatch)}, \texttt{sequence()}).
+A csak-írható implementáció persze az írási műveleteket nem fogja támogatni.
+
+A \texttt{DiffTable} egy tetszőleges \texttt{Table} implementáció fölé elhelyezhető dekorátor.
+Teljesen áttetszően működik: amíg nincsenek módosítások,
+minden műveletet egyszerűen továbbít a dekorált tábla felé.
+Módosítás esetén a különbségeket (módosított értékek, beszúrt és törölt sorok) a memóriában tárolja.
+A további lekérdezésekkor figyelembe veszi a különbségréteget a továbbhíváskor,
+illetve a szükséges mértékben összefésüli az eredményt a különbségekkel.
+
+Olyan táblák is dekorálhatók így, amelyek valós adatbázistáblákat használnak backendként.
+Ezzel a módszerrel írhatóan használhatunk egy létező adatbázist,
+az eredeti adatok módosítása nélkül.
+
+\subsection{Generikus tranzakciókezelés}
+
+A fő elv, amit a tranzakciókkal kapcsolatban követni fogunk,
+hogy megmaradjunk a réteges felépítésnél,
+és semmiképp ne a táblákra toljuk a tranzakciókezelés terhét.\footnote{
+    Mint több adatbáziskezelőnél láthatjuk (a \textit{H2} például tipikusan ilyen).
+    A munkamenetek kezelésének a táblainterfész alá tolásával
+    különféle architekturális nehézségek jelentkeznek.
+}
+
+Egy teljesen általános tranzakciókezelési módszer,
+amikor a szerver két állapotát különböztetjük meg,
+a \texttt{READ} és a \texttt{WRITE} státuszokat.
+Feltételezzük, hogy jóval több olvasási kérés érkezik be, mint írási.
+
+Az alapértelmezett \texttt{READ} státuszban feltétel nélkül,
+konkurensen szolgáljuk ki a beérkező olvasási lekérdezéseket.
+Ha azonban egy módosító lekérdezés illetve tranzakció érkezik,
+elhelyezzük a módosító műveleteknek fenntartott queue-ba,
+és átváltunk \texttt{WRITE} módba.
+
+\texttt{WRITE} módban a beérkező olvasási illetve írási műveletek
+a számukra fenntartott két dedikált queue-ba kerülnek.
+Először kiszolgáljuk a még folyamatban lévő olvasási műveleteket,
+ezután sorra szekvenciálisan kivesszük és végrehajtjuk a módosítási queue elemeit, amíg van ilyen.
+Ha már nincs elem a módosítási queue-ban,
+akkor az olvasási queue összes elemét felszabadítjuk, és továbbítjuk párhuzamos végrehajtásra,
+miközben visszaállítjuk a \texttt{READ} státuszt.
+
+Új módosító művelet érkezésekor a ciklus újrakezdődik.
+
+\subsection{Snapshot-alapú tranzakciókezelés}
+
+A \texttt{DiffTable} dekorátor minden további nélkül elhelyezhető
+más \texttt{DiffTable} objektumok fölé is, ami lehetővé teszi, hogy egymásra épülő snapshotokat tároljunk.
+
+Így könnyen megvalósítható a \textit{multiversion concurrency control} (MVCC),
+amikor a kiinduló állapot snapshotja a módosító műveletek közben is rendelkezésre áll,
+azaz az olvasási műveletek ekkor is zavartalanul futtathatók.
+Az írási tranzakció végeztével az érintett \texttt{DiffTable} példányok
+beküldik a saját módosítási rétegüket a dekorált táblába,
+így az belefésülésre kerül a megosztott adattérbe.
+
+A snapshotok alkalmazásából a tranzakciós savepointok támogatása is természetesen következik.
+Egy savepointra való visszaugrás egyszerűen a megfelelő szintre való visszatérést jelenti
+a \texttt{DiffTable} dekorátorok egymásra épülő hierarchiájában.
+
+Mivel a snapshotkezelés táblánként függetlenül működtethető,
+párhuzamosan is futtathatunk írási tranzakciókat,
+amíg azok különböző táblákon futnak.
+
+
+
+
+
+\section{(XXX) Konfiguráció}
+
+\textcolor{red}{A virtuális adatbázis felépítése a felhasználó számára legegyszerűbben
+egy konfigurációs fájl segítségével történik,
+melyben megadja az adatbázis-séma egyes elemeit, megkötéseit.
+Az oszlopok tartalmának keverési módja és értékkészlete kényelmesen állítható,
+például előre adott értéklistákkal, reguláris kifejezéssel,
+vagy akár a felhasználó által implementált Java-osztállyal.
+A virtuális adatbázis Dockerben való indításához vagy beágyazott használatához
+lényegileg elég egy ilyen konfigurációs fájl.}
+
+A HoloDB egy YAML formátumú konfigurációs fájl segítségével paraméterezhető fel,
+melyben az adatbázis minden lényeges eleme beállítható.
+A konfigurációhoz formális specifikáció is tartozik,
+így a fájl strukturális és szemantikai helyessége statikusan ellenőrizhető.
+A konfigurációt hordozó Java-osztályok egy programkódban is használhatók,
+ez csak egy dedikált, minimalisztikus csomag függőségként való beemelését igényli.
+
+\begin{figure}[H]
+  \centering
+  \begin{minipage}[t]{0.47\textwidth}
+    \begin{minted}[fontsize=\small,framesep=4pt,frame=single,framerule=1.5pt,rulecolor=\color{gray!30}]{yaml}
+seed: 425364
+schemas:
+  - name: shop
+    tables:
+      - name: customers
+        size: 5
+        columns:
+          - name: id
+            mode: COUNTER
+          - name: firstname
+            valuesBundle: forenames
+          - name: lastname
+            valuesBundle: surnames
+          - name: birth
+            valuesRange: [1950, 2000]
+      - name: orders
+        size: 12
+        columns:
+          - name: id
+            mode: COUNTER
+          - name: cid
+            valuesForeignColumn:
+              [customers, id]
+          - name: product
+            valuesBundle: fruits
+          - name: quantity
+            valuesRange: [1, 10]
+    \end{minted}
+  \end{minipage}
+  \hspace*{\fill}
+  \begin{minipage}[t]{0.35cm}
+    \vspace{7cm}
+    {\Large $\Rightarrow$}
+  \end{minipage}
+  \hspace*{\fill}
+  \begin{minipage}[t]{0.45\textwidth}\begin{center}
+
+    \vspace{1.2cm}
+
+    \texttt{customers}
+    \vspace{0.1cm}
+
+    \begin{tabular}{ |r|l|l|r| }
+      \hline
+        \multicolumn{1}{|>{\centering\arraybackslash}m{6mm}|}{\textbf{\texttt{id}}} &
+        \multicolumn{1}{>{\centering\arraybackslash}m{18mm}|}{\textbf{\texttt{firstname}}} &
+        \multicolumn{1}{>{\centering\arraybackslash}m{18mm}|}{\textbf{\texttt{lastname}}} &
+        \multicolumn{1}{>{\centering\arraybackslash}m{12mm}|}{\textbf{\texttt{birth}}} \\
+      \hline
+        1 & Howard & Anderson & 1968 \\
+        2 & Rebecca & Ferguson & 1959 \\
+        3 & Jeremy & Moore & 2000 \\
+        4 & Julie & Ellis & 1951 \\
+        5 & Kathleen & Cook & 1971 \\
+      \hline
+    \end{tabular}
+
+    \vspace{1cm}
+
+    \texttt{orders}
+    \vspace{0.1cm}
+
+    \begin{tabular}{ |r|r|l|r| }
+      \hline
+        \multicolumn{1}{|>{\centering\arraybackslash}m{6mm}|}{\textbf{\texttt{id}}} &
+        \multicolumn{1}{>{\centering\arraybackslash}m{9mm}|}{\textbf{\texttt{cid}}} &
+        \multicolumn{1}{>{\centering\arraybackslash}m{18mm}|}{\textbf{\texttt{product}}} &
+        \multicolumn{1}{>{\centering\arraybackslash}m{16mm}|}{\textbf{\texttt{quantity}}} \\
+      \hline
+        1 & 5 & date & 10 \\
+        2 & 2 & orange & 1 \\
+        3 & 2 & sloe & 2 \\
+        4 & 3 & melon & 7 \\
+        5 & 5 & guava & 9 \\
+        6 & 3 & orange & 6 \\
+        7 & 2 & plantain & 3 \\
+        8 & 4 & pear & 7 \\
+        9 & 4 & papaya & 9 \\
+        10 & 5 & lime & 9 \\
+        11 & 3 & sloe & 4 \\
+        12 & 1 & strawberry & 1 \\
+      \hline
+    \end{tabular}
+
+  \end{center}\end{minipage}
+  \par
+  \caption{Egy minimalisztikus konfiguráció és eredménye}
+\end{figure}
+
+Java projektekben JPA-entitásokra helyezett annotációkkal is beállítható a teljes konfiguráció,
+így beágyazott adatbázissal, külső eszközök nélkül is futtathatunk teszteket.
+Ehhez elegendő a megfelelő JDBC connection sztringet megadni,
+a többit (keretrendszertől függően\footnote{
+    A \textit{Spring}, \textit{Micronaut} és \textit{Quarkus} beépítetten támogatott,
+    de elméletileg bármilyen rendszerhez igazítható a megoldás.
+}) automatikusan elvégzi az inicializáló service.
+
+Az egyéni működéssel való kiegészítés több szinten támogatott.
+A beépített értékkiosztási módok esetén is lehetőség van egyéni adatfájl betöltésére,
+a permutációk és rányújtások egyéni implementációjának betöltésére.
+De az oszlop értékkiosztásához teljesen egyedi implementáció is használható,
+ehhez meg kell adnunk egy olyan osztály nevét, mely implementálja a \texttt{SourceFactory} interfészt
+(illetve biztosítani kell, hogy az egyedi osztályok láthatóak legyenek a classpath alatt).
+
+A YAML formátum a humán kezelhetőségen kívül azzal az előnnyel is jár, hogy könnyen előfeldolgozható.
+Például egy megfelelő sablonkezelő használatával ugyanazt a vázat használva
+különféle tesztesetekhez finomhangolhatjuk az adatbázist.\footnote{
+    Ilyen megközelítést használ például a \textit{helm} nevű deployment eszköz.
+}
+
+A konfiguráció gépileg is generálható.
+A prototípus tartalmaz néhány ilyen segédeszközt,
+ezek közül a legfontosabb a konfigurációt a meglévő adatbázis letapogatásával,
+különféle heurisztikák bevetésével legeneráló, Python nyelven írt szkriptfájl.
+Az eredmény (és persze maga a szkriptfájl is) könnyen testreszabható.
+
+Ahogy már említettem, a konfiguráció szofisztikáltabb generálásának egy lehetséges módja,
+ha a konfigurációt optimalizáló mesterséges intelligenciára épülő módszert vetünk be.
+Ennek kutatása egy izgalmas jövőbeli projektnek ígérkezik.
+Érdekes probléma például, hogyan érdemes számítani a bemeneti adatbázis
+és az előállított konfiguráció közötti megfelelőségi mutatót.%
+\cite{Erritali2016DocumentSimilarity}
+
+A konfigurációs fájl az adatbázis nagyjábóli definíciójának is felfogható.
+Egy másik ígéretesnek tűnő továbbfejlesztési lehetőség,
+hogy kiegészítsük a struktúrát olyan további opcionális elemekkel,
+melyek egyrészt teljesen leírják az éles adatbázis szerkezetét,
+másrészt pedig lehetővé teszik az adatmigrációknak
+kizárólag a konfigurációs fájlok különbségén alapuló automatizálását.
+Természetesen ez egyáltalán nem triviális,
+hiszen néha a meglévő adatok átstruktúrálására van szükség,
+illetve lehetnek a két konfigurációs állapot közötti történetben elbújó lényeges módosítások.
+Úgy vélem, mindkét probléma kezelhető,
+közeljövőbeli tervem egy ilyen migrációs keretrendszer kialakítása.
+
+
+
+
+
+
+
+
+
+\chapter{A virtuális adattár építőkövei}
+
+\section{(???) STORAGE API IMPL: BEVEZETŐ}
+
+Bármilyen implementáció legyen is mögötte, a storage API egy relációs adatbázist ír le.
+Tehát ahhoz, hogy a virtuális adatok funkcionálisan egy valódi (csak-olvasható) relációs adathalmaz képét adják,
+nem kell más, mint hogy megfelelő viselkedéssel elérhetők legyenek a storage API-n keresztül.
+A megfelelőség ez esetben két dolgot jelent:
+
+\begin{enumerate}
+  \item \textbf{Konzisztencia:}
+        felépíthető egy olyan tényleges immutábilis relációs adatbázis ($M$),
+        hogy minden lehetséges relációs lekérdezés esetében, amely a közös sémára ($S$) értelmes,
+        a virtuális és a tényleges adatbázis esetében visszaadott eredménytábla megegyezik.
+  \item \textbf{Megkötések kielégítése:}
+        az $S$ séma teljesíti a virtuális adatbázis felhasználói konfigurációját ($C$),
+        valamint az $M$-ben szereplő adatok tulajdonságai illeszkednek a $C$-ben leírt megkötésekre.
+\end{enumerate}
+
+A virtuális adatokhoz a legalsó szinten a storage API megfelelő hívásaival férünk hozzá.
+Ezek a speciális hívások szűk keresztmetszetet képeznek,
+hiszen ezek szimulálják például a közvetlen adatelérést is.
+Ha ezen hívások performanciája nagyságrendileg (de legalább aszimptotikusan) összemérhető a tényleges adatbázisokéval,
+akkor az erre épülő lekérdezésfuttató és egyéb rétegek már
+a tényleges adatbázisoknál megszokott módon és nagyságrendi teljesítménnyel tudnak működni.
+
+A lekérdező műveletek esetében két különösen fontos hozzáférési módot kell kiemelni:
+
+\begin{enumerate}
+  \item rekordok véletlen elérése (random access)
+  \item adott érték előfordulásainak keresése egy oszlopban (reverse index)
+\end{enumerate}
+
+Ha e két hozzáférési mód hatékony, akkor már a lekérdezések jelentős részénél
+elérhető a tényleges adatbázisokéval összemérhető performancia.
+
+A storage API-ban úgy definiáltuk a \texttt{TableIndex} interfészt,
+hogy a keresésen kívül még néhány további funkciót is támogatnia kelljen,
+például a rendezést és a $NULL$ értékek kezelését.
+Külön kitérek majd az ezzel kapcsolatos problémákra, ahol szükséges.
+
+\section{Segédtípusok}
+
+\subsection{Hatékony számítások (??? BEVEZETŐ)}
 
 Mivel a szoftver létező prototípusa, a \textit{HoloDB}
 (és a hozzá kapcsolódó segédeszközök, könyvtárak nagy része) Java programnyelven íródott,
@@ -612,9 +1061,8 @@ mivel az kisebb számokra a \texttt{long} típushoz képest rendkívül rossz pe
 
 \todo[inline]{skálázhatóságról (FastHasher, LinearMonotonic, noop permutation)}
 
-\section{(???) Az architektúra alapjai}
 
-\subsection{(???) Segédtípusok}
+\subsection{Segédtípusok áttekintése}
 
 \todo[inline]{"relációs ontológia" stb.: ezeket a kifejezéseket mellőzni}
 
@@ -633,7 +1081,7 @@ A következő osztálydiagram összefoglalja a kiemelt és lentebb tárgyalt int
 }
 \end{figure}
 
-\subsection{(???) A \texttt{LargeInteger} típus}
+\subsection{A \texttt{LargeInteger} típus}
 
 Az adatok on-the-fly számításakor a szűk keresztmetszet
 a tárolás és elérés problémáiról a kalkulációkra helyeződik át.
@@ -707,7 +1155,15 @@ a \texttt{LargeInteger} valamivel gyorsabb.
     }
 \end{figure}
 
-\subsection{(???) A \texttt{TreeRandom} és implementációi}
+
+
+\subsection{(+++) HASH-FÜGGVÉNYEK}
+
+\todo[inline]{Utalni a Feistel-hálózatban (és egyebütt) történt használatra}
+
+
+
+\subsection{A \texttt{TreeRandom} és implementációi}
 
 Az adatbázist egy hierarchikus képződményként is fölfoghatjuk,
 ahol a sémákon belül táblák, azokon belül oszlopok,
@@ -758,7 +1214,7 @@ A további bitek ennek derivátumai, aminek legegyszerűbb algoritmusa,
 ha a hash alapján előállított seeddel inicializált \texttt{Random} példánnyal
 rendre visszaadott bájtokat használjuk.
 
-\subsection{(???) A \texttt{Monotonic} és implementációi}
+\subsection{A \texttt{Monotonic} és implementációi}
 
 Gyakran egy adott értékkészlet elemeiből akarunk képezni egy $n$ hosszúságú rendezett listát.
 Az eloszlás (beleértve, hogy valamely érték egyáltalán előfordul-e)
@@ -801,7 +1257,46 @@ mely minden értékkészletbeli értékre tartalmazza annak várható előfordul
 Ezeket az előre definiált gyakoriságokat használhatjuk a mintavételezésben,
 de akár közvetlenül is alkalmazhatjuk egy diszkrét lineáris vetítéssel.
 
-\subsection{(???) A \texttt{Permutation} és implementációi}
+
+\subsection{(+++) A monoton méretigazítás megvalósítása}
+
+A \texttt{Monotonic} interfész példánya egy függvényt reprezentál,
+amely az első $n$ nemnegatív egész számot értékkészletként nem monoton növekvő módon hozzárendeli az első $N$ nemnegatív egész számhoz.
+Ez arra használható, hogy egy $n$ elemű, rendezetten tárolt értékkészletet egy $N$ méretű adatbázistábla oszlopához igazítsunk méretben,
+Tehát a példány $M(i) = m$ függvényt valósítja meg, ahol $0 \leq i < N$ illetve $0 \leq m < n$, továbbá $i_1 < i_2 \implies M(i_1) < M(i_2)$.
+Ugyanakkor indexelt elérést is biztosít, azaz lekérdezhető, hogy egy adott érték mely indexsávhoz rendelődik,
+azaz megvalósítja az $M^{-1}(m) = [i, j)$ függvényt is, ahol $0 \leq m < n$ illetve $0 \leq i \leq j \leq N$, és teljesülnek az alábbiak:
+
+\begin{itemize}
+\item $x < i \implies M(x) < M(i)$
+\item $i \leq x < j \implies M(i) \leq M(x) < M(j)$.
+\item $i < x \implies M(i) < M(x)$
+\end{itemize}
+
+Az indexelt elérés az \texttt{indicesOf(value)} metóduson keresztül biztosított, amely egy \texttt{Range} objektumot ad vissza.
+A metódus egy variánsa maga is egy \texttt{Range} példányt vár, és értelemszerűen általánosítja az előbbit.
+
+\subsubsection{(+++) Triviális implementációk}
+
+\todo[inline]{Monotonic: triviális implementációk}
+
+\todo[inline]{Monotonic: egyszerű diszkrét lineáris interpoláció: általában ez is elég, a permutáció majd úgyis elkeveri}
+
+\subsubsection{(+++) Szimulált mintavétel}
+
+\todo[inline]{Monotonic: szimulált mintavétel (jó ez a cím?)}
+
+\todo[inline]{Monotonic: szimulált mintavétel: a lényeg, hogy bizonyos mértékű véletlenszerűséget ad}
+
+\subsubsection{(+++) Gyakoriságtáblázat használata}
+
+A fenti implementációk mindegyike általánosítható úgy, hogy figyelembe vegyen egy gyakoriságtáblázatot,
+mely az értékkészlet elemeihez azok relatív gyakoriságát rendeli.
+
+\todo[inline]{Monotonic: gyakoriságtáblázat}
+
+
+\subsection{A \texttt{Permutation} és implementációi}
 
 Gyorsan számítható invertálható permutációk például modulo szorzásból kiindulva valósíthatók meg.
 
@@ -871,234 +1366,6 @@ Az átméretező metódus bekerült magába az interfészbe,
 hogy az ilyen implementációk maguk kezeljék a helyzetet.
 A jó szétszórást biztosító permutációknál valószínűtlen a sok újrahívás.
 
-\subsection{(???) A storage API}
-
-Ha definiáltuk a relációs ontológia fő elemeit,
-akkor ezek megfelelő implementációi már megvalósítanak egy relációs adattárat,
-mely funkcionálisan megfelel egy tényleges adatbázisnak.
-De melyek legyenek ezek az elemek?
-A kérdést elsőként a \textit{hozzáférés} szempontjából érdemes megközelíteni.
-Az írhatóság problémakörével később foglalkozom.
-
-Nyilvánvalóan gondoskodni kell az alaphierarchiáról,
-ezek lesznek a \texttt{Schema}, \texttt{Table} és \texttt{Column} típusok.
-Az oszlopok elvont tulajdonságait a \texttt{ColumnDefinition} típus fogja össze.
-Bár az egyes mezők értékeit általában oszloporientáltan állítjuk elő
-(jellemzően az értéklistákat megadó \texttt{Source} objektumok használatával),
-a lekérésnél több szempontból is intuitívabbnak és előnyösebbnek mutatkozik
-a rekordorientált megközelítés.
-A rekordot a \textt{Row} típus reprezentálja,
-ezen keresztül kérhetőek le a konkrét mezőértékek
-az oszlopnév vagy oszloppozíció megadásával.
-
-Az adatok hatékony keresését indexek segítik, itt három ilyen indexfajtával fogok foglalkozni:
-a normál \texttt{TableIndex}, a \texttt{FulltextIndex} és a \texttt{SpatialIndex} típusokkal.
-Ezek keresőmetódusai egy \texttt{TableSelection} példánnyal térnek vissza,
-melyen keresztül a találati listához férünk hozzá.
-
-A \texttt{TableIndex} a szokásos rendezett indextípus,
-mely egyúttal teljes kontrollal rendelkezik a találati lista rendezése
-és a $NULL$ értékek kezelése fölött.
-Ha többoszlopos, akkor az oszloplista bármely prefixére is indexként működik (leftmost prefix lookup).
-
-A másik két típus találatainak rendezése definiálatlan.
-Egyik sem ad vissza $NULL$ mezőket.
-
-A következő osztálydiagramon a fenti interfészeket foglaltam össze,
-a tömörség kedvéért néhol kicsit vázlatosan:
-
-\begin{figure}[H]
-\centering
-\includegraphics[width=\textwidth]{diagram/storage-api-uml.png}
-\caption{A storage API fő interfészei (egy relációs adattár alapontológiája)}
-\end{figure}
-
-
-\section{(XXX) A csak-olvasható alapréteg}
-
-Bármilyen implementáció legyen is mögötte, a storage API egy relációs adatbázist ír le.
-Tehát ahhoz, hogy a virtuális adatok funkcionálisan egy valódi (csak-olvasható) relációs adathalmaz képét adják,
-nem kell más, mint hogy megfelelő viselkedéssel elérhetők legyenek a storage API-n keresztül.
-A megfelelőség ez esetben két dolgot jelent:
-
-\begin{enumerate}
-  \item \textbf{Konzisztencia:}
-        felépíthető egy olyan tényleges immutábilis relációs adatbázis ($M$),
-        hogy minden lehetséges relációs lekérdezés esetében, amely a közös sémára ($S$) értelmes,
-        a virtuális és a tényleges adatbázis esetében visszaadott eredménytábla megegyezik.
-  \item \textbf{Megkötések kielégítése:}
-        az $S$ séma teljesíti a virtuális adatbázis felhasználói konfigurációját ($C$),
-        valamint az $M$-ben szereplő adatok tulajdonságai illeszkednek a $C$-ben leírt megkötésekre.
-\end{enumerate}
-
-A virtuális adatokhoz a legalsó szinten a storage API megfelelő hívásaival férünk hozzá.
-Ezek a speciális hívások szűk keresztmetszetet képeznek,
-hiszen ezek szimulálják például a közvetlen adatelérést is.
-Ha ezen hívások performanciája nagyságrendileg (de legalább aszimptotikusan) összemérhető a tényleges adatbázisokéval,
-akkor az erre épülő lekérdezésfuttató és egyéb rétegek már
-a tényleges adatbázisoknál megszokott módon és nagyságrendi teljesítménnyel tudnak működni.
-
-A lekérdező műveletek esetében két különösen fontos hozzáférési módot kell kiemelni:
-
-\begin{enumerate}
-  \item rekordok véletlen elérése (random access)
-  \item adott érték előfordulásainak keresése egy oszlopban (reverse index)
-\end{enumerate}
-
-Ha e két hozzáférési mód hatékony, akkor már a lekérdezések jelentős részénél
-elérhető a tényleges adatbázisokéval összemérhető performancia.
-
-A storage API-ban úgy definiáltuk a \texttt{TableIndex} interfészt,
-hogy a keresésen kívül még néhány további funkciót is támogatnia kelljen,
-például a rendezést és a $NULL$ értékek kezelését.
-Külön kitérek majd az ezzel kapcsolatos problémákra, ahol szükséges.
-
-\subsection{(???) Keretrendszer az értékkiosztásokhoz}
-
-Virtuális adatok alatt elsősorban az egy-egy oszlop alá besorakozó,
-közös típussal rendelkező mezőértékeket értem.
-Azaz alapesetben, ahogy korábban fogalmaztam, az adatokat oszlop-orientáltan fogjuk előállítani.
-Minden oszlophoz tartozik majd egy virtuális adatlista,
-melynek hossza egyenlő az adott oszlopot tartalmazó tábla hosszával
-(opcionálisan szerepelhetnek benne $NULL$ értékek),
-a többi érték típusának pedig kompatibilisnak kell lennie az oszlophoz megadott típussal.
-
-Bár ez a megközelítés oszloponként független adatlistákra van szabva,
-valójában más jellegű értékkiosztási módszer is lehet mögötte,
-amennyiben az egy-egy oszlophoz tartozó listanézetek biztosítottak.
-Majd a több oszlopot érintő megkötések esetében ez lesz a helyzet.
-De lássuk először az egyoszlopos értékkiosztások lehetséges módszereit.
-
-\subsection{(???) Indexelt egyoszlopos értékkiosztások}
-
-\subsubsection{Előzetes megfontolások}
-
-Olyan értékkiosztási módszereket veszek most végig,
-amelyek lehetőleg biztosítják az alábbiakat:
-
-\begin{enumerate}
-  \item hatékony elérés (random access)
-  \item pozíciótól függő érték (\texttt{TreeRandom} seed)
-  \item hatékony kereshetőség valamilyen formában
-  \item hatékony rendezés
-  \item konzisztencia
-\end{enumerate}
-
-Az egyes esetekben megvizsgálom majd, hogyan teljesíthetők ezek az elvárások.
-
-\subsubsection{$NULL$ értékek kezelése}
-
-Általánosan, bármely értékkiosztási módszerhez könnyen hozzáilleszthető a $NULL$ értékek támogatása.
-Mindössze az szükséges, hogy az értékkiosztást a tábla méreténél kisebb intervallumra végezzük,
-a maradék helyeket pedig $NULL$-nak tekintjük.
-Ezen felül opcionálisan egy permutáció beiktatásával az értékeket elkeverhetjük,
-ami által a $NULL$ értékek is szétszórtan szerepelnek majd.
-
-Nem szükséges ez a plusz kompozíció,
-ha a fentiek magába az eredeti értékkiosztásba is könnyen beépíthetők.
-Például a kétfázisú értékkiosztásokba egyszerűen felvehető a $NULL$ mint érték.
-
-Akár beépítetten, akár plusz kompozícióval van megvalósítva a $NULL$ értékek kezelése,
-természetesen figyelni kell a speciális kezelésre a keresés-rendezés során.
-
-A fentiek fényében az egyes értékkiosztások tárgyalásánál a $NULL$ értékek kezelésével nem foglalkozom.
-
-\subsubsection{Egyszerű értékkiosztások}
-
-Tényleges adatbázisokban némely esetben meglehetősen következetes módon
-szerepelnek az értékek az oszlop értéklistájában.
-Természetesen az ilyen esetek szimulálása a legegyszerűbb.
-
-Triviális eset, ha egy oszlop mezői egy közös konstans értéket tartalmaznak.
-
-Továbbá, ha olyan adathalmazt szimulálunk, melyre megengedhető a feltevés,
-hogy nem történt még releváns módosítás
-(ami persze az írási réteggel utána korrigálható),
-úgy egyes oszlopok szekvenciális alapon generálhatók.
-Az ilyen esetekben az $n$-edik érték lekérése
-egy egyszerű lineáris függvénnyel számolható.
-Az érték keresése hasonló, lényegileg az inverz függvényt kell alkalmazni.
-
-A szekvenciális oszlopoknál az érték megegyezik a rekord 1-től indított sorszámával.
-
-Időbélyegeket is generálhatunk hasonló módon,
-amennyiben megengedhető, hogy a szimulált időadatok között egyenletes időközök legyenek.
-
-\subsubsection{Unique értékkiosztás}
-
-Elsődleges vagy más egyedi kulcsok szimulálásakor fontos,
-hogy ugyanaz az érték ne forduljon elő kétszer az értéklistában.
-Ennek természetesen előfeltétele,
-hogy a lehetséges értékkészlet nagyobb legyen, mint az oszlop hossza
-($NULL$ értékek nélkül).
-
-Egy egyszerűen megvalósítható módszer,
-ha egyszerűen valamilyen \texttt{Permutation} példányt alkalmazunk az értékkészlet fölött,
-és a permutált lista oszlophosszúságú prefixét vesszük értéklistaként.
-Ekkor a random elérés triviális: csak a permutációt kell visszafejteni.
-Az index a rendezett értékkészletre alapozható,
-a találatokat a permutációval megforgatva kell listázni,
-kihagyva a prefixen kívül eső értékeket.
-
-Ha azonban az értékkészlet mérete lényegesen nagyobb, mint az oszlophossz,
-jellemzően nagyon sok értéket kell átugranunk, amely a prefixen kívül esik.
-Sokkal hatékonyabb, ha a következő részben leírt általános kétfázisú értékkiosztást használjuk,
-ami nem csak unique oszlopokhoz alkalmazható.
-A unique oszlop esetén csak annyi a megkötés, hogy a használt \texttt{Monotonic}
-a kimenetet szigorúan monoton módon állítsa elő.
-
-
-
-
-
-
-
-
-
-
-
-%%%%%%% BEGIN NEW
-
-
-\subsection{(+++) KÉTLÉPÉSES ÉRTÉKKIOSZTÁS}
-
-\subsection{(+++) A monoton méretigazítás megvalósítása}
-
-A \texttt{Monotonic} interfész példánya egy függvényt reprezentál,
-amely az első $n$ nemnegatív egész számot értékkészletként nem monoton növekvő módon hozzárendeli az első $N$ nemnegatív egész számhoz.
-Ez arra használható, hogy egy $n$ elemű, rendezetten tárolt értékkészletet egy $N$ méretű adatbázistábla oszlopához igazítsunk méretben,
-Tehát a példány $M(i) = m$ függvényt valósítja meg, ahol $0 \leq i < N$ illetve $0 \leq m < n$, továbbá $i_1 < i_2 \implies M(i_1) < M(i_2)$.
-Ugyanakkor indexelt elérést is biztosít, azaz lekérdezhető, hogy egy adott érték mely indexsávhoz rendelődik,
-azaz megvalósítja az $M^{-1}(m) = [i, j)$ függvényt is, ahol $0 \leq m < n$ illetve $0 \leq i \leq j \leq N$, és teljesülnek az alábbiak:
-
-\begin{itemize}
-\item $x < i \implies M(x) < M(i)$
-\item $i \leq x < j \implies M(i) \leq M(x) < M(j)$.
-\item $i < x \implies M(i) < M(x)$
-\end{itemize}
-
-Az indexelt elérés az \texttt{indicesOf(value)} metóduson keresztül biztosított, amely egy \texttt{Range} objektumot ad vissza.
-A metódus egy variánsa maga is egy \texttt{Range} példányt vár, és értelemszerűen általánosítja az előbbit.
-
-\subsubsection{(+++) Triviális implementációk}
-
-\todo[inline]{Monotonic: triviális implementációk}
-
-\todo[inline]{Monotonic: egyszerű diszkrét lineáris interpoláció: általában ez is elég, a permutáció majd úgyis elkeveri}
-
-\subsubsection{(+++) Szimulált mintavétel}
-
-\todo[inline]{Monotonic: szimulált mintavétel (jó ez a cím?)}
-
-\todo[inline]{Monotonic: szimulált mintavétel: a lényeg, hogy bizonyos mértékű véletlenszerűséget ad}
-
-\subsubsection{(+++) Gyakoriságtáblázat használata}
-
-A fenti implementációk mindegyike általánosítható úgy, hogy figyelembe vegyen egy gyakoriságtáblázatot,
-mely az értékkészlet elemeihez azok relatív gyakoriságát rendeli.
-
-\todo[inline]{Monotonic: gyakoriságtáblázat}
-
 \subsection{(+++) Permutációk megvalósítása}
 
 A \texttt{Permutation} interfész megvalósításához olyan eljárást keresünk, amellyel változó (és akár óriás) tartományon értelmezett,
@@ -1161,6 +1428,8 @@ Ha egyúttal páros számú kört követelünk meg,
 akkor az utolsó kör végére garantáltan ugyanabba a fázisba kerülünk, mint az első kör kezdete előtt;
 vagyis a dekódolás folyamata teljesen egyezni fog az elkódolással, ami egyszerűsíti az eljárást.
 
+Lorem ipsum. XXX~\ref{appendix:algorithm_xyz}
+
 \todo[inline]{ALGORITMUS: Feistel: last-zero algoritmus-változat}
 
 Persze, még ha a páros blokkméret követelményét így sikerült is eliminálni,
@@ -1195,34 +1464,47 @@ Helyette viszont egyszerűen áttérhetünk modulo $n$-re: $P_{+k}(k)(i) = (i + 
 
 \todo[inline]{bitkeverés, kétfelől átfedő 2-hatványos permutálás stb.}
 
-\subsection{(+++) HASH-FÜGGVÉNYEK}
-
-\todo[inline]{Utalni a Feistel-hálózatban (és egyebütt) történt használatra}
-
-%%%%%%% END NEW
 
 
+\section{1OSZL. IND. ÉRTÉKKIOSZTÁSOK}
+
+\subsection{Általános megfontolások}
+
+\todo[inline]{Általános megfontolások: Itt írni a nem indexelt értékkiosztásokról (máshol már akkor nem kell, pl. régi regex)}
+
+Olyan értékkiosztási módszereket veszek most végig,
+amelyek lehetőleg biztosítják az alábbiakat:
+
+\begin{enumerate}
+  \item hatékony elérés (random access)
+  \item pozíciótól függő érték (\texttt{TreeRandom} seed)
+  \item hatékony kereshetőség valamilyen formában
+  \item hatékony rendezés
+  \item konzisztencia
+\end{enumerate}
+
+Az egyes esetekben megvizsgálom majd, hogyan teljesíthetők ezek az elvárások.
 
 
+\subsection{(???) Keretrendszer az értékkiosztásokhoz}
 
+Virtuális adatok alatt elsősorban az egy-egy oszlop alá besorakozó,
+közös típussal rendelkező mezőértékeket értem.
+Azaz alapesetben, ahogy korábban fogalmaztam, az adatokat oszlop-orientáltan fogjuk előállítani.
+Minden oszlophoz tartozik majd egy virtuális adatlista,
+melynek hossza egyenlő az adott oszlopot tartalmazó tábla hosszával
+(opcionálisan szerepelhetnek benne $NULL$ értékek),
+a többi érték típusának pedig kompatibilisnak kell lennie az oszlophoz megadott típussal.
 
+Bár ez a megközelítés oszloponként független adatlistákra van szabva,
+valójában más jellegű értékkiosztási módszer is lehet mögötte,
+amennyiben az egy-egy oszlophoz tartozó listanézetek biztosítottak.
+Majd a több oszlopot érintő megkötések esetében ez lesz a helyzet.
+De lássuk először az egyoszlopos értékkiosztások lehetséges módszereit.
 
+\subsection{(???) Általános kétfázisú értékkiosztás}
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-\subsubsection{(???) Általános kétfázisú értékkiosztás}
+\subsubsection{XXXXXXXXX}
 
 Talán a leggyakoribb eset,
 hogy előre ismert véges értékkészlet elemeit szeretnénk viszontlátni az oszlopban,
@@ -1348,30 +1630,79 @@ de véletlenszerű, zajos kimenetet szeretnénk látni.
 
 
 
+\subsection{(+++) KÉTLÉPÉSES ÉRTÉKKIOSZTÁS}
+
+\todo[inline]{KÉTLÉPÉSES ÉRTÉKKIOSZTÁS}
+
+\subsection{$NULL$ értékek kezelése}
+
+\todo[inline]{NULL értékek kezelése: ez mehet az általános megfontolásokba}
+
+Általánosan, bármely értékkiosztási módszerhez könnyen hozzáilleszthető a $NULL$ értékek támogatása.
+Mindössze az szükséges, hogy az értékkiosztást a tábla méreténél kisebb intervallumra végezzük,
+a maradék helyeket pedig $NULL$-nak tekintjük.
+Ezen felül opcionálisan egy permutáció beiktatásával az értékeket elkeverhetjük,
+ami által a $NULL$ értékek is szétszórtan szerepelnek majd.
+
+Nem szükséges ez a plusz kompozíció,
+ha a fentiek magába az eredeti értékkiosztásba is könnyen beépíthetők.
+Például a kétfázisú értékkiosztásokba egyszerűen felvehető a $NULL$ mint érték.
+
+Akár beépítetten, akár plusz kompozícióval van megvalósítva a $NULL$ értékek kezelése,
+természetesen figyelni kell a speciális kezelésre a keresés-rendezés során.
+
+A fentiek fényében az egyes értékkiosztások tárgyalásánál a $NULL$ értékek kezelésével nem foglalkozom.
+
+\subsection{Egyszerű értékkiosztások}
+
+\todo[inline]{Egyszerű értékkiosztások: ez mehet az általános megfontolásokba}
+
+Tényleges adatbázisokban némely esetben meglehetősen következetes módon
+szerepelnek az értékek az oszlop értéklistájában.
+Természetesen az ilyen esetek szimulálása a legegyszerűbb.
+
+Triviális eset, ha egy oszlop mezői egy közös konstans értéket tartalmaznak.
+
+Továbbá, ha olyan adathalmazt szimulálunk, melyre megengedhető a feltevés,
+hogy nem történt még releváns módosítás
+(ami persze az írási réteggel utána korrigálható),
+úgy egyes oszlopok szekvenciális alapon generálhatók.
+Az ilyen esetekben az $n$-edik érték lekérése
+egy egyszerű lineáris függvénnyel számolható.
+Az érték keresése hasonló, lényegileg az inverz függvényt kell alkalmazni.
+
+A szekvenciális oszlopoknál az érték megegyezik a rekord 1-től indított sorszámával.
+
+Időbélyegeket is generálhatunk hasonló módon,
+amennyiben megengedhető, hogy a szimulált időadatok között egyenletes időközök legyenek.
+
+\subsection{Unique értékkiosztás}
+
+Elsődleges vagy más egyedi kulcsok szimulálásakor fontos,
+hogy ugyanaz az érték ne forduljon elő kétszer az értéklistában.
+Ennek természetesen előfeltétele,
+hogy a lehetséges értékkészlet nagyobb legyen, mint az oszlop hossza
+($NULL$ értékek nélkül).
+
+Egy egyszerűen megvalósítható módszer,
+ha egyszerűen valamilyen \texttt{Permutation} példányt alkalmazunk az értékkészlet fölött,
+és a permutált lista oszlophosszúságú prefixét vesszük értéklistaként.
+Ekkor a random elérés triviális: csak a permutációt kell visszafejteni.
+Az index a rendezett értékkészletre alapozható,
+a találatokat a permutációval megforgatva kell listázni,
+kihagyva a prefixen kívül eső értékeket.
+
+Ha azonban az értékkészlet mérete lényegesen nagyobb, mint az oszlophossz,
+jellemzően nagyon sok értéket kell átugranunk, amely a prefixen kívül esik.
+Sokkal hatékonyabb, ha a következő részben leírt általános kétfázisú értékkiosztást használjuk,
+ami nem csak unique oszlopokhoz alkalmazható.
+A unique oszlop esetén csak annyi a megkötés, hogy a használt \texttt{Monotonic}
+a kimenetet szigorúan monoton módon állítsa elő.
 
 
+\subsection{(+++) Értékkészlet reguláris kifejezésből}
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-%%%%%%% BEGIN NEW
-
-\subsubsection{(+++) Értékkészlet reguláris kifejezésből}
+\subsubsection{Reguláris kifejezésből képzett szó-fák}
 
 Karakterláncokból álló értékkészletnek egy reguláris kifejezés alapján történő generálása
 talán a legáltalánosabb és legrugalmasabb módja az értékek definiálásának.
@@ -1400,6 +1731,9 @@ irányított körmentes szógráf (DAWG),
 melyben egy érték nélküli kiinduló elemből érjük el a karaktereket reprezentáló csomópontokat,
 és kizárólag a szóvég csomópontokon (EOW) terminálhatunk,
 melyekből már nem érhető el további csomópont.
+
+\textcolor{red}{TODO TODO TODO TODO TODO} \parencite{AppelScrabble1988}
+% TODO: https://www.cs.cmu.edu/afs/cs/academic/class/15451-s06/www/lectures/scrabble.pdf
 
 A gráf lényegileg egy prefix fa, ahol egyes azonos részfákat újrahasznosítunk.
 Ezért a továbbiakban az egyszerűség kedvéért néha faként fogok a gráfra hivatkozni.
@@ -1773,46 +2107,16 @@ amelyek együtt implementálják az értékkészlethez tartozó rendezési koll�
 % így elég hatékony algoritmust kapunk
 
 
-%%%%%%% END NEW 
 
 
 
 
 
+\subsection{EGYÉB DOLGOK, FÁJL STB.}
 
+\todo[inline]{további éértékkészlet-betöltési módok, fájlból stb., monotonic, eloszlás stb.}
 
-
-
-
-
-
-
-\subsubsection{(???) Értékkiosztás reguláris kifejezés alapján}
-
-Ha elengedjük a gyors keresés kritériumát,
-akkor a reguláris kifejezés alapján történő értékkiosztást nagyon könnyen megvalósíthatjuk
-egy véges automatával történő véletlenszerű inverz mintaillesztéssel\footnote{
-  A jelenlegi implementáció a \textit{Generex} könyvtárat használja erre.
-},
-a sorindex és a \texttt{TreeRandom}-ból vett seed figyelembevételével.
-
-Ha azonban fenn szeretnénk tartani a gyors keresés lehetőségét,
-szükséges lesz, hogy képezni tudjuk az adott reguláris kifejezésre illeszkedő összes sztring virtuális listáját.
-Azaz bármely $n$ sorindexre elő kell tudnunk állítani az $n$-edik illeszkedő sztringet
-(méghozzá ABC-rendben, nem pedig a reguláris kifejezés szerkezete alapján).
-És fordítva, tetszőleges sztringre meg kell tudni mondani,
-hányadik illeszkedő sztringgel azonos vagy melyikhez van közel, ha nem illeszkedik.
-Ha már van egy ilyen virtuális listánk, azt a kétfázisú értékkiosztással könnyen a kívánt oszloppá alakíthatjuk.
-
-A megoldás a reguláris kifejezések lehetőségeinek csak valamilyen limitált részhalmazát fogja támogatni.
-De még így is bőven lefedi az olyan egyszerű eseteket, mint például a telefonszámok, email-címek stb.
-
-Az ilyen típusú szöveggenerálás részletes bemutatása kimutat a jelen dolgozat keretei közül,
-így ennek ismertetését itt mellőzöm\footnote{
-  Egy egyszerű erre készült prototípus a \texttt{Strex} könyvtár.
-}.
-
-\subsubsection{Full-text indexelt értékkiosztás}
+\subsection{Full-text indexelt értékkiosztás}
 
 Ez az értékkiosztási mód folyószövegeket állít elő, melyekhez full-text indexet tesz elérhetővé.
 Itt most csak a full-text index legegyszerűbb fajtájával foglalkozunk,
@@ -1927,6 +2231,8 @@ A szóhalmaz kiválasztásának és a szöveg generálásának összehangolásá
 a kifejezésekre való keresés bizonyos formái is megvalósíthatóvá válnak.
 Ezekre a bővítési lehetőségekre ezen keretek között szintén nem tudunk részletesen kitérni.
 
+
+
 \subsection{Földrajzi koordináták értékkiosztása}
 
 A legegyszerűbben közelítjük meg a problémát,
@@ -1968,6 +2274,9 @@ sőt, az egy sorban egymás után lévők összevontan is kezelhetők.
     Csak a határvonal által metszett mezőkbe eső pontokkal kell részletesebben foglalkozni.
 }
 \end{figure}
+
+
+\section{Egyéb értékkiosztási módok}
 
 \subsection{Nem-indexelt egyoszlopos értékkiosztások}
 
@@ -2021,6 +2330,33 @@ További indexeletlen eset, amikor az oszlop teljes tartalma explicite felsorolv
 például egy listafájlból.
 Nagy táblahossznál érdemes lehet ezt indexeltté tenni egy tényleges adatstruktúrával (például B-Tree),
 mivel ilyenkor valószínűleg úgysem a memóriahasználat minimalizálása a cél.
+
+\subsection{RÉGIN REGEXP (előzőbe fésülni)}
+
+\todo[inline]{régi regexp: előzőbe fésülni}
+
+Ha elengedjük a gyors keresés kritériumát,
+akkor a reguláris kifejezés alapján történő értékkiosztást nagyon könnyen megvalósíthatjuk
+egy véges automatával történő véletlenszerű inverz mintaillesztéssel\footnote{
+  A jelenlegi implementáció a \textit{Generex} könyvtárat használja erre.
+},
+a sorindex és a \texttt{TreeRandom}-ból vett seed figyelembevételével.
+
+Ha azonban fenn szeretnénk tartani a gyors keresés lehetőségét,
+szükséges lesz, hogy képezni tudjuk az adott reguláris kifejezésre illeszkedő összes sztring virtuális listáját.
+Azaz bármely $n$ sorindexre elő kell tudnunk állítani az $n$-edik illeszkedő sztringet
+(méghozzá ABC-rendben, nem pedig a reguláris kifejezés szerkezete alapján).
+És fordítva, tetszőleges sztringre meg kell tudni mondani,
+hányadik illeszkedő sztringgel azonos vagy melyikhez van közel, ha nem illeszkedik.
+Ha már van egy ilyen virtuális listánk, azt a kétfázisú értékkiosztással könnyen a kívánt oszloppá alakíthatjuk.
+
+A megoldás a reguláris kifejezések lehetőségeinek csak valamilyen limitált részhalmazát fogja támogatni.
+De még így is bőven lefedi az olyan egyszerű eseteket, mint például a telefonszámok, email-címek stb.
+
+Az ilyen típusú szöveggenerálás részletes bemutatása kimutat a jelen dolgozat keretei közül,
+így ennek ismertetését itt mellőzöm\footnote{
+  Egy egyszerű erre készült prototípus a \texttt{Strex} könyvtár.
+}.
 
 \subsection{Értékkiosztás oszlopok közötti összefüggéssel}
 
@@ -2080,296 +2416,8 @@ az egyesített táblában a kisebb tábla adatait pedig redundánsan szerepeltet
 így az összefüggéseket már táblán belül tudjuk értelmezni.
 
 
-\section{Az írhatósági réteg}
-
-\subsection{A \texttt{DiffTable} dekorátor}
-
-A virtuális adattár egy-egy példánya várhatóan viszonylag rövid élettartamú lesz.
-Feltehetjük, hogy az írási műveletek összességében kevés módosítást eredményeznek.
-A tipikus szcenáriókban főként egyes konkrét rekordok lesznek módosítva, hozzáadva, törölve.
-A tömeges módosítások kérdésével itt nem foglalkozom,
-de nem látszik akadálya az ezek optimalizálását célzó továbbfejlesztésnek.
-
-Az írhatósági réteget arra is használhatjuk,
-hogy egy-egy tesztesethez egyéni rekordokat adjunk hozzá,
-ami megkötéseken keresztül nehézkesebb lenne.
-
-A módosítások támogatásához előszöris a \texttt{Table} interfészt magát
-ki kell egészíteni a megfelelő műveletekkel
-(pl. \texttt{isWritable()}, \texttt{applyPatch(TablePatch)}, \texttt{sequence()}).
-A csak-írható implementáció persze az írási műveleteket nem fogja támogatni.
-
-A \texttt{DiffTable} egy tetszőleges \texttt{Table} implementáció fölé elhelyezhető dekorátor.
-Teljesen áttetszően működik: amíg nincsenek módosítások,
-minden műveletet egyszerűen továbbít a dekorált tábla felé.
-Módosítás esetén a különbségeket (módosított értékek, beszúrt és törölt sorok) a memóriában tárolja.
-A további lekérdezésekkor figyelembe veszi a különbségréteget a továbbhíváskor,
-illetve a szükséges mértékben összefésüli az eredményt a különbségekkel.
-
-Olyan táblák is dekorálhatók így, amelyek valós adatbázistáblákat használnak backendként.
-Ezzel a módszerrel írhatóan használhatunk egy létező adatbázist,
-az eredeti adatok módosítása nélkül.
-
-\subsection{Generikus tranzakciókezelés}
-
-A fő elv, amit a tranzakciókkal kapcsolatban követni fogunk,
-hogy megmaradjunk a réteges felépítésnél,
-és semmiképp ne a táblákra toljuk a tranzakciókezelés terhét.\footnote{
-    Mint több adatbáziskezelőnél láthatjuk (a \textit{H2} például tipikusan ilyen).
-    A munkamenetek kezelésének a táblainterfész alá tolásával
-    különféle architekturális nehézségek jelentkeznek.
-}
-
-Egy teljesen általános tranzakciókezelési módszer,
-amikor a szerver két állapotát különböztetjük meg,
-a \texttt{READ} és a \texttt{WRITE} státuszokat.
-Feltételezzük, hogy jóval több olvasási kérés érkezik be, mint írási.
-
-Az alapértelmezett \texttt{READ} státuszban feltétel nélkül,
-konkurensen szolgáljuk ki a beérkező olvasási lekérdezéseket.
-Ha azonban egy módosító lekérdezés illetve tranzakció érkezik,
-elhelyezzük a módosító műveleteknek fenntartott queue-ba,
-és átváltunk \texttt{WRITE} módba.
-
-\texttt{WRITE} módban a beérkező olvasási illetve írási műveletek
-a számukra fenntartott két dedikált queue-ba kerülnek.
-Először kiszolgáljuk a még folyamatban lévő olvasási műveleteket,
-ezután sorra szekvenciálisan kivesszük és végrehajtjuk a módosítási queue elemeit, amíg van ilyen.
-Ha már nincs elem a módosítási queue-ban,
-akkor az olvasási queue összes elemét felszabadítjuk, és továbbítjuk párhuzamos végrehajtásra,
-miközben visszaállítjuk a \texttt{READ} státuszt.
-
-Új módosító művelet érkezésekor a ciklus újrakezdődik.
-
-\subsection{Snapshot-alapú tranzakciókezelés}
-
-A \texttt{DiffTable} dekorátor minden további nélkül elhelyezhető
-más \texttt{DiffTable} objektumok fölé is, ami lehetővé teszi, hogy egymásra épülő snapshotokat tároljunk.
-
-Így könnyen megvalósítható a \textit{multiversion concurrency control} (MVCC),
-amikor a kiinduló állapot snapshotja a módosító műveletek közben is rendelkezésre áll,
-azaz az olvasási műveletek ekkor is zavartalanul futtathatók.
-Az írási tranzakció végeztével az érintett \texttt{DiffTable} példányok
-beküldik a saját módosítási rétegüket a dekorált táblába,
-így az belefésülésre kerül a megosztott adattérbe.
-
-A snapshotok alkalmazásából a tranzakciós savepointok támogatása is természetesen következik.
-Egy savepointra való visszaugrás egyszerűen a megfelelő szintre való visszatérést jelenti
-a \texttt{DiffTable} dekorátorok egymásra épülő hierarchiájában.
-
-Mivel a snapshotkezelés táblánként függetlenül működtethető,
-párhuzamosan is futtathatunk írási tranzakciókat,
-amíg azok különböző táblákon futnak.
-
-
 
 \chapter{Gyakorlati eredmények}
-
-
-\section{A prototípus}
-
-\begin{figure}[H]
-\centering
-\includesvg[height=0.8\textwidth]{diagram/simplearch}
-\caption{A virtuális adatbázis vázlatos architektúrája}
-\end{figure}
-
-A virtuális adatbázist megvalósító szoftvert HoloDB néven tettem elérhetővé.
-Az elnevezés a hologramokra utal:
-a konfigurációból leképzett, ``kivetített'' virtuális adatbázis hasonlóan illuzórikus,
-mint a hologramból előhívott térbeli látvány.
-
-A HoloDB sok tekintetben már kinőtte a prototípus státuszt,
-hiszen egy nagyívű rétegelt architektúráról van szó,
-mely kellően megszilárdult alapvonalakkal rendelkezik a hosszútávú fejlesztéshez.
-Ugyanakkor stabil verzióról még nem beszélhetünk;
-az implementációs részleteket, valós használati eseteket,
-más eszközökkel való integrációt illetően még számos felmérendő, kikísérletezendő dolog adódik.
-
-A szerver Docker konténerként is futtatható, amihez a Docker Hubon biztosítok egy testreszabott képet.
-A felhasználói Dockerfile mellé csak a konfigurációs fájlt kell elhelyezni az indításhoz.
-A testreszabott kép a kis erőforrásigény miatt serverless végpontként is jól használható.
-
-A HoloDB a MiniBase projektre épül.
-Utóbbi egy relációsadatbázis-keretrendszer, mely definiálja a storage API-t,
-és annak konkrét implementációjához agnosztikusan viszonyulva
-egy komplett adatbázisszervert épít fölé;
-beleértve a lekérdezések fordítását és futtatását,
-a felhasználói munkamenetek, tranzakciók és változók kezelését,
-a runtime sémamódosításokat illetve új táblákat és más felelősségi köröket.
-A HoloDB ehhez a storage API virtuális implementációját,
-a konfiguráció kezelését
-és a megfelelő futtatási környezetet adja hozzá.
-
-A MiniBase közvetlenül biztosít egy SQL-futtató felületet, a MiniConnect API megvalósításával.
-A MiniConnect testvérprojekt célja egy egyszerű és egyértelmű adatbázis-elérési API definiálása,
-melyet a JDBC nehézkessége inspirált.\footnote{
-    Nem áll módomban ehelyt a JDBC részletes kritikájába bocsátkozni.
-    De milyen problémát is old meg a \texttt{nativeSQL()} metódus?
-    Egyáltalán miként egyszerűsítené a helyzetet ez a kellemetlenül rengeteg függvény?
-    Miért származik a \texttt{PreparedStatement} a \texttt{Statement} típusból?
-    Hosszan folytathatjuk a sort.
-}
-A MiniConnecthez különféle middleware változatok is elérhetők, például hálózaton keresztül is használható,
-illetve letisztultsága miatt könnyen írhatók hozzá dekorátorok, proxyk.
-Egy (deb csomagként is elérhető) REPL is tartozik hozzá,
-mellyel parancssorból tudunk hálózaton keresztül csatlakozni a MiniConnectet támogató tetszőleges adatbázishoz.
-Ez egyúttal a HoloDB kipróbálásának legkényelmesebb módja,
-számos kényelmi funkciót támogat (szép kimenet, syntax highlight, parancstörténet stb.).
-
-Az architektúra köré sokféle további eszközt fejlesztettem,
-melyek a robusztusság eltérő fokain állnak.
-Ilyenek például: automatikus REST API, GraphQL adapter, authentikációs proxy, Apache Calcite SQL driver stb.
-
-
-\section{(XXX) Konfiguráció}
-
-A HoloDB egy YAML formátumú konfigurációs fájl segítségével paraméterezhető fel,
-melyben az adatbázis minden lényeges eleme beállítható.
-A konfigurációhoz formális specifikáció is tartozik,
-így a fájl strukturális és szemantikai helyessége statikusan ellenőrizhető.
-A konfigurációt hordozó Java-osztályok egy programkódban is használhatók,
-ez csak egy dedikált, minimalisztikus csomag függőségként való beemelését igényli.
-
-\begin{figure}[H]
-  \centering
-  \begin{minipage}[t]{0.47\textwidth}
-    \begin{minted}[fontsize=\small,framesep=4pt,frame=single,framerule=1.5pt,rulecolor=\color{gray!30}]{yaml}
-seed: 425364
-schemas:
-  - name: shop
-    tables:
-      - name: customers
-        size: 5
-        columns:
-          - name: id
-            mode: COUNTER
-          - name: firstname
-            valuesBundle: forenames
-          - name: lastname
-            valuesBundle: surnames
-          - name: birth
-            valuesRange: [1950, 2000]
-      - name: orders
-        size: 12
-        columns:
-          - name: id
-            mode: COUNTER
-          - name: cid
-            valuesForeignColumn:
-              [customers, id]
-          - name: product
-            valuesBundle: fruits
-          - name: quantity
-            valuesRange: [1, 10]
-    \end{minted}
-  \end{minipage}
-  \hspace*{\fill}
-  \begin{minipage}[t]{0.35cm}
-    \vspace{7cm}
-    {\Large $\Rightarrow$}
-  \end{minipage}
-  \hspace*{\fill}
-  \begin{minipage}[t]{0.45\textwidth}\begin{center}
-
-    \vspace{1.2cm}
-
-    \texttt{customers}
-    \vspace{0.1cm}
-
-    \begin{tabular}{ |r|l|l|r| }
-      \hline
-        \multicolumn{1}{|>{\centering\arraybackslash}m{6mm}|}{\textbf{\texttt{id}}} &
-        \multicolumn{1}{>{\centering\arraybackslash}m{18mm}|}{\textbf{\texttt{firstname}}} &
-        \multicolumn{1}{>{\centering\arraybackslash}m{18mm}|}{\textbf{\texttt{lastname}}} &
-        \multicolumn{1}{>{\centering\arraybackslash}m{12mm}|}{\textbf{\texttt{birth}}} \\
-      \hline
-        1 & Howard & Anderson & 1968 \\
-        2 & Rebecca & Ferguson & 1959 \\
-        3 & Jeremy & Moore & 2000 \\
-        4 & Julie & Ellis & 1951 \\
-        5 & Kathleen & Cook & 1971 \\
-      \hline
-    \end{tabular}
-
-    \vspace{1cm}
-
-    \texttt{orders}
-    \vspace{0.1cm}
-
-    \begin{tabular}{ |r|r|l|r| }
-      \hline
-        \multicolumn{1}{|>{\centering\arraybackslash}m{6mm}|}{\textbf{\texttt{id}}} &
-        \multicolumn{1}{>{\centering\arraybackslash}m{9mm}|}{\textbf{\texttt{cid}}} &
-        \multicolumn{1}{>{\centering\arraybackslash}m{18mm}|}{\textbf{\texttt{product}}} &
-        \multicolumn{1}{>{\centering\arraybackslash}m{16mm}|}{\textbf{\texttt{quantity}}} \\
-      \hline
-        1 & 5 & date & 10 \\
-        2 & 2 & orange & 1 \\
-        3 & 2 & sloe & 2 \\
-        4 & 3 & melon & 7 \\
-        5 & 5 & guava & 9 \\
-        6 & 3 & orange & 6 \\
-        7 & 2 & plantain & 3 \\
-        8 & 4 & pear & 7 \\
-        9 & 4 & papaya & 9 \\
-        10 & 5 & lime & 9 \\
-        11 & 3 & sloe & 4 \\
-        12 & 1 & strawberry & 1 \\
-      \hline
-    \end{tabular}
-
-  \end{center}\end{minipage}
-  \par
-  \caption{Egy minimalisztikus konfiguráció és eredménye}
-\end{figure}
-
-Java projektekben JPA-entitásokra helyezett annotációkkal is beállítható a teljes konfiguráció,
-így beágyazott adatbázissal, külső eszközök nélkül is futtathatunk teszteket.
-Ehhez elegendő a megfelelő JDBC connection sztringet megadni,
-a többit (keretrendszertől függően\footnote{
-    A \textit{Spring}, \textit{Micronaut} és \textit{Quarkus} beépítetten támogatott,
-    de elméletileg bármilyen rendszerhez igazítható a megoldás.
-}) automatikusan elvégzi az inicializáló service.
-
-Az egyéni működéssel való kiegészítés több szinten támogatott.
-A beépített értékkiosztási módok esetén is lehetőség van egyéni adatfájl betöltésére,
-a permutációk és rányújtások egyéni implementációjának betöltésére.
-De az oszlop értékkiosztásához teljesen egyedi implementáció is használható,
-ehhez meg kell adnunk egy olyan osztály nevét, mely implementálja a \texttt{SourceFactory} interfészt
-(illetve biztosítani kell, hogy az egyedi osztályok láthatóak legyenek a classpath alatt).
-
-A YAML formátum a humán kezelhetőségen kívül azzal az előnnyel is jár, hogy könnyen előfeldolgozható.
-Például egy megfelelő sablonkezelő használatával ugyanazt a vázat használva
-különféle tesztesetekhez finomhangolhatjuk az adatbázist.\footnote{
-    Ilyen megközelítést használ például a \textit{helm} nevű deployment eszköz.
-}
-
-A konfiguráció gépileg is generálható.
-A prototípus tartalmaz néhány ilyen segédeszközt,
-ezek közül a legfontosabb a konfigurációt a meglévő adatbázis letapogatásával,
-különféle heurisztikák bevetésével legeneráló, Python nyelven írt szkriptfájl.
-Az eredmény (és persze maga a szkriptfájl is) könnyen testreszabható.
-
-Ahogy már említettem, a konfiguráció szofisztikáltabb generálásának egy lehetséges módja,
-ha a konfigurációt optimalizáló mesterséges intelligenciára épülő módszert vetünk be.
-Ennek kutatása egy izgalmas jövőbeli projektnek ígérkezik.
-Érdekes probléma például, hogyan érdemes számítani a bemeneti adatbázis
-és az előállított konfiguráció közötti megfelelőségi mutatót.%
-\cite{Erritali2016DocumentSimilarity}
-
-A konfigurációs fájl az adatbázis nagyjábóli definíciójának is felfogható.
-Egy másik ígéretesnek tűnő továbbfejlesztési lehetőség,
-hogy kiegészítsük a struktúrát olyan további opcionális elemekkel,
-melyek egyrészt teljesen leírják az éles adatbázis szerkezetét,
-másrészt pedig lehetővé teszik az adatmigrációknak
-kizárólag a konfigurációs fájlok különbségén alapuló automatizálását.
-Természetesen ez egyáltalán nem triviális,
-hiszen néha a meglévő adatok átstruktúrálására van szükség,
-illetve lehetnek a két konfigurációs állapot közötti történetben elbújó lényeges módosítások.
-Úgy vélem, mindkét probléma kezelhető,
-közeljövőbeli tervem egy ilyen migrációs keretrendszer kialakítása.
-
 
 \section{Néhány bővítési példaszcenárió}
 
@@ -2493,7 +2541,7 @@ A \texttt{TreeRandom} hierarchia természetéből adódóan a korábbi oszlopok
 továbbra is ugyanazokat a konkrét értékeket fogják szolgáltatni.
 
 
-\section{Empirikus eredmények}
+\section{(SZÉTBONTANI, SOK FEJEZET LÁTSZÓDJON) (+bővíteni, módszertan stb.) Empirikus eredmények}
 
 A HoloDB teljesítményét mind egyedi lekérdezések szintjén,
 mind realisztikus integrált teszt keretében mértem.\footnote{
@@ -2907,22 +2955,50 @@ Mindegyik mellett szólnak pro és kontra érvek.
 
 \pagebreak
 
-\appendix
 
 \phantomsection
 \addcontentsline{toc}{chapter}{\biblabel}
 \printbibliography[title=\biblabel]
 \cleardoublepage
 
-\phantomsection
-\addcontentsline{toc}{chapter}{\lstfigurelabel}
+
+\appendix
+
+\chapter{Algoritmusok}
+
+\section{Algoritmus 1}
+\label{appendix:algorithm_1}
+
+HELLO
+
+\cleardoublepage
+
+\section{Algoritmus XYZ}
+\label{appendix:algorithm_xyz}
+
+\begin{algorithm}[H]
+    \KwData{this text}
+    \KwResult{how to write algorithm with \LaTeX2e }
+    initialization\;
+    \While{not at end of this document}{
+        read current\;
+        \eIf{understand}{
+            go to next section\;
+            current section becomes this one\;
+            }{
+            go back to the beginning of current section\;
+        }
+    }
+    \caption{How to write algorithms}
+\end{algorithm}
+
+\cleardoublepage
+
+
+\chapter{\lstfigurelabel}
 \listoffigures
 \cleardoublepage
 
-\phantomsection
-\addcontentsline{toc}{chapter}{\lsttablelabel}
-\listoftables
-\cleardoublepage
 
 \chapter{Projektlinkek}
 
