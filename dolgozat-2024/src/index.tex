@@ -71,9 +71,6 @@
 
 \documentlang{hungarian}
 
-\makecover
-\cleardoublepage
-
 \maketitle
 
 \begin{small}
@@ -322,8 +319,8 @@ A hosszabb válaszban néhány tényező összejátszását sorolnám föl:
 \section{Az új megközelítés}
 
 A következőkben lényegileg egy sajátos relációsadatbázis-szervert fogok bemutatni.
-Ez egy már működő és kipróbálható szoftver, melynek a HoloDB nevet adtam,
-még a kezdetekkor ugyanis úgy gondoltam rá,
+Ez egy már működő és kipróbálható szoftver, melynek a HoloDB nevet adtam.
+Kezdetben ugyanis úgy gondoltam rá,
 mint a hologram-ábrák megfelelőjére az adatbázisok világában.
 Ebben az adatbázisban ugyanis nincsenek tárolva adatok
 (legfeljebb adatok változásai, ha az írhatóság be van kapcsolva).
@@ -331,18 +328,15 @@ Ebben az adatbázisban ugyanis nincsenek tárolva adatok
 A deklaratív konfiguráció alapján a lekérdezések eredménye on-the-fly kerül kiszámításra,
 úgy, hogy a lekérdezések közötti konzisztencia biztosított,
 vagyis az egymás utáni lekérdezések egy koherens adatbázis képét adják.
-Ezt meg lehetne oldani úgy is, hogy pusztán determinisztikusan generáljon
-egy pszeudorandom értéket egy-egy rekordmezőre,
-így kereséskor a teljes tábla szkennelése szükséges.
-A lényegi trükk azonban az hogy általában nincs szükség ilyen költséges szkennelő műveletekre,
-az oszlopok ugyanis alapértelmezetten virtuálisan indexeltek.
-Ehhez meg kell oldani, hogy értéklekérés és keresés oda-vissza egybecsengően működjön,
-ha egy keresett adatot valahol megtaláltunk, akkor ugyanott lekérve meg is kapjuk, és viszont.
-Ehhez részben a kriptográfiából ismert módszereket használtam.
+Ezt pusztán adatmezőnként determinisztikusan generált értékekkel is meg lehetne oldani,
+ekkor a kereséshez a teljes tábla szkennelése lenne szükséges.
+A virtuális indexek miatt általában azonban nincs szükség ilyen költséges műveletekre.
+Az értéklekérés és keresés oda-vissza egybecsengő működésének
+biztosításához a kriptográfiából ismert módszereket is felhasználtam.
 
 A végeredmény egy skálázható és testreszabható nyílt-forráskódú adatbázis-mockoló eszköz,
-melyhez számos kiegészítő eszköz is készült
-(csak néhány példa ezekre: REPL; networking; JDBC és JPA támogatása, Docker, haladó értékkészletek).
+számos kiegészítővel
+(REPL; networking; JDBC és JPA támogatása, Docker, haladó értékkészletek stb.).
 
 Mivel nincsenek adatok, a memóriafogyasztás minimális,
 különösen ha nem érkezik egyszerre sok lekérés.
@@ -354,13 +348,10 @@ az a konfigurációs fájl megírása,
 bár a számos példa alapján ez szinte néhány másolással is megoldható,
 de ha ez sem lenne elég, akár generálható is.
 
-Bár a teljes architektúra tárgyalása is sok érdekességet tudna bemutatni,
-a tárgyalás során a fókuszt egyértelműen a relációs storage API bemutatása adja majd,
-ez ugyanis a szűk keresztmetszet, amely a megoldás újszerűségéhez a leginkább hozzájárul,
-és egyúttal a prototípusban is ezek a legkidolgozottabb komponensek.
-
-Úgy gondolom, a forráskód a dolgozatban konkrétan bemutatott komponenseken és megoldásokon
-túl is sok izgalmas dolgot rejt,
+A tárgyalás során kifejezetten a relációs storage API implementációja lesz a fókuszban,
+mint az a szűk keresztmetszet, amely a megoldás újszerűségéhez leginkább hozzájárul,
+és ami a prototípusban is a legkidolgozottabb rész.
+A forráskód az itt bemutatottakon túl is sok érdekességet rejt,
 ezért jó szívvel ajánlom a szoftver Git-tárolóját,
 melyet a dolgozat legvégén linkeltem is.
 
@@ -368,45 +359,48 @@ melyet a dolgozat legvégén linkeltem is.
 
 Fentebb már tisztáztam, mi volt a fő motiváció a szoftver elkészítésében,
 de további alkalmazhatóságokat is lehet találni.
-A következő listában csak a legmarkánsabbakat sorolom föl:
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% TODO
+Ezek közül a legegyértelműbbek:
 
 \begin{itemize}
-    \item \textbf{ASDF.} XXXXXXXXXXXXXXXXXXXXXXx.
-    \item \textbf{FDSA.} XXXXXXXXXXXXXXXXXXXXXXx.
+    \setlength\itemsep{-0.4em}
+    \item \textbf{Tesztelés:} Integrációs és egyéb tesztek, gyors kipróbálás.
+    \item \textbf{Fejlesztés:} Kezdeti fázisban, prototípusoknál, gyakran változó adatszerkezet esetében.
+    \item \textbf{Demonstrációk:} Példaadatok bemutatókhoz, koncepciótervekhez.
+    \item \textbf{Oktatás:} Ad hoc adathalmaz konkrét példákhoz és feladatokhoz.
 \end{itemize}
 
-% azonnali indulás, minimális memóriafogyasztás
+Mivel az új megoldás erőforrásigénybeli paraméterei
+radikálisan eltérnek a tényleges adatbázisokétól,
+számos olyan helyen is felmerülhet az alkalmazása,
+ahol hagyományosan rossz gyakorlatnak számít adatbázisszervert futtatni.
+Ilyen esetek például: füsttesztek, unit tesztek, serverless.
 
-%Alkalmazhatóság: serverless, dev mode, JPA annotációk,
-%    letapogatás és renderelés, AI általi generálás, zero mode
+Néhány olyan lehetőség is megnyílik, ami adatbázisok esetében eddig fel sem merült.
+Ilyen például a \textbf{dev mode}, amikor a konfiguráció módosításával a teljes adatbázis
+azonnal igazodik a módosításhoz.
 
-\iffalse
-    \item támogatja a relációs adatmodellt, mint legáltalánosabbat
-    \item determinisztikus, konzisztens, és egy root seed módosításával újrakeverhető
-    \item azonnal elindul, nincs számottevő preparálási folyamat
-    \item az adatokat csak elérésükkor, on-the-fly számítja
-    \item indexeket szolgáltat, ahol az egyébként is elvárható lenne
-    \item könnyen és rugalmasan konfigurálható, fájlon keresztül is
-    \item óriás adatmennyiséget is képes szimulálni
-    \item skálázható, finomhangolható
-    \item egyedi működéssel könnyen bővíthető
-    \item opcionálisan írható
-\fi
+\section{Célkitűzések}
+
+A következőket fogjuk elvárni a megoldástól:
+
+\begin{enumerate}
+    \setlength\itemsep{-1em}
+    \item Támogatja a relációs adatmodellt.
+    \item Determinisztikus, koherens.
+    \item Az adatok könnyen variálhatóak.
+    \item Óriás adatmennyiséget is képes szimulálni.
+    \item Gyors, indexelt keresést nyújt, a lekérések időigénye elfogadható.
+    \item Azonnal elindul, nincs számottevő preparálási folyamat.
+    \item Kevés memóriát foglal, az adatokat on-the-fly számítja.
+    \item Könnyen és rugalmasan konfigurálható.
+    \item Skálázható, finomhangolható.
+    \item Egyedi működéssel könnyen bővíthető.
+    \item Opcionálisan írható.
+\end{enumerate}
 
 \section{A dolgozat programja}
 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% TODO
-
-\section{Tézisek}
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% TODO: a végén nyugtázni is!!!
-
-\begin{itemize}
-    \item \textbf{Tézis 1: ASDF.} XXXXXXXXXXXXXXXXXXXXXXx.
-    \item \textbf{Tézis 2: FDSA.} XXXXXXXXXXXXXXXXXXXXXXx.
-\end{itemize}
+XXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
 
 
 \chapter{Architektúra}
@@ -2537,16 +2531,49 @@ Azzal, hogy nincs jelentős generálási és indítási költség,
 olyan új lehetőségek nyílnak meg, mint a teljes adatbázistartalommal történő füstteszt,
 vagy a teljesen izolált automatikus integrációs tesztek.
 
-\section{A tézisek teljesülése}
+\section{A célkitűzések teljesülése}
 
-A dolgozatban elmondottak igazolják, hogy a felállított tételeink teljesültek:
+\begin{enumerate}
+    \setlength\itemsep{-0.5em}
+    \item \textbf{Támogatja a relációs adatmodellt.} Valóban:
+          a megoldás megvalósítja a relációs storage API-t és
+          támogatja az SQL lekérdezések futtatását.
+    \item \textbf{Determinisztikus, koherens.} Valóban:
+          a hierarchikus véletlengenerátor biztosítja a determinisztikusságot,
+          az értékkiosztások pedig a konzisztens működést adatelérés és index,
+          illetve több lekérdezés között.
+    \item \textbf{Az adatok könnyen variálhatóak.} Valóban:
+          minden adat függ a konfigurációban elhelyezett root seedtől,
+          melynek módosításával a teljes adatbázis megváltozik.
+    \item \textbf{Óriás adatmennyiséget is képes szimulálni.} Valóban:
+          mivel az adatok nincsenek tárolva, a mennyiség önmagában nem jelent problémát;
+          az aritmetika a nagy számokkal történő számoláshoz lett igazítva.
+    \item \textbf{Gyors, indexelt keresést nyújt, a lekérések időigénye elfogadható.} Valóban:
+          az értékkiosztásokban alkalmazott megoldások lehetővé teszik a virtuális indexeket;
+          a lekérdezések sebessége az empirikus tesztek alapján is elfogadható.
+    \item \textbf{Azonnal elindul, nincs számottevő preparálási folyamat.} Valóban:
+          alapértelmezetten pusztán a konfiguráció betöltése történik meg az indításkor.
+    \item \textbf{Kevés memóriát foglal, az adatokat on-the-fly számítja.} Valóban:
+          maguk az adatok egyáltalán nincsenek tárolva, lekérdezéskor kerülnek számításra,ű
+          néhány esetben kisebb adatstruktúrák generálódnak (pl. regex trie),
+          melyek mérete a táblamérettől független.
+    \item \textbf{Könnyen és rugalmasan konfigurálható.} Valóban:
+          a YAML konfigurációs fájl könnyen kezelhető és verziókezelhető,
+          minden fontosabb paraméter beállítására alkalmas.
+    \item \textbf{Skálázható, finomhangolható.} Valóban:
+          lényegileg minden komponens skálázható illetve akár kicserélhető,
+          különösen az értékkészletek, monoton méretigazítások és permutációk
+          vannak hatással a teljesítményre és az eredmény minőségére.
+    \item \textbf{Egyedi működéssel könnyen bővíthető.} Valóban:
+          lehetőség van az értékkiosztások egyedi Java osztályokkal való implementálására,
+          ami nagyrészt a konfigurációban is megadható,
+          emellett egy programozható API is rendelkezésre áll.
+    \item \textbf{Opcionálisan írható.} Valóban:
+          a módosító SQL-ek is támogatottak,
+          az írhatósági és az egyszerű tranzakciókezelési réteg
+          lehetővé teszi az írási műveletek hatásainak megjegyzését.
+\end{enumerate}
 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% TODO: nyugtázni
-
-\begin{itemize}
-    \item \textbf{Tézis 1: ASDF.} XXXXXXXXXXXXXXXXXXXXXXx.
-    \item \textbf{Tézis 2: FDSA.} XXXXXXXXXXXXXXXXXXXXXXx.
-\end{itemize}
 
 \section{Tervek a közeljövőre}
 
@@ -2586,12 +2613,10 @@ A bevett online felületeken túl (\textit{GitHub}, \textit{Stack Overflow}, \te
 mind az akadémiai, mind a versenyszféra-közegben tervezem,
 hogy workshopokon és kérdőíves formában is gyűjtsem a visszajelzéseket.
 
-És ha már a kommunikációnál tartunk, maradt itt még egy elsőre talán mellékesnek tűnő,
-valójában azonban égető probléma.
-Nevezetesen, hogy az új megoldás esszenciája a bevett terminológiákkal
-csak tekervényesen fogalmazható meg (ld. a dolgozat címét).
-Egy megfelelő, jellegzetes és egyszerű megnevezés
-szükséges feltétele lesz a szélesebb körű népszerűsítésnek.
+A bemutatott megoldás egy újszerű szoftver,
+melynek esszenciája a bevett terminológiákkal csak tekervényesen fogalmazható meg.
+Így egy megfelelő, jellegzetes és egyszerű megnevezés
+sokat segíthet majd szélesebb körű népszerűsítésben.
 Felmerült jelöltként például
 a \textit{holografikus adatbázis},
 a \textit{fantomadatbázis},
