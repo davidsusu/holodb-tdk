@@ -19,7 +19,7 @@
 \usepackage{pdflscape}
 \usepackage{fancyvrb}
 \usepackage{algorithm}
-\usepackage{algpseudocodex}
+\usepackage[rightComments=false,italicComments=false]{algpseudocodex}
 \usepackage[backend=bibtex,style=numeric]{biblatex}
 \usepackage[newfloat]{minted}
 \usepackage{todonotes}
@@ -39,6 +39,14 @@
 \vspace{1em}
 }
 
+
+%\renewcommand{\algorithmicfont}{\ttfamily}
+%\makeatletter
+%\renewcommand{\ALG@beginalgorithmic}{\ttfamily} % Force monospace for the environment
+%\makeatother
+%\makeatletter
+%\renewcommand{\ALG@beginalgorithmic}{\normalfont\ttfamily}
+%\makeatother
 
 \definecolor{lightyellow}{RGB}{255, 245, 215}
 
@@ -398,9 +406,26 @@ A következőket fogjuk elvárni a megoldástól:
     \item Opcionálisan írható.
 \end{enumerate}
 
-\section{A dolgozat programja}
+\section{Megjegyzés a dolgozat koncepciójához}
 
-XXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+A dolgozat egy újszerű megoldást mutat be a fentebb megfogalmazott problémára.
+Fő célja az elképzelés működőképességének bizonyítása,
+tehát annak a láncnak a bemutatása,
+mely a különféle részmegoldásokat egybefűzi,
+hogy létrehozza a relációs adatbázis illúzióját,
+miközben megfelel ez imént megfogalmazott célkitűzéseknek.
+Mind a fejlesztés, mind a dolgozat írása során
+a szoftvertechnológiai és architekturális szempontokra koncentráltam.
+A későbbiekben természetesen egyre fontosabbá válik majd az implementációs lehetőségek
+részletes analízise, nagy mennyiségű mérési adat felhalmozása és összehasonlítása.
+Ha azonban kezdettől ezekre az aspektusokra koncentráltam volna,
+lehetetlen lett volna egy ilyen átfogó koncepció megvalósítása és bemutatása.
+Így a felvonultatott mérési eredmények is kifejezetten azt a célt szolgálják,
+hogy az átfogó működőképességet integrált tesztekből származó számszerű adatokkal alátámasszák.
+Figyelembe kell venni azt is,
+hogy a projekt nem egy már bejáratott nagyobb kutatási program része,
+egyelőre nincsenek további dedikált erőforrásai
+a részterületek mérési adatainak feldolgozására.
 
 
 \chapter{Architektúra}
@@ -2642,10 +2667,23 @@ Mindegyik mellett szólnak pro és kontra érvek.
 \begin{algorithm}[H]
 \caption{Feistel-hálózat last-zero változat}\label{algorithm:feistel}
 \begin{algorithmic}[1]
-    \State first line
-    \Statex continuing first line
-    \State \Call{Proc}{a1, a2}
-    \State \Output Hello World!
+    \State \Comment{\texttt{blockSize}: blokkméret, ~ $N$: kör-párok száma, ~ \texttt{index}: a lekért pozíció}
+    \State \texttt{leftSize, rightSize : int}
+    \State \texttt{allBits, leftBits, rightBits, tmpBits, resultBits : bit[]}
+    \State \texttt{leftSize $\gets$ (blockSize + 1) / 2}
+    \State \texttt{rightSize $\gets$ blockSize - leftSize}
+    \State \texttt{allBits $\gets$ \Call{indexNumberToBits}{index}}
+    \State \texttt{leftBits $\gets$ allBits[0 .. leftSize-1]}
+    \State \texttt{rightBits $\gets$ allBits[leftSize .. blockSize-1]}
+    \ForAll{$i \in \{0, \dots, N-1\}$}
+        \State \texttt{rightHash $\gets$ \Call{hash}{rightBits, $i$, 0}}
+        \State \texttt{tmpBits $\gets$ leftBits.xor(rightHash, leftSize)}
+        \State \texttt{leftHash $\gets$ \Call{hash}{tmpBits, $i$, 1}}
+        \State \texttt{rightBits $\gets$ rightBits.xor(leftHash, rightSize)}
+        \State \texttt{leftBits $\gets$ tmpBits}
+    \EndFor
+    \State \texttt{resultBits $\gets$ rightBits.concat(leftBits)}
+    \State \texttt{\Return{\Call{bitsToIndexNumber}{resultBits}}}
 \end{algorithmic}
 \end{algorithm}
 
