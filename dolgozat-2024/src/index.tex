@@ -9,6 +9,7 @@
 \usepackage{graphicx}
 \usepackage{svg}
 \usepackage{hyperref}
+\usepackage{cleveref}
 \usepackage{appendix}
 \usepackage{float}
 \usepackage{pgfplots}
@@ -17,12 +18,20 @@
 \usepackage{picture,xcolor}
 \usepackage{pdflscape}
 \usepackage{fancyvrb}
-\usepackage{algorithm2e}
+\usepackage{algorithm}
+\usepackage{algpseudocodex}
 \usepackage[backend=bibtex,style=numeric]{biblatex}
-
+\usepackage[newfloat]{minted}
 \usepackage{todonotes}
+\usepackage{tocloft}
+\renewcommand{\cftsecfont}{\small} % Section titles in smaller font
+\renewcommand{\cftsubsecfont}{\small} % Subsection titles in smaller font
+\renewcommand{\cftsecpagefont}{\small} % Page numbers in smaller font
+\setlength{\cftbeforesecskip}{-0.15em} % Adjust spacing between section entries
+\setlength{\cftbeforesubsecskip}{-0.15em} % Adjust spacing between subsection entries
 
 \newcommand{\rhpad}{\vspace{0.6\baselineskip}}
+
 
 \newcommand{\thesispar}[1]{
 \vspace{1em}
@@ -30,7 +39,13 @@
 \vspace{1em}
 }
 
-\usepackage[newfloat]{minted}
+
+\definecolor{lightyellow}{RGB}{255, 245, 215}
+
+\newcommand{\algorithmref}[1]{\hyperref[algorithm:#1]{\colorbox{lightyellow}{%
+(\textrightarrow~Algoritmus: \nameref*{algorithm:#1})}}}
+
+
 
 \title{HoloDB: Relációs demóadatok on-the-fly generálása deklaratív konfigurációból}
 \date{2024}
@@ -52,20 +67,18 @@
 \setcounter{secnumdepth}{2}
 
 
-
 \begin{document}
 
 \documentlang{hungarian}
-
-\listoftodos
-\cleardoublepage
 
 \makecover
 \cleardoublepage
 
 \maketitle
 
+\begin{small}
 \tableofcontents
+\end{small}
 \cleardoublepage
 
 
@@ -99,77 +112,13 @@ Valamint olyan új lehetőségek nyílnak meg, mint a „dev mode”
 vagy a serverless adatbázis-szolgáltatás.
 \end{abstract}
 
-\chapter{(+++) Bevezetés}
+\chapter{Bevezetés}
 
-\iffalse
-% TODO: a bevezetőben utalni mindenféle korábbi generáló-módszerre
-% PI-jegyek, fraktálok stb.
-
-% TODO: az elején tisztázni, hogy ez nem implementáció-tanulmány,
-%       hanem egy "proposal" (és egyúttal prototípus)
-%       -- ezt az absztrakban is hangsúlyozni;
-%       mindennapi probléma, de nem mindennapi megoldás;
-%       sokféle helyzet, ugyanaz az "absztrakt" probléma
-% TODO: alapkövetelményeket felsorolni, majd tételesen kifejteni
-% TODO: az "Implementációs kérdések" kiemelt részletek csokra,
-%       amelyeket a legfontosabbnak tűnik részletesen tárgyalni,
-%       illetve megvalósíthatóságukat igazolni
-
---------------------------------------------
-
-- Bevezetés (kezdés: egy mindennapi probléma arcai/inkarnációi/??? [???])
-- A rendszer architektúrája
-- Implementációs kérdések
-- Proof of Concept / Gyakorlati eredmények / ??? (tényleg működik ez az egész, legalább nagyjából?)
-- Összegzés
-\fi
-
-\section{(+++) BEVEZETÉS}
-
-\todo[inline]{nem lehet pontos definíciót adni, legfeljebb bizonyos követelményeket, inkább körülírjuk}
-
-Tisztázni:
-
-- Javában van
-- rengeteg kis alkatrészt kell összehozni, a vállalkozás lényege éppen ez az integráció
-
-\section{(+++) ALKALMAZHATÓSÁG}
-
-% ha mindezt meg tudjuk valósítani...
-
-\todo[inline]{előnyöket itt tárgyalni: azonnali indulás, minimális memóriafogyasztás}
-
-% TODO: azonnali indulás: lazy init-en még dolgozni!
-
-\section{(+++) ÚJONNAN MEGNYÍLÓ LEHETŐSÉGEK}
-
-\todo[inline]{serverless}
-
-\todo[inline]{dev mode}
-
-\todo[inline]{JPA annotációk}
-
-\todo[inline]{letapogatás és renderelés, AI általi generálás}
-
-\todo[inline]{zero mode}
-
-\section{Tézisek}
-
-\todo[inline]{Téziseket összeszedni}
-
-
-
-
-\chapter{(???) RÉGI BEVEZETÉS}
-
-
-\section{(???) Egy mindennapi probléma}
-
-\todo[inline]{Hangsúlyozni és kifejteni, hogy a relációs algebrával itt nem foglalkozunk, és az integrált teszt PoC célú}
+\section{Problémafelvetés}
 
 A szoftverfejlesztési és -release-elési folyamatok lényeges előfeltevése,
 hogy az alkalmazás mint absztrakt entitás snapshot jellegű,
-azaz a mindenkori forráskód \textit{aktuális állapotának} determinisztikus derivátuma,
+azaz a mindenkori forráskód \textit{aktuális állapotának} derivátuma,
 nem függ annak történetiségétől.
 Ezt az átlátható képet bolygatja meg a szoftverhez tartozó produkciós adatbázis,
 mely önálló életet él, a felhasználói világgal való interakcióban folyamatosan változik;
@@ -177,52 +126,61 @@ szerkezete, szemantikája azonban szorosan az alkalmazás mindenkori állapotáh
 \cite{Ploski2007DatabaseCentricVersioning}%
 \cite{Fluri2023DatabaseCiCd}
 
-Ez a kettős természet legalább két nagy problémakört eredményez.
-Az egyik a verziókezelést érinti:
-a produkciós adatbázist csak differencia-szkriptek végrehajtásával tudjuk módosítani,
-ami jellemzően egy másodlagos verziókezelést eredményez a forráskód verziókezelésén belül
-(ilyen megoldás például a Flyway vagy a Liquibase),
-és sorozatos összefésülési problémákhoz vezet, ha az adatok szerkezete vagy szemantikája gyakran változik.
-A jelen dolgozatban nem foglalkozom ennek a kérdésnek a részleteivel,
-de az utolsó fejezetben vázolom majd egy lehetséges megoldás körvonalait,
-ami szervesen következik majd az azt megelőzőekből.
-
-A másik problémakör azzal kapcsolatos, hogy ugyan az életnek kitett produkciós adatbázist
-kénytelenek vagyunk minden erőforrásigényével életben tartani, valamint minden release-zel migrálni,
-ám az \textit{absztrakt értelemben vett} adatbázisra számos egyéb helyen is szükségünk van,
+Az \textit{életnek kitett} produkciós adatbázist természetesen kénytelenek vagyunk
+minden erőforrásigényével életben tartani, és minden release-zel migrálni.
+Ám az \textit{absztrakt értelemben vett} adatbázisra számos egyéb helyen is szükségünk van,
 ahol ezek a folyamatos költségek igencsak nemkívánatosak.
-Ilyenek esetek jellemzően:
+Ilyenek esetek jellemzően az integrációs és egyéb tesztelés, gyors prototípusgyártás, kísérletezés draft adatbázisokkal, rövid demonstrációk és prezentációk.
 
-\begin{itemize}
-    \item adatfüggő mockok és stubok biztosítása
-    \item integrációs és egyéb tesztelés
-    \item gyors prototípusgyártás, kísérletezés draft adatbázisokkal
-    \item rövid demonstrációk, prezentációk
-\end{itemize}
+Mivel más opció fel sem merül, ezekben az esetekben is ugyanahhoz az infrastruktúrához nyúlunk,
+mint a produkciós adatbázis esetében.
+Így például az integrációs tesztek jelentős erőforrást fognak igénybe venni
+(generálási vagy anonimizálási időt, indítási  és üzemeltetési költséget, memória- és tárhelyfoglalást stb.),
+mindezt egy rövidéletű adathalmaz biztosítása miatt,
+amelynek ráadásul csak egy töredéke lesz érintve egy-egy teszt során.
 
-Ezeken kívül, ha egy csak-olvasható adattartalmat akarunk nagy adatforgalomnak kitenni,
-fölmerülhet az adattartalom replikálása, és load-balanceren keresztüli elérhetővé tétele,
-ekkor azonban minden újabb példány jelentősen növeli a tárhelyfoglalást.
+Számos esetben tehát szükségünk van egy működő adatbázisra,
+de valójában nincs szükségünk igazi adatokra.
+Ez egy paradox helyzet, és felveti annak kérdését, hogy ezekért az átmeneti adatokkal
+azonos súlyban van-e az erőforrásigény.
+Egyáltalán, van valami abszurd abban, amikor ilyen nagy mennyiségű adatot
+könnyedén lematerializálunk, majd nagyrészt használatlanul eldobjuk.
+Felmerül a kérdés: vajon elkerülhető mindez?
+Más egyértelmű megoldás híján azonban inkább a meglévő módszerek tökéletesítésére törekszünk.
+Ördögi kör.
 
-Más területeken is találkozhatunk a fentiekhez hasonló kívánalmakkal.
-Például az adatbázisok oktatásában is jellemző, hogy minden egyes hallgató
-számára saját izolált adatbázist bocsátanak rendelkezésre,
-bár mindegyik ilyen adatbázis szükségszerűen ugyanazzal a szerkezettel és adatokkal bír.
+Amikor egy szoftver kezdeti fázisában az adatbázis szerkezete is gyakran változik,
+a teszteléskor az adatbázist újra létre kell hozni,
+vagy igazítani a megváltozott adatszerkezethez.
+Mindkettő nehézségekkel és erőforráshasználattal jár.
+Sokkal egyszerűbb lenne az adatbázis szerkezetét egyetlen konfigurációs fájl,
+vagy akár az alkalmazásban lévő adatobjektumok változásával függő viszonyba helyezni.
 
-Fogalmazzuk meg tehát a problémát, mintegy tézisként:
+A dolgozatban elsősorban ezekre a problémára kínálok egy újszerű megoldást.
+Mivel a bemutatott szoftver egyúttal egy általános keretrendszer virtuális adattárakhoz,
+számos további alkalmazása is adódhat.
 
-\thesispar{
-    \textbf{Alapmegállapítás:} Igen gyakran ütközünk abba a helyzetbe,
-    hogy adott struktúrájú és szemantikájú, viszonylag rövid életű adatbázist kell biztosítani,
-    a produkciós adatokra vonatkozó speciális követelmények nélkül.
-}
+\section{Tanulmány}
 
-A következő szekcióban röviden végigveszem, hogyan szokás általában a hasonló problémákat kezelni.
+\subsection{A probléma státusza}
 
+Érdemes tisztázni, hogy nem ismerek még csak próbálkozást sem,
+mely a fenti problémafelvetésemre kívánt volna célzott megoldást találni,
+és főképpen nem tudok olyanról, amely ilyesmit már nyújtana.
+Természetesen valaminek a hiányát nehéz bizonyítani,
+és az állítást (egyelőre) pusztán egy sokéves fejlesztői tapasztalat
+empirikus benyomásával tudom alátámasztani.
 
-\section{(???) Körkép}
+Számomra meglepő, hogy egy ilyen problémára,
+mely ennyire napi szinten érinti fejlesztők, tesztelők, tanulók és mások életét,
+egyelőre csak a legszofisztikáltabb kerülőmegoldások születtek.
+Kicsivel lentebb megpróbálom majd megtippelni ennek az okát.
 
-\subsection{(???) Kérések mockolása on-the-fly}
+A következőkben végigveszek néhány megközelítést,
+melyek valamennyire kapcsolódnak a fenti problémához,
+hasonló akarnak megoldani.
+
+\subsection{Kérések mockolása on-the-fly}
 
 Főként webes API-k által szolgáltatott adathalmazok mockolásakor találkozunk olyan megoldással,
 mely a lekérés (és persze az előre beállított szabályok)
@@ -236,23 +194,34 @@ a visszaadandó eredménytábla szerkezetét, adattípusait,
 az egy-egy oszlopba kerülő adatok jellegét,
 majd random jelleggel elő kell állítani bizonyos számú, ezeknek a követelményeknek megfelelő eredményrekordot.
 
-Ez a megoldás természetesen nem fog konzisztens eredményt adni több lekérés esetén,
-így csak olyan esetben használható, ahol a lekérések nem épülnek egymásra.
+Ebbe a kategóriába sorolhatók az úgynevezett faker segédkönyvtárak is.
+Ezek olyan véletlenadat-generálók,
+melyek bizonyos gyakori entitástípusok adatait (pl. személynevek, e-mail, dátum) szolgáltatja.
+
+Ez a megközelítés természetesen nem is törekszik arra,
+hogy koherens eredményt adjon több lekérés esetén,
+tehát csak olyan esetben használható, ahol a lekérések nem épülnek egymásra.
 Cserébe erőforrásigénye csekély, nincs szükség az adatok tényleges tárolására.
 
-\subsection{(???) Seed-alapú virtuális világok}
+\subsection{Seed-alapú virtuális világok}
 
 Játékokban és egyszerűbb szimulációkban már igen régóta generálnak kisebb világokat,
 pályákat procedurálisan valamilyen pszeudovéletlen algoritmus segítségével.
-A módszer továbbfejleszthető óriás világokra is.
-Ekkor a világteret (sorosan vagy hierarchikusan) szeletekre osztjuk, és biztosítunk egy függvényt,
+Ennek azonban komoly méretbeli korlátai vannak.
+Felmerül a gondolat, hogy lehetséges-e óriás méretű világokat konzisztensen
+a játékosok rendelkezésére bocsátani, anélkül, hogy le kellene generálni az egészet.
+
+Univerzumot, nyílt világokat és egyéb óriás rendszereket felvonultató játékokban
+a probléma már régen felmerült, és természetesen megoldások is születtek.
+Egy ilyen módszer, ha a világteret (sorosan vagy hierarchikusan)
+szeletekre osztjuk, és biztosítunk egy függvényt,
 mely minden szelethez rendel egy saját seed értéket.
 Legegyszerűbb esetben a seed az adott szelet sorszámából generált hash.
 Amikor szükségünk van valamely szelet tartalmára, a szelet seedjéből kiindulva,
 az adott szabályrendszer szerint on-demand legeneráljuk az adott szelet tartalmát.
 A sűrűn benépesített világok szomszédos szeleteinek összeillesztése néha nem triviális.
 Felületszerű, folytonos struktúrák generálása esetén gyakran használnak
-valamilyen eleve interpolált eljárást, például Perlin-zajt,
+valamilyen eleve interpolált eljárást,
 így biztosítva a közeli helyeken a közeli értékeket.
 
 Egy közismert korai példa seed-alapú módszert alkalmazó szoftverre
@@ -266,7 +235,7 @@ ez a generálási módszer közel tetszőleges jellegű virtuális adathalmaz b�
 De azonnal szembeötlik a legfőbb hátrány is: a virtuális világ-adathalmaz nem kereshető.
 Nem tudjuk például hatékonyan lekérdezni, mely világszeletekben lelhető föl egy adott típusú objektum.
 
-\subsection{(???) Relációs adatok generálása}
+\subsection{Relációs adatok generálása}
 
 Amikor adatokat generálunk egy relációs modellbe, azt legegyszerűbb megközelítésben fölfoghatjuk úgy is,
 mint az előbb bemutatott virtuális világ materializációját egy relációs adatbázisszerveren.
@@ -286,7 +255,7 @@ akkor ki kell dolgoznunk valamilyen módszert a módosulások detektálására, 
 
 Egyes generátorok a séma és az adatok jellegének deklaratív leírását is támogatják. Ez a leírás tárolható egy konfigurációs fájlban, ami verziókezelhető, dokumentálható, könnyen szerkeszthető.
 
-\subsection{(???) Relációs adatok anonimizálása}
+\subsection{Relációs adatok anonimizálása}
 
 Ha már rendelkezésre áll egy éles adatbázis, kézenfekvőnek látszik,
 hogy ennek replikáit használjuk a teszt- vagy mockadatbázis kiindulópontjaként.
@@ -309,7 +278,7 @@ másrészt az oda való beauthentikálás (a konkrét megoldástól függően) b
 
 Egy általános megoldás tehát aligha épülhet anonimizálásos módszerre.
 
-\subsection{(???) Nagy teljesítményű megoldások}
+\subsection{Nagy teljesítményű megoldások}
 
 Számos nagyteljesítményű szolgáltatás érhető el a piacon szintetikus adatok generálásához.
 A MOSTLY AI megoldása az akkurátus adatokra helyezi a hangsúlyt.
@@ -324,76 +293,17 @@ Ezek a rendszerek erősen optimalizálják és párhuzamosítják a tesztadatok 
 Csodát viszont nem lehet várni: a számításigény aszimptotikusan,
 a tárhelyigény pedig teljes egészében ugyanaz marad.
 
+\subsection{Miért csak kerülő megoldások vannak?}
 
-\section{(???) Egy újfajta megoldás körvonalai}
+Erre a kérdésre egy rövidebb és egy hosszabb válasszal szolgálhatok.
+Mindegyik tényállítás annyiban, hogy önmagában igaz,
+és puszta tipp atekintetben, hogy mennyire okozója a vizsgált helyzetnek.
 
-Az előzőekben tárgyalt megközelítések mindegyikének megvoltak a maga sajátos előnyei ás hátrányai.
-Fölmerül a kérdés: létezhet-e olyan megoldás, amely egyesíti az előnyöket és kikerüli a fő hátrányokat;
-vagy pedig ez eleve lehetetlen?
-Nincs-e itt egy beöltésre váró hézag?
+A rövid válaszom, hogy a rohanó világban, különösen a lokális optimumra törekvő fejlesztők világában,
+az egyértelmű alternatív megoldás hiánya szükségszerűen
+a bevett kerékvonalak továbbmélyítését eredményezi.
 
-Először szedjük össze tételesen, milyen követelményeket várnánk el
-egy (egyelőre hipotetikus) ideális készterméktől:
-
-\begin{itemize}
-    \item támogatja a relációs adatmodellt, mint legáltalánosabbat
-    \item determinisztikus, konzisztens, és egy root seed módosításával újrakeverhető
-    \item azonnal elindul, nincs számottevő preparálási folyamat
-    \item az adatokat csak elérésükkor, on-the-fly számítja
-    \item indexeket szolgáltat, ahol az egyébként is elvárható lenne
-    \item könnyen és rugalmasan konfigurálható, fájlon keresztül is
-    \item óriás adatmennyiséget is képes szimulálni
-    \item skálázható, finomhangolható
-    \item egyedi működéssel könnyen bővíthető
-    \item opcionálisan írható
-\end{itemize}
-
-Az utolsó, írhatósági követelménynél föltehetjük, hogy az ilyen adatbázis viszonylag rövid életű,
-tehát jellemzően nincs szükség sem nagy mennyiségű módosítás megjegyzésére,
-sem azok hosszú távú perzisztálására.
-Így az egynemű módosíthatóság fentebb említett előnyét nyugodtan elvethetjük:
-ha egyszer a módosítási réteg megfelelően és univerzálisan implementálva van,
-az egyes felhasználásoknál már nincs ezzel kapcsolatos teendő.
-
-Belátható, hogy a fenti elvárások egyszerre teljesíthetők.
-Az alábbi szekcióban röviden vázolom, milyen előnyöket nyerünk így,
-az implementáció részleteit pedig a következő fejezetben fogom bemutatni.
-
-
-\section{(???) Az új megközelítés előnyei}
-
-Egyszerű esetben a felhasználói élményben három lényeges fázist különíthetünk el.
-A figyelem először a konfigurációs fájlra irányul:
-egyetlen átlátható, deklaratív, verziókezelhető adatfájlban minden megadható, amire szükség van.
-Majd az adatbázis létrejöttekor és a szerver elindulásakor látható,
-hogy teljesen hiányzik a szokásos másolási, generálási, anonimizálási, inicializálási vagy egyéb folyamat,
-a szerver töredékmásodperc alatt válaszképesen elindul.
-Végül a szerver rendkívül kis memóriaigénnyel fut\footnote{
-    Ami persze a betöltött plusz adatforrások és az adatmódosítások arányában megnövekedhet.
-},
-ugyanakkor a lekérdezések futási ideje sem marad el nagyságrendekkel a tényleges adatbázisétól.
-
-Az integrált konfigurációs fájl előnye még,
-hogy létező adatbázispéldányokon tanított mesterséges intelligencia segítségével is generálható.\footnote{
-    Ígéretes, hogy mindössze egy példafájl és pár instrukció után
-    a ChatGPT-4 is meglehetősen jó eredményt generál.
-}
-A gépi tanulással segített konfigurációmenedzsment egyre szélesebb körben alkalmazott módszer,
-megtaláljuk a SAT-solverektől\cite{Hoos2021AutomatedCA} a felhőarchitektúrákig\cite{Osypanka2022ResourceUC},
-és nem látszik elvi akadálya az adatbázisra vonatkozó konfigurációban való alkalmazásnak.
-
-De ilyen vaskos módszerek nélkül, egyszerűbb heurisztikákkal is lehetséges
-egy létező adatbázis jó közelítéssel történő letapogatása.
-Hasonlóan, a virtuális adatbázis könnyen materializálható egy valós adatbázisba.
-
-A könnyűsúlyú jelleg olyan új távlatokat nyit, amelyek korábban föl sem merülhettek.
-Például most már nincs akadálya, hogy bármely füstteszt adatbázis-eléréssel fusson.
-A CI/CD pipeline-okban adathalmazok kívülről való betöltése nélkül is lehet rövid feladatokat futtatni.
-A megoldás adatbázistervező eszközökbe való integrálással lehetővé tudnánk tenni,
-hogy az épp aktuális tervállapot gombnyomásra teljes értékű adatbázisként elinduljon.
-
-Azt hiszem, jogosan merül föl a kérdés, hogy miért nem született és terjedt el még hasonló termék.
-Ennek fő okait az alábbiakban látom:
+A hosszabb válaszban néhány tényező összejátszását sorolnám föl:
 
 \begin{itemize}
     \item \textbf{kontraintuitivitás}: előzetes feltevésemmel szemben úgy tűnik,
@@ -409,6 +319,94 @@ Ennek fő okait az alábbiakban látom:
           nincs tehát nyomás jelentősen más típusú termékkel való kísérletezésre
 \end{itemize}
 
+\section{Az új megközelítés}
+
+A következőkben lényegileg egy sajátos relációsadatbázis-szervert fogok bemutatni.
+Ez egy már működő és kipróbálható szoftver, melynek a HoloDB nevet adtam,
+még a kezdetekkor ugyanis úgy gondoltam rá,
+mint a hologram-ábrák megfelelőjére az adatbázisok világában.
+Ebben az adatbázisban ugyanis nincsenek tárolva adatok
+(legfeljebb adatok változásai, ha az írhatóság be van kapcsolva).
+
+A deklaratív konfiguráció alapján a lekérdezések eredménye on-the-fly kerül kiszámításra,
+úgy, hogy a lekérdezések közötti konzisztencia biztosított,
+vagyis az egymás utáni lekérdezések egy koherens adatbázis képét adják.
+Ezt meg lehetne oldani úgy is, hogy pusztán determinisztikusan generáljon
+egy pszeudorandom értéket egy-egy rekordmezőre,
+így kereséskor a teljes tábla szkennelése szükséges.
+A lényegi trükk azonban az hogy általában nincs szükség ilyen költséges szkennelő műveletekre,
+az oszlopok ugyanis alapértelmezetten virtuálisan indexeltek.
+Ehhez meg kell oldani, hogy értéklekérés és keresés oda-vissza egybecsengően működjön,
+ha egy keresett adatot valahol megtaláltunk, akkor ugyanott lekérve meg is kapjuk, és viszont.
+Ehhez részben a kriptográfiából ismert módszereket használtam.
+
+A végeredmény egy skálázható és testreszabható nyílt-forráskódú adatbázis-mockoló eszköz,
+melyhez számos kiegészítő eszköz is készült
+(csak néhány példa ezekre: REPL; networking; JDBC és JPA támogatása, Docker, haladó értékkészletek).
+
+Mivel nincsenek adatok, a memóriafogyasztás minimális,
+különösen ha nem érkezik egyszerre sok lekérés.
+A nem létező adatok természetesen a háttértáron sem foglalnak helyet.
+Mivel a szerver elindulása pusztán a konfiguráció betöltéséből áll,
+az indulási idő is minimális.
+Az egyetlen előzetes költség, amit a felhasználónak be kell fektetnie,
+az a konfigurációs fájl megírása,
+bár a számos példa alapján ez szinte néhány másolással is megoldható,
+de ha ez sem lenne elég, akár generálható is.
+
+Bár a teljes architektúra tárgyalása is sok érdekességet tudna bemutatni,
+a tárgyalás során a fókuszt egyértelműen a relációs storage API bemutatása adja majd,
+ez ugyanis a szűk keresztmetszet, amely a megoldás újszerűségéhez a leginkább hozzájárul,
+és egyúttal a prototípusban is ezek a legkidolgozottabb komponensek.
+
+Úgy gondolom, a forráskód a dolgozatban konkrétan bemutatott komponenseken és megoldásokon
+túl is sok izgalmas dolgot rejt,
+ezért jó szívvel ajánlom a szoftver Git-tárolóját,
+melyet a dolgozat legvégén linkeltem is.
+
+\section{Alkalmazhatóság}
+
+Fentebb már tisztáztam, mi volt a fő motiváció a szoftver elkészítésében,
+de további alkalmazhatóságokat is lehet találni.
+A következő listában csak a legmarkánsabbakat sorolom föl:
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% TODO
+
+\begin{itemize}
+    \item \textbf{ASDF.} XXXXXXXXXXXXXXXXXXXXXXx.
+    \item \textbf{FDSA.} XXXXXXXXXXXXXXXXXXXXXXx.
+\end{itemize}
+
+% azonnali indulás, minimális memóriafogyasztás
+
+%Alkalmazhatóság: serverless, dev mode, JPA annotációk,
+%    letapogatás és renderelés, AI általi generálás, zero mode
+
+\iffalse
+    \item támogatja a relációs adatmodellt, mint legáltalánosabbat
+    \item determinisztikus, konzisztens, és egy root seed módosításával újrakeverhető
+    \item azonnal elindul, nincs számottevő preparálási folyamat
+    \item az adatokat csak elérésükkor, on-the-fly számítja
+    \item indexeket szolgáltat, ahol az egyébként is elvárható lenne
+    \item könnyen és rugalmasan konfigurálható, fájlon keresztül is
+    \item óriás adatmennyiséget is képes szimulálni
+    \item skálázható, finomhangolható
+    \item egyedi működéssel könnyen bővíthető
+    \item opcionálisan írható
+\fi
+
+\section{A dolgozat programja}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% TODO
+
+\section{Tézisek}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% TODO: a végén nyugtázni is!!!
+
+\begin{itemize}
+    \item \textbf{Tézis 1: ASDF.} XXXXXXXXXXXXXXXXXXXXXXx.
+    \item \textbf{Tézis 2: FDSA.} XXXXXXXXXXXXXXXXXXXXXXx.
+\end{itemize}
 
 
 \chapter{Architektúra}
@@ -476,21 +474,14 @@ amelyek teljesítik a kereshetőség erősebb feltételét is,
 azaz \textbf{kereshető virtuális értékkiosztások}.
 
 A legtöbb oszlop értékkészlete jól behatárolható.
-Az oszlopban tételesen szereplő értekek egy efölötti
+Az oszlopban tételesen szereplő értékek egy efölötti
 tetszőlegesen sorrendezett multihalmazt (tömböt) alkotnak,
-néha ehhez valamilyen statisztikai megkötés is tartozik ($NULL$-ok száma, értékgyakoriság stb.).
-A tábla rekordjait mindig sorrendezettnek fogom tekinteni:
+néha ehhez statisztikai megkötések is tartoznak ($NULL$-ok száma, értékgyakoriság stb.).
+A tábla rekordjait sorrendezettnek fogom tekinteni:
 azonos táblabeli valamely két oszlop értéklistájából kiválasztott egy-egy mező
 azonos rekordhoz tartozik pontosan akkor, ha a sorrendbeli pozíciójuk (sorindexük) megegyezik.
 
-Vegyük észre, hogy két független problémával szembesülünk:
-
-\begin{enumerate}
-    \item az oszlopértékek monoton rendezett multihalmazának előállítása
-    \item az értékek összekeverése
-\end{enumerate}
-
-Mivel az oszlopot általában értékkészlettel definiáljuk, ebből három független probléma lesz:
+Vegyük észre, hogy több független, külön-külön is implementálható problémával szembesülünk:
 
 \begin{enumerate}
     \item az értékkészlet biztosítása
@@ -506,9 +497,9 @@ hogy a lépések egymástól függetlenül skálázhatók.
 Ezeket úgy kell megvalósítani, hogy a végső értéklista adott pozíciójú eleme is gyorsan lekérhető legyen,
 valamint egy adott érték vagy értéksáv előfordulási pozíciói is
 (keresés).
-A perrmutáció esetén ez annyit jelent, hogy legyen invertálható.
+A permutáció esetén ez annyit jelent, hogy legyen invertálható.
 
-A \textbf{kétfázisú értékkiosztásnak} ezzel az ötletével
+Az értékkészletből történő \textbf{kétlépéses értékkiosztásnak} ezzel az ötletével
 egy egyszerűbb adatbázis szimulációjának kívánalmait már tulajdonképpen le is fedtük,
 de néhány további hasznos értékkiosztási módszert is be fogok majd mutatni.
 
@@ -520,17 +511,11 @@ a relációs műveletek és \textbf{az SQL lekérdezések megvalósítása már 
 Ma már elérhető néhány nyílt forrású jól felépített SQL query planner framework is,
 melyek megkönnyítik egy teljes körű SQL-szerver kiépítését.
 Ilyen például az általam használt Apache Calcite.
-Ugyanakkor egy saját SQL-futtatót is implementáltam, mely sok esetben gyorsabban fut,
-cserébe csak egy limitált SQL-t támogat.
+Ugyanakkor egy saját SQL-futtatót is implementáltam, mely sok esetben gyorsabb fut,
+cserébe csak limitált SQL-t támogat.
 
 
-\section{(XXX) (MÁS CÍM!!!!) A prototípus}
-
-\begin{figure}[H]
-\centering
-\includesvg[height=0.8\textwidth]{diagram/simplearch}
-\caption{A virtuális adatbázis vázlatos architektúrája}
-\end{figure}
+\section{A prototípusról}
 
 A virtuális adatbázist megvalósító szoftvert HoloDB néven tettem elérhetővé.
 Az elnevezés a hologramokra utal:
@@ -559,17 +544,9 @@ A HoloDB ehhez a storage API virtuális implementációját,
 a konfiguráció kezelését
 és a megfelelő futtatási környezetet adja hozzá.
 
-\todo[inline]{JDBC kritikája: ne jegyzetbe, lenyesni/tárgyilagosítani, akár elhagyni}
-
 A MiniBase közvetlenül biztosít egy SQL-futtató felületet, a MiniConnect API megvalósításával.
 A MiniConnect testvérprojekt célja egy egyszerű és egyértelmű adatbázis-elérési API definiálása,
-melyet a JDBC nehézkessége inspirált.\footnote{
-    Nem áll módomban ehelyt a JDBC részletes kritikájába bocsátkozni.
-    De milyen problémát is old meg a \texttt{nativeSQL()} metódus?
-    Egyáltalán miként egyszerűsítené a helyzetet ez a kellemetlenül rengeteg függvény?
-    Miért származik a \texttt{PreparedStatement} a \texttt{Statement} típusból?
-    Hosszan folytathatjuk a sort.
-}
+melyet a JDBC nehézkessége inspirált.
 A MiniConnecthez különféle middleware változatok is elérhetők, például hálózaton keresztül is használható,
 illetve letisztultsága miatt könnyen írhatók hozzá dekorátorok, proxyk.
 Egy (deb csomagként is elérhető) REPL is tartozik hozzá,
@@ -581,14 +558,18 @@ Az architektúra köré sokféle további eszközt fejlesztettem,
 melyek a robusztusság eltérő fokain állnak.
 Ilyenek például: automatikus REST API, GraphQL adapter, authentikációs proxy, Apache Calcite SQL driver stb.
 
+\begin{figure}[H]
+\centering
+\includesvg[height=0.8\textwidth]{diagram/simplearch}
+\caption{A virtuális adatbázis vázlatos architektúrája}
+\end{figure}
+
 
 \section{A relációs storage API}
 
-Ha definiáltuk a relációs adathozzáférés fő entitásait,
-akkor ezek megfelelő implementációi már megvalósítanak egy relációs adattárat,
-mely funkcionálisan megfelel egy tényleges adatbázisnak.
-De melyek legyenek ezek az elemek?
-A kérdést elsőként a \textit{hozzáférés} szempontjából érdemes megközelíteni.
+Ha már körvonalaztuk a relációs adathozzáférés fő entitásait,
+ezeket rendre implementálva funkcionálisan már egy teljes körű relációs adattárat kapunk.
+Az entitások meghatározásakor elsőként a \textit{hozzáférés} szempontjait érdemes átgondolni.
 Az írhatóság problémakörével később foglalkozom.
 
 Nyilvánvalóan gondoskodni kell az alapvető hierarchiáról,
@@ -596,8 +577,7 @@ ezek lesznek a \texttt{Schema}, \texttt{Table} és \texttt{Column} típusok.
 Az oszlopok elvont tulajdonságait a \texttt{ColumnDefinition} típus fogja össze.
 Bár az egyes mezők értékeit általában oszloporientáltan állítjuk elő
 (jellemzően az értéklistákat megadó \texttt{Source} objektumok használatával),
-a lekérésnél több szempontból is intuitívabbnak és előnyösebbnek mutatkozik
-a rekordorientált megközelítés.
+a lekérések szemszögéből jobbnak mutatkozik a rekordorientált megközelítés.
 A rekordot a \textt{Row} típus reprezentálja,
 ezen keresztül kérhetőek le a konkrét mezőértékek
 az oszlopnév vagy oszloppozíció megadásával.
@@ -607,31 +587,23 @@ itt három ilyen indexfajtával fogok foglalkozni:
 a normál \texttt{TableIndex}, a \texttt{FulltextIndex} és a \texttt{SpatialIndex} típusokkal.
 Ezek keresőmetódusai egy \texttt{TableSelection} példánnyal térnek vissza,
 melyen keresztül a találati listához férünk hozzá.
-
 A \texttt{TableIndex} a szokásos rendezett indextípus,
 mely egyúttal teljes kontrollal rendelkezik a találati lista rendezése
 és a $NULL$ értékek kezelése fölött.
 Ha többoszlopos, akkor az oszloplista bármely prefixére is indexként működik (leftmost prefix lookup).
-
 A másik két típus találatainak rendezése definiálatlan.
 Egyik sem ad vissza $NULL$ mezőket.
 
-A következő osztálydiagramon a fenti interfészeket foglaltam össze,
-a tömörség kedvéért néhol kicsit vázlatosan:
+A következő osztálydiagramon a vázlatosan összefoglaltam az interfészeket:
 
 \begin{figure}[H]
 \centering
-\includegraphics[width=\textwidth]{diagram/storage-api-uml.png}
-\caption{A storage API fő interfészei (egy relációs adattár alapontológiája)}
+\includegraphics[width=0.85\textwidth]{diagram/storage-api-uml.png}
+\caption{A storage API fő interfészei (egy relációs adattár alapentitásai)}
 \end{figure}
 
 
-
-\section{Az írhatósági réteg (EGYBEVENNI!)}
-
-\todo[inline]{Az írhatósági réteg: nem kellenek alfejezetek}
-
-\subsection{A \texttt{DiffTable} dekorátor}
+\section{Az írhatósági réteg}
 
 A virtuális adattár egy-egy példánya várhatóan viszonylag rövid élettartamú lesz.
 Feltehetjük, hogy az írási műveletek összességében kevés módosítást eredményeznek.
@@ -659,11 +631,8 @@ Olyan táblák is dekorálhatók így, amelyek valós adatbázistáblákat haszn
 Ezzel a módszerrel írhatóan használhatunk egy létező adatbázist,
 az eredeti adatok módosítása nélkül.
 
-\subsection{Generikus tranzakciókezelés}
-
-A fő elv, amit a tranzakciókkal kapcsolatban követni fogunk,
-hogy megmaradjunk a réteges felépítésnél,
-és semmiképp ne a táblákra toljuk a tranzakciókezelés terhét.\footnote{
+A tranzakciók kezelésénél megmaradjunk a réteges felépítésnél,
+semmiképp nem toljuk a táblákra a tranzakciókezelés terhét.\footnote{
     Mint több adatbáziskezelőnél láthatjuk (a \textit{H2} például tipikusan ilyen).
     A munkamenetek kezelésének a táblainterfész alá tolásával
     különféle architekturális nehézségek jelentkeznek.
@@ -690,8 +659,6 @@ miközben visszaállítjuk a \texttt{READ} státuszt.
 
 Új módosító művelet érkezésekor a ciklus újrakezdődik.
 
-\subsection{Snapshot-alapú tranzakciókezelés}
-
 A \texttt{DiffTable} dekorátor minden további nélkül elhelyezhető
 más \texttt{DiffTable} objektumok fölé is, ami lehetővé teszi, hogy egymásra épülő snapshotokat tároljunk.
 
@@ -711,26 +678,28 @@ párhuzamosan is futtathatunk írási tranzakciókat,
 amíg azok különböző táblákon futnak.
 
 
+\section{Konfiguráció}
 
-
-
-\section{(XXX) Konfiguráció}
-
-\textcolor{red}{A virtuális adatbázis felépítése a felhasználó számára legegyszerűbben
-egy konfigurációs fájl segítségével történik,
-melyben megadja az adatbázis-séma egyes elemeit, megkötéseit.
+A felhasználónak mindössze egy konfigurációs fájlt szerkesztenie,
+hogy nulláról indulva egy teljes körű adatbázist tudjon futtatni.
+A fájlban megadhatja az adatbázis-séma egyes elemeit, megkötéseit.
 Az oszlopok tartalmának keverési módja és értékkészlete kényelmesen állítható,
-például előre adott értéklistákkal, reguláris kifejezéssel,
-vagy akár a felhasználó által implementált Java-osztállyal.
-A virtuális adatbázis Dockerben való indításához vagy beágyazott használatához
-lényegileg elég egy ilyen konfigurációs fájl.}
+például előre adott értéklistákkal, reguláris kifejezéssel.
+A virtuális adatbázis kész Docker konténerrel is indítható,
+ez esetben tényleg csak a konfigurációs fájlra van szükség.
 
-A HoloDB egy YAML formátumú konfigurációs fájl segítségével paraméterezhető fel,
-melyben az adatbázis minden lényeges eleme beállítható.
-A konfigurációhoz formális specifikáció is tartozik,
+A konfigurációs fájl alapértelmezetten YAML formátumú,
+de tetszőleges adatleíró nyelv használható
+a hozzá igazított Jackson mappingen keresztül.
+(A Jackson adatszerializációs keretrendszer Java objektumokat, adatstruktúrákat,
+különböző adatleíró nyelveken írt fájlokat, karakterláncokat
+és más adatreprezentációkat konvertál egymásba.)
+A konfigurációs adatstruktúra ezen kívül programozottan is felépíthető.
+
+A konfigurációval az adatbázis minden lényeges eleme állítható.
+A Jackson mappinggel ellátott konfigurációs osztályokhoz formális specifikáció is tartozik,
 így a fájl strukturális és szemantikai helyessége statikusan ellenőrizhető.
-A konfigurációt hordozó Java-osztályok egy programkódban is használhatók,
-ez csak egy dedikált, minimalisztikus csomag függőségként való beemelését igényli.
+Ennek használata csak egy dedikált, minimalisztikus csomag függőségként való beemelését igényli.
 
 \begin{figure}[H]
   \centering
@@ -831,7 +800,7 @@ Ehhez elegendő a megfelelő JDBC connection sztringet megadni,
 a többit (keretrendszertől függően\footnote{
     A \textit{Spring}, \textit{Micronaut} és \textit{Quarkus} beépítetten támogatott,
     de elméletileg bármilyen rendszerhez igazítható a megoldás.
-}) automatikusan elvégzi az inicializáló service.
+}) automatikusan elvégzi az inicializáló szolgáltatás.
 
 Az egyéni működéssel való kiegészítés több szinten támogatott.
 A beépített értékkiosztási módok esetén is lehetőség van egyéni adatfájl betöltésére,
@@ -839,6 +808,7 @@ a permutációk és rányújtások egyéni implementációjának betöltésére.
 De az oszlop értékkiosztásához teljesen egyedi implementáció is használható,
 ehhez meg kell adnunk egy olyan osztály nevét, mely implementálja a \texttt{SourceFactory} interfészt
 (illetve biztosítani kell, hogy az egyedi osztályok láthatóak legyenek a classpath alatt).
+Az egyéni működések egy része közvetlenül a konfigurációból is hivatkozható.
 
 A YAML formátum a humán kezelhetőségen kívül azzal az előnnyel is jár, hogy könnyen előfeldolgozható.
 Például egy megfelelő sablonkezelő használatával ugyanazt a vázat használva
@@ -858,30 +828,26 @@ Ennek kutatása egy izgalmas jövőbeli projektnek ígérkezik.
 Érdekes probléma például, hogyan érdemes számítani a bemeneti adatbázis
 és az előállított konfiguráció közötti megfelelőségi mutatót.%
 \cite{Erritali2016DocumentSimilarity}
+Azonban a generálás egyszerű szóbeli megfogalmazás alapján is történhet,
+erre még az általános ChatGPT is képes.
 
 A konfigurációs fájl az adatbázis nagyjábóli definíciójának is felfogható.
-Egy másik ígéretesnek tűnő továbbfejlesztési lehetőség,
-hogy kiegészítsük a struktúrát olyan további opcionális elemekkel,
+Így adódik az az ígéretes továbbfejlesztési lehetőség,
+hogy kiegészítsük a struktúrát olyan opcionális elemekkel,
 melyek egyrészt teljesen leírják az éles adatbázis szerkezetét,
 másrészt pedig lehetővé teszik az adatmigrációknak
 kizárólag a konfigurációs fájlok különbségén alapuló automatizálását.
 Természetesen ez egyáltalán nem triviális,
-hiszen néha a meglévő adatok átstruktúrálására van szükség,
+hiszen néha a meglévő adatok átstrukturálására van szükség,
 illetve lehetnek a két konfigurációs állapot közötti történetben elbújó lényeges módosítások.
 Úgy vélem, mindkét probléma kezelhető,
-közeljövőbeli tervem egy ilyen migrációs keretrendszer kialakítása.
-
-
-
-
-
-
+jövőbeli terveim közé tartozik egy ilyen migrációs keretrendszer kialakítása.
 
 
 
 \chapter{A virtuális adattár építőkövei}
 
-\section{(???) STORAGE API IMPL: BEVEZETŐ}
+\section{Alapfeltevések}
 
 Bármilyen implementáció legyen is mögötte, a storage API egy relációs adatbázist ír le.
 Tehát ahhoz, hogy a virtuális adatok funkcionálisan egy valódi (csak-olvasható) relációs adathalmaz képét adják,
@@ -889,7 +855,7 @@ nem kell más, mint hogy megfelelő viselkedéssel elérhetők legyenek a storag
 A megfelelőség ez esetben két dolgot jelent:
 
 \begin{enumerate}
-  \item \textbf{Konzisztencia:}
+  \item \textbf{Lekérdezések közötti konzisztencia:}
         felépíthető egy olyan tényleges immutábilis relációs adatbázis ($M$),
         hogy minden lehetséges relációs lekérdezés esetében, amely a közös sémára ($S$) értelmes,
         a virtuális és a tényleges adatbázis esetében visszaadott eredménytábla megegyezik.
@@ -922,7 +888,7 @@ Külön kitérek majd az ezzel kapcsolatos problémákra, ahol szükséges.
 
 \section{Segédtípusok}
 
-\subsection{Hatékony számítások (??? BEVEZETŐ)}
+\subsection{Hatékony számítások}
 
 Mivel a szoftver létező prototípusa, a \textit{HoloDB}
 (és a hozzá kapcsolódó segédeszközök, könyvtárak nagy része) Java programnyelven íródott,
@@ -939,7 +905,7 @@ ami általában az oszlopok értékeinek on-the-fly produkálását és keresés
 Az on-the-fly értékszámítás során gyakran fordulnak elő átmeneti óriás számok,
 ám nehezen jósolható előre, hogy pontosan mikor.
 Például eleve egy értékkészlet is lehet óriási
-(gondoljunk például az \texttt{{\textbackslash}w{30}}
+(gondoljunk például a '\texttt{{\textbackslash}w{30}}'
 reguláris kifejezés alapján kitöltött oszlop lehetséges értékeinek számára),
 miközben szükségünk van bármely pozíció közvetlen hivatkozására.
 Az adatbázis méretére vonatkozóan nem akartam megkötéseket tenni.
@@ -949,16 +915,9 @@ Továbbá az egész számokat egységesen szerettem volna kezelni, függetlenül
 Így a beépített \texttt{BigInteger} típust egy idő után elvetettem,
 mivel az kisebb számokra a \texttt{long} típushoz képest rendkívül rossz performanciájú.
 
-\todo[inline]{ide a hashert, és bármit, ami még jöhet}
+\subsection{A fő segédtípusok áttekintése}
 
-\todo[inline]{skálázhatóságról (FastHasher, LinearMonotonic, noop permutation)}
-
-
-\subsection{Segédtípusok áttekintése}
-
-\todo[inline]{"relációs ontológia" stb.: ezeket a kifejezéseket mellőzni}
-
-Mielőtt rátérnék a relációs ontológiát leíró storage API tárgyalására,
+Mielőtt rátérnék a storage API interfészeinek tárgyalására,
 röviden áttekintem azokat a segédinterfészeket,
 amelyek a későbbiekben nélkülözhetetlenek lesznek majd.
 Természetesen ezek az esszenciális típusok apró szeletét adják csak a teljes architektúrának.
@@ -1048,13 +1007,6 @@ a \texttt{LargeInteger} valamivel gyorsabb.
 \end{figure}
 
 
-
-\subsection{HASH-FÜGGVÉNYEK}
-
-\todo[inline]{Utalni a Feistel-hálózatban (és egyebütt) történt használatra}
-
-
-
 \subsection{Hierarchikus véletlengenerátorok}
 
 Az adatbázist egy hierarchikus képződményként is fölfoghatjuk,
@@ -1082,22 +1034,19 @@ Valamint lehetőleg az alábbi gyenge követelményeket:
 
 Az ezeknek való megfelelés a \texttt{TreeRandom} interfészen keresztül történik.
 
-Igen gyakran számokat akarunk előállítani,
-ezért kényelmi okokból az interfészhez adtuk a \texttt{getNumber()} default metódust,
+Legtöbbször számokat akarunk előállítani,
+ezért az interfészhez adtuk a \texttt{getNumber()} default metódust,
 mely a paraméterül kapott számnál kisebb nem negatív egészet ad vissza.
 Ehhez annyi generált bitet használ,
 amennyi a szám elfogulatlan kiválasztásához szükséges (rejection sampling).\footnote{
-  Az általános eset miatt valójában egy beépített limittel, melynek elérésekor zérót ad vissza.
-  Ha a bitgenerátor-stratégia például csupa 1-est generál
-  (ami nem teljesíti ugyan a gyenge követelményeket, de fapados implementációként teljesen valid),
-  könnyen végtelen ciklus alakulhatna ki.
+  Egy alapértelmezett limittel, hogy implementációtól függetlenül ne alakulhasson ki végtelen ciklus.
 }
 
 A fő implementáció hashelésen alapul, és magának a hashelésnek a minőségével skálázható.
-Minden ilyen példány belsőleg tartalmaz egy kulcs-bájtsorozatot.
+Minden ilyen tárol tartalmaz egy kulcs-bájtsorozatot.
 A root példánynál ez a root seed alapján áll elő.
-Egy alpéldány előállításakor az eredeti objektum kulcs-bájtsorozatához egy szeparátorbájt,
-majd a megadott kulcs alapján előállított bájtsorozat kerül hozzáfűzésre,
+Alpéldány előállításakor az eredeti objektum kulcs-bájtsorozatához egy szeparátorbájt
+majd a kapott kulcs alapján generált bájtsorozat kerül hozzáfűzésre,
 így áll elő az alpéldány kulcs-bájtsorozata.
 
 Amikor az adott példányból bitek kerülnek lekérdezésre,
@@ -1106,14 +1055,14 @@ A további bitek ennek derivátumai, aminek legegyszerűbb algoritmusa,
 ha a hash alapján előállított seeddel inicializált \texttt{Random} példánnyal
 rendre visszaadott bájtokat használjuk.
 
-\subsection{(---) A \texttt{Monotonic} és implementációi}
+\subsection{Monoton méretigazítás}
 
-Gyakran egy adott értékkészlet elemeiből akarunk képezni egy $n$ hosszúságú rendezett listát.
+Gyakran egy adott értékkészlet elemeiből akarunk képezni egy $N$ hosszúságú rendezett listát.
 Az eloszlás (beleértve, hogy valamely érték egyáltalán előfordul-e)
 teljesen implementációfüggő lehet.
-Mivel az értékkészlet maga is egy $k$ hosszúságú lista,
-a további leképezési kompozíciók szempontjából rugalmasabb,
-ha az értékindexeket, azaz a $[0..k)$ egész-intervallum számait tesszük a listába.
+Mivel az értékkészlet maga is egy $n$ hosszúságú lista,
+a további leképezés-kompozíciók lehetővé tétele érdekében rugalmasabb,
+ha inkább az értékindexeket, azaz a $[0..n)$ egész-intervallum használjuk.
 
 Követelmény, hogy le tudjuk kérdezni az alábbiakat:
 
@@ -1128,9 +1077,25 @@ A rendezettség miatt a második kérdésre mindig egy összefüggő sáv a vál
 
 Ezeket az elvárásokat formalizálja a \texttt{Monotonic} interfész.
 
+A \texttt{Monotonic} interfész példánya egy függvényt reprezentál,
+amely az első $n$ nemnegatív egész számot értékkészletként nem monoton növekvő módon hozzárendeli az első $N$ nemnegatív egész számhoz.
+Ez arra használható, hogy egy $n$ elemű, rendezetten tárolt értékkészletet egy $N$ méretű adatbázistábla oszlopához igazítsunk méretben,
+Tehát a példány $M(i) = m$ függvényt valósítja meg, ahol $0 \leq i < N$ illetve $0 \leq m < n$, továbbá $i_1 < i_2 \implies M(i_1) < M(i_2)$.
+Ugyanakkor indexelt elérést is biztosít, azaz lekérdezhető, hogy egy adott érték mely indexsávhoz rendelődik,
+azaz megvalósítja az $M^{-1}(m) = [i, j)$ függvényt is, ahol $0 \leq m < n$ illetve $0 \leq i \leq j \leq N$, és teljesülnek az alábbiak:
+
+\begin{itemize}
+\item $x < i \implies M(x) < M(i)$
+\item $i \leq x < j \implies M(i) \leq M(x) < M(j)$.
+\item $i < x \implies M(i) < M(x)$
+\end{itemize}
+
+Az indexelt elérés az \texttt{indicesOf(value)} metóduson keresztül biztosított, amely egy \texttt{Range} objektumot ad vissza.
+A metódus egy variánsa egy \texttt{Range} példányt vár, értelemszerűen általánosítva az előbbit.
+
 A legegyszerűbb implementáció a diszkrét lineáris vetítés.
-A $k$ hosszúságú értékkészletet ekkor úgy vetítjük az $n$ listahosszra,
-hogy az $i$-edik helyre a $\lfloor \frac{k \cdot i}{n} \rfloor$ pozíciójú érték kerül.
+Az $n$ hosszúságú értékkészletet ekkor úgy vetítjük az $N$ listahosszra,
+hogy az $i$-edik helyre a $\lfloor \frac{n \cdot i}{N} \rfloor$ pozíciójú érték kerül.
 
 A költségesebb, jobb minőségű implementációk pszeudovéletlen mintavételezésen alapulnak.
 Ehhez rekurzívan osztjuk föl az értékkészletet, miközben a felosztás fája determinisztikus, mindig ugyanaz.
@@ -1149,121 +1114,11 @@ mely minden értékkészletbeli értékre tartalmazza annak várható előfordul
 Ezeket az előre definiált gyakoriságokat használhatjuk a mintavételezésben,
 de akár közvetlenül is alkalmazhatjuk egy diszkrét lineáris vetítéssel.
 
-
-\subsection{(+++) Monoton méretigazítás}
-
-A \texttt{Monotonic} interfész példánya egy függvényt reprezentál,
-amely az első $n$ nemnegatív egész számot értékkészletként nem monoton növekvő módon hozzárendeli az első $N$ nemnegatív egész számhoz.
-Ez arra használható, hogy egy $n$ elemű, rendezetten tárolt értékkészletet egy $N$ méretű adatbázistábla oszlopához igazítsunk méretben,
-Tehát a példány $M(i) = m$ függvényt valósítja meg, ahol $0 \leq i < N$ illetve $0 \leq m < n$, továbbá $i_1 < i_2 \implies M(i_1) < M(i_2)$.
-Ugyanakkor indexelt elérést is biztosít, azaz lekérdezhető, hogy egy adott érték mely indexsávhoz rendelődik,
-azaz megvalósítja az $M^{-1}(m) = [i, j)$ függvényt is, ahol $0 \leq m < n$ illetve $0 \leq i \leq j \leq N$, és teljesülnek az alábbiak:
-
-\begin{itemize}
-\item $x < i \implies M(x) < M(i)$
-\item $i \leq x < j \implies M(i) \leq M(x) < M(j)$.
-\item $i < x \implies M(i) < M(x)$
-\end{itemize}
-
-Az indexelt elérés az \texttt{indicesOf(value)} metóduson keresztül biztosított, amely egy \texttt{Range} objektumot ad vissza.
-A metódus egy variánsa maga is egy \texttt{Range} példányt vár, és értelemszerűen általánosítja az előbbit.
-
-\subsubsection{Triviális implementációk}
-
-\todo[inline]{Monotonic: triviális implementációk}
-
-\todo[inline]{Monotonic: egyszerű diszkrét lineáris interpoláció: általában ez is elég, a permutáció majd úgyis elkeveri}
-
-\subsubsection{Szimulált mintavétel}
-
-\todo[inline]{Monotonic: szimulált mintavétel (jó ez a cím?)}
-
-\todo[inline]{Monotonic: szimulált mintavétel: a lényeg, hogy bizonyos mértékű véletlenszerűséget ad}
-
-\subsubsection{Gyakoriságtáblázat használata}
-
-A fenti implementációk mindegyike általánosítható úgy, hogy figyelembe vegyen egy gyakoriságtáblázatot,
-mely az értékkészlet elemeihez azok relatív gyakoriságát rendeli.
-
-\todo[inline]{Monotonic: gyakoriságtáblázat}
-
-
-\subsection{(---) A \texttt{Permutation} és implementációi}
-
-Gyorsan számítható invertálható permutációk például modulo szorzásból kiindulva valósíthatók meg.
-
-\todo[inline]{Permutációk: egyszerűen a Feiste-háló rugalmasságával, teljesen kontrollálható paramétereivel, sokrétű skálázhatóságával érvelni}
-
-Költségesebb, de erősen véletlenszerű összevisszaságot biztosító invertálható permutációk
-különféle kriptográfiai módszerekkel állíthatók elő.
-Többféle algoritmuscsalád kipróbálása után
-végül egy megfelelően kialakított Feistel-hálózat bizonyult a legkezelhetőbbnek.
-A Feistel-háló fő skálázási paramétere (akárcsak a hash-alapú \texttt{TreeRandom}-implementációnál)
-a hashelő algoritmus minősége,
-de a háló mérete illetve a permutáció $n$ hossza is lényeges.
-
-A következő ábrán vizuálisan összehasonlítottam néhány permutáció-típus értékeloszlását:
-
-\begin{figure}[H]
-  \centering
-  \hspace*{\fill}
-  \begin{minipage}[b]{0.45\textwidth}
-    \centering
-    \includegraphics[width=0.9\textwidth]{image/permutation-fpe1.png}
-    \par Rank-then-encipher FPE\protect\cite{Bellare2009FormatPreservingE}
-  \end{minipage}
-  \hspace*{\fill}
-  \begin{minipage}[b]{0.45\textwidth}
-    \centering
-    \includegraphics[width=0.9\textwidth]{image/permutation-mp1.png}
-    \par Modulo permutáció
-  \end{minipage}
-  \hspace*{\fill}
-
-  \vspace*{0.7cm}
-
-  \hspace*{\fill}
-  \begin{minipage}[b]{0.45\textwidth}
-    \centering
-    \includegraphics[width=0.9\textwidth]{image/permutation-feif1.png}
-    \par Feistel-háló (1-round, fast hash)
-  \end{minipage}
-  \hspace*{\fill}
-  \begin{minipage}[b]{0.45\textwidth}
-    \centering
-    \includegraphics[width=0.9\textwidth]{image/permutation-feis2.png}
-    \par Feistel-háló (2-round, SHA256)
-  \end{minipage}
-  \hspace*{\fill}
-
-  \caption[Permutációk kimeneteinek összehasonlítása]{
-    A \texttt{Permutation} különféle implementációinak kimenetei \\
-    (a közeli értékek színe hasonló; minél nagyobb a káosz, annál jobb)
-  }
-\end{figure}
-
-A kriptográfiában alkalmazott legtöbb megfordítható permutáció mérete eleve kötött.
-A Feistel-háló ebből a szempontból elég rugalmas,
-de a permutáció hossza még ekkor is csak 2-hatvány lehet.
-A tetszőleges hossz biztosítására átméretező dekorátorok használhatók.
-A hosszcsökkentő dekorátor továbbhív a dekorált permutációra,
-és ha a kapott érték a célhosszon belül van, akkor visszaadja, ha nem,
-akkor a mindenkori értékkel addig hívja újra,
-amíg megfelelő értéket nem kap.
-A hossznövelő dekorátor ennek felhasználásával implementálható,
-de a jelentősége kisebb, jellemzően hosszcsökkentés történik.
-Egyes speciális permutációknál az előbbi módszer nagyon sok újrahívással járhat
-(például egy olyannál, ahol az értékek eggyel előre tolása történik).
-Az átméretező metódus bekerült magába az interfészbe,
-hogy az ilyen implementációk maguk kezeljék a helyzetet.
-A jó szétszórást biztosító permutációknál valószínűtlen a sok újrahívás.
-
-\subsection{(+++) Permutációk}
+\subsection{Permutációk}
 
 A \texttt{Permutation} interfész megvalósításához olyan eljárást keresünk, amellyel változó (és akár óriás) tartományon értelmezett,
 seed szerint variálható permutációfüggvény és annak inverze előáll, ahol mindkét függvény hatékony.
-
-Az inverz függvényhívás az \texttt{indexOf(value)} metódus biztosítja.
+Az inverz függvényhívást az \texttt{indexOf(value)} metódus deklarálja.
 
 \subsubsection{Triviális implementációk}
 
@@ -1292,21 +1147,21 @@ Ez a háttérben a \texttt{BigInteger} osztály ugyanilyen nevű metódusát hí
 Az invertálható, változtatható méretű, seed alapján újrakeverhető permutációk könnyen analógiába állíthatók kriptográfiai titkosítófüggvényekkel.
 Ezek általában változtatható blokkméretűek, kulcs alapján újrakeverhetőek és természetesen dekódolhatóak.
 Felmerül a gondolat, hogy közvetlenül egy ilyen kriptográfiai módszert alkalmazzunk a permutáció megvalósításához.
-Mindenképpen olyan megoldásra van szükség, amelynél a blokkméret tetszőlegesen megadható, és kellően flexibilis, skálázható.
+Olyan megoldásra van szükség, amelynél a blokkméret tetszőlegesen megadható, és kellően flexibilis, skálázható.
 
-A Feistel-hálózatok pontosan ilyenek, és emiatt gyakran használják is őket összetett titkosító eljárások keretrendszereként.
-A Feistel-hálózat egy többkörös eljárás, ahol minden körben az adat egyik felének bitjeit módosítjuk.
-Ez alapesetben megköveteli a páros blokkméretet, de mindjárt kitérek arra, hogyan lehet ezen enyhíteni.
+A Feistel-hálózatok ilyenek, így összetett titkosító eljárások keretrendszereként igen népszerűek.
+A Feistel-hálózat többkörös eljárás, ahol minden körben az adat egyik felének bitjeit módosítjuk.
+Ez alapesetben megköveteli a páros blokkméretet, de amint látni fogjuk, ezen lehet enyhíteni.
 
 Az egyes körökben felváltva a bitsorozat bal illetve jobb oldali felét változtatjuk; nevezzük ezt célhelynek, a másik fél tartalmát pedig forrásbiteknek.
-Egy-egy kör abból áll, hogy a forrásbitekre meghívunk egy az adott körhöz dedikált hossztartó hash-függvényt,
+Egy-egy körben a forrásbitekre meghívunk egy az adott körhöz dedikált hossztartó hash-függvényt,
 és az így kapott eredményt XOR-ral ráfésüljük a célhelyre.
-Vegyük észre, hogy az XOR művelet tulajdonságai miatt ez reverzibilis művelet (bármi legyen is a hash-függvény),
-ha újra alkalmazzuk, az eredeti bitsorozatot kapjuk vissza,
-és a forrásbitek még rendelkezésre állnak, mivel azokat ezen a ponton még nem írtuk felül.
+Vegyük észre, hogy az XOR tulajdonságai miatt ez reverzibilis (bármi legyen is a hash-függvény),
+újraalkalmazva az eredeti bitsorozatot kapjuk vissza
+(a forrásbiteket ezen a ponton még nem írtuk felül).
 Tehát a Feistel-hálózattal kapott kód visszafejtése úgy történik, hogy a lépéseket visszafelé újra végrehajtjuk.
 Általában nem szükséges, hogy az egyes körökhöz különböző hash-függvényt használjunk,
-számunkra bőven elég, ha a páros és páratlan körökhöz eltérő függvényt alkalmazunk (szigorúan még ez sem lenne szükséges).
+bőven elég, ha a páros és páratlan körökhöz eltérő függvényt alkalmazunk (szigorúan még ez sem lenne szükséges).
 
 A Feistel-hálózatokkal való kísérletezés során észrevettem,
 hogy a páros blokkméret követelménye enyhíthető a következőképpen.
@@ -1319,50 +1174,82 @@ ami természetesen visszafelé haladva ugyanúgy teljesül, tehát a dekódolás
 Ha egyúttal páros számú kört követelünk meg,
 akkor az utolsó kör végére garantáltan ugyanabba a fázisba kerülünk, mint az első kör kezdete előtt;
 vagyis a dekódolás folyamata teljesen egyezni fog az elkódolással, ami egyszerűsíti az eljárást.
-
-Lorem ipsum. XXX~\ref{appendix:algorithm_xyz}
-
-\todo[inline]{ALGORITMUS: Feistel: last-zero algoritmus-változat}
+\algorithmref{feistel}
 
 Persze, még ha a páros blokkméret követelményét így sikerült is eliminálni,
 továbbra is adott a probléma, hogy az $n$ blokkmérethez mindig $2^n$ méretű permutáció tartozik.
-Vagyis, ha nem csak 2-hatvány méretű permutációkat akarunk támogatni, méretigazítás szükséges.
-Ezt a rejection sampling technika alkalmazásával érjük el.
+Vagyis a nem 2-hatvány méretű permutációkhoz méretigazítás szükséges.
+Ezt a rejection sampling alkalmazásával érjük el.
 Az adott $n$ mérethez vesszük azt a legkisebb $N$ 2-hatványt, amely $n$-nél nem kisebb.
-Amikor egy adott $i$ értékre a Feistel-hálótól az intervallumon kívül eső $p$-t kapunk,
+Amikor egy adott $i$ értékre a Feistel-hálózattól az intervallumon kívül eső $p$-t kapunk,
 azaz amelyre $p \geq n$ ($p < N$), akkor újra meghívjuk a permutáló függvényt $p$-re.
 Addig ismételjük a hívást, míg végre $n$-nél kisebb szám nem születik.
-A páratlan blokkméret megengedettsége a hatékonyság szempontjából is fontos,
-mivel jelentősen csökkentheti az intervallumon kívülre esés esélyét,
-és így a Feistel-hálózatra történő hívások számát.
-
-\todo[inline]{Feistel leírásához igazítani a hasher-implementációk tárgyalását}
-
-\subsubsection{Permutációk méretigazítása}
-
-\todo[inline]{Rejection sampling}
+A páratlan blokkméret lehetősége a hatékonyság szempontjából is fontos,
+mivel jelentősen a Feistel-hálózatra történő újrahívások számát.
 
 A rejection sampling nem minden implementációnál hatékony,
-de pontosan ezért vezettük be a $resized(newSize)$ metódust magán a $Permutation$ interfészen.
+de pontosan ezért vezettük be a \texttt{resized(LargeInteger)} metódust
+magán a \texttt{Permutation} interfészen.
 Így minden implementáció maga döntheti el, hogyan kell átméretezni.
 Egy extrém eset például, amikor a $P_{+1}(i) = (i + 1) \bmod N$ permutációt $n$-re kell átméreteznünk.
 Rejection sampling módszerrel $i = n$ esetén $N - n$ számú extra iterációt kellene végrehajtani,
 ami nagy méret esetén rendkívül költséges.
 Helyette viszont egyszerűen áttérhetünk modulo $n$-re: $P_{+k}(k)(i) = (i + k) \bmod n$.
 
-\subsubsection{XXXX}
+Az alábbi ábrán vizuálisan összehasonlítottam néhány permutáció-típus értékeloszlását.
+A pixel koordináta az indexből, a színárnyalat és a fényerő értékek az értékből vannak kalkulálva.
+Értelemszerűen a nagyobb összevisszaság erősebb véletlenszerűséget jelent.
+Felül a bal oldalon egy erős véletlenszerűséget adó FPE (Format Preserving Encryption) eljárás,
+a Rank-then-encipher\protect\cite{Bellare2009FormatPreservingE},
+a jobb oldalon pedig egy egyszerű lineáris kongruencián alapuló permutáció kimenete látható.
+Alul két Feistel-hálózat kimenetét látjuk,
+melyek a fenti kettőhöz mérhető skálázódást mutatnak pusztán paraméterezés által;
+a bal oldalon egy kétkörös, erős SHA256 hashelést használóét,
+a jobb oldalon pedig egy egykörös, gyors XOR ellenőrzőösszeggel hashelőét.
+Ráadásul az XOR hash eredménye jobb, mint a lineáris kongruencián alapuló permutációé.
+(Forráskódért ld.: \autoref{appendix:projectlinks})
 
-\todo[inline]{egy trükkös saját permutáció, ami elég jó szórást ad (ha sikerül megoldani)}
+\begin{figure}[H]
+  \centering
+  \hspace*{\fill}
+  \begin{minipage}[b]{0.45\textwidth}
+    \centering
+    \includegraphics[width=0.9\textwidth]{image/permutation-fpe1.png}
+    \par Rank-then-encipher FPE\protect\cite{Bellare2009FormatPreservingE}
+  \end{minipage}
+  \hspace*{\fill}
+  \begin{minipage}[b]{0.45\textwidth}
+    \centering
+    \includegraphics[width=0.9\textwidth]{image/permutation-mp1.png}
+    \par Modulo permutáció
+  \end{minipage}
+  \hspace*{\fill}
 
-\todo[inline]{bitkeverés, kétfelől átfedő 2-hatványos permutálás stb.}
+  \vspace*{0.7cm}
+
+  \hspace*{\fill}
+  \begin{minipage}[b]{0.45\textwidth}
+    \centering
+    \includegraphics[width=0.9\textwidth]{image/permutation-feis2.png}
+    \par Feistel-hálózat (2-round, SHA256)
+  \end{minipage}
+  \hspace*{\fill}
+  \begin{minipage}[b]{0.45\textwidth}
+    \centering
+    \includegraphics[width=0.9\textwidth]{image/permutation-feif1.png}
+    \par Feistel-hálózat (1-round, fast hash)
+  \end{minipage}
+  \hspace*{\fill}
+
+  \caption[Permutációk kimeneteinek összehasonlítása]{
+    A \texttt{Permutation} különféle implementációinak kimenetei
+  }
+\end{figure}
 
 
-
-\section{1OSZL. IND. ÉRTÉKKIOSZTÁSOK}
+\section{Egyoszlopos kereshető értékkiosztások}
 
 \subsection{Általános megfontolások}
-
-\todo[inline]{Általános megfontolások: Itt írni a nem indexelt értékkiosztásokról (máshol már akkor nem kell, pl. régi regex)}
 
 Olyan értékkiosztási módszereket veszek most végig,
 amelyek lehetőleg biztosítják az alábbiakat:
@@ -1372,13 +1259,12 @@ amelyek lehetőleg biztosítják az alábbiakat:
   \item pozíciótól függő érték (\texttt{TreeRandom} seed)
   \item hatékony kereshetőség valamilyen formában
   \item hatékony rendezés
-  \item konzisztencia
+  \item lekérdezések közötti konzisztencia
 \end{enumerate}
 
 Az egyes esetekben megvizsgálom majd, hogyan teljesíthetők ezek az elvárások.
 
-
-\subsection{(???) Keretrendszer az értékkiosztásokhoz}
+\subsection{Keretrendszer az értékkiosztásokhoz}
 
 Virtuális adatok alatt elsősorban az egy-egy oszlop alá besorakozó,
 közös típussal rendelkező mezőértékeket értem.
@@ -1394,9 +1280,7 @@ amennyiben az egy-egy oszlophoz tartozó listanézetek biztosítottak.
 Majd a több oszlopot érintő megkötések esetében ez lesz a helyzet.
 De lássuk először az egyoszlopos értékkiosztások lehetséges módszereit.
 
-\subsection{(???) Általános kétfázisú értékkiosztás}
-
-\subsubsection{XXXXXXXXX}
+\subsection{Általános kétlépéses értékkiosztás}
 
 Talán a leggyakoribb eset,
 hogy előre ismert véges értékkészlet elemeit szeretnénk viszontlátni az oszlopban,
@@ -1412,8 +1296,8 @@ egy \texttt{Permutation} példány segítségével elkeverjük.
 \begin{figure}[H]
 \centering
 \includesvg[width=0.55\textwidth]{diagram/distribution}
-\caption[A kétfázisú értékkiosztás alapelve]{
-    A kétfázisú értékkiosztás alapelve:
+\caption[A kétlépéses értékkiosztás alapelve]{
+    A kétlépéses értékkiosztás alapelve:
     egymás után végrehajtott visszafejthető disztribúció és permutáció
 }
 \end{figure}
@@ -1435,31 +1319,29 @@ A következő két ábra szemlélteti az adatlekérés illetve értékkeresés f
   \centering
   \begin{minipage}[t]{0.48\textwidth}
     \includesvg[width=\textwidth]{diagram/getvalue}
-    \caption{Adatlekérés a kétfázisú értékkiosztásból}
+    \caption{Adatlekérés a kétlépéses értékkiosztásból}
   \end{minipage}
   \hspace*{\fill}
   \begin{minipage}[t]{0.48\textwidth}
     \includesvg[width=\textwidth]{diagram/findvalue}
-    \caption[Keresés a kétfázisú értékkiosztásban]{
-      Keresés a kétfázisú értékkiosztásban:
+    \caption[Keresés a kétlépéses értékkiosztásban]{
+      Keresés a kétlépéses értékkiosztásban:
       a rendezett értékkészlet és a leképezések megfordíthatósága
       biztosítja a hatékony keresést a virtuális listában
     }
   \end{minipage}
 \end{figure}
 
-\todo[inline]{Függetlenül paraméterezhető és skálázható (a gyakoriságtáblázatot is ehhez)}
-
-\subsubsection{Kétfázisú értékkiosztás gyakoriságtáblázattal}
+\subsubsection{Kétlépéses értékkiosztás gyakoriságtáblázattal}
 
 Egyes esetekben előre ismert az értékek eloszlása,
 amit szeretnénk nagyjából vagy pontosan viszontlátni a céloszlopban.
 Ekkor egyszerűen a \texttt{Monotonic} fentebb tárgyalt konkrét eloszlásokat használó
 implementációnak egyikét kell használnunk.
 
-A felhasználó számára biztosítani kell a gyakoriságok könnyű konfigurálhatóságát.
-Ennek legegyszerűbb módja, ha szám-érték párokat kérünk be.
-Az értékekhez tartozó számok egymáshoz képesti relatív gyakoriságok.
+A felhasználó számára biztosítani kell a gyakoriságok könnyű konfigurálhatóságát,
+ehhez érték-gyakoriság párok sorait kérünk be.
+A második érték egymáshoz képesti relatív gyakoriságot jelöl.
 
 \subsubsection{Zajosan monoton értékkiosztások}
 
@@ -1514,21 +1396,13 @@ Ezzel az eljárással nem csak zajossá tudtuk tenni az eloszlást,
 de a monotonitás garantálása mellett megengedtük,
 hogy az értékek esetlegesen csomósodhassanak,
 illetve elméletben tetszőlegesen eltávolodhassanak attól a helytől,
-amit egy egyszerű, szigorúan egyenletes kiosztás esetén vettek volna föl.
+amit egy szigorúan egyenletes kiosztás esetén vettek volna föl.
 
 Ez az értékkiosztás különösen alkalmas időbélyegek szimulálására,
 amikor az események általános sűrűsége adott,
 de véletlenszerű, zajos kimenetet szeretnénk látni.
 
-
-
-\subsection{(+++) KÉTLÉPÉSES ÉRTÉKKIOSZTÁS}
-
-\todo[inline]{KÉTLÉPÉSES ÉRTÉKKIOSZTÁS}
-
 \subsection{$NULL$ értékek kezelése}
-
-\todo[inline]{NULL értékek kezelése: ez mehet az általános megfontolásokba}
 
 Általánosan, bármely értékkiosztási módszerhez könnyen hozzáilleszthető a $NULL$ értékek támogatása.
 Mindössze az szükséges, hogy az értékkiosztást a tábla méreténél kisebb intervallumra végezzük,
@@ -1538,7 +1412,7 @@ ami által a $NULL$ értékek is szétszórtan szerepelnek majd.
 
 Nem szükséges ez a plusz kompozíció,
 ha a fentiek magába az eredeti értékkiosztásba is könnyen beépíthetők.
-Például a kétfázisú értékkiosztásokba egyszerűen felvehető a $NULL$ mint érték.
+Például a kétlépéses értékkiosztásokba egyszerűen felvehető a $NULL$ mint érték.
 
 Akár beépítetten, akár plusz kompozícióval van megvalósítva a $NULL$ értékek kezelése,
 természetesen figyelni kell a speciális kezelésre a keresés-rendezés során.
@@ -1546,8 +1420,6 @@ természetesen figyelni kell a speciális kezelésre a keresés-rendezés során
 A fentiek fényében az egyes értékkiosztások tárgyalásánál a $NULL$ értékek kezelésével nem foglalkozom.
 
 \subsection{Egyszerű értékkiosztások}
-
-\todo[inline]{Egyszerű értékkiosztások: ez mehet az általános megfontolásokba}
 
 Tényleges adatbázisokban némely esetben meglehetősen következetes módon
 szerepelnek az értékek az oszlop értéklistájában.
@@ -1586,18 +1458,19 @@ kihagyva a prefixen kívül eső értékeket.
 
 Ha azonban az értékkészlet mérete lényegesen nagyobb, mint az oszlophossz,
 jellemzően nagyon sok értéket kell átugranunk, amely a prefixen kívül esik.
-Sokkal hatékonyabb, ha a következő részben leírt általános kétfázisú értékkiosztást használjuk,
+Sokkal hatékonyabb, ha a következő részben leírt általános kétlépéses értékkiosztást használjuk,
 ami nem csak unique oszlopokhoz alkalmazható.
 A unique oszlop esetén csak annyi a megkötés, hogy a használt \texttt{Monotonic}
 a kimenetet szigorúan monoton módon állítsa elő.
 
 
-\subsection{Értékkészletek reguláris kifejezésekből}
+\subsection{Reguláris kifejezésből képzett értékkészletek}
 
-\subsubsection{Reguláris kifejezésből képzett szó-fák}
+\subsubsection{Reguláris kifejezésből generált szó-fák}
 
-Karakterláncokból álló értékkészletnek egy reguláris kifejezés alapján történő generálása
-talán a legáltalánosabb és legrugalmasabb módja az értékek definiálásának.
+Karakterláncokból álló értékkészletnek egy reguláris kifejezés (minta)
+alapján történő generálása talán a legáltalánosabb és legrugalmasabb módja
+az értékek definiálásának.
 Emiatt ezzel a résztémával fogok a legrészletesebben foglalkozni.
 
 Véletlenszerű karakterláncok reguláris kifejezés alapján történő generálására
@@ -1614,7 +1487,7 @@ Lássuk, hogyan tudnánk valami módon mégis egy rendezett értékkészletet im
 Első megközelítésben a reguláris kifejezéssel kapcsolatban az alábbi megszorításokat tesszük:
 
 \begin{itemize}
-    \item a reguláris kifejezés csak konstans karaktereket, karakterosztályokat, csoportokat és alternációt tartalmaz
+    \item a minta csak konstans karakterek, karakterosztályok, csoportok és alternációk szerepelnek
     \item a rendezés karakterenkénti, azaz nincs másodlagos, harmadlagos stb. összehasonlítási szempont
 \end{itemize}
 
@@ -1622,10 +1495,7 @@ Ilyen megkötések mellett a reguláris kifejezéshez problémamentesen rendelhe
 irányított körmentes szógráf (DAWG),
 melyben egy érték nélküli kiinduló elemből érjük el a karaktereket reprezentáló csomópontokat,
 és kizárólag a szóvég csomópontokon (EOW) terminálhatunk,
-melyekből már nem érhető el további csomópont.
-
-\textcolor{red}{TODO TODO TODO TODO TODO} \parencite{AppelScrabble1988}
-% TODO: https://www.cs.cmu.edu/afs/cs/academic/class/15451-s06/www/lectures/scrabble.pdf
+melyekből már nem érhető el további csomópont. \parencite{AppelScrabble1988}
 
 A gráf lényegileg egy prefix fa, ahol egyes azonos részfákat újrahasznosítunk.
 Ezért a továbbiakban az egyszerűség kedvéért néha faként fogok a gráfra hivatkozni.
@@ -1636,14 +1506,9 @@ A szóvég csomópontok lesznek a fa levelei.
 A prefix fa könnyen felépíthető a reguláris kifejezés szintaxisfájából (AST).
 A gráf tömöríthető úgy, hogy konstans karakterek helyett karakterosztályokat engedünk meg.
 
-\todo[inline]{tisztázni, hogy a "szó"-fa teljes sztringekre vonatkozik}
-
 A felépítés két lépcsőben történik.
 Először egy nyers fát állítunk elő, ami közvetlenül reprezentálja a reguláris kifejezést.
-
-\todo[inline]{nyers szófa előállításának rövid leírása}
-
-\todo[inline]{ALGORITMUS: nyers szófa előállítása}
+\algorithmref{regex_wordtree_create_raw}
 
 Például a \texttt{([a-c]z(tt|uu)r|a[s-z])} reguláris kifejezés nyers szófája így néz ki:
 
@@ -1689,8 +1554,7 @@ A fát egyúttal célszerű úgy továbbalakítani, hogy megszüntetjük az alte
 pusztán az elágazás kedvéért felvett csomópontokat,
 ez természetesen az egyenlő csomópontok részfáinak összefésülését vonja maga után.
 Nevezzük az így nyert gráfot a reguláris kifejezés kompakt szófájának.
-
-\todo[inline]{ALGORITMUS: kompakt szófa előállítása}
+\algorithmref{regex_wordtree_create_compact}
 
 A \texttt{([a-c]z(tt|uu)r|a[s-z])} reguláris kifejezés fenti nyers szófájából
 az alábbi kompakt szófát nyerjük:
@@ -1705,8 +1569,7 @@ Minden csomóponthoz hozzárendeltük a hozzá tartozó részfa leveleinek effek
 ami rekurzióval könnyen számítható.
 Ez az információ már elegendő ahhoz, hogy kikeressük az $n$-edik elemet,
 illetve hogy megkeressük egy adott karakterlánc (megtalált vagy beillesztési) pozícióját.
-
-\todo[inline]{ALGORITMUS: iteráció stb.}
+\algorithmref{regex_wordtree_iterate}
 
 A kompakt szófában megtalálható különböző részfák száma
 a nyers szófa különböző részfáinak számához képest exponenciálisan megnőhet.
@@ -1764,7 +1627,7 @@ a kivételt elkapó szint el fogja dobni az ágat mint lehetetlent,
 ami újabb kivételdobást eredményezhet, ha az ottani gyermekelemek emiatt elfogytak,
 és így tovább.
 
-\subsubsection{(+++) Unicode karakterláncok és többszintű rendezés reguláris kifejezésekkel}
+\subsubsection{Unicode karakterláncok és többszintű rendezés reguláris kifejezésekkel}
 
 Az igazi nehézségek akkor kezdődnek,
 amikor elengedjük a karakterenkénti rendezés megszorítását
@@ -1803,8 +1666,6 @@ A UCA öt alapértelmezett rendezési szintet különböztet meg:
     \item \textbf{Ln}: kódolási különbségek (Identical)
 \end{itemize}
 
-\todo[inline]{példa a szintekbeli nézetre, esetleg a lista helyett táblázat (legalább lenne táblázat)}
-
 Például a normál magyar kollációban a '\texttt{Kör}' karakterlánc L1-es alakja '\texttt{kor}'
 ahol a diakritikus jel és nagybetűsség stb. ignorálásra (eltávolításra) került.
 Ellenben például a svéd nyelvben az '\texttt{ö}' betű az ABC végén
@@ -1824,9 +1685,9 @@ Konkrét szabályok kialakításához ebből érdemes kiindulni.
 Az ICU általában (beleértve a standard, európai és magyar kollációkat is)
 teljesen az L1 szinten kezeli az írásjeleket is
 (az egymás utáni több írásjel is külön-külön elsődleges karakternek számít).
-Ez logikusabb, mint az írásjeleket egyátalán nem figyelembe venni a betűk vizsgálatakor,
+Ez logikusabb, mint az írásjeleket egyáltalán nem figyelembe venni a betűk vizsgálatakor,
 hiszen akkor a szavak tagolása sem történik meg
-(például az '\texttt{ab:cd}' előrébb kerül, mint az '\textttt{a:cd}').
+(például az '\texttt{ab:cd}' előrébb kerül, mint az '\texttt{a:cd}').
 Ezt is figyelembe véve, mi most csak az első három szinttel foglalkozunk,
 legalábbis kizárólag pozíciótartó összehasonlításokkal.
 
@@ -1842,10 +1703,7 @@ Ezeket a szófákat aztán (virtuális értelemben) egymás alá fűzzük,
 azaz effektíve minden előző szint EOW csomópontja után konkatenáljuk a következő szint fáját.
 Az összevont (például egybeolvadó karakterekhez tartozó) részfák
 többszörös számossággal számítanak, amit jelezni kell.
-
-\todo[inline]{ÁBRA: többszintű kompakt fa}
-
-\todo[inline]{ALGORITMUS: többszintű kompakt fa}
+\algorithmref{regex_wordtree_create_multilevel}
 
 Az n-edik karakterlánc lekérése úgy történik,
 hogy az egymás alá fűzött fák rendszerében (ami maga is egy nagy faként értelmezhető) navigálunk.
@@ -1869,8 +1727,6 @@ a második szint fája megengedheti a '\texttt{tarol}', `\texttt{tárol}', '\tex
 karakterláncokhoz tartozó útvonalakat,
 de mondjuk a (tegyük föl, eredetileg megengedett) "hasonlít" útvonalát már nem.
 
-\todo[inline]{ÁBRA: lekérés a többszintű fából (szűkített fával)}
-
 Ez a szűkítés a bemenettől függ.
 Vagyis nem tudjuk előre generálni, a futási idejű performanciát fogja befolyásolni.
 A előbb bemutatott adatszerkezet alkalmas arra, hogy ezt hatékonnyá tegye,
@@ -1880,133 +1736,13 @@ azaz egy adott karakterlánc összes szintbeli nézetének hossza egyezzen az er
 és bármely karaktere a vele azonos pozíción található eredeti karakter derivátuma legyen.
 Mivel csak pozciótartó összehasonlításokra szorítkoztunk,
 ez a megkötés eleve biztosított.
-
-\todo[inline]{ALGORITMUS: lekérés a többszintű fából (fa szűkítésével)}
-
-\todo[inline]{megjegyezni a negyedik szint nem is feltétlen hasznos}
-% TODO: különösen ha a szóköz is írásjelnek számít (vs. szavankénti rendezés),
-%       illetve ha a speciális karakterek dominálnak illetve fontosak}
+\algorithmref{regex_wordtree_getfrom_multilevel}
 
 Karakterlánc keresésekor is a fenti szempontokkal egészítjük ki
 a többszintű rendezést nem támogató kompakt fánál látott algoritmus-sémát.
 A fő eltérés, hogy a kereséskor nem az addigi útvonalakkal,
 hanem a keresett eredeti karakterlánccal való kompatibilitás számít,
 nyilván már az első szinttől kezdve.
-
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
-
-
-
-
-
-
-
-
-\subsubsection{(+++) (???) OLD XXX}
-
-A UCA egy nyelvfüggő többszintű összehasonlítási sémát definiál,
-de ezek között van olyan általános séma is, mely tekinthető egy nyelvfüggetlen összehasonlításnak.
-Ennek egy egyszerűsített háromszintű változatát fogjuk alapul venni.
-
-Minden karaktert három komponens,
-nevezetesen az \textit{alapkarakter}, a \textit{diakritikus jel}
-és a \textit{kis-/nagybetűsség} együttesének tekintünk.
-Alapkarakternek a karakter diakritikus jelektől megfosztott kisbetűs alakját nevezzük.
-Tehát például az '\texttt{Á}' karakter az '\texttt{a}' alapkarakterre,
-a '\texttt{´}' ékezetre és a nagybetűsségre bontható.
-Komponensenként egyértelmű és független lesz a rendezés.
-
-Maguk a karakterláncok is három rétegre esnek szét, és komponensenként hasonlítandók össze.
-Összehasonlításkor a későbbi komponens csak akkor vizsgálandó,
-ha az azt megelőző komponensek a két karakterláncban egyeznek.
-A pozicionált diakritikus jeleket és nagybetűsség-jelzéseket speciális karaktereknek is tekinthetjük,
-ekkor lényegileg karakterenkénti összehasonlításra is visszavezethetjük az eljárást.
-Például:
-
-\begin{verbatim}
-AL      =   al   __   __     =   al<U:0><U:1>
-alom    =   alom ____ ____   =   alom
-Alom    =   alom ____ U___   =   alom<U:0>
-álom    =   alom ´___ ____   =   alom<D:´:0>
-BAL     =   bal  ___  UUU    =   bal<U:0><U:1><U:2>
-báL     =   bal  _´_  __U    =   bal<D:´:1><U:2>
-\end{verbatim}
-
-% FIXME ez a megközelítés jobban adaptálható később a svéd collation-höz
-Vagy:
-
-\begin{verbatim}
-AL      =   al.al.AL         =   al<U:0><U:1>
-alom    =   alom.alom.alom   =   alom
-Alom    =   alom.alom.Alom   =   alom<U:0>
-álom    =   alom.álom.álom   =   alom<D:´:0>
-BAL     =   bal.bal.BAL      =   bal<U:0><U:1><U:2>
-báL     =   bal.bál.báL      =   bal<D:´:1><U:2>
-\end{verbatim}
-
-A jobb oldalon a karakterláncoknak egy normálalakja látható,
-mely az alapkarakterek után csak a módosításokat tartalmazza,
-és a kisbetűsséget alapértelmezettnek tekinti.
-Az ilyen normálalak karakterenkénti rendezése problémamentes:
-
-\begin{itemize}
-    \item egy előbbi komponenshez tartozó karakter mindig megelőzi a későbbit.
-    \item a komponensen belüli rendezés %TODO
-\end{itemize}
-
-Természetesen másfajta normálalakot is választhatunk (például ahol a nagybetűsség az alapértelmezett),
-akár a reguláris kifejezés tulajdonságaitól függően,
-de mindenképpen rendelkeznünk kell bizonyos, egymással konzisztens algoritmusokkal,
-amelyek együtt implementálják az értékkészlethez tartozó rendezési kollációt:
-
-\begin{enumerate}
-    \item karakterláncot és normálalakot egymásba alakító függvényekkel
-    \item normálalakban lévő karakterláncokat összehasonlító komparátorral
-    \item reguláris kifejezést a normálalak szerinti prefix-gráfba alakító algoritmussal
-    \item a prefix-gráfot bejáró, kereső stb. algoritmusokkal
-\end{enumerate}
-
-\todo[inline]{a két- vagy háromrétegű prefix-fa leírása}
-
-\todo[inline]{FUTURE PLAN: az UCA még részletesebb és konfigurálható megvalósítása}
-
-
-
-
-
-
-
-% TODO: svédek: å, ä, ö: base characters
-% https://en.wikipedia.org/wiki/Swedish_alphabet
-
-% Az ötlet az, hogy egyetlen prefix-fa helyett többet hozunk létre.
-% A harmadik a normál prefix-fa, mely az eredeti karaktereket tartalmazza, karakterenként rendezve.
-% A második ennek topológiai egyszerűsítése úgy, hogy a kis-nagybetű különbségeket összevonjuk.
-% Ahol az összevonásnál azonos gyermekelemeket találunk, azok közül csak az egyiket tartjuk meg,
-% de beiktatunk egy szorzó csomópontot (TODO: megmagyarázni).
-% Az első fa szintén a normál prefix-fa egyszerűsítése,
-% de itt minden azonos alapkarakterű karaktert összevonunk.
-% A csomópontok számításánál figyelembe kell venni a szorzókat,
-% amelyek felszorozzák a részfák levél-számát.
-
-% az algoritmus:
-    % - az első fát normál módon érjük el, azonban a leveleknél 1-nél nagyobb számosságok fognak maradni a szorzók miatt
-    % - a második fát le kell szűkíteni az alapkarakterek szerint, ez alternatív számosságokat fog adni, ez alapján tudjuk számolni az alapkarater-fán belüli pozíciókat, itt is 1-nél nagyobb számosságokra lyukadhatunk ki
-    % - a harmadik fát szintén szűkítjük a kisbetűs karakterek szerint
-% a számosságok csak az érintett karakterekre számítandók, és cache-elhetők
-% így elég hatékony algoritmust kapunk
-
-
-
-
-
-
-
-\subsection{EGYÉB DOLGOK, FÁJL STB.}
-
-\todo[inline]{további éértékkészlet-betöltési módok, fájlból stb., monotonic, eloszlás stb.}
 
 \subsection{Full-text indexelt értékkiosztás}
 
@@ -2018,7 +1754,17 @@ Rendezéssel ez esetben nem foglalkozunk, a full-text indexek ezt általában ne
 Látni fogjuk, hogy a bemutatott megoldás könnyen továbbfejleszthető.
 
 Első körben induljunk ki abból, hogy adott egy szólista, a mellékelt $f_i$ előfordulási gyakoriságokkal.
-Az $f_i$ előfordulási gyakoriság szimulálható is Zipf törvényére alapozva\cite{Zipf1942UnityOfNature}.
+Az $f_i$ előfordulási gyakoriság szimulálható is a Zipf-törvényre alapozva.
+A Zipf-törvény egy számos különböző területen fennálló statisztikai jelenség,
+miszerint a diszkrét gyakoriságok általában hatványtörvény szerint rendeződnek (Zipf-eloszlás).
+Vagyis egy (némileg paraméterezhető) törvényszerűséget ad meg arra vonatkozóan,
+hogy a leggyakoribb, második leggyakoribb stb. elem
+milyen gyakorisággal fordul elő a teljes mintában.
+A törvényszerűség meglehetősen egyetemesen fennáll az organikusan alakuló rendszerekben,
+ezt követi például a jövedelmek, városok, állatok stb. méret szerinti gyakorisága.
+Esetünkben azért érdekes, mert a legtöbb természetes nyelvben a szavak gyakorisága is így oszlik el.
+\cite{Zipf1942UnityOfNature}.
+
 A szavakat egyszerűen betűkarakterek sorozataiként fogjuk föl,
 előzetesen függetlenítve a központozás, szövegfelépítés problematikájától.
 
@@ -2074,7 +1820,7 @@ A következő ábrák szemléltetik az eddig leírt szóösszeállítási illetv
   \end{minipage}
   \hspace*{\fill}
 \end{figure}
-
+í
 Egy harmadik egyszerű javítás adódik,
 ha előre ismert, mely néhány (ideálisan kb. 6-8) szó lesz gyakran keresve,
 ezeket teljesen külön kezelhetjük.
@@ -2088,7 +1834,7 @@ Megjegyzem, ha vannak kiemelt szavak, akkor a többi szó halmaza részben vagy 
 akár mesterségesen előállított szavakból is állhat.
 Ekkor egy minta alapján generálunk szavakat
 (on-the-fly, ld. a reguláris kifejezések kapcsán írottakat),
-majd például Zipf törvénye alapján hozzájuk rendeljük a gyakoriságokat.
+majd például a Zipf-törvény alapján hozzájuk rendeljük a gyakoriságokat.
 Ha így járunk el, megspóroljuk a konkrét szavak tárolásának tárhelyigényét.
 
 Egy-egy mezőértékhez még csak a szavak halmazát állítottuk elő.
@@ -2223,33 +1969,6 @@ például egy listafájlból.
 Nagy táblahossznál érdemes lehet ezt indexeltté tenni egy tényleges adatstruktúrával (például B-Tree),
 mivel ilyenkor valószínűleg úgysem a memóriahasználat minimalizálása a cél.
 
-\subsection{RÉGIN REGEXP (előzőbe fésülni)}
-
-\todo[inline]{régi regexp: előzőbe fésülni}
-
-Ha elengedjük a gyors keresés kritériumát,
-akkor a reguláris kifejezés alapján történő értékkiosztást nagyon könnyen megvalósíthatjuk
-egy véges automatával történő véletlenszerű inverz mintaillesztéssel\footnote{
-  A jelenlegi implementáció a \textit{Generex} könyvtárat használja erre.
-},
-a sorindex és a \texttt{TreeRandom}-ból vett seed figyelembevételével.
-
-Ha azonban fenn szeretnénk tartani a gyors keresés lehetőségét,
-szükséges lesz, hogy képezni tudjuk az adott reguláris kifejezésre illeszkedő összes sztring virtuális listáját.
-Azaz bármely $n$ sorindexre elő kell tudnunk állítani az $n$-edik illeszkedő sztringet
-(méghozzá ABC-rendben, nem pedig a reguláris kifejezés szerkezete alapján).
-És fordítva, tetszőleges sztringre meg kell tudni mondani,
-hányadik illeszkedő sztringgel azonos vagy melyikhez van közel, ha nem illeszkedik.
-Ha már van egy ilyen virtuális listánk, azt a kétfázisú értékkiosztással könnyen a kívánt oszloppá alakíthatjuk.
-
-A megoldás a reguláris kifejezések lehetőségeinek csak valamilyen limitált részhalmazát fogja támogatni.
-De még így is bőven lefedi az olyan egyszerű eseteket, mint például a telefonszámok, email-címek stb.
-
-Az ilyen típusú szöveggenerálás részletes bemutatása kimutat a jelen dolgozat keretei közül,
-így ennek ismertetését itt mellőzöm\footnote{
-  Egy egyszerű erre készült prototípus a \texttt{Strex} könyvtár.
-}.
-
 \subsection{Értékkiosztás oszlopok közötti összefüggéssel}
 
 Az oszlopok közötti összefüggésnek számtalan módja lehetséges.
@@ -2363,7 +2082,7 @@ például egymásutáni megbontatlan házszámok tartományként tárolhatók.
 Egy prefix indexhívásnál a megfelelő szintig megyünk le a keresésben,
 a találatok pedig az az alatti levelek lesznek.
 A tényleges rekordokra való leképezést
-a kétfázisú értékkiosztásnál megismerthez hasonló módszerrel végezzük el.
+a kétlépéses értékkiosztásnál megismerthez hasonló módszerrel végezzük el.
 
 A fő hierarchián kívüli mezők értékei és a fa közötti indexelést külön adatstruktúrába generáljuk.
 Változó lehet, hogy a tábla mely szintjén történik meg az irányítószámra való leképezés,
@@ -2433,19 +2152,47 @@ A \texttt{TreeRandom} hierarchia természetéből adódóan a korábbi oszlopok
 továbbra is ugyanazokat a konkrét értékeket fogják szolgáltatni.
 
 
-\section{(SZÉTBONTANI, SOK FEJEZET LÁTSZÓDJON) (+bővíteni, módszertan stb.) Empirikus eredmények}
+\section{Empirikus eredmények}
 
-A HoloDB teljesítményét mind egyedi lekérdezések szintjén,
-mind realisztikus integrált teszt keretében mértem.\footnote{
-    A használt benchmark projekt forráskódjának linkjét megadtam a függelékben.
-}
+\subsection{Mérési módszertan}
+
+Mivel a HoloDB preparálási folyamat nélkül rendelkezésre áll,
+lényegileg azonnal elindul és minimális memóriát fogyaszt,
+ezekben a paraméterekben nem volt értelme összevetni
+a radikálisan eltérő opciókkal.
+Így alapvetően a lekérdezési sebességre koncentráltam,
+azt szűk keresztmetszetében és end-to-end jellegű integrált tesztekkel is megvizsgáltam.
+A performanciával kapcsolatban a várakozás mindössze annyi volt,
+hogy legyen összemérhető a valódi adatbázisokéval.
 A Docker-képek összehasonlítását leszámítva minden esetben
 a HoloDB beágyazott verzióját használtam.
 Az összehasonlítást MySQL-lel (mint az egyik legelterjedtebb szerveradatbázissal)
 és H2-vel (mint a Java környezetben legelterjedtebb beágyazott adatbázissal) valósítottam meg.
+A lekérdezések közvetlen mérésénél az SQL parancsnak a JDBC API-n keresztüli beküldésétől
+az eredménytábla végigiterálásnak végéig eltelt időt mértem.
+Különböző bonyolultságú és válaszméretű lekéréseket vizsgáltam.
 
 Az integrált tesztelést egy Micronaut keretrendszerben implementált
 alkalmazás REST API-n keresztüli hívásával futtattam.
+A Micronaut keretrendszer egy kis erőforrásigényű Java keretrendszer,
+amely minimális erőforrás-lábnyománál fogva a legalkalmasabbnak tűnt a mérésre.
+
+A Spring és Quarkus rendszerekkel szemben a Micronaut már fordítási időben
+tárolja és optimalizálja az alkalmazás menedzselt objektumai közötti függőségeket,
+így általában gyorsabban is indul el, mint az előző kettő,
+így performancia-tesztekre is alkalmasabb.
+
+Az alkalmazás futtatását egy POSIX shell szkript vezérli.
+Egy további Bash szkript az előbbi fájlt hívja többszörösen,
+közben átírja a konfigurációs fájlt, hogy különböző teszteket hajtson végre.
+A bash szkript a futtatási ciklusok között legalább 5 másodperc szünetet vár.
+
+A lekérdezésszintű tesztekhez a H2-t a \texttt{QUERY\_CACHE\_SIZE{=}0} opcióval használtam,
+míg az integrált tesztnél ezt elhagytam az authentikusság kedvéért.
+(A teljes benchmarkért ld.: \autoref{appendix:projectlinks}).
+
+\subsection{Az lekérdezési és integrált tesztek eredménye}
+
 A \ref{fig:benchmarkPage}~ábra felső részén
 az integrált teszt három verziójának eredményei láthatók.
 A \texttt{simple-readonly} teszt főleg egyszerűbb lekérdezéseket tartalmazott,
@@ -2453,13 +2200,10 @@ a \texttt{complex-readonly} teszt ezt néhány összetettebb lekérdezéssel eg�
 A \texttt{complex-writeable} tesztben pedig adatírások,
 majd arra épülő lekérdezések is történtek.
 
-A lekérdezések közvetlen mérésénél az SQL parancsnak a JDBC API-n keresztüli beküldésétől
-az eredménytábla végigiterálásnak végéig eltelt időt mértem.
-Különböző bonyolultságú és válaszméretű lekéréseket vizsgáltam.
-A HoloDB teljesítménye igen jó, amíg kevés adat lekéréséről van szó,
-és drasztikusan romlik, amikor sok adatot kell visszaadni.
-Vagyis a korábban tárgyalt indexelési technikák valóban jól teljesítenek,
-és kulcsfontosságúak a megfelelő teljesítményhez.
+A lekérdezések esetében kevés adatnál a teljesítmény meglepően jó,
+és drasztikusan romlik nagy eredménytábláknál.
+Vagyis a korábban tárgyalt indexelési technikák jól teljesítenek,
+kulcsfontosságúak a megfelelő teljesítményhez.
 Ugyanakkor az adatelérés kevésbé optimális;
 feltehetően mind az adatok számítása, mind az eredménytábla továbbítása jelentősen javítható még.
 
@@ -2470,7 +2214,6 @@ de a base image változtatásával,
 az operációs rendszer és a JRE testreszabásával ez valószínűleg tovább javítható.
 A minden függőséget tartalmazó shadow JAR lényegesen nagyobb, mint a H2-nél,
 ám ez minden bizonnyal jelentősen csökkenthető (ez eddig nem is volt szempont).
-
 
 \cleardoublepage
 
@@ -2775,7 +2518,7 @@ A minden függőséget tartalmazó shadow JAR lényegesen nagyobb, mint a H2-né
 \section{Az eredmények értékelése}
 
 A dolgozatban az adatbázismockolás egy újszerű megközelítését mutattam be.
-Láthattuk, hogy néhány alapvetően egyszerű ötlet kombinálásával lehetséges
+Láthattuk, hogy sok kicsi alapvetően egyszerű ötlet kombinálásával lehetséges
 egy funkcionálisan teljes értékű relációs adatbázist működtetni,
 anélkül, hogy azt ténylegesen tárolni kellene.
 
@@ -2783,10 +2526,9 @@ A prototípus a teszteredmények alapján valóban drasztikusan csökkenti az er
 miközben tisztán deklaratív, snapshot jellegű entitássá teszi a nem-produkciós adatbázist.
 Megmutattam, hogy memóriahasználatban a HoloDB lényegesen kedvezőbb,
 mint a vizsgált alternatívák;
-valamint hogy runtime teljesítménye (nem óriás méretű eredménytáblák esetén)
-összemérhető a valódi adatbázisokéval;
+valamint hogy runtime teljesítménye a legtöbb esetben összemérhető a valódi adatbázisokéval;
 ez pedig a generálási, anonimizálási és egyéb inicializáló lépések kikerülése miatt
-összességében gyorsabb tesztfuttatást tesz lehetővé.
+összességében sokkal gyorsabb tesztfuttatást tesz lehetővé.
 
 A deklaratív konfiguráció átláthatóan, integráltan írja le a sémát és az adatokat,
 kényelmesen verziókezelhető, generálható, előfeldolgozható.
@@ -2797,7 +2539,14 @@ vagy a teljesen izolált automatikus integrációs tesztek.
 
 \section{A tézisek teljesülése}
 
-\todo[inline]{Tézisek teljesülését tételesen vizsgálni}
+A dolgozatban elmondottak igazolják, hogy a felállított tételeink teljesültek:
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% TODO: nyugtázni
+
+\begin{itemize}
+    \item \textbf{Tézis 1: ASDF.} XXXXXXXXXXXXXXXXXXXXXXx.
+    \item \textbf{Tézis 2: FDSA.} XXXXXXXXXXXXXXXXXXXXXXx.
+\end{itemize}
 
 \section{Tervek a közeljövőre}
 
@@ -2862,31 +2611,113 @@ Mindegyik mellett szólnak pro és kontra érvek.
 
 \chapter{Algoritmusok}
 
-\section{Algoritmus 1}
-\label{appendix:algorithm_1}
-
-HELLO
-
-\cleardoublepage
-
-\section{Algoritmus XYZ}
-\label{appendix:algorithm_xyz}
+\phantomsection
+\addcontentsline{toc}{section}{Feistel-hálózat last-zero változat}
 
 \begin{algorithm}[H]
-    \KwData{this text}
-    \KwResult{how to write algorithm with \LaTeX2e }
-    initialization\;
-    \While{not at end of this document}{
-        read current\;
-        \eIf{understand}{
-            go to next section\;
-            current section becomes this one\;
-            }{
-            go back to the beginning of current section\;
-        }
-    }
-    \caption{How to write algorithms}
+\caption{Feistel-hálózat last-zero változat}\label{algorithm:feistel}
+\begin{algorithmic}[1]
+    \State first line
+    \Statex continuing first line
+    \State \Call{Proc}{a1, a2}
+    \State \Output Hello World!
+\end{algorithmic}
 \end{algorithm}
+
+
+\phantomsection
+\addcontentsline{toc}{section}{Nyers szófa összeállítása}
+
+\begin{algorithm}[H]
+\caption{Nyers szófa összeállítása}\label{algorithm:regex_wordtree_create_raw}
+\begin{algorithmic}[1]
+    \State first line
+    \Statex continuing first line
+    \State \Call{Proc}{a1, a2}
+    \State \Output Hello World!
+\end{algorithmic}
+\end{algorithm}
+
+
+\phantomsection
+\addcontentsline{toc}{section}{Kompakt szófa konverziója nyers szófából}
+
+\begin{algorithm}[H]
+\caption{Kompakt szófa konverziója nyers szófából}\label{algorithm:regex_wordtree_create_compact}
+\begin{algorithmic}[1]
+    \State first line
+    \Statex continuing first line
+    \State \Call{Proc}{a1, a2}
+    \State \Output Hello World!
+\end{algorithmic}
+\end{algorithm}
+
+
+\phantomsection
+\addcontentsline{toc}{section}{Szavak iterációja kompakt szófán}
+
+\begin{algorithm}[H]
+\caption{Szavak iterációja kompakt szófán}\label{algorithm:regex_wordtree_iterate}
+\begin{algorithmic}[1]
+    \State first line
+    \Statex continuing first line
+    \State \Call{Proc}{a1, a2}
+    \State \Output Hello World!
+\end{algorithmic}
+\end{algorithm}
+
+
+\phantomsection
+\addcontentsline{toc}{section}{Többszintű fa építése}
+
+\begin{algorithm}[H]
+\caption{Többszintű fa építése}\label{algorithm:regex_wordtree_create_multilevel}
+\begin{algorithmic}[1]
+    \State first line
+    \Statex continuing first line
+    \State \Call{Proc}{a1, a2}
+    \State \Output Hello World!
+\end{algorithmic}
+\end{algorithm}
+
+
+\phantomsection
+\addcontentsline{toc}{section}{Lekérés a többszintű fából}
+
+\begin{algorithm}[H]
+\caption{Lekérés a többszintű fából}\label{algorithm:regex_wordtree_getfrom_multilevel}
+\begin{algorithmic}[1]
+    \State first line
+    \Statex continuing first line
+    \State \Call{Proc}{a1, a2}
+    \State \Output Hello World!
+\end{algorithmic}
+\end{algorithm}
+
+
+% TODO: svédek: å, ä, ö: base characters
+% https://en.wikipedia.org/wiki/Swedish_alphabet
+
+% Az ötlet az, hogy egyetlen prefix-fa helyett többet hozunk létre.
+% A harmadik a normál prefix-fa, mely az eredeti karaktereket tartalmazza, karakterenként rendezve.
+% A második ennek topológiai egyszerűsítése úgy, hogy a kis-nagybetű különbségeket összevonjuk.
+% Ahol az összevonásnál azonos gyermekelemeket találunk, azok közül csak az egyiket tartjuk meg,
+% de beiktatunk egy szorzó csomópontot (TODO: megmagyarázni).
+% Az első fa szintén a normál prefix-fa egyszerűsítése,
+% de itt minden azonos alapkarakterű karaktert összevonunk.
+% A csomópontok számításánál figyelembe kell venni a szorzókat,
+% amelyek felszorozzák a részfák levél-számát.
+
+% az algoritmus:
+    % - az első fát normál módon érjük el, azonban a leveleknél 1-nél nagyobb számosságok fognak maradni a szorzók miatt
+    % - a második fát le kell szűkíteni az alapkarakterek szerint, ez alternatív számosságokat fog adni, ez alapján tudjuk számolni az alapkarater-fán belüli pozíciókat, itt is 1-nél nagyobb számosságokra lyukadhatunk ki
+    % - a harmadik fát szintén szűkítjük a kisbetűs karakterek szerint
+% a számosságok csak az érintett karakterekre számítandók, és cache-elhetők
+% így elég hatékony algoritmust kapunk
+
+
+
+
 
 \cleardoublepage
 
@@ -2896,7 +2727,7 @@ HELLO
 \cleardoublepage
 
 
-\chapter{Projektlinkek}
+\chapter{Projektlinkek}\label{appendix:projectlinks}
 
 \begin{itemize}
     \item GitHub organization: \par \url{https://github.com/miniconnect/}
@@ -2904,7 +2735,8 @@ HELLO
     \item HoloDB projekt: \par \url{https://github.com/miniconnect/holodb}
     \item Docker Hub repository: \par \url{https://hub.docker.com/r/miniconnect/holodb/tags}
     \item \texttt{LargeInteger} benchmark: \par \url{https://github.com/miniconnect/miniconnect-api/tree/master/projects/lang/src/jmh/java/hu/webarticum/miniconnect/lang}
-    \item HoloDB benchmark: \par \url{https://github.com/davidsusu/holodb-tdk/tree/main/benchmark}
+    \item Permutáció-összehasonlító: \par \url{https://github.com/miniconnect/holodb/tree/master/projects/core/src/lab/java/hu/webarticum/holodb/core/lab/permutation}
+    \item HoloDB integrált benchmark: \par \url{https://github.com/davidsusu/holodb-tdk/tree/main/benchmark}
 \end{itemize}
 
 \end{document}
