@@ -19,7 +19,7 @@
 \usepackage{pdflscape}
 \usepackage{fancyvrb}
 \usepackage{algorithm}
-\usepackage[rightComments=false,italicComments=false]{algpseudocodex}
+\usepackage[rightComments=false,italicComments=false,breakable=true]{algpseudocodex}
 \usepackage[backend=bibtex,style=numeric]{biblatex}
 \usepackage[newfloat]{minted}
 \usepackage{todonotes}
@@ -40,19 +40,10 @@
 }
 
 
-%\renewcommand{\algorithmicfont}{\ttfamily}
-%\makeatletter
-%\renewcommand{\ALG@beginalgorithmic}{\ttfamily} % Force monospace for the environment
-%\makeatother
-%\makeatletter
-%\renewcommand{\ALG@beginalgorithmic}{\normalfont\ttfamily}
-%\makeatother
-
 \definecolor{lightyellow}{RGB}{255, 245, 215}
 
 \newcommand{\algorithmref}[1]{\hyperref[algorithm:#1]{\colorbox{lightyellow}{%
 (\textrightarrow~Algoritmus: \nameref*{algorithm:#1})}}}
-
 
 
 \title{HoloDB: Relációs demóadatok on-the-fly generálása deklaratív konfigurációból}
@@ -73,7 +64,6 @@
 
 \setcounter{tocdepth}{2}
 \setcounter{secnumdepth}{2}
-
 
 \begin{document}
 
@@ -363,11 +353,11 @@ A forráskód az itt bemutatottakon túl is sok érdekességet rejt,
 ezért jó szívvel ajánlom a szoftver Git-tárolóját,
 melyet a dolgozat legvégén linkeltem is.
 
+A szoftver Java környezetben készült, ezt egyes esetekben érdemes lehet figyelembe venni.
+
 \section{Alkalmazhatóság}
 
-Fentebb már tisztáztam, mi volt a fő motiváció a szoftver elkészítésében,
-de további alkalmazhatóságokat is lehet találni.
-Ezek közül a legegyértelműbbek:
+A fentiek fényében az alábbi területeken biztosan alkalmazható a szoftver:
 
 \begin{itemize}
     \setlength\itemsep{-0.4em}
@@ -1588,7 +1578,6 @@ Minden csomóponthoz hozzárendeltük a hozzá tartozó részfa leveleinek effek
 ami rekurzióval könnyen számítható.
 Ez az információ már elegendő ahhoz, hogy kikeressük az $n$-edik elemet,
 illetve hogy megkeressük egy adott karakterlánc (megtalált vagy beillesztési) pozícióját.
-\algorithmref{regex_wordtree_iterate}
 
 A kompakt szófában megtalálható különböző részfák száma
 a nyers szófa különböző részfáinak számához képest exponenciálisan megnőhet.
@@ -1722,7 +1711,6 @@ Ezeket a szófákat aztán (virtuális értelemben) egymás alá fűzzük,
 azaz effektíve minden előző szint EOW csomópontja után konkatenáljuk a következő szint fáját.
 Az összevont (például egybeolvadó karakterekhez tartozó) részfák
 többszörös számossággal számítanak, amit jelezni kell.
-\algorithmref{regex_wordtree_create_multilevel}
 
 Az n-edik karakterlánc lekérése úgy történik,
 hogy az egymás alá fűzött fák rendszerében (ami maga is egy nagy faként értelmezhető) navigálunk.
@@ -1755,7 +1743,6 @@ azaz egy adott karakterlánc összes szintbeli nézetének hossza egyezzen az er
 és bármely karaktere a vele azonos pozíción található eredeti karakter derivátuma legyen.
 Mivel csak pozciótartó összehasonlításokra szorítkoztunk,
 ez a megkötés eleve biztosított.
-\algorithmref{regex_wordtree_getfrom_multilevel}
 
 Karakterlánc keresésekor is a fenti szempontokkal egészítjük ki
 a többszintű rendezést nem támogató kompakt fánál látott algoritmus-sémát.
@@ -2665,8 +2652,9 @@ Mindegyik mellett szólnak pro és kontra érvek.
 \addcontentsline{toc}{section}{Feistel-hálózat last-zero változat}
 
 \begin{algorithm}[H]
-\caption{Feistel-hálózat last-zero változat}\label{algorithm:feistel}
+\caption[Feistel-hálózat last-zero változat]{\textbf{\texttt{getFeistelLastZero(index)}} -- Feistel-hálózat last-zero változat}\label{algorithm:feistel}
 \begin{algorithmic}[1]
+    \scriptsize
     \State \Comment{\texttt{blockSize}: blokkméret, ~ $N$: kör-párok száma, ~ \texttt{index}: a lekért pozíció}
     \State \texttt{leftSize, rightSize : int}
     \State \texttt{allBits, leftBits, rightBits, tmpBits, resultBits : bit[]}
@@ -2675,7 +2663,7 @@ Mindegyik mellett szólnak pro és kontra érvek.
     \State \texttt{allBits $\gets$ \Call{indexNumberToBits}{index}}
     \State \texttt{leftBits $\gets$ allBits[0 .. leftSize-1]}
     \State \texttt{rightBits $\gets$ allBits[leftSize .. blockSize-1]}
-    \ForAll{$i \in \{0, \dots, N-1\}$}
+    \ForAll{\texttt{$i$} \textbf{from} \texttt{$0$} \textbf{until} \texttt{$N$}}
         \State \texttt{rightHash $\gets$ \Call{hash}{rightBits, $i$, 0}}
         \State \texttt{tmpBits $\gets$ leftBits.xor(rightHash, leftSize)}
         \State \texttt{leftHash $\gets$ \Call{hash}{tmpBits, $i$, 1}}
@@ -2691,95 +2679,88 @@ Mindegyik mellett szólnak pro és kontra érvek.
 \phantomsection
 \addcontentsline{toc}{section}{Nyers szófa összeállítása}
 
+
 \begin{algorithm}[H]
-\caption{Nyers szófa összeállítása}\label{algorithm:regex_wordtree_create_raw}
+\caption[Nyers szófa összeállítása]{\textbf{\texttt{createRawTrie(regexAstSeq,suffixTree)}} -- Nyers szófa összeállítása}\label{algorithm:regex_wordtree_create_raw}
 \begin{algorithmic}[1]
-    \State first line
-    \Statex continuing first line
-    \State \Call{Proc}{a1, a2}
-    \State \Output Hello World!
+    \scriptsize
+    \State \Comment{\texttt{regexAstSeq}: regex AST szekvencia, \texttt{suffixTree}: suffix-fa, alapértelmezetten \texttt{<EOW>}}
+    \State \texttt{astItem : RegexAstNode}
+    \State \texttt{resultTree, branch : Trie}
+    \State \texttt{branches : Queue<Trie>}
+    \State \texttt{resultTree $\gets$ suffixTree}
+    \ForAll{\texttt{$i$} \textbf{from} \texttt{regexAstSeq.length-1} \textbf{down to} \texttt{$0$}}
+        \State \texttt{astItem $\gets$ regexAstSeq.items[$i$]}
+        \If{\texttt{astItem} \textbf{is} \texttt{QualifiedAstNode}}
+            \State \texttt{astItem $\gets$ \Call{qualifiedAstNodeToAlternation}{astItem}}
+        \EndIf
+        \If{\texttt{astItem} \textbf{is} \texttt{SequenceAstNode}}
+            \State \texttt{resultTree $\gets$ createRawTrie(astItem, suffixTree)}
+        \ElsIf{\texttt{astItem} \textbf{is} \texttt{AlternationAstNode}}
+            \State \texttt{branches $\gets$ \Call{newEmptyQueue}{}}
+            \ForAll{\texttt{branchSeq} \textbf{in} \texttt{astItem.branches}}
+                \State \texttt{branch $\gets$ createRawTrie(astItem, suffixTree)}
+                \State \texttt{branches.enqueue(branch)}
+            \EndFor
+            \State \texttt{resultTree $\gets$ \Call{createTreeFromRootValueAndChildrenQueue}{\Call{newEmptyNodeValue}{},branches}}
+        \Else
+            \State \texttt{resultTree $\gets$ \Call{createTreeFromRootValueAndChildrenQueue}{astItem,\Call{queueOf}{resultTree}}}
+        \EndIf
+    \EndFor
+    \State \texttt{\Return{resultTree}}
 \end{algorithmic}
 \end{algorithm}
 
 
 \phantomsection
-\addcontentsline{toc}{section}{Kompakt szófa konverziója nyers szófából}
+\addcontentsline{toc}{section}{Nyers szófa kompakttá alakítása}
 
 \begin{algorithm}[H]
-\caption{Kompakt szófa konverziója nyers szófából}\label{algorithm:regex_wordtree_create_compact}
+\caption[Nyers szófa kompakttá alakítása]{\textbf{\texttt{convertRawTrieToCompact(parentNodeValue,anchors,children)}} -- \par -- Nyers szófa kompakttá alakítása}\label{algorithm:regex_wordtree_create_compact}
 \begin{algorithmic}[1]
-    \State first line
-    \Statex continuing first line
-    \State \Call{Proc}{a1, a2}
-    \State \Output Hello World!
+    \scriptsize
+    \State \Comment{\texttt{parentNodeValue}: regex AST érték, \texttt{anchors}: horgonyok eddigi szekvenciája, \texttt{children}: következő gyermekelemek}
+    \State \texttt{nextInputs : Array<Trie>}
+    \State \texttt{normalizedNextInputs : SortedMap<CharClassAstNode|EowAstNode, Array<Trie{>}{>}}
+    \State \texttt{nextInputs $\gets$ \Call{collectNextInputs{\textunderscore}Helper}{parentNodeValue,anchors,children}}
+    \State \texttt{normalizedNextInputs $\gets$ \Call{createEmptySortedMap}{}}
+    \ForAll{\texttt{nextInput} \textbf{in} \texttt{nextInputs}}
+        \State \texttt{normalizedNextInputs $\gets$ \Call{mergeIntoNormalizedMap{\textunderscore}OuterHelper}{normalizedNextInputs,nextInput}}
+    \EndFor
+    \ForAll{\texttt{astNode, associatedChildren} \textbf{in} \texttt{normalizedNextInputs}}
+        \State \texttt{TODO}
+    \EndFor
+    \State \texttt{TODO}
 \end{algorithmic}
 \end{algorithm}
 
-
-\phantomsection
-\addcontentsline{toc}{section}{Szavak iterációja kompakt szófán}
-
+\begingroup
+\renewcommand{\thealgorithm}{3/a}
 \begin{algorithm}[H]
-\caption{Szavak iterációja kompakt szófán}\label{algorithm:regex_wordtree_iterate}
+\caption{\textbf{\texttt{collectNextInputs{\textunderscore}Helper(parentNodeValue,anchors,children)}}}
 \begin{algorithmic}[1]
-    \State first line
-    \Statex continuing first line
-    \State \Call{Proc}{a1, a2}
-    \State \Output Hello World!
+    \scriptsize
+    \State \Comment{\texttt{parentNodeValue}: regex AST érték, \texttt{anchors}: horgonyok eddigi szekvenciája, \texttt{children}: következő gyermekelemek}
+    \State \texttt{resultQueue : Queue<Trie>}
+    \State \texttt{subAnchors : Array<AnchorAstNode>}
+    \State \texttt{subChildren : Array<Trie>}
+    \State \texttt{resultQueue $\gets$ \Call{newEmptyQueue}{}}
+    \ForAll{\texttt{childNode} \textbf{in} \texttt{children}}
+        \If{\texttt{childNode.value} \textbf{is} \texttt{AnchorAstNode}}
+            \State \texttt{subAnchors $\gets$ \Call{appendToArray}{anchors,childNode.value}}
+            \State \texttt{subChildren $\gets$ collectNextInputs(parentNodeValue, subAnchors, childNode.children)}
+            \State \texttt{resultQueue.enqueueAll(subChildren)}
+        \ElsIf{\texttt{childNode.value} \textbf{is} \texttt{EmptyAstNode}}
+            \State \texttt{subChildren $\gets$ collectNextInputs(parentNodeValue, anchors, childNode.children)}
+            \State \texttt{resultQueue.enqueueAll(subChildren)}
+        \ElsIf{\texttt{\Call{checkAllAnchorsMatchBetween}{parentNodeValue,childNode.value,anchors}}}
+            \State \texttt{resultQueue.enqueue(childNode)}
+        \EndIf
+    \EndFor
+    \State \texttt{\Call{arrayFromQueue}{resultQueue}}
 \end{algorithmic}
 \end{algorithm}
-
-
-\phantomsection
-\addcontentsline{toc}{section}{Többszintű fa építése}
-
-\begin{algorithm}[H]
-\caption{Többszintű fa építése}\label{algorithm:regex_wordtree_create_multilevel}
-\begin{algorithmic}[1]
-    \State first line
-    \Statex continuing first line
-    \State \Call{Proc}{a1, a2}
-    \State \Output Hello World!
-\end{algorithmic}
-\end{algorithm}
-
-
-\phantomsection
-\addcontentsline{toc}{section}{Lekérés a többszintű fából}
-
-\begin{algorithm}[H]
-\caption{Lekérés a többszintű fából}\label{algorithm:regex_wordtree_getfrom_multilevel}
-\begin{algorithmic}[1]
-    \State first line
-    \Statex continuing first line
-    \State \Call{Proc}{a1, a2}
-    \State \Output Hello World!
-\end{algorithmic}
-\end{algorithm}
-
-
-% TODO: svédek: å, ä, ö: base characters
-% https://en.wikipedia.org/wiki/Swedish_alphabet
-
-% Az ötlet az, hogy egyetlen prefix-fa helyett többet hozunk létre.
-% A harmadik a normál prefix-fa, mely az eredeti karaktereket tartalmazza, karakterenként rendezve.
-% A második ennek topológiai egyszerűsítése úgy, hogy a kis-nagybetű különbségeket összevonjuk.
-% Ahol az összevonásnál azonos gyermekelemeket találunk, azok közül csak az egyiket tartjuk meg,
-% de beiktatunk egy szorzó csomópontot (TODO: megmagyarázni).
-% Az első fa szintén a normál prefix-fa egyszerűsítése,
-% de itt minden azonos alapkarakterű karaktert összevonunk.
-% A csomópontok számításánál figyelembe kell venni a szorzókat,
-% amelyek felszorozzák a részfák levél-számát.
-
-% az algoritmus:
-    % - az első fát normál módon érjük el, azonban a leveleknél 1-nél nagyobb számosságok fognak maradni a szorzók miatt
-    % - a második fát le kell szűkíteni az alapkarakterek szerint, ez alternatív számosságokat fog adni, ez alapján tudjuk számolni az alapkarater-fán belüli pozíciókat, itt is 1-nél nagyobb számosságokra lyukadhatunk ki
-    % - a harmadik fát szintén szűkítjük a kisbetűs karakterek szerint
-% a számosságok csak az érintett karakterekre számítandók, és cache-elhetők
-% így elég hatékony algoritmust kapunk
-
-
-
+\endgroup
 
 
 \cleardoublepage
