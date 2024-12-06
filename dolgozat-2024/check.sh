@@ -10,6 +10,7 @@ cat "${latexFile}" |
     sed -E '/%\\begin\{spellignore\}/,/%\\end\{spellignore\}/d' |
     grep -vE '\\(logo|includegraphics|includesvg|documentlang|todo)\b' |
     sed -E '/\\begin\{(minted)\}/,/\\end\{minted\}/d' |
+    sed -E '/\\iffalse/,/\\fi/d' |
     sed -E 's/\$\-([a-zA-Z]|'"${hunChars}"'){1,7}\b/$/gi' |
     sed -E 's/(mailto:)?[a-zA-Z0-9.]+@[a-zA-Z0-9.]+//g' |
     sed -E 's/\\(texttt|url|href)\{[^{}\\]+\}//g' |

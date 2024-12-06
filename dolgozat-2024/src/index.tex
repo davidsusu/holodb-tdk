@@ -136,8 +136,8 @@ amelynek ráadásul csak egy töredéke lesz érintve egy-egy teszt során.
 
 Számos esetben tehát szükségünk van egy működő adatbázisra,
 de valójában nincs szükségünk igazi adatokra.
-Ez egy paradox helyzet, és felveti annak kérdését, hogy ezekért az átmeneti adatokkal
-azonos súlyban van-e az erőforrásigény.
+Ez egy paradox helyzet, és felveti annak kérdését,
+hogy ezzel az átmeneti tárolással azonos súllyal esik-e latba az erőforrásigény.
 Egyáltalán, van valami abszurd abban, amikor ilyen nagy mennyiségű adatot
 könnyedén lematerializálunk, majd nagyrészt használatlanul eldobjuk.
 Felmerül a kérdés: vajon elkerülhető mindez?
@@ -151,7 +151,7 @@ Mindkettő nehézségekkel és erőforráshasználattal jár.
 Sokkal egyszerűbb lenne az adatbázis szerkezetét egyetlen konfigurációs fájl,
 vagy akár az alkalmazásban lévő adatobjektumok változásával függő viszonyba helyezni.
 
-A dolgozatban elsősorban ezekre a problémára kínálok egy újszerű megoldást.
+A dolgozatban elsősorban ezekre a problémákra kínálok egy újszerű megoldást.
 Mivel a bemutatott szoftver egyúttal egy általános keretrendszer virtuális adattárakhoz,
 számos további alkalmazása is adódhat.
 
@@ -164,16 +164,15 @@ mely a fenti problémafelvetésemre kívánt volna célzott megoldást találni,
 és főképpen nem tudok olyanról, amely ilyesmit már nyújtana.
 Természetesen valaminek a hiányát nehéz bizonyítani,
 és az állítást (egyelőre) pusztán egy sokéves fejlesztői tapasztalat
-empirikus benyomásával tudom alátámasztani.
+során szerzett erőteljes benyomás támasztja alá.
 
 Számomra meglepő, hogy egy ilyen problémára,
 mely ennyire napi szinten érinti fejlesztők, tesztelők, tanulók és mások életét,
-egyelőre csak a legszofisztikáltabb kerülőmegoldások születtek.
+egyelőre csak a legszofisztikáltabb \textit{kerülőmegoldások} születtek.
 Kicsivel lentebb megpróbálom majd megtippelni ennek az okát.
-
-A következőkben végigveszek néhány megközelítést,
+Előtte még végigveszek néhány megközelítést,
 melyek valamennyire kapcsolódnak a fenti problémához,
-hasonló akarnak megoldani.
+valamelyest hasonlót akarnak megoldani.
 
 \subsection{Kérések mockolása on-the-fly}
 
@@ -191,11 +190,11 @@ majd random jelleggel elő kell állítani bizonyos számú, ezeknek a követelm
 
 Ebbe a kategóriába sorolhatók az úgynevezett faker segédkönyvtárak is.
 Ezek olyan véletlenadat-generálók,
-melyek bizonyos gyakori entitástípusok adatait (pl. személynevek, e-mail, dátum) szolgáltatja.
+melyek bizonyos gyakori entitástípusok adatait (pl. személynevek, e-mail, dátum) szolgáltatják.
 
 Ez a megközelítés természetesen nem is törekszik arra,
 hogy koherens eredményt adjon több lekérés esetén,
-tehát csak olyan esetben használható, ahol a lekérések nem épülnek egymásra.
+tehát csak olyankor használható, ahol a lekérések nem épülnek egymásra.
 Cserébe erőforrásigénye csekély, nincs szükség az adatok tényleges tárolására.
 
 \subsection{Seed-alapú virtuális világok}
@@ -311,7 +310,7 @@ A hosszabb válaszban néhány tényező összejátszását sorolnám föl:
     \item \textbf{érdekhiány}: a releváns területen működő nagyobb vendorok elsősorban
           erőforrásokat adnak bérbe, és az általuk fejlesztett architektúrák (történetileg érthetően)
           elsősorban az ezeken futó tényleges adatbázisok kezelését kell megoldják;
-          nincs tehát nyomás jelentősen más típusú termékkel való kísérletezésre
+          nincs tehát nyomás jelentősen más típusú termékkel való kísérletezésre.
 \end{itemize}
 
 \section{Az új megközelítés}
@@ -2566,7 +2565,7 @@ vagy a teljesen izolált automatikus integrációs tesztek.
     \item \textbf{Azonnal elindul, nincs számottevő preparálási folyamat.} Valóban:
           alapértelmezetten pusztán a konfiguráció betöltése történik meg az indításkor.
     \item \textbf{Kevés memóriát foglal, az adatokat on-the-fly számítja.} Valóban:
-          maguk az adatok egyáltalán nincsenek tárolva, lekérdezéskor kerülnek számításra,ű
+          maguk az adatok egyáltalán nincsenek tárolva, lekérdezéskor kerülnek számításra,
           néhány esetben kisebb adatstruktúrák generálódnak (pl. regex trie),
           melyek mérete a táblamérettől független.
     \item \textbf{Könnyen és rugalmasan konfigurálható.} Valóban:
