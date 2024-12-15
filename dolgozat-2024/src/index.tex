@@ -1193,7 +1193,7 @@ Amikor egy adott $i$ értékre a Feistel-hálózattól az intervallumon kívül 
 azaz amelyre $p \geq n$ ($p < N$), akkor újra meghívjuk a permutáló függvényt $p$-re.
 Addig ismételjük a hívást, míg végre $n$-nél kisebb szám nem születik.
 A páratlan blokkméret lehetősége a hatékonyság szempontjából is fontos,
-mivel jelentősen a Feistel-hálózatra történő újrahívások számát.
+mivel jelentősen csökkenti a Feistel-hálózatra történő újrahívások számát.
 
 A rejection sampling nem minden implementációnál hatékony,
 de pontosan ezért vezettük be a \texttt{resized(LargeInteger)} metódust
@@ -2715,21 +2715,30 @@ Mindegyik mellett szólnak pro és kontra érvek.
 \addcontentsline{toc}{section}{Nyers szófa kompakttá alakítása}
 
 \begin{algorithm}[H]
-\caption[Nyers szófa kompakttá alakítása]{\textbf{\texttt{convertRawTrieToCompact(parentNodeValue,anchors,children)}} -- \par -- Nyers szófa kompakttá alakítása}\label{algorithm:regex_wordtree_create_compact}
+\caption[Nyers szófa kompakttá alakítása]{\textbf{\texttt{convertRawTrieToCompact(parentNodeValue,children)}} -- \par -- Nyers szófa kompakttá alakítása}\label{algorithm:regex_wordtree_create_compact}
 \begin{algorithmic}[1]
     \scriptsize
-    \State \Comment{\texttt{parentNodeValue}: regex AST érték, \texttt{anchors}: horgonyok eddigi szekvenciája, \texttt{children}: következő gyermekelemek}
-    \State \texttt{nextInputs : Array<Trie>}
+    \State \Comment{\texttt{parentNodeValue}: regex AST érték, \texttt{children}: feldolgozandó gyermekelemek}
+    \State \texttt{resultQueue, subQueue : Queue<Trie>}
+    \State \texttt{nextInputs, subResultChildren : Array<Trie>}
     \State \texttt{normalizedNextInputs : SortedMap<CharClassAstNode|EowAstNode, Array<Trie{>}{>}}
-    \State \texttt{nextInputs $\gets$ \Call{collectNextInputs{\textunderscore}Helper}{parentNodeValue,anchors,children}}
+    \State \texttt{noAnchor : Array<AnchorAstNode>}
+    \State \texttt{noAnchor $\gets$ \Call{newEmptyArray}}
+    \State \texttt{nextInputs $\gets$ \Call{collectNextInputs{\textunderscore}Helper}{parentNodeValue,noAnchor,children}}
     \State \texttt{normalizedNextInputs $\gets$ \Call{createEmptySortedMap}{}}
     \ForAll{\texttt{nextInput} \textbf{in} \texttt{nextInputs}}
         \State \texttt{normalizedNextInputs $\gets$ \Call{mergeIntoNormalizedMap{\textunderscore}OuterHelper}{normalizedNextInputs,nextInput}}
     \EndFor
+    \State \texttt{resultQueue $\gets$ \Call{newEmptyQueue}{}}
     \ForAll{\texttt{astNode, associatedChildren} \textbf{in} \texttt{normalizedNextInputs}}
-        \State \texttt{TODO}
+        \State \texttt{subQueue $\gets$ \Call{newEmptyQueue}{}}
+        \ForAll{\texttt{associatedChild} \textbf{in} \texttt{associatedChildren}}
+            \State \texttt{subQueue.enqueueAll(associatedChild.children)}
+        \EndFor
+        \State \texttt{subResultChildren $\gets$ \Call{convertRawTrieToCompact}{astNode,\Call{arrayFromQueue}{subQueue}}}
+        \State \texttt{resultQueue.enqueue(\Call{createTreeFromRootValueAndChildrenQueue}{astNode,subResultChildren})}
     \EndFor
-    \State \texttt{TODO}
+    \State \texttt{\Call{arrayFromQueue}{resultQueue}}
 \end{algorithmic}
 \end{algorithm}
 
@@ -2739,7 +2748,7 @@ Mindegyik mellett szólnak pro és kontra érvek.
 \caption{\textbf{\texttt{collectNextInputs{\textunderscore}Helper(parentNodeValue,anchors,children)}}}
 \begin{algorithmic}[1]
     \scriptsize
-    \State \Comment{\texttt{parentNodeValue}: regex AST érték, \texttt{anchors}: horgonyok eddigi szekvenciája, \texttt{children}: következő gyermekelemek}
+    \State \Comment{\texttt{parentNodeValue}: regex AST érték, \texttt{anchors}: horgonyok eddigi szekvenciája, \texttt{children}: feldolgozandó gyermekelemek}
     \State \texttt{resultQueue : Queue<Trie>}
     \State \texttt{subAnchors : Array<AnchorAstNode>}
     \State \texttt{subChildren : Array<Trie>}
@@ -2747,10 +2756,10 @@ Mindegyik mellett szólnak pro és kontra érvek.
     \ForAll{\texttt{childNode} \textbf{in} \texttt{children}}
         \If{\texttt{childNode.value} \textbf{is} \texttt{AnchorAstNode}}
             \State \texttt{subAnchors $\gets$ \Call{appendToArray}{anchors,childNode.value}}
-            \State \texttt{subChildren $\gets$ collectNextInputs(parentNodeValue, subAnchors, childNode.children)}
+            \State \texttt{subChildren $\gets$ \Call{collectNextInputs{\textunderscore}Helper}{parentNodeValue, subAnchors, childNode.children}}
             \State \texttt{resultQueue.enqueueAll(subChildren)}
         \ElsIf{\texttt{childNode.value} \textbf{is} \texttt{EmptyAstNode}}
-            \State \texttt{subChildren $\gets$ collectNextInputs(parentNodeValue, anchors, childNode.children)}
+            \State \texttt{subChildren $\gets$ \Call{collectNextInputs{\textunderscore}Helper}{parentNodeValue, anchors, childNode.children}}
             \State \texttt{resultQueue.enqueueAll(subChildren)}
         \ElsIf{\texttt{\Call{checkAllAnchorsMatchBetween}{parentNodeValue,childNode.value,anchors}}}
             \State \texttt{resultQueue.enqueue(childNode)}
