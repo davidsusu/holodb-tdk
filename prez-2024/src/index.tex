@@ -1,0 +1,1286 @@
+\pdfsuppresswarningpagegroup=1
+
+\PassOptionsToPackage{dvipsnames}{xcolor}
+
+\documentclass[
+    %handout,
+]{beamer}
+
+\usetheme{Boadilla}
+\usecolortheme{seahorse}
+\usepackage{pifont}
+\usepackage{pgfplots}
+\usepackage{svg}
+\usepackage{t1enc}
+\usepackage{bbding}
+\usepackage{enumitem}
+\usepackage{fontawesome5}
+\usepackage{minted}
+\usepackage[hungarian]{babel}
+\usepackage[none]{hyphenat}
+
+\pgfplotsset{
+    tick label style = {font = {\fontsize{8 pt}{14 pt}\selectfont}},
+    every axis label = {font = {\fontsize{8 pt}{14 pt}\selectfont}},
+    label style = {font = {\fontsize{10 pt}{20pt}\selectfont}},
+    legend style = {font = {\fontsize{6 pt}{10 pt}\selectfont}},
+}
+
+\setenumerate{
+    label=\arabic*.,
+    itemsep=3pt,
+    topsep=3pt,
+}
+  
+\setitemize{
+    label=\usebeamerfont*{itemize item}%
+    \usebeamercolor[fg]{itemize item}
+    \usebeamertemplate{itemize item}
+}
+  
+\newlist{logolist}{itemize}{1}
+\setlist[logolist,1]{
+    label={},
+    leftmargin=4em
+}
+
+\titlegraphic{\includegraphics[width=2cm]{elte_cimer_szines}}
+\title[HoloDB]{HoloDB: szintetikus adatok on-the-fly szolgáltatása relációs adatbázisként}
+\author[Horváth Dávid]{Horváth Dávid \\ ~ \\ { \footnotesize Témavezető: Dr. Vincellér Zoltán, Mesteroktató }}
+\institute[ELTE-IK]{ELTE Informatikai Kar, Információs Rendszerek Tanszék}
+\date{2023}
+
+\newcommand{\slidetitle}[2]{\frametitle{{\small #1 ~ \ding{226} ~ } \normalsize \textbf{#2} }}
+
+\newcommand{\greencheck}{{\color{green!65!black}\ding{51}}}
+
+\begin{document}
+\beamertemplatenavigationsymbolsempty
+
+\frame{\titlepage}
+
+% \AtBeginSection[]
+% {
+%     \begin{frame}
+%         \frametitle{Tartalom}
+%         \tableofcontents[currentsection]
+%     \end{frame}
+% }
+
+\begin{frame}
+    \frametitle{Tartalom}
+    \tableofcontents
+\end{frame}
+
+\section{Bevezetés: adatbázist akarok, most!}
+\def\sectionshorttitle{Bevezetés}
+
+\begin{frame}
+    \slidetitle{\sectionshorttitle}{Adatbázist akarok, most!}
+    
+    \begin{logolist}
+        \setlength\itemsep{1.2em}
+        \item[\raisebox{-0.75em}{\includegraphics[width=2em,height=2em]{image/dbnow-mock}}]
+            \begin{minipage}[c]{\linewidth}~~\textbf{mockolás, fejlesztés} \par ~~~~
+                csak legyen ott valami, hogy fusson
+            \end{minipage}
+        \item[\raisebox{-0.75em}{\includegraphics[width=2em,height=2em]{image/dbnow-test}}]
+            \begin{minipage}[c]{\linewidth}~~\textbf{integrált tesztelés} \par ~~~~
+                kellenének adatok a tesztfuttatáshoz
+            \end{minipage}
+        \item[\raisebox{-0.75em}{\includegraphics[width=2em,height=2em]{image/dbnow-prot}}]
+            \begin{minipage}[c]{\linewidth}~~\textbf{prototípusfejlesztés, kísérletezés, adatbázis-tervezés} \par ~~~~
+                szeretnénk folyamatosan újragondolni
+            \end{minipage}
+        \item[\raisebox{-0.75em}{\includegraphics[width=2em,height=2em]{image/dbnow-pres}}]
+            \begin{minipage}[c]{\linewidth}~~\textbf{bemutatók, koncepciótervek} \par ~~~~
+                jól jönne egy értelmes adathalmaz a prezentációhoz
+            \end{minipage}
+        \item[\raisebox{-0.75em}{\includegraphics[width=2em,height=2em]{image/dbnow-stud}}]
+            \begin{minipage}[c]{\linewidth}~~\textbf{oktatás} \par ~~~~
+                egységes homokozó adatbázis a tanulóknak
+            \end{minipage}
+    \end{logolist}
+\end{frame}
+
+\begin{frame}
+    \slidetitle{\sectionshorttitle}{Tesztadatbázis biztosításának nehézségei}
+    
+    Egy adatbázisszerver ad hoc odateremtése nem egyszerű.
+    
+    \vspace{1.5em}
+
+    \centering
+    
+    \includegraphics[height=0.4\textwidth]{diagram/database-tasks}
+\end{frame}
+
+% \begin{frame}
+%     \slidetitle{\sectionshorttitle}{Alapmegállapítás}
+%     
+%     \centering
+%     
+%     \includegraphics[height=0.22\textwidth]{diagram/test-with-data}
+%     
+%     \vspace{1cm}
+%     
+%     \begin{minipage}[b]{0.8\textwidth}
+%         \justifying
+%         Igen gyakran ütközünk abba a problémába,
+%         hogy adott struktúrájú és szemantikájú,
+%         viszonylag rövid életű adatbázist kell biztosítani,
+%         a produkciós adatokra vonatkozó speciális követelmények nélkül.
+%     \end{minipage}
+% \end{frame}
+
+\section{Körkép: a létező (kerülő)megoldások}
+\def\sectionshorttitle{Körkép}
+
+\begin{frame}
+    \slidetitle{\sectionshorttitle}{Bevett megközelítések}
+    
+    \begin{itemize}
+        \setlength\itemsep{1.5em}
+        \item produkciós adatbázis másolatának használata
+        \item anonimizálás
+        \item adatgenerálás
+        \item lekérdezések ad hoc mockolása
+    \end{itemize}
+\end{frame}
+
+\begin{frame}
+    \slidetitle{\sectionshorttitle}{Néhány nagyteljesítményű megoldás}
+    
+    \begin{logolist}
+        \setlength\itemsep{1.7em}
+        \item[{\includegraphics[width=2em,height=2em]{image/mostly-ai}}]
+            \begin{minipage}[c]{\linewidth}\textbf{MOSTLY AI} \par ~~ { \footnotesize
+                ``Synthetic data is more accessible, more flexible, and simply... smarter.'' }
+            \end{minipage}
+        \item[{\includegraphics[width=2em,height=2em]{image/tonic}}]
+            \begin{minipage}[c]{\linewidth}\textbf{Tonic} \par ~~ { \footnotesize
+                ``Generate data that is both useful and secure for everyone on your team.'' }
+            \end{minipage}
+        \item[{\includegraphics[width=2em,height=2em]{image/genrocket}}]
+            \begin{minipage}[c]{\linewidth}\textbf{GenRocket} \par ~~ { \footnotesize
+                ``Automated Data Delivery in Any Volume, Variety, and Format'' }
+            \end{minipage}
+        \item[{\includegraphics[width=2em,height=2em]{image/delphix}}]
+            \begin{minipage}[c]{\linewidth}\textbf{Delphix} \par ~~ { \footnotesize
+                ``Your biggest application lifecycle data challenges -- solved'' }
+            \end{minipage}
+    \end{logolist}
+\end{frame}
+
+\begin{frame}
+    \slidetitle{\sectionshorttitle}{Egy lehetséges alternatív ihletforrás}
+    
+    \centering
+    
+    \includegraphics[height=0.55\textwidth]{image/nomanssky}
+    
+    \smallskip
+    
+    Részlet a \textit{No Man's Sky Origins} játékból (hivatalos trailer)
+\end{frame}
+
+% \section{Egy új megoldás körvonalai: HoloDB}
+% \def\sectionshorttitle{HoloDB}
+
+\section{A HoloDB architektúrája}
+\def\sectionshorttitle{Architektúra}
+
+\begin{frame}
+    \slidetitle{\sectionshorttitle}{Elvárások egy új megoldással szemben}
+    
+    \begin{itemize}
+        \setlength\itemsep{0.5em}
+        \item {\color{red}relációs} adatmodellre épül
+        \item {\color{red}deklaratív}, finomhangolható, könnyen bővíthető
+        \item nem szükséges forrásadatbázis, de mintaként használható
+        \item {\color{red}nincs preparálás}i folyamat, szinte azonnal elindul
+        \item óriás adatmennyiséget is képes szimulálni, szinte {\color{red}tárhelyigény nélkül}
+        \item az adatokat csak elérésükkor, on-the-fly számítja
+        \item indexeket szolgáltat, ahol egyébként is elvárható lenne
+        \item a runtime teljesítmény kielégítő
+        \item determinisztikus, {\color{red}konzisztens}, skálázható
+        \item opcionálisan írható
+    \end{itemize}
+\end{frame}
+
+% \begin{frame}
+%     \slidetitle{\sectionshorttitle}{Mit tapasztal a felhasználó?}
+%     
+%     \begin{enumerate}
+%         \setlength\itemsep{1em}
+%         \item egyetlen átlátható, deklaratív {\color{red}konfigurációs fájl}ban minden megadható
+%         \item {\color{red}nincs adatgenerálás}, anonimizálás vagy egyéb preparálási folyamat
+%         \item az adatbázis {\color{red}kis tárhelyigénnyel} fut
+%         \item az adatbázis úgy viselkedik, {\color{red}mint egy valós} relációs adatbázis
+%         \item a lekérdezések {\color{red}elfogadható idő} alatt lefutnak
+%     \end{enumerate}
+% \end{frame}
+
+% \section{A HoloDB architektúrája}
+% \def\sectionshorttitle{Architektúra}
+
+\begin{frame}
+    \slidetitle{\sectionshorttitle}{Alapvető adattípus: LargeInteger}
+    
+    \begin{minipage}[t]{0.6\textwidth}
+        \centering
+        
+        \vspace{0.5em}
+        
+        \begin{itemize}
+            \setlength\itemsep{0.5em}
+            \item kis és óriás egészekkel is működik
+            \item a konverzió automatikus és egyértelmű
+            \item kis számokon gyors (\texttt{long} aritmetika)
+            \item memóriaigénye minimális
+            \item duplikálja a \texttt{BigInteger} metódusait
+            \item további hasznos metódusokkal bővíti
+            \item nincsenek függőségei
+        \end{itemize}
+    \end{minipage}%
+    \begin{minipage}[t]{0.4\textwidth}
+        \centering
+        
+        \vspace{0.05em}
+        
+        \begin{tikzpicture}[font=\footnotesize]
+            \begin{axis}[
+                    symbolic x coords={primitive long,,LargeInteger,,BigInt (Scala),,BigInteger},
+                    xticklabel style={rotate=60,anchor=north east},
+                    xtick={primitive long,LargeInteger,BigInt (Scala),BigInteger},
+                    ylabel={Futásidő (ns)},
+                    y label style={at={(0.12,0.5)}},
+                    width={0.9\textwidth},
+                    height=5cm,
+                    ymajorgrids,
+                    ymin=0,
+                    ymax=160,
+                    bar width=0.5cm,
+                    enlarge x limits=0.2,
+                    nodes near coords,
+                    nodes near coords align={vertical},
+                ]
+                \addplot[ybar,fill=cyan] coordinates { (primitive long,27) };
+                \addplot[ybar,fill=orange] coordinates { (LargeInteger,32) };
+                \addplot[ybar,fill=cyan] coordinates { (BigInt (Scala),42) };
+                \addplot[ybar,fill=cyan] coordinates { (BigInteger,126) };
+            \end{axis}
+        \end{tikzpicture}
+    \end{minipage}
+    
+    \begin{flushright}
+        { \footnotesize Benchmark: kis számokon végzett sokféle művelet ~~~~~ }
+    \end{flushright}
+\end{frame}
+
+\begin{frame}
+    \slidetitle{\sectionshorttitle}{Alapvető adattípus: TreeRandom}
+    
+    \begin{minipage}[c]{0.5\textwidth}
+        \vspace{0.5em}
+        
+        {\color{beamer@blendedblue}Hierarchikus véletlengenerátor}
+        
+        \vspace{0.2cm}
+        
+        \begin{itemize}
+            \item egyenlő példány: egyező kimenet
+            \item kulcs megadásával alpéldány
+            \item egyenlő kulcs: egyenlő alpéldány
+        \end{itemize}
+
+        \vspace{0.7cm}
+        
+        {\color{beamer@blendedblue}Gyenge követelmények}
+
+        \vspace{0.2cm}
+        
+        \begin{itemize}
+            \item véletlenszerű kimenetet ad
+            \item eltérő példány: eltérő kimenet
+        \end{itemize}
+
+        \begin{overprint}
+            \onslide<7>\begin{flushright}
+                \vspace{2.5em}
+                
+                { \tiny \color{BrickRed}
+                    \texttt{871121}{\color{RoyalPurple},}%
+                    \texttt{"schema1"}{\color{RoyalPurple},}%
+                    \texttt{"table1"}{\color{RoyalPurple},}%
+                    \texttt{"description"}{\color{RoyalPurple},}%
+                    \texttt{3}{\color{RoyalPurple},}%
+                    \texttt{"text"} {\color{RoyalPurple}$\rightarrow$}
+                    seed
+                }
+            \end{flushright}
+        \end{overprint}
+    \end{minipage}%
+    \begin{minipage}[c]{0.5\textwidth}
+        \begin{overprint}
+            \onslide<2>\centerline{\includegraphics[width=0.9\textwidth]{diagram/treerandom-0}}
+            \onslide<3>\centerline{\includegraphics[width=0.9\textwidth]{diagram/treerandom-1}}
+            \onslide<4>\centerline{\includegraphics[width=0.9\textwidth]{diagram/treerandom}}
+            \onslide<5>\centerline{\includegraphics[width=0.9\textwidth]{diagram/treerandom-indexed}}
+            \onslide<6->\centerline{\includegraphics[width=0.9\textwidth]{diagram/treerandom-nonindexed}}
+        \end{overprint}
+    \end{minipage}
+\end{frame}
+
+\begin{frame}
+    \slidetitle{\sectionshorttitle}{Vázlatos architektúraábra}
+    
+    \centering
+    
+    \begin{overprint}
+        \onslide<1>\centerline{\includegraphics[height=0.65\textwidth]{diagram/simplearch-0}}
+        \onslide<2>\centerline{\includegraphics[height=0.65\textwidth]{diagram/simplearch-1}}
+    \end{overprint}
+\end{frame}
+
+\begin{frame}
+    \slidetitle{\sectionshorttitle}{Storage API}
+    
+    \begin{minipage}[c]{0.5\textwidth}
+        \begin{itemize}
+            \item \texttt{Schema}
+            \item \texttt{Table}
+            \item \texttt{Column}
+            \item \texttt{ColumnDefinition}
+            \item {\only<2>{\color{beamer@blendedblue}}\texttt{Source}}
+            \item \texttt{Row}
+            \item \texttt{TableIndex}
+            \item \texttt{FulltextIndex}
+            \item \texttt{SpatialIndex}
+            \item \texttt{TableSelection}
+        \end{itemize}
+    \end{minipage}%
+    \begin{minipage}[c]{0.5\textwidth}
+        \begin{overprint}
+            \onslide<2>\centerline{\includegraphics[width=0.9\textwidth]{diagram/storage-source}}
+        \end{overprint}
+    \end{minipage}
+\end{frame}
+
+\begin{frame}
+    \slidetitle{\sectionshorttitle}{Csak-olvasható réteg}
+    
+    A teljes storage API-t valósítja meg a következő követelmények mellett:
+    
+    \vspace{0.5cm}
+    
+    \begin{itemize}
+        \setlength\itemsep{1.5em}
+        \item \textbf{Lekérdezési konzisztencia}:
+            felépíthető egy olyan tényleges immutábilis relációs adatbázis (M),
+            hogy minden lehetséges relációs lekérdezés esetében,
+            amely a közös sémára (S) értelmes, a virtuális és a tényleges adatbázis
+            esetében visszaadott eredménytábla megegyezik.
+        \item \textbf{Megkötések kielégítése}:
+            az S séma teljesíti a virtuális adatbázis felhasználói konfigurációját (C),
+            valamint az M-ben szereplő adatok tulajdonságai illeszkednek a C-ben leírt megkötésekre.
+    \end{itemize}
+\end{frame}
+
+\begin{frame}
+    \slidetitle{\sectionshorttitle}{Írhatósági réteg}
+    
+    {\color{beamer@blendedblue}A \texttt{DiffTable} dekorátor}
+    
+    \begin{itemize}
+        \item csak olvassa az alárendelt táblaobjektumot
+        \item amíg nincs módosítás, átlátszóan működik
+        \item memóriában tárolja a módosításokat
+        \item szükség szerint kiegészíti a lekérést és összefésüli az eredménytáblát
+    \end{itemize}
+    
+    \vspace{0.4cm}
+    
+    {\color{beamer@blendedblue}Tranzakciókezelés}
+    
+    \begin{itemize}
+        \item kétféle tranzakciós stratégia: írási ablakok vagy MVCC
+        \item kétféle commit mód: \texttt{AUTOCOMMIT} vagy explicit lockolás
+        \item mindegyik változat ACID-kompatibilis
+        \item nagyon sok írási művelet esetén nem igazán hatékony
+    \end{itemize}
+\end{frame}
+
+\section{A szűk keresztmetszet: értékkiosztások}
+\def\sectionshorttitle{Értékkiosztások}
+
+% \begin{frame}
+%     \slidetitle{\sectionshorttitle}{Az értékkiosztások problémaköre}
+%     
+%     \begin{itemize}
+%         \setlength\itemsep{1em}
+%         \item \texttt{Source} interfész
+%         \item oszloporientáltság
+%         \item adatelérés (random access)
+%         \item ha lehet, keresés és rendezés (reverse index)
+%         \item $NULL$ értékek
+%         \item előfordulási gyakoriságok
+%         \item esetenként többoszlopos
+%     \end{itemize}
+% \end{frame}
+
+\begin{frame}
+    \slidetitle{\sectionshorttitle}{Főbb egyoszlopos értékkiosztási típusok}
+
+    {\color{beamer@blendedblue}Nem indexelt}
+    
+    \begin{itemize}
+        \item egyszerű/strukturált szöveg
+        \item strukturált adat
+        \item kép
+        \item jelszó-hash
+        \item random BLOB/CLOB
+    \end{itemize}
+    
+    \vspace{0.4cm}
+    
+    {\color{beamer@blendedblue}Indexelt}
+    
+    \begin{itemize}
+        \item számláló (például numerikus kulcsokhoz)
+        \item időbélyegek, adott eloszlással és zajjal
+        \item full-text indexelt szövegek
+        \item { \only<2>{\color{red}\textbf} { általános kétfázisú értékkiosztás } }
+    \end{itemize}
+    
+\end{frame}
+
+\begin{frame}
+    \slidetitle{\sectionshorttitle}{Általános kétfázisú értékkiosztás}
+    
+    \centering
+    
+    \includegraphics[height=0.5\textwidth]{diagram/distribution}
+    
+    Kétfázisú értékkiosztás alapelve: \par
+    visszafejthető disztribúció és permutáció kompozíciója
+\end{frame}
+
+\begin{frame}
+    \slidetitle{\sectionshorttitle}{Kétfázisú értékkiosztás: adatlekérés}
+    
+    \centering
+    
+    \begin{overprint}
+        \onslide<1>\centerline{\includegraphics[height=0.45\textwidth]{diagram/getvalue-0}}
+        \onslide<2>\centerline{\includegraphics[height=0.45\textwidth]{diagram/getvalue-1}}
+        \onslide<3>\centerline{\includegraphics[height=0.45\textwidth]{diagram/getvalue-2}}
+        \onslide<4>\centerline{\includegraphics[height=0.45\textwidth]{diagram/getvalue-3}}
+        \onslide<5>\centerline{\includegraphics[height=0.45\textwidth]{diagram/getvalue-4}}
+        \onslide<6->\centerline{\includegraphics[height=0.45\textwidth]{diagram/getvalue-5}}
+    \end{overprint}
+    
+    \hspace{0.7cm}
+    
+    Lekövetjük, melyik érték képződik a virtuális értéklista adott pozíciójára
+\end{frame}
+
+\begin{frame}
+    \slidetitle{\sectionshorttitle}{Kétfázisú értékkiosztás: keresés}
+    
+    \centering
+    
+    \begin{overprint}
+        \onslide<1>\centerline{\includegraphics[height=0.45\textwidth]{diagram/findvalue-0}}
+        \onslide<2>\centerline{\includegraphics[height=0.45\textwidth]{diagram/findvalue-1}}
+        \onslide<3>\centerline{\includegraphics[height=0.45\textwidth]{diagram/findvalue-2}}
+        \onslide<4->\centerline{\includegraphics[height=0.45\textwidth]{diagram/findvalue-3}}
+    \end{overprint}
+    
+    \vspace{0.7cm}
+    
+    Eset: az érték szerepel az oszlop virtuális értéklistájában
+\end{frame}
+
+\begin{frame}
+    \slidetitle{\sectionshorttitle}{Kétfázisú értékkiosztás: nincs találat}
+    
+    \centering
+    
+    \begin{overprint}
+        \onslide<1>\centerline{\includegraphics[height=0.45\textwidth]{diagram/findvalue-0}}
+        \onslide<2>\centerline{\includegraphics[height=0.45\textwidth]{diagram/findvalue2-1}}
+        \onslide<3>\centerline{\includegraphics[height=0.45\textwidth]{diagram/findvalue2-2}}
+    \end{overprint}
+    
+    \vspace{0.7cm}
+    
+    Eset: az érték nem található, mert nincs kiosztva
+\end{frame}
+
+\begin{frame}
+    \slidetitle{\sectionshorttitle}{Kétfázisú értékkiosztás: nincs ilyen érték}
+    
+    \centering
+    
+    \begin{overprint}
+        \onslide<1>\centerline{\includegraphics[height=0.45\textwidth]{diagram/findvalue-0}}
+        \onslide<2>\centerline{\includegraphics[height=0.45\textwidth]{diagram/findvaluenone-1}}
+        \onslide<3>\centerline{\includegraphics[height=0.45\textwidth]{diagram/findvaluenone-2}}
+    \end{overprint}
+    
+    \vspace{0.7cm}
+    
+    Eset: a keresett érték nincs az értékkészletben
+\end{frame}
+
+\begin{frame}
+    \slidetitle{\sectionshorttitle}{Kétfázisú értékkiosztás: értéksáv keresése}
+    
+    \centering
+    
+    \includegraphics[height=0.45\textwidth]{diagram/findvaluerange}
+    
+    \vspace{0.7cm}
+    
+    Eset: keresés értéksávra; a hiányzó határoló érték pozíciója is fontos
+\end{frame}
+
+\section{Konfiguráció és bővítés}
+\def\sectionshorttitle{Konfiguráció és bővítés}
+
+\begin{frame}
+    \slidetitle{\sectionshorttitle}{A konfiguráció jellemzői}
+    
+    \begin{itemize}
+        \setlength\itemsep{0.5em}
+        \item konfigurációs fájllal leírható (alapértelmezetten {\color{red}YAML})
+        \item {\color{red}deklaratív}, átlátható
+        \item a sémát és az adattartalmat integráltan írja le
+        \item a gyökér-\textt{seed} változtatásával minden {\color{red}újrakeverhető}
+        \item minden lényeges paraméter állítható
+        \item az igények nagy része lefedhető a beépített lehetőségekkel
+        \item ugyanakkor {\color{red}egyedi működés} is beemelhető
+        \item JPA entitásokra helyezett annotációkkal is definiálható
+        \item megfelelő heurisztikákkal létező adatbázisról is mintázható
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+    \slidetitle{\sectionshorttitle}{Konfiguráció-példa}
+    
+    \centering
+    
+    \begin{minipage}[c]{0.47\textwidth}
+        \centering
+        
+        \begin{minted}[
+            fontsize=\tiny,
+            framesep=4pt,
+            frame=single,
+            framerule=1.5pt,
+            rulecolor=\color{gray!30}
+        ]{yaml}
+seed: 425364
+schemas:
+  - name: shop
+    tables:
+      - name: customers
+        size: 5
+        columns:
+          - name: id
+            mode: COUNTER
+          - name: firstname
+            valuesBundle: forenames
+          - name: lastname
+            valuesBundle: surnames
+          - name: birth
+            valuesRange: [1950, 2000]
+      - name: orders
+        size: 12
+        columns:
+          - name: id
+            mode: COUNTER
+          - name: cid
+            valuesForeignColumn: [customers, id]
+          - name: product
+            valuesBundle: fruits
+          - name: quantity
+            valuesRange: [1, 10]
+        \end{minted}
+        
+        {\footnotesize\texttt{config.yaml}} \pause
+    \end{minipage}%
+    \hspace*{\fill}
+    \begin{minipage}[c]{0.35cm}
+        {\Large $\Rightarrow$}
+    \end{minipage}%
+    \hspace*{\fill}
+    \begin{minipage}[c]{0.45\textwidth}
+        
+        \centering
+        
+        \normalsize \texttt{customers}
+        \vspace{0.1cm}
+        
+        \tiny
+        \begin{tabular}{ |r|l|l|r| }
+        \hline
+           id & firstname & lastname & birth \\
+        \hline
+            1 & Howard & Anderson & 1968 \\
+            2 & Rebecca & Ferguson & 1959 \\
+            3 & Jeremy & Moore & 2000 \\
+            4 & Julie & Ellis & 1951 \\
+            5 & Kathleen & Cook & 1971 \\
+        \hline
+        \end{tabular}
+        
+        \vspace{0.5cm}
+        
+        \normalsize \texttt{orders}
+        \vspace{0.1cm}
+        
+        \tiny
+        \begin{tabular}{ |r|r|l|r| }
+        \hline
+            id & cid & ~~product & quantity \\
+        \hline
+            1 & 5 & date & 10 \\
+            2 & 2 & orange & 1 \\
+            3 & 2 & sloe & 2 \\
+            4 & 3 & melon & 7 \\
+            5 & 5 & guava & 9 \\
+            6 & 3 & orange & 6 \\
+            7 & 2 & plantain & 3 \\
+            8 & 4 & pear & 7 \\
+            9 & 4 & papaya & 9 \\
+            10 & 5 & lime & 9 \\
+            11 & 3 & sloe & 4 \\
+            12 & 1 & strawberry & 1 \\
+        \hline
+        \end{tabular}
+    \end{minipage}
+\end{frame}
+
+\begin{frame}[containsverbatim]
+    \slidetitle{\sectionshorttitle}{Egyedi működés hozzáadása}
+    
+    {\color{beamer@blendedblue}Egyedi értékkiosztás betöltése saját programkönyvtárból}
+    
+    \vspace{0.5em}
+    
+    \begin{minted}[fontsize=\small,framesep=4pt,frame=single,framerule=1.5pt,rulecolor=\color{gray!30}]{yaml}
+- name: some_column
+  sourceFactory: org.example.myorg.SomeCustomDataFactory
+  sourceFactoryData:
+      additionalParameter1: 10
+      additionalParameter2: 'lorem ipsum'
+    \end{minted}
+    
+    \vspace{1em}
+    
+    {\color{beamer@blendedblue}Egyedi értékkészlet betöltése fájlból}
+    
+    \vspace{0.5em}
+    
+    \begin{minted}[fontsize=\small,framesep=4pt,frame=single,framerule=1.5pt,rulecolor=\color{gray!30}]{yaml}
+- name: some_column
+  valuesResource: custom-data.txt
+    \end{minted}
+    
+\end{frame}
+
+% \begin{frame}
+%     \slidetitle{\sectionshorttitle}{Bővítés: valós postai címek használata}
+%     
+%     {\color{beamer@blendedblue}Egy cím hierarchiája}
+%     
+%     \begin{center}
+%         településnév ~ $\rightarrow$ ~
+%         kerület ~ $\rightarrow$ ~
+%         közterület neve ~ $\rightarrow$ ~
+%         közterület jellege ~ $\rightarrow$ ~
+%         házszám ~ $\rightarrow$ ~
+%         egyéb
+%     \end{center}
+%     
+%     \vspace{0.5em}
+%     
+%     {\color{beamer@blendedblue}Jellemzők}
+%     
+%     \begin{itemize}
+%         \setlength\itemsep{0.3em}
+%         \item ebben a szcenárióban elengedjük a kis tárhelyigényt
+%         \item az összes létező címet fogjuk leképezni a táblára
+%         \item szolgáltatunk egy többoszlopos (leftmost prefix) indexet
+%         \item alternatív index: implicite üres kerülettel
+%         \item a vármegyét, irányítószámot és egyéb adatokat származtatjuk
+%         \item utóbbiak a hierarchia különböző szintjeihez tartozhatnak
+%     \end{itemize}
+% \end{frame}
+% 
+% \begin{frame}
+%     \slidetitle{\sectionshorttitle}{Bővítés: on-demand schema}
+%     
+%     \begin{itemize}
+%         \setlength\itemsep{1em}
+%         \item {\color{red} radikális automatizmus}
+%         \item nincs előre megadott séma
+%         \item ha egy lekérés új táblát/oszlopot tartalmaz, on-demand létrehozzuk
+%         \item új táblából történő wildcardos lekérdezésnél alapértelmezett oszlop
+%         \item táblaméret, oszloptípus, idegen kulcs megállapítása heurisztikákkal
+%         \item a \texttt{seed} lehet beégetett vagy az első lekérés függvénye
+%         \item írható adatbázis esetén nehéz megvalósítani
+%     \end{itemize}
+% \end{frame}
+
+\section{Eredmények}
+\def\sectionshorttitle{Eredmények}
+
+\begin{frame}
+    \slidetitle{\sectionshorttitle}{Tárhelyigény}
+    
+    \begin{minipage}[b]{0.34\textwidth}
+        \centering
+        \begin{tikzpicture}
+            \begin{axis}[
+                    symbolic x coords={Docker image},
+                    ybar,
+                    axis on top,
+                    width={0.7\textwidth},
+                    height=5.5cm,
+                    bar width=0.5cm,
+                    ymajorgrids,
+                    tick align=inside,
+                    enlarge y limits={value=.1,upper},
+                    enlarge x limits=0.15,
+                    ymin=0,
+                    ymax=700,
+                    /pgf/number format/.cd,
+                    use comma,
+                    1000 sep={~},
+                    point meta=rawy,
+                    every node near coord/.append style={
+                        anchor=west,
+                        rotate=90,
+                        font=\small
+                    },
+                    axis x line*=bottom,
+                    axis y line*=left,
+                    tickwidth=1pt,
+                    legend style={
+                        at={(0.45,-0.2)},
+                        anchor=north,
+                        legend columns=-1,
+                        /tikz/every even column/.append style={column sep=0.3cm}
+                    },
+                    ylabel={Méret (MB)},
+                    y label style={at={(0.03,0.5)}},
+                    xtick=data,
+                    nodes near coords={
+                        \pgfmathprintnumber{\pgfplotspointmeta}
+                    },
+                    nodes near coords style={
+                        /pgf/number format/.cd,
+                        /pgf/number format/fixed,
+                        precision=3
+                    }
+                ]
+                \addplot[fill=cyan] % MySQL
+                    coordinates { (Docker image,605.3) };
+                \addplot[fill=orange] % HoloDB
+                    coordinates { (Docker image,231.7) };
+                \legend{MySQL,HoloDB}
+            \end{axis}
+        \end{tikzpicture}
+    \end{minipage}%
+    \begin{minipage}[b]{0.25\textwidth}
+        \centering
+        \begin{tikzpicture}
+            \begin{axis}[
+                    symbolic x coords={Shadow JAR},
+                    ybar,
+                    axis on top,
+                    width={\textwidth},
+                    height=5.5cm,
+                    bar width=0.5cm,
+                    ymajorgrids,
+                    tick align=inside,
+                    enlarge y limits={value=.1,upper},
+                    enlarge x limits=0.15,
+                    ymin=0,
+                    ymax=8,
+                    /pgf/number format/.cd,
+                    use comma,
+                    1000 sep={~},
+                    point meta=rawy,
+                    every node near coord/.append style={
+                        anchor=west,
+                        rotate=90,
+                        font=\smal
+                    },
+                    axis x line*=bottom,
+                    axis y line*=left,
+                    tickwidth=1pt,
+                    legend style={
+                        at={(0.4,-0.2)},
+                        anchor=north,
+                        legend columns=-1,
+                        /tikz/every even column/.append style={column sep=0.3cm}
+                    },
+                    xtick=data,
+                    nodes near coords={
+                        \pgfmathprintnumber{\pgfplotspointmeta}
+                    },
+                    nodes near coords style={
+                        /pgf/number format/.cd,
+                        /pgf/number format/fixed,
+                        precision=3
+                    }
+                ]
+                \addplot[fill=blue] % H2
+                    coordinates { (Shadow JAR,2.49) };
+                \addplot[fill=orange] % HoloDB
+                    coordinates { (Shadow JAR,7.65) };
+                \legend{H2,HoloDB}
+            \end{axis}
+        \end{tikzpicture}
+    \end{minipage}%
+    \begin{minipage}[b]{0.3\textwidth}
+        \centering
+        \begin{tikzpicture}
+            \begin{axis}[
+                    symbolic x coords={Adatméret},
+                    ybar,
+                    axis on top,
+                    width={\textwidth},
+                    height=5.5cm,
+                    bar width=0.5cm,
+                    ymajorgrids,
+                    tick align=inside,
+                    enlarge y limits={value=.1,upper},
+                    enlarge x limits=0.15,
+                    ymin=0,
+                    ymax=2.4,
+                    /pgf/number format/.cd,
+                    use comma,
+                    1000 sep={~},
+                    point meta=rawy,
+                    every node near coord/.append style={
+                        anchor=west,
+                        rotate=90,
+                        font=\small
+                    },
+                    axis x line*=bottom,
+                    axis y line*=left,
+                    tickwidth=1pt,
+                    legend style={
+                        at={(0.45,-0.2)},
+                        anchor=north,
+                        legend columns=-1,
+                        /tikz/every even column/.append style={column sep=0.3cm}
+                    },
+                    xtick=data,
+                    nodes near coords={
+                        \pgfmathprintnumber{\pgfplotspointmeta}
+                    },
+                    nodes near coords style={
+                        /pgf/number format/.cd,
+                        /pgf/number format/fixed,
+                        precision=3
+                    }
+                ]
+                \addplot[fill=cyan] % MySQL
+                    coordinates { (Adatméret,2.27) };
+                \addplot[fill=blue] % H2
+                    coordinates { (Adatméret,0.55) };
+                \addplot[fill=orange] % HoloDB
+                    coordinates { (Adatméret,0.001) };
+                \legend{MySQL,H2,HoloDB}
+            \end{axis}
+        \end{tikzpicture}
+    \end{minipage}
+\end{frame}
+
+\begin{frame}
+    \slidetitle{\sectionshorttitle}{Integrált teszt futási ideje (Micronaut$,$ REST)}
+    
+    \centering
+    
+    \begin{tikzpicture}[font=\tiny]
+        \begin{axis}[
+                symbolic x coords={simple-readonly,complex-readonly,complex-writeable},
+                ybar,
+                axis on top,
+                width={\textwidth},
+                height=6cm,
+                bar width=0.5cm,
+                ymajorgrids,
+                tick align=inside,
+                enlarge y limits={value=.1,upper},
+                enlarge x limits=0.2,
+                ymin=0,
+                ymax=17,
+                /pgf/number format/.cd,
+                use comma,
+                1000 sep={~},
+                axis x line*=bottom,
+                axis y line*=left,
+                tickwidth=1pt,
+                legend style={
+                    at={(0.5,-0.2)},
+                    anchor=north,
+                    legend columns=-1,
+                    font = {\fontsize{6 pt}{10 pt}\selectfont},
+                    /tikz/every even column/.append style={column sep=0.3cm}
+                },
+                ylabel={Futási idő (s)},
+                y label style={at={(0.03,0.5)}},
+                xtick=data,
+                nodes near coords={
+                    \pgfmathprintnumber{\pgfplotspointmeta}
+                }
+            ]
+            \addplot[fill=cyan] % MySQL
+                coordinates {
+                    (simple-readonly,7.870093628)
+                    (complex-readonly,9.0179515675)
+                    (complex-writeable,14.3489598653)
+                };
+            \addplot[fill=blue] % H2
+                coordinates {
+                    (simple-readonly,5.103988787)
+                    (complex-readonly,5.1902669386)
+                    (complex-writeable,8.7714582641)
+                };
+            \addplot[fill=yellow] % HoloDB (basic)
+                coordinates {
+                    (simple-readonly,6.441775179)
+                    (complex-readonly,8.0399578991)
+                    (complex-writeable,13.4957423082)
+                };
+            \addplot[fill=orange] % HoloDB
+                coordinates {
+                    (simple-readonly,8.182373242)
+                    (complex-readonly,9.4207860077)
+                    (complex-writeable,14.4941282014)
+                };
+                
+            \addplot[fill=red] % HoloDB (quality)
+                coordinates {
+                    (simple-readonly,8.819935654)
+                    (complex-readonly,10.5782986771)
+                    (complex-writeable,16.7720866313)
+                };
+            \legend{MySQL,H2,HoloDB (basic),HoloDB,HoloDB (quality)}
+        \end{axis}
+    \end{tikzpicture}
+\end{frame}
+
+\begin{frame}
+    \slidetitle{\sectionshorttitle}{SQL-futásidők átlagának összehasonlítása (log.)}
+    
+    \centering
+    
+    \begin{tikzpicture}[font=\scriptsize]
+        \begin{axis}[
+                title style={
+                    at={(-0.1,1.15)},
+                    anchor=north west
+                },
+                symbolic x coords={Mező,Teljes rekord,Összetett,Teljes tábla,Többtáblás},
+                ybar,
+                axis on top,
+                width={\textwidth},
+                height=6cm,
+                bar width=0.25cm,
+                ymajorgrids,
+                tick align=inside,
+                enlarge y limits={value=.1,upper},
+                enlarge x limits=0.15,
+                ymin=0,
+                ymax=2000000000,
+                ymode=log,
+                point meta=rawy,
+                /pgf/number format/.cd,
+                use comma,
+                1000 sep={~},
+                every node near coord/.append style={
+                    anchor=west,
+                    rotate=90
+                },
+                axis x line*=bottom,
+                axis y line*=left,
+                tickwidth=1pt,
+                legend style={
+                    at={(0.5,-0.2)},
+                    anchor=north,
+                    legend columns=-1,
+                    font = {\fontsize{6 pt}{10 pt}\selectfont},
+                    /tikz/every even column/.append style={column sep=0.3cm}
+                },
+                ylabel={Futási idő (ns)},
+                y label style={at={(0.03,0.5)}},
+                xtick=data,
+                nodes near coords={
+                    \pgfmathprintnumber{\pgfplotspointmeta}
+                }
+            ]
+            \addplot[fill=cyan] % MySQL
+                coordinates {
+                    (Mező,106276)
+                    (Teljes rekord,109819) 
+                    (Összetett,146710)
+                    (Teljes tábla,146710)
+                    (Többtáblás,1637889)
+                };
+            \addplot[fill=blue] % H2
+                coordinates {
+                    (Mező,12648)
+                    (Teljes rekord,13015) 
+                    (Összetett,21927)
+                    (Teljes tábla,1971234)
+                    (Többtáblás,189958)
+                };
+            \addplot[fill=yellow] % HoloDB (basic)
+                coordinates {
+                    (Mező,21709)
+                    (Teljes rekord,24207) 
+                    (Összetett,50474)
+                    (Teljes tábla,32271101)
+                    (Többtáblás,481306)
+                };
+            \addplot[fill=orange] % HoloDB
+                coordinates {
+                    (Mező,25941)
+                    (Teljes rekord,140232) 
+                    (Összetett,293885)
+                    (Teljes tábla,1228183178)
+                    (Többtáblás,4030303)
+                };
+            \addplot[fill=red] % HoloDB (quality)
+                coordinates {
+                    (Mező,49860)
+                    (Teljes rekord,207383) 
+                    (Összetett,2543441)
+                    (Teljes tábla,1676796378)
+                    (Többtáblás,8121736)
+                };
+            \legend{MySQL,H2,HoloDB (basic),HoloDB,HoloDB (quality)}
+        \end{axis}
+    \end{tikzpicture}
+\end{frame}
+
+\section{Összegzés}
+\def\sectionshorttitle{Összegzés}
+
+% \begin{frame}
+%     \slidetitle{\sectionshorttitle}{Elvárások teljesítése}
+%     
+%     \begin{itemize}
+%         \setlength\itemsep{0.5em}
+%         \item[] \onslide<2->{\greencheck} relációs adatmodellre épül
+%         \item[] \onslide<3->{\greencheck} deklaratív, finomhangolható, könnyen bővíthető
+%         \item[] \onslide<4->{\greencheck} nem szükséges forrásadatbázis, de mintaként használható
+%         \item[] \onslide<5->{\greencheck} nincs preparálási folyamat, szinte azonnal elindul
+%         \item[] \onslide<6->{\greencheck} óriás adatmennyiséget is képes szimulálni, szinte tárhelyigény nélkül
+%         \item[] \onslide<7->{\greencheck} az adatokat csak elérésükkor, on-the-fly számítja
+%         \item[] \onslide<8->{\greencheck} a runtime teljesítmény kielégítő
+%         \item[] \onslide<9->{\greencheck} determinisztikus, konzisztens, skálázható
+%         \item[] \onslide<10->{\greencheck} opcionálisan írható
+%     \end{itemize}
+% \end{frame}
+
+\begin{frame}
+    \slidetitle{\sectionshorttitle}{Elvárások teljesítése}
+    
+    \begin{itemize}
+        \setlength\itemsep{0.5em}
+        \item[\greencheck] relációs adatmodellre épül
+        \item[\greencheck] deklaratív, finomhangolható, könnyen bővíthető
+        \item[\greencheck] nem szükséges forrásadatbázis, de mintaként használható
+        \item[\greencheck] nincs preparálási folyamat, szinte azonnal elindul
+        \item[\greencheck] óriás adatmennyiséget is képes szimulálni, szinte tárhelyigény nélkül
+        \item[\greencheck] az adatokat csak elérésükkor, on-the-fly számítja
+        \item[\greencheck] a runtime teljesítmény kielégítő
+        \item[\greencheck] determinisztikus, konzisztens, skálázható
+        \item[\greencheck] opcionálisan írható
+    \end{itemize}
+\end{frame}
+
+\begin{frame}
+    \slidetitle{\sectionshorttitle}{További előnyök}
+    
+    \begin{itemize}
+        \setlength\itemsep{1em}
+        \item könnyen verziókezelhető konfigurációs fájl
+        \item könnyű replikálhatóság (csak-olvasható adatbázis esetén)
+        \item teljesen izolált automatikus integrációs tesztelés adatbázissal
+        \item füsttesztek teljes értékű adatbázissal
+        \item írási rétegként létező adatbázis fölé is elhelyezhető
+    \end{itemize}
+\end{frame}
+
+\begin{frame}
+    \slidetitle{\sectionshorttitle}{Miért nem terjedt még el hasonló megoldás?}
+
+    \begin{itemize}
+        \setlength\itemsep{1em}
+        \item \textbf{kontraintuitivitás}:
+            előzetes feltevésemmel szemben úgy tűnik, nem olyan egyszerű átlátni a koncepciót,
+            és megérteni hogy ``hol is vannak az adatok''
+        \item \textbf{megfelelő SQL plannerek eddigi hiánya}:
+            az Apache Calcite például csak az utóbbi néhány évben vált népszerűvé,
+            és inkább elsősorban adatintegrátorként
+        \item \textbf{bejáratott alternatívák}:
+            az on-the-fly mockolás lehetősége,
+            a NoSQL adatbázisok és felhőmegoldások fejlődése stb.
+            sztenderdképző kerülőmegoldásokként elfedték a problémát
+        \item \textbf{érdekhiány}:
+            nincs nyomás jelentősen más típusú termékkel való kísérletezésre,
+            a nagy adatbázisvendorok érdeke elsősorban
+            a tényleges adatbázisok kezelésére kínált megoldások fejlesztése
+    \end{itemize}
+\end{frame}
+
+\iffalse
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+Összefoglalás, jövő (közvetlenül a mérések után):
+
+- almát a körtével
+- nem a részletes összenhasonlítgatás volt a cél
+- proof of concept
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+####### Kérdések: #######
+
+1. A legtöbb rendszer már úgy van fejlesztve, hogy van hely bőven. Miért kritikus ez egy
+mockadatbázisnál? A laptopok is rendelkeznek ár több GB memóriával.
+
+- egy lightweight megoldás megnöveli a lehetőségeket
+- olyan új lehetőségek nyílnak meg, amelyeket eddig nem is asszociáltak adatbázisokhoz (dev mode, serverless stb.)
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+2. A tranzakcióknál az írási státusznál feltételezi, hogy addig nem olvas senki? Mi a helyzet
+ha blokkolódik az írási tranzakció? Mi van ha több tranzakció fut egyszerre, akkor a WRITE
+állapot globális?
+
+- a tranzakciós réteg csupán demonstrálni kívánja, hogy lehetséges tranzakcionális írási réteget helyezni a bemutatott csak-olvasható réteg fölé
+- írási műveletek esetén jellemzően egyfelhasználós használatra számítunk
+- főként olvasási műveletekre számítunk
+- egyébként sem az írási műveletek képeznek szűk keresztmetszetet::: demo: ott vannak az adatok; tesztek: egy kezdeti művelet jellemzőit akarjuk ellenőrizni
+- a későbbiekben ez továbbfejleszthető, akár egy teljeskörű tranzakciós keretrendszerré, de ez messze nem prioritás
+- a csak-olvasható réteg megosztható több tranzakciós réteg alatt (a dolgozatban szereplő két tranzakciós technika ebben az irányba mutat, habár jelenleg ez még nincs megvalósítva)
+- később az írási/tranzakciós rétegek megoszthatósága is tervben van (érkezett hozzám ilyen kérdés korábbról)
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+3. Mitől gyorsabb a LargeInteger mint a scala BigInt? Az ábrán látjuk hogy az, bár a mérések
+nincsenek leírva, de mi ennek az oka? Miért kellett sajátot írni? Miért nem volt jó a Scalas
+megoldás?
+
+- nem az volt a cél, hogy feltétlenül gyorsabban legyen, hanem hogy ne az legyen, hogy létezik egy szupergyors megoldás, mi meg egy lassabbat használunk
+- azért nem vettem át egy idegen környezet megoldását, mert:
+    - a BigInt felülete scalára lett tervezve, javában borzalmas (ld. például operátor-műveletek)
+    - egy standalone, kényelmes megoldást akartam nyújtani, ami kompatibilis a BigInteger típussal
+    - egy függetlenül fejleszthető megoldást akartam, radikálisan minimalizáltam a projekt függőségeit
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+4. A Nyers szófa kompakttá alakítás algoritmus új eredmény? Nem lehetett volna ezt külön
+publikálni.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+5. A 2.1 ábrán megjelenik a SPARQL. Szemantikus adatokat is tud tárolni? Ott hogyan
+vannak megvalósítva az összekapcsolások?
+
+[RDF (Resource Description Framework), triple-store, predicate, semantic data ...]
+- valóban készült egy kezdetleges SPARQL adapter (quetzal :: https://dl.acm.org/doi/10.1145/2463676.2463718)
+- az erőforrások négyoszlopos táblák: numerikus egyedi kulcs, erőforrás-azonosító, predikátum, tulajdonság
+- a feltüntetése demonstratív jelleg (szándékosan nagyon eltérő lekérdező-nyelveket tüntettem föl)
+- nem arról van szó, hogy maga a HoloDB szemantikus adatokat tárolna, hanem a relációs modellben hozzáférhető táblák egy szemantikus nézet backendjeként ("storage" engine) is használhatók
+- én ehhez a quetzal nevezetű SPARQL->SQL megoldással kísérleteztem
+- nagyon kezdetleges
+- a későbbiekben prioritás lesz, hogy más rendszerekkel össze lehessen kapcsolni
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+6. Az adatokat oszlop szinten tárolódnak a dolgozat alapján? Hogyan kapcsolódik ez a
+megoldás az oszloporientált adatbáisokhoz? Például a Classandrához?
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+\fi
+
+\begin{frame}
+    \slidetitle{\sectionshorttitle}{Jövőbeli tervek}
+
+    \begin{itemize}
+        \setlength\itemsep{1em}
+        \item az alapvető működés optimalizálása
+        \item további kiegészítő funkciók, eszközök fejlesztése
+        \item dokumentáció és kommunikáció
+        \pause \item megfelelő elnevezés megtalálása
+            
+            \vspace{0.5\baselineskip}
+            
+            \pause { \huge ~~~ } \faWifi ~~ \textit{holografikus adatbázis}
+            
+            \vspace{0.4\baselineskip}
+            
+            \pause { \huge ~~~ } ~\faGhost ~~ \textit{fantomadatbázis}
+            
+            \vspace{0.4\baselineskip}
+            
+            \pause { \huge ~~~ } ~\faEdit ~ \textit{deklaratív adatbázis}
+    \end{itemize}
+\end{frame}
+        
+\begin{frame}
+    \vspace{1em}
+    
+    \centering
+    
+    { \Huge Köszönöm a figyelmet! }
+    
+    \vspace{3em}
+    
+    \begin{flushleft}
+        \normalsize
+        
+        ~~~
+        {\color{beamer@blendedblue}Projektlinkek:}
+        
+        \vspace{0.5em}
+        
+        \footnotesize
+        
+        \begin{itemize}
+            \item HoloDB projekt: \par
+                    \url{https://github.com/miniconnect/holodb}
+            \item Használati példák: \par
+                    \url{https://github.com/miniconnect/general-docs/tree/main/examples}
+            \item Jelen TDK-pályamunka forrásrepója: \par
+                    \url{https://github.com/davidsusu/holodb-tdk}
+        \end{itemize}
+        
+        \vspace{1.5em}
+        
+        \normalsize
+        
+        ~~~
+        { \color{beamer@blendedblue} E-mail: }
+        \href{mailto:horvathdown@student.elte.hu}{horvathdown@student.elte.hu}
+        \end{flushleft}
+\end{frame}
+
+\end{document}
