@@ -48,7 +48,7 @@
 \title[HoloDB]{HoloDB: szintetikus adatok on-the-fly szolgáltatása relációs adatbázisként}
 \author[Horváth Dávid]{Horváth Dávid \\ ~ \\ { \footnotesize Témavezető: Dr. Vincellér Zoltán, Mesteroktató }}
 \institute[ELTE-IK]{ELTE Informatikai Kar, Információs Rendszerek Tanszék}
-\date{2023}
+\date{2024}
 
 \newcommand{\slidetitle}[2]{\frametitle{{\small #1 ~ \ding{226} ~ } \normalsize \textbf{#2} }}
 
@@ -57,17 +57,11 @@
 \begin{document}
 \beamertemplatenavigationsymbolsempty
 
-\frame{\titlepage}
+\begin{frame}[plain,noframenumbering]
+    \titlepage
+\end{frame}
 
-% \AtBeginSection[]
-% {
-%     \begin{frame}
-%         \frametitle{Tartalom}
-%         \tableofcontents[currentsection]
-%     \end{frame}
-% }
-
-\begin{frame}
+\begin{frame}[plain,noframenumbering]
     \frametitle{Tartalom}
     \tableofcontents
 \end{frame}
@@ -115,26 +109,28 @@
     \includegraphics[height=0.4\textwidth]{diagram/database-tasks}
 \end{frame}
 
-% \begin{frame}
-%     \slidetitle{\sectionshorttitle}{Alapmegállapítás}
-%     
-%     \centering
-%     
-%     \includegraphics[height=0.22\textwidth]{diagram/test-with-data}
-%     
-%     \vspace{1cm}
-%     
-%     \begin{minipage}[b]{0.8\textwidth}
-%         \justifying
-%         Igen gyakran ütközünk abba a problémába,
-%         hogy adott struktúrájú és szemantikájú,
-%         viszonylag rövid életű adatbázist kell biztosítani,
-%         a produkciós adatokra vonatkozó speciális követelmények nélkül.
-%     \end{minipage}
-% \end{frame}
+\iffalse
+\begin{frame}
+    \slidetitle{\sectionshorttitle}{Alapmegállapítás}
+    
+    \centering
+    
+    \includegraphics[height=0.22\textwidth]{diagram/test-with-data}
+    
+    \vspace{1cm}
+    
+    \begin{minipage}[b]{0.8\textwidth}
+        \justifying
+        Igen gyakran ütközünk abba a problémába,
+        hogy adott struktúrájú és szemantikájú,
+      viszonylag rövid életű adatbázist kell biztosítani,
+        a produkciós adatokra vonatkozó speciális követelmények nélkül.
+    \end{minipage}
+\end{frame}
+\fi
 
-\section{Körkép: a létező (kerülő)megoldások}
-\def\sectionshorttitle{Körkép}
+\section{Eddigi megközelítések}
+\def\sectionshorttitle{Megközelítések}
 
 \begin{frame}
     \slidetitle{\sectionshorttitle}{Bevett megközelítések}
@@ -149,7 +145,7 @@
 \end{frame}
 
 \begin{frame}
-    \slidetitle{\sectionshorttitle}{Néhány nagyteljesítményű megoldás}
+    \slidetitle{\sectionshorttitle}{Generálás és anonimizálás hatékonyan}
     
     \begin{logolist}
         \setlength\itemsep{1.7em}
@@ -173,7 +169,7 @@
 \end{frame}
 
 \begin{frame}
-    \slidetitle{\sectionshorttitle}{Egy lehetséges alternatív ihletforrás}
+    \slidetitle{\sectionshorttitle}{Alternatív ihletforrások}
     
     \centering
     
@@ -184,8 +180,18 @@
     Részlet a \textit{No Man's Sky Origins} játékból (hivatalos trailer)
 \end{frame}
 
-% \section{Egy új megoldás körvonalai: HoloDB}
-% \def\sectionshorttitle{HoloDB}
+\begin{frame}[noframenumbering]
+    \slidetitle{\sectionshorttitle}{Alternatív ihletforrások}
+    
+    \begin{columns}[t]
+    \column{.5\textwidth}
+    \includegraphics[width=\linewidth, frame]{image/starflight}
+    \includegraphics[width=\linewidth, frame]{image/starfield}
+    \column{.5\textwidth}
+    \includegraphics[width=\linewidth, frame]{image/minecraft}
+    \includegraphics[width=\linewidth, frame]{image/starmade}
+    \end{columns}
+\end{frame}
 
 \section{A HoloDB architektúrája}
 \def\sectionshorttitle{Architektúra}
@@ -203,26 +209,45 @@
         \item az adatokat csak elérésükkor, on-the-fly számítja
         \item indexeket szolgáltat, ahol egyébként is elvárható lenne
         \item a runtime teljesítmény kielégítő
-        \item determinisztikus, {\color{red}konzisztens}, skálázható
+        \item determinisztikus, {\color{red}koherens}, skálázható
         \item opcionálisan írható
     \end{itemize}
 \end{frame}
 
-% \begin{frame}
-%     \slidetitle{\sectionshorttitle}{Mit tapasztal a felhasználó?}
-%     
-%     \begin{enumerate}
-%         \setlength\itemsep{1em}
-%         \item egyetlen átlátható, deklaratív {\color{red}konfigurációs fájl}ban minden megadható
-%         \item {\color{red}nincs adatgenerálás}, anonimizálás vagy egyéb preparálási folyamat
-%         \item az adatbázis {\color{red}kis tárhelyigénnyel} fut
-%         \item az adatbázis úgy viselkedik, {\color{red}mint egy valós} relációs adatbázis
-%         \item a lekérdezések {\color{red}elfogadható idő} alatt lefutnak
-%     \end{enumerate}
-% \end{frame}
+\begin{frame}
+    \slidetitle{\sectionshorttitle}{Vázlatos architektúraábra}
+    
+    \centering
+    
+    \begin{overprint}
+        \onslide<1>\centerline{\includegraphics[height=0.65\textwidth]{diagram/simplearch-0}}
+        \onslide<2>\centerline{\includegraphics[height=0.65\textwidth]{diagram/simplearch-1}}
+    \end{overprint}
+\end{frame}
 
-% \section{A HoloDB architektúrája}
-% \def\sectionshorttitle{Architektúra}
+\begin{frame}
+    \slidetitle{\sectionshorttitle}{Storage API}
+    
+    \begin{minipage}[c]{0.5\textwidth}
+        \begin{itemize}
+            \item \texttt{Schema}
+            \item \texttt{Table}
+            \item \texttt{Column}
+            \item \texttt{ColumnDefinition}
+            \item {\only<2>{\color{beamer@blendedblue}}\texttt{Source}}
+            \item \texttt{Row}
+            \item \texttt{TableIndex}
+            \item \texttt{FulltextIndex}
+            \item \texttt{SpatialIndex}
+            \item \texttt{TableSelection}
+        \end{itemize}
+    \end{minipage}%
+    \begin{minipage}[c]{0.5\textwidth}
+        \begin{overprint}
+            \onslide<2>\centerline{\includegraphics[width=0.9\textwidth]{diagram/storage-source}}
+        \end{overprint}
+    \end{minipage}
+\end{frame}
 
 \begin{frame}
     \slidetitle{\sectionshorttitle}{Alapvető adattípus: LargeInteger}
@@ -289,9 +314,9 @@
         \vspace{0.2cm}
         
         \begin{itemize}
-            \item egyenlő példány: egyező kimenet
             \item kulcs megadásával alpéldány
             \item egyenlő kulcs: egyenlő alpéldány
+            \item egyenlő példány: egyező kimenet
         \end{itemize}
 
         \vspace{0.7cm}
@@ -333,141 +358,18 @@
 \end{frame}
 
 \begin{frame}
-    \slidetitle{\sectionshorttitle}{Vázlatos architektúraábra}
-    
-    \centering
-    
-    \begin{overprint}
-        \onslide<1>\centerline{\includegraphics[height=0.65\textwidth]{diagram/simplearch-0}}
-        \onslide<2>\centerline{\includegraphics[height=0.65\textwidth]{diagram/simplearch-1}}
-    \end{overprint}
-\end{frame}
-
-\begin{frame}
-    \slidetitle{\sectionshorttitle}{Storage API}
-    
-    \begin{minipage}[c]{0.5\textwidth}
-        \begin{itemize}
-            \item \texttt{Schema}
-            \item \texttt{Table}
-            \item \texttt{Column}
-            \item \texttt{ColumnDefinition}
-            \item {\only<2>{\color{beamer@blendedblue}}\texttt{Source}}
-            \item \texttt{Row}
-            \item \texttt{TableIndex}
-            \item \texttt{FulltextIndex}
-            \item \texttt{SpatialIndex}
-            \item \texttt{TableSelection}
-        \end{itemize}
-    \end{minipage}%
-    \begin{minipage}[c]{0.5\textwidth}
-        \begin{overprint}
-            \onslide<2>\centerline{\includegraphics[width=0.9\textwidth]{diagram/storage-source}}
-        \end{overprint}
-    \end{minipage}
-\end{frame}
-
-\begin{frame}
-    \slidetitle{\sectionshorttitle}{Csak-olvasható réteg}
-    
-    A teljes storage API-t valósítja meg a következő követelmények mellett:
-    
-    \vspace{0.5cm}
-    
-    \begin{itemize}
-        \setlength\itemsep{1.5em}
-        \item \textbf{Lekérdezési konzisztencia}:
-            felépíthető egy olyan tényleges immutábilis relációs adatbázis (M),
-            hogy minden lehetséges relációs lekérdezés esetében,
-            amely a közös sémára (S) értelmes, a virtuális és a tényleges adatbázis
-            esetében visszaadott eredménytábla megegyezik.
-        \item \textbf{Megkötések kielégítése}:
-            az S séma teljesíti a virtuális adatbázis felhasználói konfigurációját (C),
-            valamint az M-ben szereplő adatok tulajdonságai illeszkednek a C-ben leírt megkötésekre.
-    \end{itemize}
-\end{frame}
-
-\begin{frame}
-    \slidetitle{\sectionshorttitle}{Írhatósági réteg}
-    
-    {\color{beamer@blendedblue}A \texttt{DiffTable} dekorátor}
-    
-    \begin{itemize}
-        \item csak olvassa az alárendelt táblaobjektumot
-        \item amíg nincs módosítás, átlátszóan működik
-        \item memóriában tárolja a módosításokat
-        \item szükség szerint kiegészíti a lekérést és összefésüli az eredménytáblát
-    \end{itemize}
-    
-    \vspace{0.4cm}
-    
-    {\color{beamer@blendedblue}Tranzakciókezelés}
-    
-    \begin{itemize}
-        \item kétféle tranzakciós stratégia: írási ablakok vagy MVCC
-        \item kétféle commit mód: \texttt{AUTOCOMMIT} vagy explicit lockolás
-        \item mindegyik változat ACID-kompatibilis
-        \item nagyon sok írási művelet esetén nem igazán hatékony
-    \end{itemize}
-\end{frame}
-
-\section{A szűk keresztmetszet: értékkiosztások}
-\def\sectionshorttitle{Értékkiosztások}
-
-% \begin{frame}
-%     \slidetitle{\sectionshorttitle}{Az értékkiosztások problémaköre}
-%     
-%     \begin{itemize}
-%         \setlength\itemsep{1em}
-%         \item \texttt{Source} interfész
-%         \item oszloporientáltság
-%         \item adatelérés (random access)
-%         \item ha lehet, keresés és rendezés (reverse index)
-%         \item $NULL$ értékek
-%         \item előfordulási gyakoriságok
-%         \item esetenként többoszlopos
-%     \end{itemize}
-% \end{frame}
-
-\begin{frame}
-    \slidetitle{\sectionshorttitle}{Főbb egyoszlopos értékkiosztási típusok}
-
-    {\color{beamer@blendedblue}Nem indexelt}
-    
-    \begin{itemize}
-        \item egyszerű/strukturált szöveg
-        \item strukturált adat
-        \item kép
-        \item jelszó-hash
-        \item random BLOB/CLOB
-    \end{itemize}
-    
-    \vspace{0.4cm}
-    
-    {\color{beamer@blendedblue}Indexelt}
-    
-    \begin{itemize}
-        \item számláló (például numerikus kulcsokhoz)
-        \item időbélyegek, adott eloszlással és zajjal
-        \item full-text indexelt szövegek
-        \item { \only<2>{\color{red}\textbf} { általános kétfázisú értékkiosztás } }
-    \end{itemize}
-    
-\end{frame}
-
-\begin{frame}
-    \slidetitle{\sectionshorttitle}{Általános kétfázisú értékkiosztás}
+    \slidetitle{\sectionshorttitle}{Általános kétlépcsős értékkiosztás}
     
     \centering
     
     \includegraphics[height=0.5\textwidth]{diagram/distribution}
     
-    Kétfázisú értékkiosztás alapelve: \par
+    Kétlépcsős értékkiosztás alapelve: \par
     visszafejthető disztribúció és permutáció kompozíciója
 \end{frame}
 
 \begin{frame}
-    \slidetitle{\sectionshorttitle}{Kétfázisú értékkiosztás: adatlekérés}
+    \slidetitle{\sectionshorttitle}{Kétlépcsős értékkiosztás: adatlekérés}
     
     \centering
     
@@ -486,7 +388,7 @@
 \end{frame}
 
 \begin{frame}
-    \slidetitle{\sectionshorttitle}{Kétfázisú értékkiosztás: keresés}
+    \slidetitle{\sectionshorttitle}{Kétlépcsős értékkiosztás: keresés}
     
     \centering
     
@@ -503,7 +405,7 @@
 \end{frame}
 
 \begin{frame}
-    \slidetitle{\sectionshorttitle}{Kétfázisú értékkiosztás: nincs találat}
+    \slidetitle{\sectionshorttitle}{Kétlépcsős értékkiosztás: nincs találat}
     
     \centering
     
@@ -519,7 +421,7 @@
 \end{frame}
 
 \begin{frame}
-    \slidetitle{\sectionshorttitle}{Kétfázisú értékkiosztás: nincs ilyen érték}
+    \slidetitle{\sectionshorttitle}{Kétlépcsős értékkiosztás: nincs ilyen érték}
     
     \centering
     
@@ -535,7 +437,7 @@
 \end{frame}
 
 \begin{frame}
-    \slidetitle{\sectionshorttitle}{Kétfázisú értékkiosztás: értéksáv keresése}
+    \slidetitle{\sectionshorttitle}{Kétlépcsős értékkiosztás: értéksáv keresése}
     
     \centering
     
@@ -544,6 +446,34 @@
     \vspace{0.7cm}
     
     Eset: keresés értéksávra; a hiányzó határoló érték pozíciója is fontos
+\end{frame}
+
+\begin{frame}[t]
+    \slidetitle{\sectionshorttitle}{Értékek reguláris kifejezésből (kereshetően)}
+    \centering
+    {\Large A \texttt{\colorbox{goldenrod!10}{([a-c]z(tt|uu)r|a[x-z])}} reguláris kifejezés szófája:}
+    
+    \vspace{1.2cm}
+    
+    \includesvg[width=\textwidth]{diagram/trie-simple-raw}
+    
+    \vspace{0.9cm}
+    
+    {\Large (nyers szófa)}
+\end{frame}
+
+\begin{frame}[t,noframenumbering]
+    \slidetitle{\sectionshorttitle}{Értékek reguláris kifejezésből (kereshetően)}
+    \centering
+    {\Large A \texttt{\colorbox{goldenrod!10}{([a-c]z(tt|uu)r|a[x-z])}} reguláris kifejezés szófája:}
+    
+    \vspace{1.2cm}
+    
+    \includesvg[width=\textwidth]{diagram/trie-simple-compact}
+    
+    \vspace{0.9cm}
+    
+    {\Large ({\color{red}kompakt} szófa)}
 \end{frame}
 
 \section{Konfiguráció és bővítés}
@@ -561,7 +491,7 @@
         \item minden lényeges paraméter állítható
         \item az igények nagy része lefedhető a beépített lehetőségekkel
         \item ugyanakkor {\color{red}egyedi működés} is beemelhető
-        \item JPA entitásokra helyezett annotációkkal is definiálható
+        \item {\color{red}JPA} entitásokra helyezett annotációkkal is definiálható
         \item megfelelő heurisztikákkal létező adatbázisról is mintázható
     \end{itemize}
 \end{frame}
@@ -691,49 +621,29 @@ schemas:
     
 \end{frame}
 
-% \begin{frame}
-%     \slidetitle{\sectionshorttitle}{Bővítés: valós postai címek használata}
-%     
-%     {\color{beamer@blendedblue}Egy cím hierarchiája}
-%     
-%     \begin{center}
-%         településnév ~ $\rightarrow$ ~
-%         kerület ~ $\rightarrow$ ~
-%         közterület neve ~ $\rightarrow$ ~
-%         közterület jellege ~ $\rightarrow$ ~
-%         házszám ~ $\rightarrow$ ~
-%         egyéb
-%     \end{center}
-%     
-%     \vspace{0.5em}
-%     
-%     {\color{beamer@blendedblue}Jellemzők}
-%     
-%     \begin{itemize}
-%         \setlength\itemsep{0.3em}
-%         \item ebben a szcenárióban elengedjük a kis tárhelyigényt
-%         \item az összes létező címet fogjuk leképezni a táblára
-%         \item szolgáltatunk egy többoszlopos (leftmost prefix) indexet
-%         \item alternatív index: implicite üres kerülettel
-%         \item a vármegyét, irányítószámot és egyéb adatokat származtatjuk
-%         \item utóbbiak a hierarchia különböző szintjeihez tartozhatnak
-%     \end{itemize}
-% \end{frame}
-% 
-% \begin{frame}
-%     \slidetitle{\sectionshorttitle}{Bővítés: on-demand schema}
-%     
-%     \begin{itemize}
-%         \setlength\itemsep{1em}
-%         \item {\color{red} radikális automatizmus}
-%         \item nincs előre megadott séma
-%         \item ha egy lekérés új táblát/oszlopot tartalmaz, on-demand létrehozzuk
-%         \item új táblából történő wildcardos lekérdezésnél alapértelmezett oszlop
-%         \item táblaméret, oszloptípus, idegen kulcs megállapítása heurisztikákkal
-%         \item a \texttt{seed} lehet beégetett vagy az első lekérés függvénye
-%         \item írható adatbázis esetén nehéz megvalósítani
-%     \end{itemize}
-% \end{frame}
+\begin{frame}
+    \slidetitle{\sectionshorttitle}{Írhatósági réteg}
+    
+    {\color{beamer@blendedblue}A \texttt{DiffTable} dekorátor}
+    
+    \begin{itemize}
+        \item csak olvassa az alárendelt táblaobjektumot
+        \item amíg nincs módosítás, átlátszóan működik
+        \item memóriában tárolja a módosításokat
+        \item szükség szerint kiegészíti a lekérést és összefésüli az eredménytáblát
+    \end{itemize}
+    
+    \vspace{0.4cm}
+    
+    {\color{beamer@blendedblue}Tranzakciókezelés}
+    
+    \begin{itemize}
+        \item kétféle tranzakciós stratégia: írási ablakok vagy MVCC
+        \item kétféle commit mód: \texttt{AUTOCOMMIT} vagy explicit lockolás
+        \item mindegyik változat ACID-kompatibilis
+        \item nagyon sok írási művelet esetén nem igazán hatékony
+    \end{itemize}
+\end{frame}
 
 \section{Eredmények}
 \def\sectionshorttitle{Eredmények}
@@ -1075,23 +985,6 @@ schemas:
 \section{Összegzés}
 \def\sectionshorttitle{Összegzés}
 
-% \begin{frame}
-%     \slidetitle{\sectionshorttitle}{Elvárások teljesítése}
-%     
-%     \begin{itemize}
-%         \setlength\itemsep{0.5em}
-%         \item[] \onslide<2->{\greencheck} relációs adatmodellre épül
-%         \item[] \onslide<3->{\greencheck} deklaratív, finomhangolható, könnyen bővíthető
-%         \item[] \onslide<4->{\greencheck} nem szükséges forrásadatbázis, de mintaként használható
-%         \item[] \onslide<5->{\greencheck} nincs preparálási folyamat, szinte azonnal elindul
-%         \item[] \onslide<6->{\greencheck} óriás adatmennyiséget is képes szimulálni, szinte tárhelyigény nélkül
-%         \item[] \onslide<7->{\greencheck} az adatokat csak elérésükkor, on-the-fly számítja
-%         \item[] \onslide<8->{\greencheck} a runtime teljesítmény kielégítő
-%         \item[] \onslide<9->{\greencheck} determinisztikus, konzisztens, skálázható
-%         \item[] \onslide<10->{\greencheck} opcionálisan írható
-%     \end{itemize}
-% \end{frame}
-
 \begin{frame}
     \slidetitle{\sectionshorttitle}{Elvárások teljesítése}
     
@@ -1110,15 +1003,18 @@ schemas:
 \end{frame}
 
 \begin{frame}
-    \slidetitle{\sectionshorttitle}{További előnyök}
+    \slidetitle{\sectionshorttitle}{Mit nyertünk még?}
     
     \begin{itemize}
         \setlength\itemsep{1em}
-        \item könnyen verziókezelhető konfigurációs fájl
-        \item könnyű replikálhatóság (csak-olvasható adatbázis esetén)
-        \item teljesen izolált automatikus integrációs tesztelés adatbázissal
-        \item füsttesztek teljes értékű adatbázissal
+        \item könnyen verziókezelhető
+        \item könnyen replikálható (csak-olvasható adatbázis esetén)
+        \item JPA-entitásokból is indítható
+        \item füsttesztekhez is használható
+        \item akár serverless szolgáltatásként is működtethető
         \item írási rétegként létező adatbázis fölé is elhelyezhető
+        \pause \item \textbf{\large\texttt{{-}{-}dev{-}mode}}
+        \pause \item \textbf{\large\texttt{{-}{-}zero{-}mode}}
     \end{itemize}
 \end{frame}
 
@@ -1144,104 +1040,15 @@ schemas:
     \end{itemize}
 \end{frame}
 
-\iffalse
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
-Összefoglalás, jövő (közvetlenül a mérések után):
-
-- almát a körtével
-- nem a részletes összenhasonlítgatás volt a cél
-- proof of concept
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
-####### Kérdések: #######
-
-1. A legtöbb rendszer már úgy van fejlesztve, hogy van hely bőven. Miért kritikus ez egy
-mockadatbázisnál? A laptopok is rendelkeznek ár több GB memóriával.
-
-- egy lightweight megoldás megnöveli a lehetőségeket
-- olyan új lehetőségek nyílnak meg, amelyeket eddig nem is asszociáltak adatbázisokhoz (dev mode, serverless stb.)
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
-2. A tranzakcióknál az írási státusznál feltételezi, hogy addig nem olvas senki? Mi a helyzet
-ha blokkolódik az írási tranzakció? Mi van ha több tranzakció fut egyszerre, akkor a WRITE
-állapot globális?
-
-- a tranzakciós réteg csupán demonstrálni kívánja, hogy lehetséges tranzakcionális írási réteget helyezni a bemutatott csak-olvasható réteg fölé
-- írási műveletek esetén jellemzően egyfelhasználós használatra számítunk
-- főként olvasási műveletekre számítunk
-- egyébként sem az írási műveletek képeznek szűk keresztmetszetet::: demo: ott vannak az adatok; tesztek: egy kezdeti művelet jellemzőit akarjuk ellenőrizni
-- a későbbiekben ez továbbfejleszthető, akár egy teljeskörű tranzakciós keretrendszerré, de ez messze nem prioritás
-- a csak-olvasható réteg megosztható több tranzakciós réteg alatt (a dolgozatban szereplő két tranzakciós technika ebben az irányba mutat, habár jelenleg ez még nincs megvalósítva)
-- később az írási/tranzakciós rétegek megoszthatósága is tervben van (érkezett hozzám ilyen kérdés korábbról)
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
-3. Mitől gyorsabb a LargeInteger mint a scala BigInt? Az ábrán látjuk hogy az, bár a mérések
-nincsenek leírva, de mi ennek az oka? Miért kellett sajátot írni? Miért nem volt jó a Scalas
-megoldás?
-
-- nem az volt a cél, hogy feltétlenül gyorsabban legyen, hanem hogy ne az legyen, hogy létezik egy szupergyors megoldás, mi meg egy lassabbat használunk
-- azért nem vettem át egy idegen környezet megoldását, mert:
-    - a BigInt felülete scalára lett tervezve, javában borzalmas (ld. például operátor-műveletek)
-    - egy standalone, kényelmes megoldást akartam nyújtani, ami kompatibilis a BigInteger típussal
-    - egy függetlenül fejleszthető megoldást akartam, radikálisan minimalizáltam a projekt függőségeit
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
-4. A Nyers szófa kompakttá alakítás algoritmus új eredmény? Nem lehetett volna ezt külön
-publikálni.
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
-5. A 2.1 ábrán megjelenik a SPARQL. Szemantikus adatokat is tud tárolni? Ott hogyan
-vannak megvalósítva az összekapcsolások?
-
-[RDF (Resource Description Framework), triple-store, predicate, semantic data ...]
-- valóban készült egy kezdetleges SPARQL adapter (quetzal :: https://dl.acm.org/doi/10.1145/2463676.2463718)
-- az erőforrások négyoszlopos táblák: numerikus egyedi kulcs, erőforrás-azonosító, predikátum, tulajdonság
-- a feltüntetése demonstratív jelleg (szándékosan nagyon eltérő lekérdező-nyelveket tüntettem föl)
-- nem arról van szó, hogy maga a HoloDB szemantikus adatokat tárolna, hanem a relációs modellben hozzáférhető táblák egy szemantikus nézet backendjeként ("storage" engine) is használhatók
-- én ehhez a quetzal nevezetű SPARQL->SQL megoldással kísérleteztem
-- nagyon kezdetleges
-- a későbbiekben prioritás lesz, hogy más rendszerekkel össze lehessen kapcsolni
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
-6. Az adatokat oszlop szinten tárolódnak a dolgozat alapján? Hogyan kapcsolódik ez a
-megoldás az oszloporientált adatbáisokhoz? Például a Classandrához?
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
-
-\fi
-
 \begin{frame}
     \slidetitle{\sectionshorttitle}{Jövőbeli tervek}
 
     \begin{itemize}
         \setlength\itemsep{1em}
+        \item több és részletesebb mérési eredmény
         \item az alapvető működés optimalizálása
         \item további kiegészítő funkciók, eszközök fejlesztése
         \item dokumentáció és kommunikáció
-        \pause \item megfelelő elnevezés megtalálása
-            
-            \vspace{0.5\baselineskip}
-            
-            \pause { \huge ~~~ } \faWifi ~~ \textit{holografikus adatbázis}
-            
-            \vspace{0.4\baselineskip}
-            
-            \pause { \huge ~~~ } ~\faGhost ~~ \textit{fantomadatbázis}
-            
-            \vspace{0.4\baselineskip}
-            
-            \pause { \huge ~~~ } ~\faEdit ~ \textit{deklaratív adatbázis}
     \end{itemize}
 \end{frame}
         
@@ -1282,5 +1089,138 @@ megoldás az oszloporientált adatbáisokhoz? Például a Classandrához?
         \href{mailto:horvathdown@student.elte.hu}{horvathdown@student.elte.hu}
         \end{flushleft}
 \end{frame}
+
+\appendix
+\begingroup
+\setbeamertemplate{footline}{}
+
+\section{Bírálói kérdések}
+\def\sectionshorttitle{Kérdések}
+
+\begin{frame}[noframenumbering]
+    ~~~
+\end{frame}
+
+\begin{frame}[t,noframenumbering]
+    \slidetitle{\sectionshorttitle}{1. kérdés}
+    
+    \textbf{A legtöbb rendszer már úgy van fejlesztve, hogy van hely bőven.
+    Miért kritikus ez egy mockadatbázisnál?
+    A laptopok is rendelkeznek már több GB memóriával.}
+    
+    \vspace{0.7cm}
+    
+    \begin{itemize}
+        \setlength\itemsep{1em}
+        \item a bő hely is véges
+        \item párhuzamos futtatás
+        \item az adat nem csak helyet foglal, de elő is kell állítani
+        \item nem csak fejlesztéskor van szükség átemeneti adatbázisra
+        \item új lehetőségek (pl. \texttt{{-}{-}dev{-}mode})
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[t,noframenumbering]
+    \slidetitle{\sectionshorttitle}{2. kérdés}
+    
+    \textbf{A tranzakcióknál az írási státusznál feltételezi, hogy addig nem olvas senki?
+    Mi a helyzet, ha blokkolódik az írási tranzakció?
+    Mi van, ha több tranzakció fut egyszerre?
+    Akkor a WRITE állapot globális?}
+    
+    \vspace{0.3cm}
+    
+    \begin{itemize}
+        \setlength\itemsep{1em}
+        \item igen, az alap módban egy írási tranzakció kizárólagosan fut
+        \item lightweight tranzakciós megoldás
+        \item főleg egyfelhasználós hozzáférésre számítunk
+        \item főleg olvasási műveletekre számítunk
+        \item az alap módban READ állapotban akárhány olvasás futhat egyszerre
+        \item MVCC módban eldobódik az írási tranzakció, ha nem fésülhető be
+        \item lényeg: nem terheljük a tábla engine-re a konkurencia kezelését
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[t,noframenumbering]
+    \slidetitle{\sectionshorttitle}{3. kérdés}
+    
+    \textbf{Mitől gyorsabb a LargeInteger, mint a Scala BigInt?
+    Az ábrán látjuk, hogy az (bár a mérések nincsenek leírva), de mi ennek az oka?
+    Miért kellett sajátot írni, miért nem volt jó a scalás megoldás?}
+    
+    \vspace{0.7cm}
+    
+    \begin{itemize}
+        \setlength\itemsep{1em}
+        \item már dolgoztam a LargeInteger-en, mikor a BigInt a scala API-ba került
+        \item már az is elég, ha a teljesítmény összemérhető
+        \item nem akartam külső függőségeket, főként ilyen alapvető típusnál
+        \item a BigInt nem idiomatikus Javában (pl. \texttt{\colorbox{goldenrod!10}{n.\$less\$less(m)}})
+        \item a LargeInteger támogatja a javás BigInteger metódusait
+        \item a LargeInteger egy független utility, számos kényelmi metódussal
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[t,noframenumbering]
+    \slidetitle{\sectionshorttitle}{4. kérdés}
+    
+    \textbf{A Nyers szófa kompakttá alakítás algoritmus új eredmény?
+    Nem lehetett volna ezt külön publikálni?}
+    
+    \vspace{0.7cm}
+    
+    \begin{itemize}
+        \setlength\itemsep{1em}
+        \item nem találtam ennek megfelelő létező megoldást
+        \item nagyon speciális céllal használom az algoritmust
+        \item lehetséges, hogy megéri önállóan publikálni,
+              de elsősorban a reguláris kifejezésekből épített
+              virtuális értékkészletek kontextusában van értelme
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[t,noframenumbering]
+    \slidetitle{\sectionshorttitle}{5. kérdés}
+    
+    \textbf{A 2.1 ábrán megjelenik a SPARQL.
+    Szemantikus adatokat is tud tárolni?
+    Ott hogyan vannak megvalósítva az összekapcsolások?}
+    
+    \vspace{0.7cm}
+    
+    \begin{itemize}
+        \setlength\itemsep{1em}
+        \item prioritás, hogy a HoloDB-t más rendszerekkel össze lehessen kapcsolni
+        \item a relációs modell egy közös nevező más modellekhez
+        \item nincs natív támogatás szemantikus adatokhoz
+        \item egy kezdetleges driver készült a Quetzal nevezetű SPARQL keretrendszerhez
+              (mely relációs adatbázist használ tárolóként)
+        \item ilyenkor a schema a Quetzal tárolási struktúráját kell kövesse
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[t,noframenumbering]
+    \slidetitle{\sectionshorttitle}{6. kérdés}
+    
+    \textbf{Az adatok oszlop szinten tárolódnak a dolgozat alapján.
+    Hogyan kapcsolódik ez a megoldás az oszloporientált adatbázisokhoz,
+    például a Cassandrához?}
+    
+    \vspace{0.7cm}
+    
+    \begin{itemize}
+        \setlength\itemsep{1em}
+        \item közvetlenül nem kapcsolódik
+        \item NoSQL adatbázisok közül csak MongoDB lekérések mockolásával foglalkoztam,
+              egyelőre az is kezdetleges,
+              proof-of-concept jellegű
+        \item a HoloDB valószínűleg hatékony lenne oszloporientált rendszerek backendjeként,
+              különösen olyan adatoknál, ahol nincs külön permutálás
+              (időbélyegek, monoton idősoros adatok stb.)
+    \end{itemize}
+\end{frame}
+
+\endgroup
 
 \end{document}

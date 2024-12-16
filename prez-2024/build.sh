@@ -40,10 +40,12 @@ if ! [ "${mode}" = 'draft' ]; then
         
         diagramSvgFilename="${diagramFilenameBase}.svg"
         drawio --export --format svg --output "${diagramSvgFilename}" "${diagramFilename}"
-        if [ "${mode}" = 'final' ]; then
-            inkscape "${diagramSvgFilename}" --export-text-to-path --export-overwrite
-        fi
     done
+    #if [ "${mode}" = 'final' ]; then
+        ls ./ --color=never | egrep '^.*\.svg$' | while IFS=' ' read -r svgFilename; do
+            inkscape "${svgFilename}" --export-text-to-path --export-overwrite
+        done
+    #fi
 fi
 
 cd ..

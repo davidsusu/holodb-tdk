@@ -37,9 +37,11 @@ if ! [ "${mode}" = 'draft' ]; then
         diagramSvgFilename="$( echo "${diagramFilename}" | sed -E 's/.drawio$/.svg/' )"
         drawio --export --format svg --output "${diagramSvgFilename}" "${diagramFilename}"
     done
-    ls ./ --color=never | egrep '^.*\.svg$' | while IFS=' ' read -r svgFilename; do
-        inkscape "${svgFilename}" --export-text-to-path --export-overwrite
-    done
+    #if [ "${mode}" = 'final' ]; then
+        ls ./ --color=never | egrep '^.*\.svg$' | while IFS=' ' read -r svgFilename; do
+            inkscape "${svgFilename}" --export-text-to-path --export-overwrite
+        done
+    #fi
 fi
 
 cd ..

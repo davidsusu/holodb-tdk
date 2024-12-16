@@ -1518,7 +1518,7 @@ A felépítés két lépcsőben történik.
 Először egy nyers fát állítunk elő, ami közvetlenül reprezentálja a reguláris kifejezést.
 \algorithmref{regex_wordtree_create_raw}
 
-Például a \texttt{([a-c]z(tt|uu)r|a[s-z])} reguláris kifejezés nyers szófája így néz ki:
+Például a \texttt{([a-c]z(tt|uu)r|a[x-z])} reguláris kifejezés nyers szófája így néz ki:
 
 \begin{figure}[H]
 \centering
@@ -1564,7 +1564,7 @@ ez természetesen az egyenlő csomópontok részfáinak összefésülését vonj
 Nevezzük az így nyert gráfot a reguláris kifejezés kompakt szófájának.
 \algorithmref{regex_wordtree_create_compact}
 
-A \texttt{([a-c]z(tt|uu)r|a[s-z])} reguláris kifejezés fenti nyers szófájából
+A \texttt{([a-c]z(tt|uu)r|a[x-z])} reguláris kifejezés fenti nyers szófájából
 az alábbi kompakt szófát nyerjük:
 
 \begin{figure}[H]
