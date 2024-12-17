@@ -61,9 +61,14 @@
     \titlepage
 \end{frame}
 
-\begin{frame}[plain,noframenumbering]
+\begin{frame}
     \frametitle{Tartalom}
-    \tableofcontents
+    \hfill
+    \parbox[t]{.95\textwidth}{
+        \begin{minipage}[c][0.75\textheight]{\textwidth}
+        \tableofcontents
+        \end{minipage}
+    }
 \end{frame}
 
 \section{Bevezetés: adatbázist akarok, most!}
@@ -109,39 +114,24 @@
     \includegraphics[height=0.4\textwidth]{diagram/database-tasks}
 \end{frame}
 
-\iffalse
-\begin{frame}
-    \slidetitle{\sectionshorttitle}{Alapmegállapítás}
-    
-    \centering
-    
-    \includegraphics[height=0.22\textwidth]{diagram/test-with-data}
-    
-    \vspace{1cm}
-    
-    \begin{minipage}[b]{0.8\textwidth}
-        \justifying
-        Igen gyakran ütközünk abba a problémába,
-        hogy adott struktúrájú és szemantikájú,
-      viszonylag rövid életű adatbázist kell biztosítani,
-        a produkciós adatokra vonatkozó speciális követelmények nélkül.
-    \end{minipage}
-\end{frame}
-\fi
-
 \section{Eddigi megközelítések}
 \def\sectionshorttitle{Megközelítések}
 
 \begin{frame}
-    \slidetitle{\sectionshorttitle}{Bevett megközelítések}
+    \slidetitle{\sectionshorttitle}{A szokásos megoldások}
     
-    \begin{itemize}
+    \begin{logolist}
         \setlength\itemsep{1.5em}
-        \item produkciós adatbázis másolatának használata
-        \item anonimizálás
-        \item adatgenerálás
-        \item lekérdezések ad hoc mockolása
-    \end{itemize}
+        \LARGE
+        \item[\raisebox{-0.4em}{\includesvg[width=1.25em]{image/solution-copy}}]
+                ~produkciós adatbázis másolása
+        \item[\raisebox{-0.4em}{\includesvg[width=1.25em]{image/solution-anonymize}}]
+                ~anonimizálás
+        \item[\raisebox{-0.4em}{\includesvg[width=1.25em]{image/solution-generate}}]
+                ~adatgenerálás
+        \item[\raisebox{-0.4em}{\includesvg[width=1.25em]{image/solution-mock}}]
+                ~lekérdezések ad hoc mockolása
+    \end{logolist}
 \end{frame}
 
 \begin{frame}
@@ -331,7 +321,7 @@
         \end{itemize}
 
         \begin{overprint}
-            \onslide<7>\begin{flushright}
+            \onslide<6>\begin{flushright}
                 \vspace{2.5em}
                 
                 { \tiny \color{BrickRed}
@@ -351,8 +341,8 @@
             \onslide<2>\centerline{\includegraphics[width=0.9\textwidth]{diagram/treerandom-0}}
             \onslide<3>\centerline{\includegraphics[width=0.9\textwidth]{diagram/treerandom-1}}
             \onslide<4>\centerline{\includegraphics[width=0.9\textwidth]{diagram/treerandom}}
-            \onslide<5>\centerline{\includegraphics[width=0.9\textwidth]{diagram/treerandom-indexed}}
-            \onslide<6->\centerline{\includegraphics[width=0.9\textwidth]{diagram/treerandom-nonindexed}}
+            \onslide<5-6>\centerline{\includegraphics[width=0.9\textwidth]{diagram/treerandom-nonindexed}}
+            \onslide<7>\centerline{\includegraphics[width=0.9\textwidth]{diagram/treerandom-indexed}}
         \end{overprint}
     \end{minipage}
 \end{frame}
@@ -476,25 +466,32 @@
     {\Large ({\color{red}kompakt} szófa)}
 \end{frame}
 
-\section{Konfiguráció és bővítés}
-\def\sectionshorttitle{Konfiguráció és bővítés}
-
 \begin{frame}
-    \slidetitle{\sectionshorttitle}{A konfiguráció jellemzői}
+    \slidetitle{\sectionshorttitle}{Írhatósági réteg}
+    
+    {\color{beamer@blendedblue}A \texttt{DiffTable} dekorátor}
     
     \begin{itemize}
-        \setlength\itemsep{0.5em}
-        \item konfigurációs fájllal leírható (alapértelmezetten {\color{red}YAML})
-        \item {\color{red}deklaratív}, átlátható
-        \item a sémát és az adattartalmat integráltan írja le
-        \item a gyökér-\textt{seed} változtatásával minden {\color{red}újrakeverhető}
-        \item minden lényeges paraméter állítható
-        \item az igények nagy része lefedhető a beépített lehetőségekkel
-        \item ugyanakkor {\color{red}egyedi működés} is beemelhető
-        \item {\color{red}JPA} entitásokra helyezett annotációkkal is definiálható
-        \item megfelelő heurisztikákkal létező adatbázisról is mintázható
+        \item csak olvassa az alárendelt táblaobjektumot
+        \item amíg nincs módosítás, átlátszóan működik
+        \item memóriában tárolja a módosításokat
+        \item szükség szerint kiegészíti a lekérést és összefésüli az eredménytáblát
+    \end{itemize}
+    
+    \vspace{0.4cm}
+    
+    {\color{beamer@blendedblue}Tranzakciókezelés}
+    
+    \begin{itemize}
+        \item kétféle tranzakciós stratégia: írási ablakok vagy MVCC
+        \item kétféle commit mód: \texttt{AUTOCOMMIT} vagy explicit lockolás
+        \item mindegyik változat ACID-kompatibilis
+        \item nagyon sok írási művelet esetén nem igazán hatékony
     \end{itemize}
 \end{frame}
+
+\section{Konfiguráció és bővítés}
+\def\sectionshorttitle{Konfiguráció és bővítés}
 
 \begin{frame}[fragile]
     \slidetitle{\sectionshorttitle}{Konfiguráció-példa}
@@ -621,31 +618,7 @@ schemas:
     
 \end{frame}
 
-\begin{frame}
-    \slidetitle{\sectionshorttitle}{Írhatósági réteg}
-    
-    {\color{beamer@blendedblue}A \texttt{DiffTable} dekorátor}
-    
-    \begin{itemize}
-        \item csak olvassa az alárendelt táblaobjektumot
-        \item amíg nincs módosítás, átlátszóan működik
-        \item memóriában tárolja a módosításokat
-        \item szükség szerint kiegészíti a lekérést és összefésüli az eredménytáblát
-    \end{itemize}
-    
-    \vspace{0.4cm}
-    
-    {\color{beamer@blendedblue}Tranzakciókezelés}
-    
-    \begin{itemize}
-        \item kétféle tranzakciós stratégia: írási ablakok vagy MVCC
-        \item kétféle commit mód: \texttt{AUTOCOMMIT} vagy explicit lockolás
-        \item mindegyik változat ACID-kompatibilis
-        \item nagyon sok írási művelet esetén nem igazán hatékony
-    \end{itemize}
-\end{frame}
-
-\section{Eredmények}
+\section{Empirikus eredmények}
 \def\sectionshorttitle{Eredmények}
 
 \begin{frame}
@@ -1009,7 +982,7 @@ schemas:
         \setlength\itemsep{1em}
         \item könnyen verziókezelhető
         \item könnyen replikálható (csak-olvasható adatbázis esetén)
-        \item JPA-entitásokból is indítható
+        \item JPA-entitásokból is indítható (nem szükséges a YAML-fájl)
         \item füsttesztekhez is használható
         \item akár serverless szolgáltatásként is működtethető
         \item írási rétegként létező adatbázis fölé is elhelyezhető
@@ -1045,7 +1018,7 @@ schemas:
 
     \begin{itemize}
         \setlength\itemsep{1em}
-        \item több és részletesebb mérési eredmény
+        \item {\color{red}több és részletesebb mérési eredmény}
         \item az alapvető működés optimalizálása
         \item további kiegészítő funkciók, eszközök fejlesztése
         \item dokumentáció és kommunikáció
@@ -1115,7 +1088,7 @@ schemas:
         \item a bő hely is véges
         \item párhuzamos futtatás
         \item az adat nem csak helyet foglal, de elő is kell állítani
-        \item nem csak fejlesztéskor van szükség átemeneti adatbázisra
+        \item nem csak fejlesztéskor van szükség átmeneti adatbázisra
         \item új lehetőségek (pl. \texttt{{-}{-}dev{-}mode})
     \end{itemize}
 \end{frame}
@@ -1153,7 +1126,7 @@ schemas:
     
     \begin{itemize}
         \setlength\itemsep{1em}
-        \item már dolgoztam a LargeInteger-en, mikor a BigInt a scala API-ba került
+        \item már dolgoztam a LargeInteger-en, mielőtt az új BigInt megjelent
         \item már az is elég, ha a teljesítmény összemérhető
         \item nem akartam külső függőségeket, főként ilyen alapvető típusnál
         \item a BigInt nem idiomatikus Javában (pl. \texttt{\colorbox{goldenrod!10}{n.\$less\$less(m)}})
