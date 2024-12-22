@@ -118,8 +118,7 @@ nem függ annak történetiségétől.
 Ezt az átlátható képet bolygatja meg a szoftverhez tartozó produkciós adatbázis,
 mely önálló életet él, a felhasználói világgal való interakcióban folyamatosan változik;
 szerkezete, szemantikája azonban szorosan az alkalmazás mindenkori állapotához kötődik.%
-\cite{Ploski2007DatabaseCentricVersioning}%
-\cite{Fluri2023DatabaseCiCd}
+\cite{Ploski2007DatabaseCentricVersioning,Fluri2023DatabaseCiCd,Edwards2023LiveLocalSchemaChange}
 
 Az \textit{életnek kitett} produkciós adatbázist természetesen kénytelenek vagyunk
 minden erőforrásigényével életben tartani, és minden release-zel migrálni.
@@ -134,14 +133,13 @@ mint a produkciós adatbázis esetében.
 mindezt egy rövidéletű adathalmaz biztosítása miatt,
 amelynek ráadásul csak egy töredéke lesz érintve egy-egy teszt során.
 
-Számos esetben tehát szükségünk van egy működő adatbázisra,
-de valójában nincs szükségünk igazi adatokra.
-Ez egy paradox helyzet, és felveti annak kérdését,
-hogy ezzel az átmeneti tárolással azonos súllyal esik-e latba az erőforrásigény.
-Egyáltalán, van valami abszurd abban, amikor ilyen nagy mennyiségű adatot
-könnyedén lematerializálunk, majd nagyrészt használatlanul eldobjuk.
+Gyakran tehát szükségünk van egy működő adatbázisra,
+miközben valójában nincs szükségünk igazi adatokra.
+Meglehetősen paradox ez a helyzet.
+Ráadásul van valami abszurd abban, amikor ilyen nagy mennyiségű adatot
+gondosan lematerializálunk, hogy aztán nagyrészt használatlanul eldobjuk.
 Felmerül a kérdés: vajon elkerülhető mindez?
-Más egyértelmű megoldás híján azonban inkább a meglévő módszerek tökéletesítésére törekszünk.
+Más egyértelmű megoldás híján hagyományosan inkább a meglévő módszerek tökéletesítésére törekszünk.
 Ördögi kör.
 
 Amikor egy szoftver kezdeti fázisában az adatbázis szerkezete is gyakran változik,
@@ -166,12 +164,12 @@ Természetesen valaminek a hiányát nehéz bizonyítani,
 és az állítást (egyelőre) pusztán egy sokéves fejlesztői tapasztalat
 során szerzett erőteljes benyomás támasztja alá.
 
-Számomra meglepő, hogy egy ilyen problémára,
-mely ennyire napi szinten érinti fejlesztők, tesztelők, tanulók és mások életét,
+Számomra meglepő, hogy egy ilyen nehézségre,
+mely napi szinten érinti fejlesztők, tesztelők és mások munkáját, produktivitását,
 egyelőre csak a legszofisztikáltabb \textit{kerülőmegoldások} születtek.
-Kicsivel lentebb megpróbálom majd megtippelni ennek az okát.
-Előtte még végigveszek néhány megközelítést,
-melyek valamennyire kapcsolódnak a fenti problémához,
+Hamarosan megkísérlem megtippelni ennek az okát.
+Előtte azonban még végigveszek néhány megközelítést,
+melyek valamennyire kapcsolódnak ehhez a problémához,
 valamelyest hasonlót akarnak megoldani.
 
 \subsection{Kérések mockolása on-the-fly}
@@ -1503,7 +1501,7 @@ Ilyen megkötések mellett a reguláris kifejezéshez problémamentesen rendelhe
 irányított körmentes szógráf (DAWG),
 melyben egy érték nélküli kiinduló elemből érjük el a karaktereket reprezentáló csomópontokat,
 és kizárólag a szóvég csomópontokon (EOW) terminálhatunk,
-melyekből már nem érhető el további csomópont. \parencite{AppelScrabble1988}
+melyekből már nem érhető el további csomópont.\cite{AppelScrabble1988}
 
 A gráf lényegileg egy prefix fa, ahol egyes azonos részfákat újrahasznosítunk.
 Ezért a továbbiakban az egyszerűség kedvéért néha faként fogok a gráfra hivatkozni.
@@ -1646,7 +1644,7 @@ hogy egy korábbi ékezet vagy nagybetűsség számít-e.
 Vagyis az egyszerű, karakterenkénti prefix-fa sem elég a rendezettség biztosításához.
 
 Ha egy ilyen szofisztikáltabb rendezési elvet akarunk megvalósítani,
-az \textit{Unicode Collation Algorithm} (UCA) szabványból érdemes kiindulni.
+az \textit{Unicode Collation Algorithm} (UCA) szabványból érdemes kiindulni\protect\cite{UCA2024}.
 A UCA azonban rendkívül összetett,
 így egyelőre csak az alapvető szempontok implementálását fogom bemutatni.
 Ki-kitérek majd arra, hogyan lehet ezeket a későbbiekben bővíteni, továbbfejleszteni,
@@ -1687,7 +1685,7 @@ kerül megállapításra a két karakterlánc egymáshoz képesti sorrendje.
 
 Az \textit{International Components for Unicode} a Unicode Consortium hivatalos
 referenciaimplementációja általában a Unicode szabványhoz,
-beleértve számos konkrét kollációt a világ nyelveihez.
+beleértve számos konkrét kollációt a világ nyelveihez~\protect\cite{ICU2024}.
 Konkrét szabályok kialakításához ebből érdemes kiindulni.
 Az ICU általában (beleértve a standard, európai és magyar kollációkat is)
 teljesen az L1 szinten kezeli az írásjeleket is
