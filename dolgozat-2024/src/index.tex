@@ -315,20 +315,20 @@ kívül esik a megszokott paradigmán, és nem fér bele az időbe.
 Néhány ezzel kapcsolatos tényezőt tényszerűen megállapíthatunk.
 
 \begin{itemize}
-    \item \textbf{érdekhiány}: a releváns területen működő nagyobb vendorok elsősorban
+    \item \textbf{Érdekhiány}: a releváns területen működő nagyobb vendorok elsősorban
           erőforrásokat adnak bérbe, és az általuk fejlesztett architektúrák (történetileg érthetően)
           elsősorban az ezeken futó tényleges adatbázisok kezelését kell megoldják;
           nincs tehát nyomás jelentősen más típusú termékkel való kísérletezésre.
           \todoref{+CITE: (miért nincs?) erőforrásokat adnak bérbe}
-    \item \textbf{bejáratott alternatívák}: az on-the-fly mockolás lehetősége,
+    \item \textbf{Bejáratott alternatívák}: az on-the-fly mockolás lehetősége,
           a NoSQL adatbázisok és felhőmegoldások fejlődése stb.
-          sztenderdképző kerülőmegoldásokként elfedték a problémát
+          sztenderdképző kerülőmegoldásokként elfedték a problémát.
           \todoref{+CITE: (miért nincs?) kerülőmegoldások}
-    \item \textbf{megfelelő SQL plannerek eddigi hiánya}: az Apache Calcite például
-          csak az utóbbi néhány évben vált népszerűvé, és inkább elsősorban adatintegrátorként
+    \item \textbf{Megfelelő SQL plannerek eddigi hiánya}: az Apache Calcite például
+          csak az utóbbi néhány évben vált népszerűvé, és inkább elsősorban adatintegrátorként.
           \todoref{+CITE: (miért nincs?) SQL-plannerek csak utóbb}
-    \item \textbf{kontraintuitivitás}: az új megoldás működésmódja nem triviális,
-          így nem egyszerű átlátni a koncepciót, és megérteni hogy „hol is vannak az adatok”
+    \item \textbf{Kontraintuitivitás}: az új megoldás működésmódja nem triviális,
+          így nem egyszerű átlátni a koncepciót, és megérteni hogy „hol is vannak az adatok”.
           \todoref{+CITE: (miért nincs?) hol is vannak az adatok}
 \end{itemize}
 
@@ -342,7 +342,7 @@ A következőkben lényegileg egy sajátos relációsadatbázis-szervert fogok b
 Ennek a már működő és kipróbálható szoftvernek a HoloDB nevet adtam.
 Kezdetben ugyanis úgy gondoltam rá,
 mint a hologram-ábrák megfelelőjére az adatbázisok világában,
-mint ami, csak illuzórikusan kivetítésre kerül egy kisméretű definíció alapján.
+mint ami illuzórikusan kerül kivetítésre egy kisméretű definícióból.
 Ebben az adatbázisban ugyanis nincsenek tárolva adatok
 (legfeljebb adatok változásai, ha az írhatóság be van kapcsolva).
 
@@ -350,7 +350,9 @@ A deklaratív konfiguráció alapján a lekérdezések eredménye on-the-fly ker
 úgy, hogy a lekérdezések közötti konzisztencia biztosított,
 vagyis az egymás utáni lekérdezések egy koherens adatbázis képét adják.
 Ezt pusztán adatmezőnként determinisztikusan generált értékekkel is meg lehetne oldani,
-ekkor a kereséshez a teljes tábla szkennelése lenne szükséges.
+ekkor a kereséshez a teljes tábla szkennelése lenne szükséges
+(vagyis visszajutnánk ugyanahhoz a problémához,
+mint amit a seed-alapú világokban való kereshetőség kapcsán említettem).
 A virtuális indexek miatt általában azonban nincs szükség ilyen költséges műveletekre.
 Az értéklekérés és keresés oda-vissza egybecsengő működésének
 biztosításához a kriptográfiából ismert módszereket is felhasználtam.
@@ -388,8 +390,8 @@ A fentiek fényében az alábbi területeken biztosan alkalmazható a szoftver:
     \setlength\itemsep{-0.4em}
     \item \textbf{Tesztelés:} Integrációs és egyéb tesztek, kipróbálás.
     \item \textbf{Fejlesztés:} Kezdeti fázisban, prototípusoknál, gyakran változó adatszerkezet esetében.
-    \item \textbf{Demonstrációk:} Példaadatok bemutatókhoz, koncepciótervekhez.
-    \item \textbf{Oktatás:} Ad hoc adathalmaz konkrét példákhoz és feladatokhoz.
+    \item \textbf{Demonstrációk:} Példaadatok szolgáltatásához bemutatókhoz, koncepciótervekhez.
+    \item \textbf{Oktatás:} Ad hoc adathalmaz biztosításához konkrét példákhoz és feladatokhoz.
 \end{itemize}
 
 Mivel az új megoldás erőforrásigénybeli paraméterei
