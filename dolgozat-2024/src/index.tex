@@ -42,6 +42,8 @@
 
 \definecolor{lightyellow}{RGB}{255, 245, 215}
 
+\newcommand{\todoref}[1]{\todo[inline, noinlinepar, color=red, textcolor=white, inlinewidth=0.6cm, caption={#1}]{\large \textbf{×}}}
+
 \newcommand{\algorithmref}[1]{\hyperref[algorithm:#1]{\colorbox{lightyellow}{%
 (\textrightarrow~Algoritmus: \nameref*{algorithm:#1})}}}
 
@@ -68,6 +70,9 @@
 \begin{document}
 
 \documentlang{hungarian}
+
+\listoftodos
+\cleardoublepage
 
 \maketitle
 
@@ -121,7 +126,7 @@ szerkezete, szemantikája azonban szorosan az alkalmazás mindenkori állapotáh
 \cite{Ploski2007DatabaseCentricVersioning,Fluri2023DatabaseCiCd,Edwards2023LiveLocalSchemaChange}
 
 Az \textit{életnek kitett} produkciós adatbázist természetesen kénytelenek vagyunk
-minden erőforrásigényével életben tartani, és minden release-zel migrálni.
+minden erőforrásigényével életben tartani, és minden release-zel migrálni \todoref{+CITE: DB-migráció (flyway/liquibase...?)}.
 Ám az \textit{absztrakt értelemben vett} adatbázisra számos egyéb helyen is szükségünk van,
 ahol ezek a folyamatos költségek igencsak nemkívánatosak.
 Ilyenek esetek jellemzően az integrációs és egyéb tesztelés, gyors prototípusgyártás, kísérletezés draft adatbázisokkal, rövid demonstrációk és prezentációk.
@@ -138,16 +143,16 @@ miközben valójában nincs szükségünk igazi adatokra.
 Meglehetősen paradox ez a helyzet.
 Ráadásul van valami abszurd abban, amikor ilyen nagy mennyiségű adatot
 gondosan lematerializálunk, hogy aztán nagyrészt használatlanul eldobjuk.
-Felmerül a kérdés: vajon elkerülhető mindez?
-Más egyértelmű megoldás híján hagyományosan inkább a meglévő módszerek tökéletesítésére törekszünk.
+Még ha olykor fel is merül a kérdés, hogy vajon elkerülhető-e mindez,
+más egyértelmű megoldás híján továbbra is inkább a meglévő módszerek tökéletesítésére törekszünk.
 Ördögi kör.
 
 Amikor egy szoftver kezdeti fázisában az adatbázis szerkezete is gyakran változik,
-a teszteléskor az adatbázist újra létre kell hozni,
-vagy igazítani a megváltozott adatszerkezethez.
-Mindkettő nehézségekkel és erőforráshasználattal jár.
-Sokkal egyszerűbb lenne az adatbázis szerkezetét egyetlen konfigurációs fájl,
-vagy akár az alkalmazásban lévő adatobjektumok változásával függő viszonyba helyezni.
+a próbálgatáshoz, teszteléshez fenntartott lokális adatbázist folyton újra létre kell hozni,
+vagy pedig igazítani a megváltozott adatszerkezethez.
+Mindkét megközelítés nehézségekkel és erőforráshasználattal jár.
+Sokkal egyszerűbb lenne az adatbázis szerkezetét egyetlen deklaratív konfigurációs fájltól
+(vagy akár közvetlenül az alkalmazásban definiált adatosztályok szerkezetétől) függővé tenni.
 
 A dolgozatban elsősorban ezekre a problémákra kínálok egy újszerű megoldást.
 Mivel a bemutatott szoftver egyúttal egy általános keretrendszer virtuális adattárakhoz,
@@ -168,7 +173,7 @@ Számomra meglepő, hogy egy ilyen nehézségre,
 mely napi szinten érinti fejlesztők, tesztelők és mások munkáját, produktivitását,
 egyelőre csak a legszofisztikáltabb \textit{kerülőmegoldások} születtek.
 Hamarosan megkísérlem megtippelni ennek az okát.
-Előtte azonban még végigveszek néhány megközelítést,
+Előbb azonban röviden áttekintem azokat a tipikus megoldásokat,
 melyek valamennyire kapcsolódnak ehhez a problémához,
 némileg hasonlót akarnak megoldani.
 
@@ -179,16 +184,19 @@ mely a lekérés (és persze az előre beállított szabályok)
 alapján generálja a válaszként visszaadandó adatstruktúrát
 (például egy rekordot vagy dokumentumot JSON formátumban).
 Az adatok véletlenszerűen kerülnek kitöltésre a lekérés szerkezete alapján megállapított séma keretébe.
+\todoref{+CITE: API-mockolók}
 
 A módszer SQL-lekérdezések közvetlen mockolásához is adaptálható,
 a lekérdezés (és ha ismert, akkor a séma) alapján meg kell állapítani
 a visszaadandó eredménytábla szerkezetét, adattípusait,
 az egy-egy oszlopba kerülő adatok jellegét,
 majd random jelleggel elő kell állítani bizonyos számú, ezeknek a követelményeknek megfelelő eredményrekordot.
+\todoref{+CITE: SQL-mockolók}
 
 Ebbe a kategóriába sorolhatók az úgynevezett faker segédkönyvtárak is.
 Ezek olyan véletlenadat-generálók,
 melyek bizonyos gyakori entitástípusok adatait (pl. személynevek, e-mail, dátum) szolgáltatják.
+\todoref{+CITE: faker segédkönyvtárak}
 
 Ez a megközelítés természetesen nem is törekszik arra,
 hogy koherens eredményt adjon több lekérés esetén,
@@ -214,13 +222,22 @@ az adott szabályrendszer szerint on-demand legeneráljuk az adott szelet tartal
 A sűrűn benépesített világok szomszédos szeleteinek összeillesztése néha nem triviális.
 Felületszerű, folytonos struktúrák generálása esetén gyakran használnak
 valamilyen eleve interpolált eljárást,
-így biztosítva a közeli helyeken a közeli értékeket.
+így biztosítva a töretlen átmenetet a szomszédos szeletek határvonalainál.
 
 Egy közismert korai példa seed-alapú módszert alkalmazó szoftverre
-az \textit{Elite} nevű 1984-ben kiadott űrhajós videójáték.
+az \textit{Elite} nevű 1984-ben kiadott űrhajós videójáték \todoref{Játék: Elite (1984)}.
 A játékban meglátogatható bolygók kapnak egy-egy seedet, mely már teljesen meghatározza a felépítésüket,
 így elég a bolygó meglátogatásakor legenerálni a tartalmát.
-A módszert utána számtalan óriástérképes játék vette át.
+A módszert aztán átvették és továbbfejlesztették az újabb és újabb óriástérképes játékok.
+A seed-alapú módszernél valójában nincs határa, mekkora virtuális világot definiálhatunk.
+Az Elite sikere után hamar megjelent a kifejezetten végtelen nyílt világ koncepciója,
+mely meghatározó eleme olyan közismert játékoknak,
+mint a Starflight (1986) \todoref{+CITE: Játék: Starflight (1986)},
+Minecraft (2011) \todoref{+CITE: Játék: Minecraft (2011)},
+Starmade (2012) \todoref{+CITE: Játék: Starmade (2012)},
+No Man's Sky (2016) \todoref{+CITE: Játék: No Man's Sky (2016)},
+Starfield (2023) \todoref{+CITE: Játék: Starfield (2023)}~
+-- és sorolhatnánk .
 
 Ha elvonatkoztatunk a játékoktól és szimulációktól,
 ez a generálási módszer közel tetszőleges jellegű virtuális adathalmaz böngészését képes biztosítani.
@@ -246,11 +263,12 @@ Ha pedig nem materializált adatok mellé gyártunk indexeket,
 akkor ki kell dolgoznunk valamilyen módszert a módosulások detektálására, ami általában nem triviális.
 
 Egyes generátorok a séma és az adatok jellegének deklaratív leírását is támogatják. Ez a leírás tárolható egy konfigurációs fájlban, ami verziókezelhető, dokumentálható, könnyen szerkeszthető.
+\todoref{+CITE: DB deklaratív adatgenerátorok}
 
 \subsection{Relációs adatok anonimizálása}
 
 Ha már rendelkezésre áll egy éles adatbázis, kézenfekvőnek látszik,
-hogy ennek replikáit használjuk a teszt- vagy mockadatbázis kiindulópontjaként.
+hogy ennek replikáit használjuk a teszt- vagy mockadatbázis kiindulópontjaként \todoref{+CITE: DB anonimizálók}.
 Így rögtön egy valószerű adathalmazzal indulunk,
 az érzékeny adatok miatt azonban anonimizálásra van szükség.
 Tehát a generáláshoz szükséges számítási igényt összességében
@@ -275,10 +293,10 @@ Egy általános megoldás tehát aligha épülhet anonimizálásos módszerre.
 Számos nagyteljesítményű szolgáltatás érhető el a piacon szintetikus adatok generálásához.
 A MOSTLY AI megoldása az akkurátus adatokra helyezi a hangsúlyt.
 Az adatok statisztikai jellemzői és mintázatának lényeges elemei
-jól illeszkednek a valós adatoknál látható mintázatokra.
+jól illeszkednek a valós adatoknál látható mintázatokra. \todoref{+CITE: Nagy teljesítményű megoldás: MOSTLY AI}
 
 Egyes platformok általános megoldást nyújtanak az adatgenerálásra, anonimizációra és CI/CD-integrációra.
-Ilyen például a Tonic, a GenRocket és a Delphix.
+Ilyen például a Tonic, a GenRocket és a Delphix. \todoref{+CITE: További nagy teljesítményű megoldások: Tonic, GenRocket, Delphix}
 
 Ezek a rendszerek erősen optimalizálják és párhuzamosítják a tesztadatok előállításának egyes lépéseit,
 így a fapados megoldásokhoz képest költséghatékonyak.
@@ -287,36 +305,43 @@ a tárhelyigény pedig teljes egészében ugyanaz marad.
 
 \subsection{Miért csak kerülő megoldások vannak?}
 
-Erre a kérdésre egy rövidebb és egy hosszabb válasszal szolgálhatok.
-Mindegyik tényállítás annyiban, hogy önmagában igaz,
-és puszta tipp atekintetben, hogy mennyire okozója a vizsgált helyzetnek.
-
-A rövid válaszom, hogy a rohanó világban, különösen a lokális optimumra törekvő fejlesztők világában,
+A rohanó világban, különösen a lokális optimumra törekvő fejlesztők világában,
 az egyértelmű alternatív megoldás hiánya szükségszerűen
 a bevett kerékvonalak továbbmélyítését eredményezi.
+Úgy látszik, hogy egy újszerű megoldással való kísérletezés egyszerűen
+kívül esik a megszokott paradigmán, és nem fér bele az időbe.
 
-A hosszabb válaszban néhány tényező összejátszását sorolnám föl:
+Néhány ezzel kapcsolatos tényezőt tényszerűen megállapíthatunk.
 
 \begin{itemize}
     \item \textbf{kontraintuitivitás}: előzetes feltevésemmel szemben úgy tűnik,
           nem olyan egyszerű átlátni a koncepciót, és megérteni hogy „hol is vannak az adatok”
+          \todoref{+CITE: (miért nincs?) hol is vannak az adatok}
     \item \textbf{megfelelő SQL plannerek eddigi hiánya}: az Apache Calcite például
           csak az utóbbi néhány évben vált népszerűvé, és inkább elsősorban adatintegrátorként
+          \todoref{+CITE: (miért nincs?) SQL-plannerek csak utóbb}
     \item \textbf{bejáratott alternatívák}: az on-the-fly mockolás lehetősége,
           a NoSQL adatbázisok és felhőmegoldások fejlődése stb.
           sztenderdképző kerülőmegoldásokként elfedték a problémát
+          \todoref{+CITE: (miért nincs?) kerülőmegoldások}
     \item \textbf{érdekhiány}: a releváns területen működő nagyobb vendorok elsősorban
           erőforrásokat adnak bérbe, és az általuk fejlesztett architektúrák (történetileg érthetően)
           elsősorban az ezeken futó tényleges adatbázisok kezelését kell megoldják;
           nincs tehát nyomás jelentősen más típusú termékkel való kísérletezésre.
+          \todoref{+CITE: (miért nincs?) erőforrásokat adnak bérbe}
 \end{itemize}
+
+Jelenleg csak tippelni tudok, mennyire okozói ezek (illetve ezek összjátéka) a vizsgált helyzetnek.
+Érdemes lenne ezt a kérdést a későbbiekben külön tanulmányban alaposabban is megvizsgálni,
+nagyban építve egy megfelelően megtervezetett, fejlesztőkre és technikai vezetőkre is kiterjedő kérdőíves kutatásra.
 
 \section{Az új megközelítés}
 
 A következőkben lényegileg egy sajátos relációsadatbázis-szervert fogok bemutatni.
-Ez egy már működő és kipróbálható szoftver, melynek a HoloDB nevet adtam.
+Ennek a már működő és kipróbálható szoftvernek a HoloDB nevet adtam.
 Kezdetben ugyanis úgy gondoltam rá,
-mint a hologram-ábrák megfelelőjére az adatbázisok világában.
+mint a hologram-ábrák megfelelőjére az adatbázisok világában,
+mint ami, csak illuzórikusan kivetítésre kerül egy kisméretű definíció alapján.
 Ebben az adatbázisban ugyanis nincsenek tárolva adatok
 (legfeljebb adatok változásai, ha az írhatóság be van kapcsolva).
 
@@ -334,23 +359,25 @@ számos kiegészítővel
 (REPL; networking; JDBC és JPA támogatása, Docker, haladó értékkészletek stb.).
 
 Mivel nincsenek adatok, a memóriafogyasztás minimális,
-különösen ha nem érkezik egyszerre sok lekérés.
+különösen, ha nem érkezik egyszerre sok lekérés.
 A nem létező adatok természetesen a háttértáron sem foglalnak helyet.
 Mivel a szerver elindulása pusztán a konfiguráció betöltéséből áll,
 az indulási idő is minimális.
 Az egyetlen előzetes költség, amit a felhasználónak be kell fektetnie,
 az a konfigurációs fájl megírása,
-bár a számos példa alapján ez szinte néhány másolással is megoldható,
-de ha ez sem lenne elég, akár generálható is.
+bár példafájlokból kiindulva ez szinte néhány másolással is megoldható,
+és ha ez sem lenne elég gyors, akár generálható is.
 
-A tárgyalás során kifejezetten a relációs storage API implementációja lesz a fókuszban,
-mint az a szűk keresztmetszet, amely a megoldás újszerűségéhez leginkább hozzájárul,
+Az architektúra tárgyalása során kifejezetten a relációs storage API implementációja lesz a fókuszban.
+Ez az a szűk keresztmetszet, amely a megoldás újszerűségéhez leginkább hozzájárul,
 és ami a prototípusban is a legkidolgozottabb rész.
 A forráskód az itt bemutatottakon túl is sok érdekességet rejt,
 ezért jó szívvel ajánlom a szoftver Git-tárolóját,
 melyet a dolgozat legvégén linkeltem is.
 
-A szoftver Java környezetben készült, ezt egyes esetekben érdemes lehet figyelembe venni.
+A szoftver Java környezetben készült,
+a továbbiakban ez implicite odaértendő akkor is,
+ha külön nem hívom fel rá a figyelmet.
 
 \section{Alkalmazhatóság}
 
@@ -358,7 +385,7 @@ A fentiek fényében az alábbi területeken biztosan alkalmazható a szoftver:
 
 \begin{itemize}
     \setlength\itemsep{-0.4em}
-    \item \textbf{Tesztelés:} Integrációs és egyéb tesztek, gyors kipróbálás.
+    \item \textbf{Tesztelés:} Integrációs és egyéb tesztek, kipróbálás.
     \item \textbf{Fejlesztés:} Kezdeti fázisban, prototípusoknál, gyakran változó adatszerkezet esetében.
     \item \textbf{Demonstrációk:} Példaadatok bemutatókhoz, koncepciótervekhez.
     \item \textbf{Oktatás:} Ad hoc adathalmaz konkrét példákhoz és feladatokhoz.
@@ -372,7 +399,7 @@ Ilyen esetek például: füsttesztek, unit tesztek, serverless.
 
 Néhány olyan lehetőség is megnyílik, ami adatbázisok esetében eddig fel sem merült.
 Ilyen például a \textbf{dev mode}, amikor a konfiguráció módosításával a teljes adatbázis
-azonnal igazodik a módosításhoz.
+azonnal igazodik a módosításhoz. \todoref{dev-mode, zero-mode (az on-demand schema részt is ehhez igazítani)}
 
 \section{Célkitűzések}
 
@@ -413,6 +440,7 @@ Figyelembe kell venni azt is,
 hogy a projekt nem egy már bejáratott nagyobb kutatási program része,
 egyelőre nincsenek további dedikált erőforrásai
 a részterületek mérési adatainak feldolgozására.
+\todoref{+CITE: a dolgozat koncepciója: a mérések fényében ezen enyhíteni}
 
 
 \chapter{Architektúra}
