@@ -732,7 +732,6 @@ miközben visszaállítjuk a \texttt{READ} státuszt.
 
 A \texttt{DiffTable} dekorátor minden további nélkül elhelyezhető
 más \texttt{DiffTable} objektumok fölé is, ami lehetővé teszi, hogy egymásra épülő snapshotokat tároljunk.
-
 Így könnyen megvalósítható a \textit{multiversion concurrency control} (MVCC),
 amikor a kiinduló állapot snapshotja a módosító műveletek közben is rendelkezésre áll,
 azaz az olvasási műveletek ekkor is zavartalanul futtathatók.
