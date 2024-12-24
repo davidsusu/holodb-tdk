@@ -72,13 +72,14 @@ quality mutatók
 
 
 \definecolor{lightyellow}{RGB}{255, 245, 215}
+\definecolor{verylightgray}{rgb}{0.98,0.98,0.98}
 
 \newcommand{\todoref}[1]{\todo[inline, noinlinepar, color=red, textcolor=white, inlinewidth=0.6cm, caption={#1}]{\large \textbf{×}}}
 
 \newcommand{\algorithmref}[1]{\hyperref[algorithm:#1]{\colorbox{lightyellow}{%
 (\textrightarrow~Algoritmus: \nameref*{algorithm:#1})}}}
 
-\newcommand{\regextt}[1]{\texttt{\colorbox{lightgray!!30}{#1}}}
+\newcommand{\regextt}[1]{\texttt{\colorbox{verylightgray}{#1}}}
 
 
 \title{HoloDB: Relációs demóadatok on-the-fly generálása deklaratív konfigurációból}
