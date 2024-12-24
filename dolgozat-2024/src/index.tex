@@ -753,8 +753,9 @@ amíg azok különböző táblákon futnak.
 A felhasználónak mindössze a konfigurációs fájlt kell szerkesztenie,
 hogy nulláról indulva egy teljes körű adatbázist tudjon futtatni.
 A fájlban megadhatja az adatbázis-séma elemeit, megkötéseit.
-Az oszlopok értékkészlete, keverési módja és egyéb paraméterei kényelmesen állíthatók,
+Az oszlopok értékkészlete, keverési módja és egyéb paraméterei kényelmesen megadhatók,
 például előre adott értéklistákkal vagy akár reguláris kifejezéssel.
+Összességében az adatbázis minden lényeges eleme állítható.
 A virtuális adatbázis kész Docker konténerrel is indítható,
 ez esetben tényleg csak a konfigurációs fájlra van szükség.
 
@@ -766,7 +767,6 @@ különböző adatleíró nyelveken írt fájlokat, karakterláncokat
 és más adatreprezentációkat konvertál egymásba.)\todoref{Jackson: kicsit jobban bevezetni}
 A konfigurációs adatstruktúra ezen kívül programozottan is felépíthető.
 
-A konfigurációval az adatbázis minden lényeges eleme állítható.
 A Jackson mappinggel ellátott konfigurációs osztályokhoz formális specifikáció is tartozik,
 így a fájl strukturális és szemantikai helyessége statikusan ellenőrizhető.
 A formális specifikáció használata csak egy dedikált, minimalisztikus csomag függőségként való beemelését igényli.
