@@ -157,7 +157,7 @@ szerkezete, szemantikája azonban szorosan az alkalmazás mindenkori állapotáh
 \cite{Ploski2007DatabaseCentricVersioning,Fluri2023DatabaseCiCd,Edwards2023LiveLocalSchemaChange}
 
 Az \textit{életnek kitett} produkciós adatbázist természetesen kénytelenek vagyunk
-minden erőforrásigényével életben tartani, és minden release-zel migrálni \todoref{+CITE: DB-migráció (flyway/liquibase...?)}.
+minden erőforrásigényével életben tartani, és minden release-zel migrálni \todoref{+CITE: DB-migráció (Flyway/Liquibase...?)}.
 Ám az \textit{absztrakt értelemben vett} adatbázisra számos egyéb helyen is szükségünk van,
 ahol ezek a folyamatos költségek igencsak nemkívánatosak.
 Ilyenek esetek jellemzően az integrációs és egyéb tesztelés, gyors prototípusgyártás, kísérletezés draft adatbázisokkal, rövid demonstrációk és prezentációk.
@@ -300,7 +300,7 @@ Egyes generátorok a séma és az adatok jellegének deklaratív leírását is 
 \subsection{Relációs adatok anonimizálása}
 
 Ha már rendelkezésre áll egy éles adatbázis, kézenfekvőnek látszik,
-hogy ennek replikáit használjuk a teszt- vagy mockadatbázis kiindulópontjaként \todoref{+CITE: DB anonimizálók}.
+hogy ennek replikáit használjuk a teszt- vagy mockadatbázis kiindulópontjaként \todoref{+CITE: DB-anonimizálók}.
 Így rögtön egy valószerű adathalmazzal indulunk,
 az érzékeny adatok miatt azonban anonimizálásra van szükség.
 Tehát a generáláshoz szükséges számítási igényt összességében
@@ -365,7 +365,7 @@ Néhány ezzel kapcsolatos tényezőt tényszerűen megállapíthatunk.
 
 Jelenleg csak tippelni tudok, mennyire okozói ezek (illetve ezek összjátéka) a vizsgált helyzetnek.
 Érdemes lenne ezt a kérdést a későbbiekben külön tanulmányban alaposabban is megvizsgálni,
-nagyban építve egy megfelelően megtervezetett, fejlesztőkre és technikai vezetőkre is kiterjedő kérdőíves kutatásra.
+nagyban építve egy megfelelően megtervezett, fejlesztőkre és technikai vezetőkre is kiterjedő kérdőíves kutatásra.
 
 \section{Az új megközelítés}
 
@@ -373,7 +373,7 @@ A következőkben lényegileg egy sajátos relációsadatbázis-szervert fogok b
 Ennek a már működő és kipróbálható szoftvernek a HoloDB nevet adtam.
 Kezdetben ugyanis úgy gondoltam rá,
 mint a hologram-ábrák megfelelőjére az adatbázisok világában,
-mint ami illuzórikusan kerül kivetítésre egy kisméretű definícióból.
+mint ami illuzórikusan kerül kivetítésre egy kis méretű definícióból.
 Ebben az adatbázisban ugyanis nincsenek tárolva adatok
 (legfeljebb adatok változásai, ha az írhatóság be van kapcsolva).
 
@@ -906,7 +906,7 @@ A konfigurációs fájl az adatbázis nagyjábóli definíciójának is felfogha
 hogy kiegészítsük a struktúrát olyan opcionális elemekkel,
 melyek egyrészt teljesen leírják az éles adatbázis szerkezetét,
 másrészt pedig lehetővé teszik az adatmigrációknak
-kizárólag a konfigurációs fájlok különbségén alapuló automatizálását.
+pusztán a konfigurációs fájlok különbségén alapuló automatizálását.
 Természetesen ez egyáltalán nem triviális,
 hiszen néha meglévő adatok átstrukturálására van szükség,
 illetve lehetnek a két konfigurációs állapot közötti történetben elbújó lényeges módosítások.
