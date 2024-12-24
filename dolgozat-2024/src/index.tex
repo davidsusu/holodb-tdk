@@ -643,7 +643,7 @@ Az entitások meghatározásakor elsőként a \textit{hozzáférés} szempontjai
 Az írhatóság problémakörével később foglalkozom.
 
 Nyilvánvalóan gondoskodni kell az alapvető hierarchiáról,
-ezek lesznek a \texttt{Schema}, \texttt{Table} és \texttt{Column} típusok.
+erre szolgálnak majd a \texttt{Schema}, \texttt{Table} és \texttt{Column} típusok.
 Az oszlopok elvont tulajdonságait a \texttt{ColumnDefinition} típus fogja össze.
 Bár az egyes mezők értékeit általában oszloporientáltan állítjuk elő
 (jellemzően az értéklistákat megadó \texttt{Source} objektumok használatával),
@@ -660,7 +660,7 @@ melyen keresztül a találati listához férünk hozzá.
 A \texttt{TableIndex} a szokásos rendezett indextípus,
 mely egyúttal teljes kontrollal rendelkezik a találati lista rendezése
 és a $NULL$ értékek kezelése fölött.
-Ha többoszlopos, akkor az oszloplista bármely prefixére is indexként működik (leftmost prefix lookup).
+Ha többoszlopos, akkor az oszloplista bármely prefixére is indexként működik (leftmost prefix lookup\todoref{Leftmost prefix lookup: valamit róla}).
 A másik két típus találatainak rendezése definiálatlan.
 Egyik sem ad vissza $NULL$ mezőket.
 
