@@ -78,6 +78,8 @@ quality mutatók
 \newcommand{\algorithmref}[1]{\hyperref[algorithm:#1]{\colorbox{lightyellow}{%
 (\textrightarrow~Algoritmus: \nameref*{algorithm:#1})}}}
 
+\newcommand{\regextt}[1]{\texttt{REGEX:{#1}}
+
 
 \title{HoloDB: Relációs demóadatok on-the-fly generálása deklaratív konfigurációból}
 \date{2024}
@@ -972,7 +974,7 @@ ami általában az oszlopok értékeinek on-the-fly produkálását és keresés
 Az on-the-fly értékszámítás során gyakran fordulnak elő átmeneti óriás számok,
 ám nehezen jósolható előre, hogy pontosan mikor.
 Például eleve egy értékkészlet is lehet óriási
-(gondoljunk például a '\texttt{{\textbackslash}w\{30\}}'
+(gondoljunk például a \regextt{{\textbackslash}w\{30\}}
 reguláris kifejezés alapján kitöltött oszlop lehetséges értékeinek számára),
 miközben szükségünk van bármely pozíció közvetlen hivatkozására.
 Az adatbázis méretére vonatkozóan nem akartam megkötéseket tenni.
