@@ -863,7 +863,7 @@ schemas:
   \caption{Egy minimalisztikus konfiguráció és eredménye}
 \end{figure}
 
-Java JPA\todoref{Mi az a JPA?} projekt esetén JPA-entitásokra helyezett annotációkkal is beállítható a teljes konfiguráció,
+Java JPA\todoref{Mi az a JPA?} projekt esetén JPA-entitásokra helyezett annotációkkal is leírható a teljes konfiguráció,
 így beágyazott adatbázissal, külső eszközök nélkül is futtathatunk teszteket.
 Ehhez elegendő a megfelelő JDBC connection sztringet megadni,
 a többit (keretrendszertől függően\footnote{
@@ -873,7 +873,7 @@ a többit (keretrendszertől függően\footnote{
 
 Az egyéni működéssel való kiegészítés több szinten támogatott.
 A beépített értékkiosztási módok esetén is lehetőség van egyéni adatfájl betöltésére,
-a permutációk és rányújtások egyéni implementációjának betöltésére.
+a permutációk és rányújtások egyéni implementációjának használatára.
 De az oszlop értékkiosztásához teljesen egyedi implementáció is használható,
 ehhez meg kell adnunk egy olyan osztály nevét, mely implementálja a \texttt{SourceFactory} interfészt
 (illetve biztosítani kell, hogy az egyedi osztályok láthatóak legyenek a classpath alatt).
