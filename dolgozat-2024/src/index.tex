@@ -1004,17 +1004,10 @@ A következő osztálydiagram összefoglalja ezeket a kiemelt interfészeket:
 
 \subsection{A \texttt{LargeInteger} típus}
 
-Az adatok on-the-fly számításakor a szűk keresztmetszet
-a tárolás és elérés problémáiról a kalkulációkra helyeződik át.
-Világos tehát, hogy az egész koncepció sikere azon áll vagy bukik,
-hogy milyen gyorsan tudjuk számítani az eredményt.
-
-A legtöbb oszloptípusnál rendezett értékkészletbeli pozíciókat mappelünk össze sorindexekkel.
-Az értékkészlet óriási is lehet,
-illetve számos további részeredmény esetében merül föl az óriás számok problémája.
-Ezért szükségesnek mutatkozott egy olyan egész típus megalkotása,
+Az adatok on-the-fly számításának hatékonnyá tétele érdekében
+szükségesnek mutatkozott egy olyan egész típus megalkotása,
 mely kis és óriás számokra egyaránt működik,
-és kis számok esetében nagyon hatékony (ellentétben a beépített \texttt{BigInteger} típussal).
+és a kis számok esetében nagyon hatékony (ellentétben a beépített \texttt{BigInteger} típussal).
 
 Az ecélból készített (egyébként teljesen általános) \texttt{LargeInteger} típus
 valójában egy absztrakt típus két privát implementációval:
