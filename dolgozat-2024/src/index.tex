@@ -1239,7 +1239,8 @@ A Feistel-hálózatok ilyenek, így összetett titkosító eljárások keretrend
 \todoref{+CITE: Feistel-hálózat}
 A Feistel-hálózat többkörös eljárás, ahol minden körben az adat egyik felének bitjeit módosítjuk.
 Ez alapesetben megköveteli a páros blokkméretet, de amint látni fogjuk, ezen lehet enyhíteni.
-Az egyes körökben felváltva a bitsorozat bal illetve jobb oldali felét változtatjuk; nevezzük ezt célhelynek, a másik fél tartalmát pedig forrásbiteknek.
+Az egyes körökben felváltva a bitsorozat egyik (bal vagy jobb oldali) felét változtatjuk,
+nevezzük ezt célhelynek, a másik fél tartalmát pedig forrásbiteknek.
 Egy-egy körben a forrásbitekre meghívunk egy az adott körhöz dedikált hossztartó hash-függvényt,
 és az így kapott eredményt XOR-ral ráfésüljük a célhelyre.
 Vegyük észre, hogy az XOR tulajdonságai miatt ez reverzibilis (bármi legyen is a hash-függvény),
