@@ -1010,7 +1010,7 @@ mely kis és óriás számokra egyaránt működik,
 de egyúttal a kis számokon nagyon hatékony (ellentétben a beépített \texttt{BigInteger} típussal).
 
 Az ecélból készített (egyébként teljesen általános) \texttt{LargeInteger} típus
-valójában egy absztrakt típus két privát implementációval:
+valójában egy absztrakt osztály két privát leszármazottal:
 az \texttt{ImplSmall} a \texttt{Long.MIN\_VALUE}-tól a \texttt{Long.MAX\_VALUE}-ig
 terjedő intervallumra (kis számok),
 az \texttt{ImplBig} pedig az ezen kívül eső értékekre (nagy számok) optimalizálva.
