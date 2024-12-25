@@ -1018,8 +1018,8 @@ az \texttt{ImplBig} pedig az ezen kívül eső értékekre (nagy számok) specia
 Az \texttt{ImplSmall} egy primitív \texttt{long} értéket tárol.
 Bizonyos műveleteknél olcsó ellenőrzéssel előre megállapítja,
 hogy biztos-e, hogy nem lesz túlcsordulás,
-és ha biztos, akkor a műveletet primitív műveletként végzi el,
-különben a \texttt{BigInteger} segítségével hajtja végre a műveletet.
+és ha biztos, akkor a primitív műveletet végzi el,
+különben a \texttt{BigInteger} segítségével számol.
 Más műveletek esetében, ha mindkét bemeneti érték \texttt{long},
 először végrehajtja a primitív műveletet,
 majd ez alapján ellenőrzi, hogy történt-e túlcsordulás
