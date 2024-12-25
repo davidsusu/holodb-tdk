@@ -1230,15 +1230,16 @@ Ez a háttérben a \texttt{BigInteger} osztály ugyanilyen nevű metódusát hí
 
 \subsubsection{Feistel-hálózatok alkalmazása}
 
-Az invertálható, változtatható méretű, seed alapján újrakeverhető permutációk könnyen analógiába állíthatók kriptográfiai titkosítófüggvényekkel.
-Ezek általában változtatható blokkméretűek, kulcs alapján újrakeverhetőek és természetesen dekódolhatóak.
+Az invertálható, seed alapján újrakeverhető, változtatható méretű permutációk könnyen analógiába állíthatók kriptográfiai titkosítófüggvényekkel.
+Ezek dekódolhatók, kulcs alapján újrakeverhetők, illetve általában változtatható blokkméretűek.
 Felmerül a gondolat, hogy közvetlenül egy ilyen kriptográfiai módszert alkalmazzunk a permutáció megvalósításához.
 Olyan megoldásra van szükség, amelynél a blokkméret tetszőlegesen megadható, és kellően flexibilis, skálázható.
 
 A Feistel-hálózatok ilyenek, így összetett titkosító eljárások keretrendszereként igen népszerűek.
 A Feistel-hálózat többkörös eljárás, ahol minden körben az adat egyik felének bitjeit módosítjuk.
-Ez alapesetben megköveteli a páros blokkméretet, de amint látni fogjuk, ezen lehet enyhíteni.
+\todoref{Feistel-hálózat}
 
+Az eljárás alapesetben megköveteli a páros blokkméretet, de amint látni fogjuk, ezen lehet enyhíteni.
 Az egyes körökben felváltva a bitsorozat bal illetve jobb oldali felét változtatjuk; nevezzük ezt célhelynek, a másik fél tartalmát pedig forrásbiteknek.
 Egy-egy körben a forrásbitekre meghívunk egy az adott körhöz dedikált hossztartó hash-függvényt,
 és az így kapott eredményt XOR-ral ráfésüljük a célhelyre.
