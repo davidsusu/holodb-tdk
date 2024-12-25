@@ -1016,18 +1016,21 @@ terjedő intervallumra (kis számok) optimalizálva,
 az \texttt{ImplBig} pedig az ezen kívül eső értékekre (nagy számok) specializálva.
 
 Az \texttt{ImplSmall} egy primitív \texttt{long} értéket tárol.
-Az egyes műveletei esetében egy olcsó ellenőrzéssel mindig megállapítja,
-hogy biztos-e, hogy nem lesz túlcsordulás.
-Ha ez biztos, akkor a műveletet primitív műveletként végzi el.
-Ha nem biztos
-(vagy azért, mert az ellenőrzés nem zárta ki a túlcsordulást,
-vagy mert nagy számot kapott operandusként),
-akkor a \texttt{BigInteger} segítségével hajtja végre a műveletet;
-ha az eredmény mégis kis szám, akkor \texttt{ImplSmall} példányként adja vissza.
+Bizonyos műveleteknél olcsó ellenőrzéssel előre megállapítja,
+hogy biztos-e, hogy nem lesz túlcsordulás,
+és ha biztos, akkor a műveletet primitív műveletként végzi el.
+különben a \texttt{BigInteger} segítségével hajtja végre a műveletet.
+Más műveletek esetében, ha mindkét bemeneti érték \texttt{long},
+először végrehajtja a primitív műveletet,
+majd ez alapján ellenőrzi, hogy történt-e túlcsordulás,
+és ha igen, akkor a \texttt{BigInteger} megfelelő műveletéhez fordul.
+A \texttt{BigInteger} eredmény esetén ellenőrzésre kerül,
+hogy a \texttt{long} értéksávjában van-e,
+ez esetben is egy \texttt{ImplSmall} kerül visszaadásra.
 
 Az \texttt{ImplBig} mindig a \texttt{BigInteger}-en keresztül végzi a műveleteket.
 Hasonlóan a másik implementációhoz, szintén ellenőrzi, hogy az eredmény kis szám-e.
-Általában, egy \texttt{LargeInteger} szám akkor és csak akkor csomagolódik \texttt{ImplBig}-ként,
+Egy \texttt{LargeInteger} szám akkor és csak akkor csomagolódik \texttt{ImplBig}-ként,
 ha kívül esik a \texttt{long} értékkészletén.
 
 A \texttt{LargeInteger} a \texttt{BigInteger} összes metódusát replikálja,
