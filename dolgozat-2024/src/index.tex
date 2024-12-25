@@ -1490,15 +1490,12 @@ de véletlenszerű, zajos kimenetet szeretnénk látni.
 \subsection{$NULL$ értékek kezelése}
 
 Általánosan, bármely értékkiosztási módszerhez könnyen hozzáilleszthető a $NULL$ értékek támogatása.
-Mindössze az szükséges, hogy az értékkiosztást a tábla méreténél kisebb intervallumra végezzük,
-a maradék helyeket pedig $NULL$-nak tekintjük.
-Ezen felül opcionálisan egy permutáció beiktatásával az értékeket elkeverhetjük,
-ami által a $NULL$ értékek is szétszórtan szerepelnek majd.
+Ekkor a rányújtást a tábla méreténél kisebb intervallumra végezzük,
+a maradék helyeket pedig egyszerűen $NULL$-nak tekintjük.
+A permutáció alkalmazása után a $NULL$ értékek is szétszórtan szerepelnek majd.
 
 Nem szükséges ez a plusz kompozíció,
 ha a fentiek magába az eredeti értékkiosztásba is könnyen beépíthetők.
-Például a kétlépéses értékkiosztásokba egyszerűen felvehető a $NULL$ mint érték.
-
 Akár beépítetten, akár plusz kompozícióval van megvalósítva a $NULL$ értékek kezelése,
 természetesen figyelni kell a speciális kezelésre a keresés-rendezés során.
 
@@ -1512,15 +1509,13 @@ Természetesen az ilyen esetek szimulálása a legegyszerűbb.
 
 Triviális eset, ha egy oszlop mezői egy közös konstans értéket tartalmaznak.
 
-Továbbá, ha olyan adathalmazt szimulálunk, melyre megengedhető a feltevés,
-hogy nem történt még releváns módosítás
-(ami persze az írási réteggel utána korrigálható),
-úgy egyes oszlopok szekvenciális alapon generálhatók.
+A szekvenciális oszlopoknál az érték megegyezik a rekord 1-től indított sorszámával,
+de sok egyéb oszlop is generálható szekvenciális alapon
+(feltehetjük, hogy nem történt még releváns módosítás,
+ez aztán az írási réteg használatával korrigálható).
 Az ilyen esetekben az $n$-edik érték lekérése
-egy egyszerű lineáris függvénnyel számolható.
-Az érték keresése hasonló, lényegileg az inverz függvényt kell alkalmazni.
-
-A szekvenciális oszlopoknál az érték megegyezik a rekord 1-től indított sorszámával.
+egy egyszerű lineáris függvénnyel számolható,
+és az érték keresése is hasonlóan történik.
 
 Időbélyegeket is generálhatunk hasonló módon,
 amennyiben megengedhető, hogy a szimulált időadatok között egyenletes időközök legyenek.
