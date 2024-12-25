@@ -1158,11 +1158,16 @@ A rendezettség miatt a második kérdésre mindig egy összefüggő sáv a vál
 Ezeket az elvárásokat formalizálja a \texttt{Monotonic} interfész.
 
 A \texttt{Monotonic} interfész példánya egy függvényt reprezentál,
-amely az első $n$ nemnegatív egész számot értékkészletként nem monoton növekvő módon hozzárendeli az első $N$ nemnegatív egész számhoz.
-Ez arra használható, hogy egy $n$ elemű, rendezetten tárolt értékkészletet egy $N$ méretű adatbázistábla oszlopához igazítsunk méretben.
-Tehát a példány $M(i) = m$ függvényt valósítja meg, ahol $0 \leq i < N$ illetve $0 \leq m < n$, továbbá $i_1 < i_2 \implies M(i_1) < M(i_2)$.
-Ugyanakkor indexelt elérést is biztosít, azaz lekérdezhető, hogy egy adott érték mely indexsávhoz rendelődik,
-azaz megvalósítja az $M^{-1}(m) = [i, j)$ függvényt is, ahol $0 \leq m < n$ illetve $0 \leq i \leq j \leq N$, és teljesülnek az alábbiak:
+amely az első $n$ nemnegatív egész számot értékkészletként nem monoton növekvő módon
+az első $N$ nemnegatív egész számhoz rendeli.
+Ez arra használható, hogy egy $n$ elemű, rendezetten tárolt értékkészletet
+egy $N$ méretű adatbázistábla oszlopához igazítsunk méretben.
+Tehát a példány $M(i) = m$ függvényt valósítja meg,
+ahol $0 \leq i < N$ illetve $0 \leq m < n$, továbbá $i_1 < i_2 \implies M(i_1) < M(i_2)$.
+Ugyanakkor indexelt elérést is biztosít, azaz lekérdezhető,
+hogy egy adott érték mely indexsávhoz rendelődik,
+azaz megvalósítja az $M^{-1}(m) = [i, j)$ függvényt is,
+ahol $0 \leq m < n$ illetve $0 \leq i \leq j \leq N$, és teljesülnek az alábbiak:
 
 \begin{itemize}
 \item $x < i \implies M(x) < M(i)$
