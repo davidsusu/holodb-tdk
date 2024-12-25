@@ -1012,8 +1012,8 @@ de egyúttal a kis számokon nagyon hatékony (ellentétben a beépített \textt
 Az ecélból készített (egyébként teljesen általános) \texttt{LargeInteger} típus
 valójában egy absztrakt osztály két privát leszármazottal:
 az \texttt{ImplSmall} a \texttt{Long.MIN\_VALUE}-tól a \texttt{Long.MAX\_VALUE}-ig
-terjedő intervallumra (kis számok),
-az \texttt{ImplBig} pedig az ezen kívül eső értékekre (nagy számok) optimalizálva.
+terjedő intervallumra (kis számok) optimalizálva,
+az \texttt{ImplBig} pedig az ezen kívül eső értékekre (nagy számok) specializálva.
 
 Az \texttt{ImplSmall} egy primitív \texttt{long} értéket tárol.
 Az egyes műveletei esetében egy olcsó ellenőrzéssel mindig megállapítja,
