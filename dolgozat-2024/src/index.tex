@@ -1266,7 +1266,7 @@ vagyis a dekódolás folyamata teljesen egyezni fog az elkódolással, ami egysz
 Persze, még ha a páros blokkméret követelményét így sikerült is eliminálni,
 továbbra is adott a probléma, hogy az $n$ blokkmérethez mindig $2^n$ méretű permutáció tartozik.
 Vagyis a nem 2-hatvány méretű permutációkhoz méretigazítás szükséges.
-Ezt a rejection sampling alkalmazásával érjük el.
+Ezt rejection sampling alkalmazásával érjük el.
 Az adott $n$ mérethez vesszük azt a legkisebb $N$ 2-hatványt, amely $n$-nél nem kisebb.
 Amikor egy adott $i$ értékre a Feistel-hálózattól az intervallumon kívül eső $p$-t kapunk,
 azaz amelyre $p \geq n$ ($p < N$), akkor újra meghívjuk a permutáló függvényt $p$-re.
