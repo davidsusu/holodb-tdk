@@ -1354,12 +1354,10 @@ Az egyes esetekben megvizsgálom majd, hogyan teljesíthetők ezek az elváráso
 
 \subsection{Keretrendszer az értékkiosztásokhoz}
 
-Virtuális adatok alatt elsősorban az egy-egy oszlop alá besorakozó,
-közös típussal rendelkező mezőértékeket értem.
-Azaz alapesetben, ahogy korábban fogalmaztam, az adatokat oszlop-orientáltan fogjuk előállítani.
+Alapesetben az adatokat oszlop-orientáltan fogjuk előállítani.
 Minden oszlophoz tartozik majd egy virtuális adatlista,
-melynek hossza egyenlő az adott oszlopot tartalmazó tábla hosszával
-(opcionálisan szerepelhetnek benne $NULL$ értékek),
+melynek hossza egyenlő az adott oszlopot tartalmazó tábla hosszával.
+Opcionálisan szerepelhetnek benne $NULL$ értékek,
 a többi érték típusának pedig kompatibilisnak kell lennie az oszlophoz megadott típussal.
 
 Bár ez a megközelítés oszloponként független adatlistákra van szabva,
