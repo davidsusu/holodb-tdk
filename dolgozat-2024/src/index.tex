@@ -1243,7 +1243,7 @@ Az egyes körökben felváltva a bitsorozat egyik (bal vagy jobb) felét változ
 nevezzük ezt célhelynek, a másik fél tartalmát pedig forrásbiteknek.
 Egy-egy körben a forrásbitekre meghívunk egy az adott körhöz rendelt hossztartó hash-függvényt,
 és az így kapott eredményt XOR-ral ráfésüljük a célhelyre.
-Vegyük észre, hogy az XOR tulajdonságai miatt ez reverzibilis (bármi legyen is a hash-függvény),
+Az XOR tulajdonságai miatt ez reverzibilis (bármi legyen is a hash-függvény),
 újraalkalmazva az eredeti bitsorozatot kapjuk vissza
 (a forrásbiteket ezen a ponton még nem írtuk felül).
 Tehát a Feistel-hálózattal kapott kód visszafejtése úgy történik, hogy a lépéseket visszafelé újra végrehajtjuk.
