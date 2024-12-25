@@ -1278,10 +1278,10 @@ A rejection sampling nem minden implementációnál hatékony,
 de pontosan ezért vezettük be a \texttt{resized(LargeInteger)} metódust
 magán a \texttt{Permutation} interfészen.
 Így minden implementáció maga döntheti el, hogyan kell átméretezni.
-Egy extrém eset például, amikor a $\sigma_{+1}^{N}(i) = (i + 1) \bmod N$ permutációt $n$-re kell átméreteznünk.
+Egy extrém eset például, amikor a $\sigma_{+1}^{~N}(i) = (i + 1) \bmod N$ permutációt $n$-re kell átméreteznünk.
 Rejection sampling módszerrel $i = n$ esetén $N - n$ számú extra iterációt kellene végrehajtani,
 ami nagy méret esetén rendkívül költséges.
-Helyette viszont egyszerűen áttérhetünk modulo $n$-re: $\sigma_{+1}^{n}(i) = (i + 1) \bmod n$.
+Helyette viszont egyszerűen áttérhetünk modulo $n$-re: $\sigma_{+1}^{~n}(i) = (i + 1) \bmod n$.
 
 Az alábbi ábrán vizuálisan összehasonlítottam néhány permutáció-típus értékeloszlását.
 A pixel koordináta az indexből, a színárnyalat és a fényerő értékek az értékből vannak kalkulálva.
