@@ -1236,8 +1236,9 @@ Felmerül a gondolat, hogy közvetlenül egy ilyen kriptográfiai módszert alka
 Olyan megoldásra van szükség, amelynél a blokkméret tetszőlegesen megadható, és kellően flexibilis, skálázható.
 
 A Feistel-hálózatok ilyenek, így összetett titkosító eljárások keretrendszereként igen népszerűek.
+\todoref{+CITE: Feistel-hálózat}
 A Feistel-hálózat többkörös eljárás, ahol minden körben az adat egyik felének bitjeit módosítjuk.
-\todoref{Feistel-hálózat}
+Ez alapesetben megköveteli a páros blokkméretet, de amint látni fogjuk, ezen lehet enyhíteni.
 Az egyes körökben felváltva a bitsorozat bal illetve jobb oldali felét változtatjuk; nevezzük ezt célhelynek, a másik fél tartalmát pedig forrásbiteknek.
 Egy-egy körben a forrásbitekre meghívunk egy az adott körhöz dedikált hossztartó hash-függvényt,
 és az így kapott eredményt XOR-ral ráfésüljük a célhelyre.
@@ -1249,7 +1250,7 @@ Tehát a Feistel-hálózattal kapott kód visszafejtése úgy történik, hogy a
 bőven elég, ha a páros és páratlan körökhöz eltérő függvényt alkalmazunk (szigorúan még ez sem lenne szükséges).
 
 A Feistel-hálózatokkal való kísérletezés során észrevettem,
-hogy a páros blokkméret implicit követelménye enyhíthető a következőképpen.
+hogy a páros blokkméret követelménye enyhíthető a következőképpen.
 Páratlan blokkméret esetén vegyünk még egy zéró bitet az adat végéhez,
 amivel biztosítjuk, hogy a jobb oldali bitmező is a megfelelő méretű legyen.
 Minden olyan kör végén, ahol a jobb oldali biteket írtuk felül, az utolsó bitet ezután nullázzuk.
