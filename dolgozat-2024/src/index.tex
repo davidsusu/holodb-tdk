@@ -1341,11 +1341,10 @@ Ráadásul az XOR hash eredménye jobb, mint a lineáris kongruencián alapuló 
 \subsection{Általános megfontolások}
 
 Olyan értékkiosztási módszereket veszek most végig,
-amelyek lehetőleg biztosítják az alábbiakat:
+amelyek biztosítják az alábbiakat:
 
 \begin{enumerate}
-  \item hatékony elérés (random access)
-  \item pozíciótól függő érték (\texttt{TreeRandom} seed)
+  \item hatékony pozíció-alapú elérés (random access)
   \item hatékony kereshetőség valamilyen formában
   \item hatékony rendezés
   \item lekérdezések közötti konzisztencia
@@ -1374,7 +1373,6 @@ De lássuk először az egyoszlopos értékkiosztások lehetséges módszereit.
 Talán a leggyakoribb eset,
 hogy előre ismert véges értékkészlet elemeit szeretnénk viszontlátni az oszlopban,
 mégpedig összevissza.
-
 Fentebb már utaltam rá, hogy ez a legtöbb esetben megoldható két független lépéssel.
 Először egy \texttt{Monotonic} példány segítségével a kívánt célhosszra
 értelmezett függvényt állítunk elő, mely az értékkészlet pozícióira mutat
