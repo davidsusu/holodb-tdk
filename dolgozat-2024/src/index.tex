@@ -1036,7 +1036,12 @@ ha kívül esik a \texttt{long} értékkészletén.
 
 A \texttt{LargeInteger} a \texttt{BigInteger} összes metódusát replikálja,
 illetve számos további kényelmi metódust ad hozzá.
-A zérusközeli értékek gyorsítótárazva vannak a hatékonyság érdekében.
+A \texttt{LargeInteger} konstruktora kívülről nem elérhető,
+ehelyett a statikus \texttt{of()} metódusokon keresztül lehet példányokhoz jutni.
+A zérusközeli értékek a leggyakrabban használtak
+(gondoljunk például olyan triviális számokra, mint 0, 1, 2, 10),
+az ezekhez tartozó példányok gyorsítótárazva vannak
+a performancia és az alacsony memóriahasználat érdekében.
 
 A Scala standard könyvtárának \texttt{BigInt} típusa szintén a \texttt{long} és \texttt{BigInteger}
 aritmetika váltogatásával oldja meg,
@@ -1044,6 +1049,10 @@ hogy az óriás számok támogatása mellett kis számokon viszonylag gyorsan fu
 A két megoldás performanciában hasonló,
 a számunkra releváns esetek egy részében (kisebb számok, sokféle művelet)
 a \texttt{LargeInteger} valamivel gyorsabb.
+A Scala \texttt{BigInt} (főként kompatibilitási okokból)
+nem használ két különböző típust,
+egyetlen adatstruktúrába sűríti a két esetet,
+így valamivel több memóriát is használ.
 
 \begin{figure}[H]
     \centering
