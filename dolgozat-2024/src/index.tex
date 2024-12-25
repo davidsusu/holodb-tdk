@@ -1269,7 +1269,7 @@ Vagyis a nem 2-hatvány méretű permutációkhoz méretigazítás szükséges.
 Ezt rejection sampling alkalmazásával érjük el.
 Az adott $n$ mérethez vesszük azt a legkisebb $N$ 2-hatványt, amely $n$-nél nem kisebb.
 Amikor egy adott $i$ értékre a Feistel-hálózattól az intervallumon kívül eső $p$-t kapunk,
-azaz amelyre $pón \leq p$ ($< N$), akkor újra meghívjuk a permutáló függvényt $p$-re.
+azaz amelyre $n \leq p$ ($< N$), akkor újra meghívjuk a permutáló függvényt $p$-re.
 Addig ismételjük a hívást, míg végre $n$-nél kisebb szám nem születik.
 A páratlan blokkméret lehetősége a hatékonyság szempontjából is fontos,
 mivel jelentősen csökkenti a Feistel-hálózatra történő újrahívások számát.
