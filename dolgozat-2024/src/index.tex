@@ -1022,9 +1022,10 @@ hogy biztos-e, hogy nem lesz túlcsordulás,
 különben a \texttt{BigInteger} segítségével hajtja végre a műveletet.
 Más műveletek esetében, ha mindkét bemeneti érték \texttt{long},
 először végrehajtja a primitív műveletet,
-majd ez alapján ellenőrzi, hogy történt-e túlcsordulás,
-és ha igen, akkor a \texttt{BigInteger} megfelelő műveletéhez fordul.
-A \texttt{BigInteger} eredmény esetén ellenőrzésre kerül,
+majd ez alapján ellenőrzi, hogy történt-e túlcsordulás
+(például nem zéróval történő szorzás után az eredményt visszaoszthatjuk a szorzóval,
+és ha nem egyezik a szorzandóval, akkor tudjuk, hogy túlcsordulás volt).
+\texttt{BigInteger} eredmény esetén ellenőrzésre kerül,
 hogy a \texttt{long} értéksávjában van-e,
 ez esetben is egy \texttt{ImplSmall} kerül visszaadásra.
 
