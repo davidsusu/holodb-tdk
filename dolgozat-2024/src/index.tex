@@ -1538,9 +1538,10 @@ kihagyva a prefixen kívül eső értékeket.
 
 Ha azonban az értékkészlet mérete lényegesen nagyobb, mint az oszlophossz,
 jellemzően nagyon sok értéket kell átugranunk, amely a prefixen kívül esik.
-Ez esetben hatékonyabb, ha egyszerűen az általános kétlépéses értékkiosztást használjuk.
-A unique oszlop esetén csak annyi a megkötés, hogy a használt \texttt{Monotonic}
-a kimenetet szigorúan monoton módon állítsa elő.
+Ilyenkor sokkal hatékonyabb,
+ha az általános kétlépéses értékkiosztást használjuk
+egy megfelelő \texttt{Monotonic} implementációval,
+akár egyszerű diszkrét lineáris vetítéssel.
 
 
 \subsection{Reguláris kifejezésből képzett értékkészletek}
