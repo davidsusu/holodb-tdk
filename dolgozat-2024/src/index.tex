@@ -1565,6 +1565,8 @@ Nem tudjuk ugyanis lekérni a rendezett értékkészlet $n$-edik elemét,
 és nem tudjuk kikeresni, hogy adott érték mely pozíción található az értéklistában.
 
 Lássuk, hogyan tudnánk valami módon mégis egy rendezett értékkészletet implementálni.
+Egy olyan adatstruktúrát kell előre legenerálni,
+melyet futásidőben a gyors lekéréshez és kereséshez használhatunk majd.
 Első megközelítésben a reguláris kifejezéssel kapcsolatban az alábbi megszorításokat tesszük:
 
 \begin{itemize}
@@ -1611,7 +1613,10 @@ az alternációkból pedig egy több elágazással (gyermekelemmel) rendelkező 
 Az is látható, hogy néhány rákövetkező karakter duplikáltan szerepel egyes elágazásokban
 (például az '\texttt{a}' betű rögtön az elején).
 
-Ezen problémák kiküszöbölésére második lépésben egy normalizálási eljárást hajtunk végre,
+A közbeékelődő üres csomópontok és a duplikációk miatt
+a szófa alkalmatlan arra, hogy keressünk benne,
+illetve hogy rendezetten iteráljunk a csomópontokon.
+A probléma kiküszöbölésére második lépésben egy normalizálási eljárást hajtunk végre,
 mely után a gráfban adott csomópontból elérhető csomópontok listájára az alábbiak érvényesek:
 
 \begin{itemize}
