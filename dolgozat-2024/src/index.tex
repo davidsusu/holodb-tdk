@@ -2621,9 +2621,6 @@ valamint hogy runtime teljesítménye a legtöbb esetben összemérhető a való
 ez pedig a generálási, anonimizálási és egyéb inicializáló lépések kikerülése miatt
 összességében sokkal gyorsabb tesztfuttatást tesz lehetővé.
 
-A deklaratív konfiguráció átláthatóan, integráltan írja le a sémát és az adatokat,
-kényelmesen verziókezelhető, generálható, előfeldolgozható.
-
 Azzal, hogy nincs jelentős generálási és indítási költség,
 olyan új lehetőségek nyílnak meg, mint a teljes adatbázistartalommal történő füstteszt,
 vagy a teljesen izolált automatikus integrációs tesztek.
@@ -2655,7 +2652,7 @@ vagy a teljesen izolált automatikus integrációs tesztek.
           néhány esetben kisebb adatstruktúrák generálódnak (pl. regex trie),
           melyek mérete a táblamérettől független.
     \item \textbf{Könnyen és rugalmasan konfigurálható.} Valóban:
-          a YAML konfigurációs fájl könnyen kezelhető és verziókezelhető,
+          a deklaratív YAML konfigurációs fájl könnyen kezelhető és verziókezelhető,
           minden fontosabb paraméter beállítására alkalmas.
     \item \textbf{Skálázható, finomhangolható.} Valóban:
           lényegileg minden komponens skálázható illetve akár kicserélhető,
