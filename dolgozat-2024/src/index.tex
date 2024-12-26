@@ -1593,7 +1593,7 @@ A felépítés két lépcsőben történik.
 Először egy nyers fát állítunk elő, ami közvetlenül reprezentálja a reguláris kifejezést.
 \algorithmref{regex_wordtree_create_raw}
 
-Például a \texttt{([a-c]z(tt|uu)r|a[x-z])} reguláris kifejezés nyers szófája így néz ki:
+Például a \regextt{([a-c]z(tt|uu)r|a[x-z])} reguláris kifejezés nyers szófája így néz ki:
 
 \begin{figure}[H]
 \centering
@@ -1604,7 +1604,7 @@ Például a \texttt{([a-c]z(tt|uu)r|a[x-z])} reguláris kifejezés nyers szófá
 A nyers fa nagyon hasonlít egy szintaxisfához,
 a fő különbség, hogy az alternációk vége tovább van csatlakoztatva a külső szekvencia
 következő eleméhez tartozó csomóponthoz
-(a példában a \texttt{[t]} és az \texttt{[u]} csatlakozik így az \texttt{[r]}-hez).
+(a példában a \regextt{[t]} és az \regextt{[u]} csatlakozik így az \regextt{[r]}-hez).
 Ebből világos, hogy a nyers fa mérete és előállításának költsége
 a reguláris kifejezés méretével egyenesen arányos.
 
@@ -1632,17 +1632,17 @@ Az átalakítás rekurzív módon történik.
 Ahol egymásnak alternatíváját jelentő két karakterosztály között átfedés vagy átugrás van,
 ott mindkét karakterosztályt szét kell bontani úgy,
 hogy a kapott karakterosztályokból képzett halmazra a fentiek érvényesek legyenek.
-Például ha az \texttt{[a-c]}, \texttt{[cf]} és \texttt{[c-e]} jelennek meg alternatívaként,
-akkor ezek szétbomlanak az \texttt{[ab]}, \texttt{[c]}, \texttt{[de]} és \texttt{[f]}
+Például ha az \regextt{[a-c]}, \regextt{[cf]} és \regextt{[c-e]} jelennek meg alternatívaként,
+akkor ezek szétbomlanak az \regextt{[ab]}, \regextt{[c]}, \regextt{[de]} és \regextt{[f]}
 karakterosztályokra, és átveszik a korábbiakból elérhető csomópontokat.
-A \texttt{[c]} karakterosztály így egy hármas elágazást vesz át a három eredeti csomópontból.
+A \regextt{[c]} karakterosztály így egy hármas elágazást vesz át a három eredeti csomópontból.
 A fát egyúttal célszerű úgy továbbalakítani, hogy megszüntetjük az alternációk miatti üres értékű,
 pusztán az elágazás kedvéért felvett csomópontokat,
 ez természetesen az egyenlő csomópontok részfáinak összefésülését vonja maga után.
 Nevezzük az így nyert gráfot a reguláris kifejezés \textit{kompakt szófájának}.
 \algorithmref{regex_wordtree_create_compact}
 
-A \texttt{([a-c]z(tt|uu)r|a[x-z])} reguláris kifejezés fenti nyers szófájából
+A \regextt{([a-c]z(tt|uu)r|a[x-z])} reguláris kifejezés fenti nyers szófájából
 az alábbi kompakt szófát nyerjük:
 
 \begin{figure}[H]
@@ -1670,6 +1670,7 @@ ami exponenciálisan növekszik $n$ növelésével.
 Minden ilyen halmaz az alternáló ágak egyedi kombinációját azonosítja
 (ebben a konkrét esetben ez azt jelenti, hogy különböző lesz a lehetséges utolsó betűk halmaza),
 tehát egyúttal legalább ennyi különböző részfa is van.
+\todoref{Paraméteres reguláris kifejezések notációja?}
 
 Az előbbi reguláris kifejezés lényegileg azt fejezi ki,
 hogy a karakterláncban nem szerepelhet $C$ összes eleme, ezen kívül bármit megengedünk.
@@ -1699,10 +1700,10 @@ az opcionális repetíció kifejtése pedig a következő rekurzív módon tört
     \item $R_n~=$ \texttt{$A$\{,$n$\}} ~ $\longrightarrow$ ~ \texttt{($AR_{n-1}$|)} ~~~~~ (ahol $n>1$)
 \end{enumerate}
 
-Az opcionális előfordulás (\texttt{?}) az $R_1$ esettel egyenlő.
+Az opcionális előfordulás (\regextt{?}) az $R_1$ esettel egyenlő.
 
 A támogatott konstrukciókat könnyen tovább bővíthetjük az egyszerűbb horgonyokkal,
-mint például szövegvég (\texttt{\$}) vagy szóhatár (\texttt{{\textbackslash}b}).
+mint például szövegvég (\regextt{\$}) vagy szóhatár (\regextt{{\textbackslash}b}).
 Ezeket a kezdeti feldolgozáskor úgy tekintjük,
 mint az átmeneti üres csomópontokat, tehát elimináljuk és megjegyezzük őket,
 de utána sorban kikényszerítjük a teljesülésüket.
