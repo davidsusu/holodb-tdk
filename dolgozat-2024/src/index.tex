@@ -765,16 +765,15 @@ ez esetben tényleg csak a konfigurációs fájlra van szükség.
 A konfigurációs fájl alapértelmezetten YAML formátumú,
 de más adatleíró nyelv is használható
 a megfelelő Jackson mappingen keresztül.
-(A Jackson adatszerializációs keretrendszer Java objektumokat, adatstruktúrákat,
+A Jackson adatszerializációs keretrendszer Java objektumokat, adatstruktúrákat,
 különböző adatleíró nyelveken írt fájlokat, karakterláncokat
-és más adatreprezentációkat konvertál egymásba.)
-A konfigurációs adatstruktúra ezen kívül programozottan is felépíthető.
-\todoref{+CITE: Jackson}
-\todoref{Jackson: kicsit jobban bevezetni}
+és más adatreprezentációkat konvertál egymásba%
+\cite{SoftwareJackson}.
 
 A Jackson mappinggel ellátott konfigurációs osztályokhoz formális specifikáció is tartozik,
 így a fájl strukturális és szemantikai helyessége statikusan ellenőrizhető.
 A formális specifikáció használatához csak egy minimalisztikus dedikált csomag függőségként való beemelése szükséges.
+A konfigurációs adatstruktúra a konfigurációs osztályok közvetlen használatával programozottan is felépíthető.
 
 \begin{figure}[H]
   \centering
