@@ -163,7 +163,8 @@ Az \textit{életnek kitett} produkciós adatbázist természetesen kénytelenek 
 minden erőforrásigényével életben tartani, és minden release-zel migrálni \todoref{+CITE: DB-migráció (Flyway/Liquibase...?)}.
 Ám az \textit{absztrakt értelemben vett} adatbázisra számos egyéb helyen is szükségünk van,
 ahol ezek a folyamatos költségek igencsak nemkívánatosak.
-Ilyenek esetek jellemzően az integrációs és egyéb tesztelés, gyors prototípusgyártás, kísérletezés draft adatbázisokkal, rövid demonstrációk és prezentációk.
+Ilyenek esetek jellemzően az integrációs és egyéb tesztelés, gyors prototípusgyártás,
+kísérletezés draft adatbázisokkal, rövid demonstrációk és prezentációk.
 
 Mivel más opció fel sem merül, ezekben az esetekben is ugyanahhoz az infrastruktúrához nyúlunk,
 mint a produkciós adatbázis esetében.
@@ -767,8 +768,10 @@ de más adatleíró nyelv is használható
 a megfelelő Jackson mappingen keresztül.
 (A Jackson adatszerializációs keretrendszer Java objektumokat, adatstruktúrákat,
 különböző adatleíró nyelveken írt fájlokat, karakterláncokat
-és más adatreprezentációkat konvertál egymásba.)\todoref{Jackson: kicsit jobban bevezetni}
+és más adatreprezentációkat konvertál egymásba.)
 A konfigurációs adatstruktúra ezen kívül programozottan is felépíthető.
+\todoref{+CITE: Jackson}
+\todoref{Jackson: kicsit jobban bevezetni}
 
 A Jackson mappinggel ellátott konfigurációs osztályokhoz formális specifikáció is tartozik,
 így a fájl strukturális és szemantikai helyessége statikusan ellenőrizhető.
