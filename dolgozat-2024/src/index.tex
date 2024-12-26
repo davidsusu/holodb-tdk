@@ -52,14 +52,15 @@ quality mutatók
 \usepackage{algorithm}
 \usepackage[rightComments=false,italicComments=false,breakable=true]{algpseudocodex}
 \usepackage[backend=bibtex,style=numeric]{biblatex}
+\usepackage{biblatex-software}
 \usepackage[newfloat]{minted}
 \usepackage{todonotes}
 \usepackage{tocloft}
-\renewcommand{\cftsecfont}{\small} % Section titles in smaller font
-\renewcommand{\cftsubsecfont}{\small} % Subsection titles in smaller font
-\renewcommand{\cftsecpagefont}{\small} % Page numbers in smaller font
-\setlength{\cftbeforesecskip}{-0.15em} % Adjust spacing between section entries
-\setlength{\cftbeforesubsecskip}{-0.15em} % Adjust spacing between subsection entries
+\renewcommand{\cftsecfont}{\small}
+\renewcommand{\cftsubsecfont}{\small}
+\renewcommand{\cftsecpagefont}{\small}
+\setlength{\cftbeforesecskip}{-0.15em}
+\setlength{\cftbeforesubsecskip}{-0.15em}
 
 \newcommand{\rhpad}{\vspace{0.6\baselineskip}}
 
@@ -156,11 +157,12 @@ azaz a mindenkori forráskód \textit{aktuális állapotának} derivátuma,
 nem függ annak történetiségétől.
 Ezt az átlátható képet bolygatja meg a szoftverhez tartozó produkciós adatbázis,
 mely önálló életet él, a felhasználói világgal való interakcióban folyamatosan változik;
-szerkezete, szemantikája azonban szorosan az alkalmazás mindenkori állapotához kötődik.%
-\cite{Ploski2007DatabaseCentricVersioning,Fluri2023DatabaseCiCd,Edwards2023LiveLocalSchemaChange}
+szerkezete, szemantikája azonban szorosan az alkalmazás mindenkori állapotához kötődik%
+\cite{Ploski2007DatabaseCentricVersioning,Fluri2023DatabaseCiCd,Edwards2023LiveLocalSchemaChange}.
 
 Az \textit{életnek kitett} produkciós adatbázist természetesen kénytelenek vagyunk
-minden erőforrásigényével életben tartani, és minden release-zel migrálni \todoref{+CITE: DB-migráció (Flyway/Liquibase...?)}.
+minden erőforrásigényével életben tartani, és minden release-zel migrálni%
+\cite{SoftwareFlyway,SoftwareLiquibase}.
 Ám az \textit{absztrakt értelemben vett} adatbázisra számos egyéb helyen is szükségünk van,
 ahol ezek a folyamatos költségek igencsak nemkívánatosak.
 Ilyenek esetek jellemzően az integrációs és egyéb tesztelés, gyors prototípusgyártás,
