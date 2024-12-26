@@ -2261,6 +2261,7 @@ Az összehasonlítást MySQL-lel (mint az egyik legelterjedtebb szerveradatbázi
 A lekérdezések közvetlen mérésénél az SQL parancsnak a JDBC API-n keresztüli beküldésétől
 az eredménytábla végigiterálásnak végéig eltelt időt mértem.
 Különböző bonyolultságú és válaszméretű lekéréseket vizsgáltam.
+\todoref{Mérések: a mérési környezetet leírni, JMH stb.}
 
 Az integrált tesztelést egy Micronaut keretrendszerben implementált
 alkalmazás REST API-n keresztüli hívásával futtattam.
@@ -2281,6 +2282,8 @@ A lekérdezésszintű tesztekhez a H2-t a \texttt{QUERY\_CACHE\_SIZE{=}0} opció
 míg az integrált tesztnél ezt elhagytam az authentikusság kedvéért.
 (A teljes benchmarkért ld.: \autoref{appendix:projectlinks}).
 
+\todoref{További mérések: ...}
+
 \subsection{Az lekérdezési és integrált tesztek eredménye}
 
 A \ref{fig:benchmarkPage}~ábra felső részén
@@ -2295,7 +2298,7 @@ A lekérdezések esetében kevés adatnál a teljesítmény meglepően jó,
 Vagyis a korábban tárgyalt indexelési technikák jól teljesítenek,
 kulcsfontosságúak a megfelelő teljesítményhez.
 Ugyanakkor az adatelérés kevésbé optimális;
-feltehetően mind az adatok számítása, mind az eredménytábla továbbítása jelentősen javítható még.
+de feltehetően mind az adatok számítása, mind az eredménytábla továbbítása jelentősen javítható még.
 
 Az adatok tárhelyigényében a HoloDB természetesen drasztikus csökkenést mutat,
 hiszen eleve így lett tervezve.
