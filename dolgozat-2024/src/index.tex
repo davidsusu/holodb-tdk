@@ -2206,9 +2206,37 @@ A kilógó kontextussávokban le kell kérni a konkrét kapcsolt értéket,
 
 \subsection{Dev mode (live mode)}
 
-\todoref{Dev mode}
+Főként frontend felületek (képernyők, komponensek) fejlesztése közben megszokott
+az úgynevezett \textit{dev mode} (vagy \textit{live mode}).
+Ilyenkor a forráskódban eszközölt módosítások életbe lépéséhez
+sem a frontend környezet újraindítására, sem a böngészőablak frissítésére nincs szükség.
+A dev mode-ban futó szerver figyeli a releváns változásokat a fájlrendszeren,
+így egy-egy fájl mentésekor azonnal értesíteni tudja a futó frontendet.
+A frontend pedig úgy van kialakítva, hogy ennek hatására gazdaságosan újratöltse az éppen megjelenített nézetet.
+
+A frontend újratöltése jellemzően nem jár komolyabb háttérszámításokkal,
+így instant újratöltése könnyen megvalósítható,
+sőt, elvárás is, hiszen a felhasználói élményt teljesen lerombolja,
+ha egy frontend felület maga lefagy.
+Ez hagyományosan az adatbázisok adattal való költséges feltöltésének az ellentéte.
+Az adatbázisok esetében a dev mode megvalósítása fel sem merül,
+hiszen a módosítás életbelépése esetenként igen költséges lekérdezések alkalmazását jelentené,
+rosszabb esetben egy generáló szkript teljes újrafuttatását.
+A HoloDB esetében azonban ezek a költségek nincsenek vagy minimálisak,
+így lehetővé válik, hogy a lokális tesztadatbázist dev mode-ban futtassuk.
 
 \subsection{Zero mode}
+
+Az automatikus újratöltés egy radikalizált változatát \textit{zero mode}-nak nevezem,
+melynek használatakor konfigurációs fájlra sincsen szükség.
+Ekkor ugyanis mindent a beérkező kérések alapján fogunk generálni.
+
+Egy-egy lekérdezés implicite megmondja, milyen adatszerkezetre számít.
+Például a `SELECT firstname FROM names WHERE birtyear=1987 LIMIT 10` lekérdezés.
+
+
+
+
 
 \todoref{Zero mode: igazítani, garancia-szintek}
 
@@ -2220,6 +2248,13 @@ Itt feltételezem, hogy csak olvasási műveletek érkeznek,
 de az elv, komoly komplikációk vállalásával, írható műveletekre is kiterjeszthető.
 
 Néhány alapbeállítást (pl. \texttt{seed}) beégethetünk, vagy az első lekérés függvényévé tehetünk.
+
+
+
+
+
+
+
 
 A táblás lekérések implicite megadnak valamilyen szerkezetet,
 mivel konkrét sémákon és táblákon belüli konkrét oszlopokat próbálnak elérni.
