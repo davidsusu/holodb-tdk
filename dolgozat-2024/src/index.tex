@@ -2227,10 +2227,12 @@ A HoloDB esetében azonban ezek a költségek nincsenek vagy minimálisak,
 
 \subsection{Zero mode}
 
-Az automatikus újratöltés egy radikalizált változatát \textit{zero mode}-nak nevezem,
-melynek használatakor konfigurációs fájlra sincsen szükség.
+A dev mode elképzelését tovább is vihetjük egy egészen radikális változatig,
+melyet \textit{zero mode}-nak nevezek.
+Az elnevezés magyarázata, hogy nem pusztán az adatok tárolására nincs szükség,
+de konfigurációs fájlra sem.
 Ekkor ugyanis mindent a beérkező kérések alapján fogunk generálni.
-Kihasználhatjuk, hogy egy-egy lekérdezés általában implicite megmondja, milyen adatszerkezetre számít.
+Kihasználjuk, hogy egy-egy lekérdezés implicite többé-kevésbé megmondja, milyen adatszerkezetre számít.
 Tegyük föl például, hogy a frissen indított zero mode szerverre
 elsőként a következő két SQL-lekérdezés érkezik:
 
@@ -2239,8 +2241,38 @@ elsőként a következő két SQL-lekérdezés érkezik:
   SELECT COUNT(*) FROM customers WHERE phone IS NOT NULL;
 \end{verbatim}
 
-TODO
+Amikor az első lekérdezést értelmezzük, már tudjuk,
+hogy elvileg lennie kell egy \texttt{customers} nevű táblának,
+melyben van \texttt{email} és egy \texttt{vip} nevű mező,
+és az utóbbi típusa kompatibilis az \texttt{1} értékkel.
+Továbbá statisztikai tippet is nyerhetünk a \texttt{10}-es limitből,
+gondolhatjuk, hogy ennél több olyan rekord van, amelyek a \texttt{vip=1} feltételnek megfelelnek,
+legalábbis az biztosan érvényes helyzet, hogy ennél több van.
+A második lekérdezésben megtudjuk, hogy kell lennie egy \texttt{phone} nevű mezőnek is,
+amely \texttt{NULL} értéket is felvehet.
 
+A konfigurációt a dev mode-nál megismert módon menet közben kell újratöltenünk,
+ha olyan lekérdezés érkezik, mely az előzőekhez képest többletinformációt tartalmaz.
+Ez azt is jelenti, hogy a kérések ecélból történő előfeldolgozása
+egy külön szűk keresztmetszetet képez,
+mivel a konfiguráció inkrementális módosítása közben blokkolni kell a további lekéréseket.
+
+Kézenfekvőenk tűnik a megoldás, hogy a konfigurációt
+mindig a megfelelő módon egyszerűen bővtsük, amikor szükséges.
+A helyzet azonban valamivel komplikáltabb.
+Előfordulhat, hogy egy oszlopból már értékeket kellett visszaadnunk,
+mielőtt beérkezett volna egy olyan kérés, mely az oszlop típusát egyértelművé tette,
+mégpedig másként, mint ahogy korábban döntöttünk.
+Vagy az is előfordulhat, hogy a wildcarddal az összes oszlop vagy a tábla szerkezete kerül lekérésre,
+pedig később még további oszlopokról is érkezik információ.
+Vagy eleve megpróbáljuk elkerülni ezeket az eseteket,
+vagy megadunk egy stratégiát a kezelésükre.
+
+Az elkerülésre két fő stratégia adódik.
+A visszaadott eredménytáblák mindkettő esetében függetlenek lesznek
+a kérések beérkezési sorrendjétől.
+Az elsőt nevezhetjük \textit{strict mode}-nak.
+Ekkor 
 
 
 
