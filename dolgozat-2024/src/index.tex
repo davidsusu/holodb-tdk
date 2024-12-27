@@ -2230,13 +2230,14 @@ A HoloDB esetében azonban ezek a költségek nincsenek vagy minimálisak,
 Az automatikus újratöltés egy radikalizált változatát \textit{zero mode}-nak nevezem,
 melynek használatakor konfigurációs fájlra sincsen szükség.
 Ekkor ugyanis mindent a beérkező kérések alapján fogunk generálni.
+Kihasználhatjuk, hogy egy-egy lekérdezés általában implicite megmondja, milyen adatszerkezetre számít.
+Tegyük föl például, hogy a frissen indított zero mode szerverre
+elsőként a következő két SQL-lekérdezés érkezik:
 
-Egy-egy lekérdezés implicite megmondja, milyen adatszerkezetre számít.
-Vegyük például a következő lekérdezést:
-
-\begin{center}
-\textt{SELECT firstname FROM names WHERE birtyear=1987 LIMIT 10}
-\end{center}
+\begin{verbatim}
+SELECT email FROM customers WHERE vip=1 LIMIT 10
+SELECT COUNT(*) FROM customers WHERE phone IS NOT NULL
+\end{verbatim}
 
 TODO
 
