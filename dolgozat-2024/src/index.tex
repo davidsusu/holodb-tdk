@@ -2256,10 +2256,35 @@ ha olyan lekérdezés érkezik, mely az előzőekhez képest többletinformáci�
 Ez azt is jelenti, hogy a kérések ecélból történő előfeldolgozása
 egy külön szűk keresztmetszetet képez,
 mivel a konfiguráció inkrementális módosítása közben blokkolni kell a további lekéréseket.
+Egy alapértelmezett root seedet használhatunk,
+amit parancssori opcióval esetleg felül lehet írni.
 
 Kézenfekvőenk tűnik a megoldás, hogy a konfigurációt
-mindig a megfelelő módon egyszerűen bővtsük, amikor szükséges.
+mindig a megfelelő módon egyszerűen bővítsük, amikor szükséges.
 A helyzet azonban valamivel komplikáltabb.
+Előfordulhat például, hogy az addig (akár megfelelő részeltes információk hiányában) rögzített
+oszlopjellemzőknek ellentmondó implicit oszlopinformációt kapunk.
+Vagy eleve megpróbáljuk elkerülni ezeket az eseteket,
+vagy megadunk egy kezelési módot.
+Továbbá mindkét esetben vagy ragaszkodunk a koherenciához, vagy nem.
+Így tehét négyféle stratégia adódik:
+
+\begin{itemize}
+    \item ASDF
+    \item ASDF
+    \item ASDF
+    \item ASDF
+\begin{end}
+
+Mind a dev mode, mind a zero mode működtethető írási réteggel együtt,
+akár úgy, hogy a nem változó oszlopok módosításait megtartjuk.
+
+XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+
+
+
+
+
 Előfordulhat, hogy egy oszlopból már értékeket kellett visszaadnunk,
 mielőtt beérkezett volna egy olyan kérés, mely az oszlop típusát egyértelművé tette,
 mégpedig másként, mint ahogy korábban döntöttünk.
@@ -2276,6 +2301,7 @@ vagy egy alapértelmezett táblaszerkezetet, ha addig a tábla még nem lett lé
 Az elkerülésre két fő stratégia adódik.
 A visszaadott eredménytáblák mindkettő esetében függetlenek lesznek
 a kérések beérkezési sorrendjétől.
+
 Az elsőt nevezhetjük \textit{simple mode}-nak.
 Ekkor pusztán a tábla és az oszlopok neveiből indulunk ki
 (valamint egy alapértelmezett, de akár kapcsolóval felülírható root seed értékből).
