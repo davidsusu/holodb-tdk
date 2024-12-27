@@ -2263,61 +2263,42 @@ A helyzet azonban valamivel komplikáltabb.
 Előfordulhat, hogy egy oszlopból már értékeket kellett visszaadnunk,
 mielőtt beérkezett volna egy olyan kérés, mely az oszlop típusát egyértelművé tette,
 mégpedig másként, mint ahogy korábban döntöttünk.
-Vagy az is előfordulhat, hogy a wildcarddal az összes oszlop vagy a tábla szerkezete kerül lekérésre,
+Vagy az is előfordulhat, hogy az összes oszlop tartalma (wildcard) vagy a tábla szerkezete kerül lekérésre,
 pedig később még további oszlopokról is érkezik információ.
 Vagy eleve megpróbáljuk elkerülni ezeket az eseteket,
 vagy megadunk egy stratégiát a kezelésükre.
+Továbbá mindkét esetben vagy ragaszkodunk a koherenciához, vagy nem.
+
+(Az összes oszlop lekérését igénylő esetekkel most nem foglalkozom,
+szerintem a legjobb ilyenkor egyszerűen a már felvett oszlopokat visszaadni,
+vagy egy alapértelmezett táblaszerkezetet, ha addig a tábla még nem lett létrehozva.)
 
 Az elkerülésre két fő stratégia adódik.
 A visszaadott eredménytáblák mindkettő esetében függetlenek lesznek
 a kérések beérkezési sorrendjétől.
-Az elsőt nevezhetjük \textit{strict mode}-nak.
-Ekkor 
+Az elsőt nevezhetjük \textit{simple mode}-nak.
+Ekkor pusztán a tábla és az oszlopok neveiből indulunk ki
+(valamint egy alapértelmezett, de akár kapcsolóval felülírható root seed értékből).
+A tábla mérete és egyéb jellemző a táblanév alapján kerülnek meghatározásra,
+Az oszlop típusa és egyéb jellemzői pedig az oszlop neve alapján
+(mellékes, hogy pontosan milyen módszerrel).
+Természetesen érdemes bevetni olyan heurisztikákat,
+melyek a beszédes oszlopneveket felismerik (az előbbi \texttt{email} például ilyen).
+A másodikat hívhatjuk \textit{ad hoc mode}-nak.
+Ekkor a lekérések függetlenek egymástól.
+Minden lekérést igyekszünk a kéréshez legjobban igazodó adatszerkezettel kiszolgálni,
+cserébe teljesen elengedjük a kérések közötti koherenciát.
 
+Ha nem próbáljuk elkerülni az oszlop jellemzőit illető ellentmondások kezelését,
+szintén két stratégia adódik.
+Az \textit{incremental mode} esetén már felvett oszlopon nem változtatunk,
+az új oszlopokat természetesen az újonnan érkező információk alapján létrehozzuk.
+A \textit{correction mode} esetén meglévő oszlopokat is módosíthatunk,
+amikor egy új lekérdezés nagyon eltérő oszlopjellemzőket sugall.
+A táblaméretet és néhány egyéb globális jellemzőt ekkor sem módosítunk.
 
-
-
-\todoref{Zero mode: on-demand schema, garancia-szintek}
-
-
-
-Egyes használati esetek megengedik,
-hogy további drasztikus lépésként teljesen nyitottá és automatikussá tegyük a virtuális adatbázis felépítését.
-Ebben az esetben konfigurációs fájl létrehozására sincsen szükség,
-mindent a beérkező kérések alapján fogunk generálni.
-Itt feltételezem, hogy csak olvasási műveletek érkeznek,
-de az elv, komoly komplikációk vállalásával, írható műveletekre is kiterjeszthető.
-
-Néhány alapbeállítást (pl. \texttt{seed}) beégethetünk, vagy az első lekérés függvényévé tehetünk.
-
-
-
-
-
-
-
-
-A táblás lekérések implicite megadnak valamilyen szerkezetet,
-mivel konkrét sémákon és táblákon belüli konkrét oszlopokat próbálnak elérni.
-Ezeket on-demand kell létrehozni, és a továbbiakban megtartani.
-A táblák hosszának beállításakor esetleg figyelembe vehetjük az első lekérés limit értékeit, ha van.
-Az oszlop paramétereit a lekérésben az adott oszlopra vonatkozó
-implicit információk alapján kell meghatároznunk.
-Az oszlopnév, az érték használati módja, a keresési feltételek stb.
-mind hasznosak lehetnek.
-Ha nem tudtuk eléggé leszűkíteni az oszlop típusát,
-valamilyen kellően generikus alapértelmezett beállítást kell használnunk,
-ekkor is vállalva persze, hogy egy jövőbeli lekérdezés ezzel inkompatibilis lesz.
-
-A wildcardos lekérdezéseknél többféle stratégiát követhetünk,
-legegyszerűbb, ha egyszerűen az addigi oszlopokat adjuk vissza
-(új tábla esetén egy alapértelmezett oszlopot adhatunk hozzá).
-
-A szisztéma megvalósításához mindössze egy proxy réteg szükséges,
-mely minden beérkező kérés továbbítása előtt megfelelően kiegészíti a konfigurációt,
-és újratölti a virtuális adatbázist, ha szükséges.
-A \texttt{TreeRandom} hierarchia természetéből adódóan a korábbi oszlopok
-továbbra is ugyanazokat a konkrét értékeket fogják szolgáltatni.
+Mind a dev mode, mind a zero mode működtethető írási réteggel együtt,
+akár úgy, hogy a nem változó oszlopok módosításait megtartjuk.
 
 
 \section{Empirikus eredmények}
