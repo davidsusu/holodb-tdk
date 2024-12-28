@@ -113,7 +113,7 @@
 		\newcommand{\codelabel}{forráskód}
 		\newcommand{\alglabel}{algoritmus}
 
-		\newcommand{\biblabel}{Irodalomjegyzék}
+		\newcommand{\biblabel}{Hivatkozások}
 		\newcommand{\lstalgorithmlabel}{Algoritmusjegyzék}
 		\newcommand{\lstfigurelabel}{Ábrajegyzék}
 		\newcommand{\lsttablelabel}{Táblázatjegyzék}
