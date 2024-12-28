@@ -136,7 +136,7 @@
 		\newcommand{\codelabel}{Code}
 		\newcommand{\alglabel}{Algorithm}
 
-		\newcommand{\biblabel}{Bibliography}
+		\newcommand{\biblabel}{References}
 		\newcommand{\lstalgorithmlabel}{List of Algorithms}
 		\newcommand{\lstfigurelabel}{List of Figures}
 		\newcommand{\lsttablelabel}{List of Tables}
