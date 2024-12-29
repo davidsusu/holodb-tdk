@@ -122,7 +122,7 @@ quality mutatók
 
 \begin{abstract}
 A modern szoftverfejlesztési módszertanok fő fókuszai közé tartozik
-a gyors prototípusgyártás és a (kézi illetve automatizált) integrált tesztelés.
+a gyors prototípusgyártás és a (kézi, illetve automatizált) integrált tesztelés.
 Mindkét esetben tesztadatokat kell biztosítanunk az alkalmazás működtetéséhez.
 Ugyanakkor általában demóadatokra számos egyéb helyzetben is szükségünk lehet
 (például mockolás, füst-teszt, szoftverbemutató, edukáció).
@@ -616,7 +616,7 @@ Utóbbi egy relációsadatbázis-keretrendszer, mely definiálja a storage API-t
 egy komplett adatbázisszervert épít fölé;
 beleértve a lekérdezések fordítását és futtatását,
 a felhasználói munkamenetek, tranzakciók és változók kezelését,
-a runtime sémamódosításokat illetve új táblákat és más felelősségi köröket.
+a runtime sémamódosításokat, illetve új táblákat és más felelősségi köröket.
 A HoloDB ehhez a storage API virtuális implementációját,
 a konfiguráció kezelését
 és a megfelelő futtatási környezetet adja hozzá.
@@ -726,11 +726,11 @@ Feltételezzük, hogy jóval több olvasási kérés érkezik be, mint írási.
 
 Az alapértelmezett \texttt{READ} státuszban feltétel nélkül,
 konkurensen szolgáljuk ki a beérkező olvasási lekérdezéseket.
-Ha azonban egy módosító lekérdezés illetve tranzakció érkezik,
+Ha azonban egy módosító lekérdezés, illetve tranzakció érkezik,
 elhelyezzük a módosító műveleteknek fenntartott queue-ba,
 és átváltunk \texttt{WRITE} módba.
 
-\texttt{WRITE} módban a beérkező olvasási illetve írási műveletek
+\texttt{WRITE} módban a beérkező olvasási, illetve írási műveletek
 a számukra fenntartott két dedikált queue-ba kerülnek.
 Először kiszolgáljuk a még folyamatban lévő olvasási műveleteket,
 ezután sorra szekvenciálisan kivesszük és végrehajtjuk a módosítási queue elemeit, amíg van ilyen.
@@ -1011,7 +1011,7 @@ A következő osztálydiagram összefoglalja ezeket a kiemelt interfészeket:
 
 \subsection{A \texttt{LargeInteger} típus}
 
-Az hatékony on-the-fly számításokhoz
+A hatékony on-the-fly számításokhoz
 szükségesnek mutatkozott egy olyan egész típus megalkotása,
 mely kis és óriás számokra egyaránt működik,
 de egyúttal a kis számokon nagyon hatékony (ellentétben a beépített \texttt{BigInteger} típussal).
@@ -1024,11 +1024,10 @@ az \texttt{ImplBig} pedig az ezen kívül eső értékekre (nagy számok) specia
 
 Az \texttt{ImplSmall} egy primitív \texttt{long} értéket tárol.
 Bizonyos műveleteknél olcsó ellenőrzéssel előre megállapítja,
-hogy biztos-e, hogy nem lesz túlcsordulás.
-Ha biztosan nem lesz, akkor a primitív műveletet végzi el,
+hogy biztos-e, hogy nem lesz túlcsordulás;
+ha biztosan nem lesz, akkor a primitív műveletet végzi el,
 különben a \texttt{BigInteger} segítségével számol.
-Más műveletek esetében, ha mindkét bemeneti érték \texttt{long},
-akkor először végrehajtja a primitív műveletet,
+Más műveletek esetében először végrehajtja a primitív műveletet,
 majd ez alapján ellenőrzi, hogy történt-e túlcsordulás.
 Például nem zéróval történő szorzás után az eredményt visszaoszthatjuk a szorzóval,
 és ha nem egyezik a szorzandóval, akkor tudjuk, hogy túlcsordulás volt.
@@ -1037,7 +1036,7 @@ hogy a \texttt{long} értéksávjában van-e,
 ez esetben is egy \texttt{ImplSmall} kerül visszaadásra.
 
 Az \texttt{ImplBig} mindig a \texttt{BigInteger}-en keresztül végzi a műveleteket.
-Hasonlóan a másik implementációhoz, szintén ellenőrzi, hogy az eredmény kis szám-e.
+Hasonlóan a másik implementációhoz, szintén utóellenőrzi, hogy az eredmény kis szám-e.
 Egy \texttt{LargeInteger} szám akkor és csak akkor csomagolódik \texttt{ImplBig}-ként,
 ha kívül esik a \texttt{long} értékkészletén.
 
@@ -1045,12 +1044,12 @@ A \texttt{LargeInteger} a \texttt{BigInteger} összes metódusát replikálja,
 illetve számos további kényelmi metódust ad hozzá.
 A \texttt{LargeInteger} konstruktora kívülről nem elérhető,
 ehelyett a statikus \texttt{of()} metódusokon keresztül lehet példányokhoz jutni.
-A zérusközeli értékek a leggyakrabban használtak
+Feltesszük, hogy a zérusközeli értékek a leggyakrabban használtak
 (gondoljunk például olyan triviális számokra, mint 0, 1, 2, 10),
 az ezekhez tartozó példányok statikusan tárazva vannak a duplikációk elkerülése céljából.
 Ez nem csak a memóriahasználatot csökkenti,
 de esetenként a performanciát is növelheti
-(például kihasználhatjuk, hogy egyenlő érték egyúttal egyenlő példányt jelent).
+(például kihasználhatjuk, hogy egyenlő értékek egyúttal egyenlő példányokat jelentenek).
 
 A Scala standard könyvtárának \texttt{BigInt} típusa szintén a \texttt{long} és \texttt{BigInteger}
 aritmetika váltogatásával oldja meg,
@@ -1062,7 +1061,7 @@ a \texttt{LargeInteger} valamivel gyorsabb.
 A Scala \texttt{BigInt} (főként kompatibilitási okokból)
 nem használ két különböző típust,
 hanem egyetlen adatstruktúrába sűríti a két esetet,
-így valamivel több memóriát is használ.
+így enyhén több memóriát is használ.
 \todoref{LargeInteger és BigInt: miért nem a BigInt? Ide is a prezentált választ.}
 \todoref{LargeInteger és BigInt: mérési módszertant részletezni, JMH stb.}
 \todoref{LargeInteger és BigInt: több mérés, memória is, optimalizáció}
@@ -1172,11 +1171,11 @@ az első $N$ nemnegatív egész számhoz rendeli.
 Ez arra használható, hogy egy $n$ elemű, rendezetten tárolt értékkészletet
 egy $N$ méretű adatbázistábla oszlopához igazítsunk méretben.
 Tehát a példány az $M(i) = m$ függvényt valósítja meg,
-ahol $0 \leq i < N$ illetve $0 \leq m < n$, továbbá $i_1 < i_2 \implies M(i_1) \leq M(i_2)$.
+ahol $0 \leq i < N$, illetve $0 \leq m < n$, továbbá $i_1 < i_2 \implies M(i_1) \leq M(i_2)$.
 Ugyanakkor indexelt elérést is biztosít, azaz lekérdezhető,
 hogy egy adott érték mely indexsávhoz rendelődik,
 azaz megvalósítja az $M^{-1}(m) = [i, j)$ függvényt is,
-ahol $0 \leq m < n$ illetve $0 \leq i \leq j \leq N$, és teljesülnek az alábbiak:
+ahol $0 \leq m < n$, illetve $0 \leq i \leq j \leq N$, és teljesülnek az alábbiak:
 
 \begin{itemize}
 \item $x < i ~~~~~~~~~~ \implies ~~~ M(x) < M(i)$
@@ -1395,7 +1394,7 @@ egy \texttt{Permutation} példány segítségével elkeverjük.
 \end{figure}
 
 Láttuk, hogy mindkét függvénytípus interfésze úgy van definiálva, hogy relációként megfordítható.
-A \texttt{Monotonic} \texttt{indicesOf()} metódusaival egy értékindexnek illetve -sávnak
+A \texttt{Monotonic} \texttt{indicesOf()} metódusaival egy értékindexnek, illetve -sávnak
 a céllistabeli sávjára tudunk rákérdezni.
 A \texttt{Permutation} pedig az \texttt{indexOf()} metódust biztosítja hasonló célra
 (illetve inverze maga is permutáció).
@@ -1405,7 +1404,7 @@ A még keveretlen rányújtott adathalmazbeli találati sáv határai
 egyúttal azonnal megadják a találatok számosságát,
 ami egyszerűbb \texttt{COUNT} lekérdezéseknél igen előnyös.
 
-A következő két ábra szemlélteti az adatlekérés illetve értékkeresés folyamatát:
+A következő két ábra szemlélteti az adatlekérés, illetve értékkeresés folyamatát:
 
 \begin{figure}[H]
   \centering
@@ -1897,7 +1896,7 @@ de legalábbis ne legyen metszetük modulo $n$).
 Egy másik probléma (hacsaknem épp ez a cél), hogy a szövegek túl uniformak, ugyanannyiféle szóból állnak.
 Ezen könnyen segíthetünk, ha a szósávok közé sok apró üres sávot helyezünk el.
 
-A következő ábrák szemléltetik az eddig leírt szóösszeállítási illetve keresési módszert:
+A következő ábrák szemléltetik az eddig leírt szóösszeállítási, illetve keresési módszert:
 
 \begin{figure}[H]
   \centering
@@ -1949,7 +1948,7 @@ Egy olcsó, ugyanakkor viszonylag jó eredményt adó módszer a következő:
     \item Határozzuk meg a $c_i$ konkrét szószámot.
     \item Vegyük a szóhalmazt valamilyen konkrét sorrendben.
     \item Helyezzünk ezek közé további szavakat, míg a $c_i$ szószámot el nem érjük.
-    \item Határozzuk meg a mondat- illetve részmondathatárok pozícióit.
+    \item Határozzuk meg a mondat-, illetve részmondathatárok pozícióit.
     \item Fűzzük össze a szöveget szóközökkel, adjuk hozzá a központozást.
 \end{enumerate}
 
@@ -1973,7 +1972,7 @@ Az értékek sűrűségének, elhelyezkedésének valamint opcionálisan a várh
 figyelembevételével a felületet térszeletekre osztjuk.
 Ennek a felosztásnak nem feltétlenül kell egyenletesnek vagy egyáltalán szabályosnak lennie,
 de az egyszerűség kedvéért most maradjunk a szokványos hálónál:
-adott $w$ földrajzi hosszúságonként illetve adott $h$ földrajzi szélességenként vágjuk föl a gömbfelszínt.
+adott $w$ földrajzi hosszúságonként, illetve adott $h$ földrajzi szélességenként vágjuk föl a gömbfelszínt.
 A kapott háló (a sarkoknál háromszöggé fajuló) kis kvázi-négyszögeket határoz meg.
 Ezeket soronként véve egy globális sorrendezésüket kapjuk.
 
@@ -2089,7 +2088,7 @@ Bonyolult, de még mindig teljesen életszerű eset,
 amikor a függő értékek külön önálló indexeket is kapnak
 (ilyen eset például, ha az életkor adatot a végzettséghez igazítva generáljuk).
 Ha a mesteroszlop(ok) értékkészlete kicsi,
-akkor minden ilyen értéken belül elvégezhetjük a keresést illetve rendezést a függő értékekre,
+akkor minden ilyen értéken belül elvégezhetjük a keresést, illetve rendezést a függő értékekre,
 és ezek összefésült eredményét adjuk vissza.
 
 \subsection{Táblák közötti kapcsolatok}
@@ -2205,7 +2204,7 @@ Ha ezt sikerült megoldani, az értékkiosztás működése már triviális.
 Adott rekordhoz a földrajzi koordinátát a korábban ismertetett módszerrel generáljuk,
 a kapcsolt adatot ez alapján számítjuk az $F$ függvény szerint.
 A kapcsolt adat valamely egyéni értéksávjára való kereséskor
-lekérjük a sávon teljesen belülre eső illetve a kilógó kontextussávokat,
+lekérjük a sávon teljesen belülre eső, illetve a kilógó kontextussávokat,
 lekérjük az ezekhez tartozó alakzatokat,
 és ezen alakzatokra keressük a földrajzi koordinátákat.
 A keresett sávon teljesen belülre eső kontextussávokhoz tartozó találatok feltétel nélkül megtarthatók.
@@ -2716,7 +2715,7 @@ vagy a teljesen izolált automatikus integrációs tesztek.
           a deklaratív YAML konfigurációs fájl könnyen kezelhető és verziókezelhető,
           minden fontosabb paraméter beállítására alkalmas.
     \item \textbf{Skálázható, finomhangolható.} Valóban:
-          lényegileg minden komponens skálázható illetve akár kicserélhető,
+          lényegileg minden komponens skálázható, illetve akár kicserélhető,
           különösen az értékkészletek, monoton méretigazítások és permutációk
           vannak hatással a teljesítményre és az eredmény minőségére.
     \item \textbf{Egyedi működéssel könnyen bővíthető.} Valóban:
