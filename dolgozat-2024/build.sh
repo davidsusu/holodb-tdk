@@ -47,11 +47,9 @@ fi
 cd ..
 
 if [ "${mode}" = 'draft' ]; then
-    command="pdflatex --shell-escape -interaction=nonstopmode '\makeatletter\def\@classoptionslist{draft}\makeatother\input{${inputFileName}}'"
-elif [ "${mode}" = 'edit' ]; then
-    command="pdflatex --shell-escape -interaction=nonstopmode --synctex=1 '${inputFileName}'"
+    command="pdflatex --shell-escape -interaction=nonstopmode --synctex=1 '\makeatletter\def\@classoptionslist{draft}\makeatother\input{${inputFileName}}'"
 else
-    command="pdflatex --shell-escape -interaction=nonstopmode '${inputFileName}'"
+    command="pdflatex --shell-escape -interaction=nonstopmode --synctex=1 '${inputFileName}'"
 fi
 
 eval "${command}"
@@ -63,11 +61,7 @@ cd ..
 
 rm -f ./*.out ./*.dvi
 
+mkdir -p out
 cp -f "build/${baseName}.pdf" "out/${outputFileName}"
-
-if [ "${mode}" = 'edit' ]; then
-    rm -rf edit
-    mkdir -p edit
-    cp -f "build/${baseName}.pdf" "edit/${baseName}.pdf"
-    gzip -dc "build/${baseName}.synctex.gz" | sed -E 's/\/build\/.\/(\w+).(cls|tex)/\/src\/\1.\2/' | gzip > "edit/${baseName}.synctex.gz"
-fi
+synctexOutputFileName="$( printf '%s' "$outputFileName" | sed -E 's/\.pdf$//' ).synctex.gz"
+gzip -dc "build/${baseName}.synctex.gz" | sed -E 's/\/build\/.\/(\w+).(cls|tex)$/\/src\/\1.\2/' | gzip > "out/${synctexOutputFileName}"
