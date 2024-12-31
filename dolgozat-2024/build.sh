@@ -54,9 +54,6 @@ else
     command="pdflatex --shell-escape -interaction=nonstopmode '${inputFileName}'"
 fi
 
-echo "${command}"
-exit
-
 eval "${command}"
 bibtex "${baseName}"
 eval "${command}"
