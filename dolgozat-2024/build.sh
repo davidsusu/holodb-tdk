@@ -69,6 +69,5 @@ if [ "${mode}" = 'edit' ]; then
     rm -rf edit
     mkdir -p edit
     cp -f "build/${baseName}.pdf" "edit/${baseName}.pdf"
-    cp -f "build/${baseName}.synctex.gz" "edit/${baseName}.synctex.gz"
-    ln -s "$( realpath "src/${inputFileName}" )" "edit/${inputFileName}"
+    gzip -dc "build/${baseName}.synctex.gz" | sed -E 's/\/build\/.\/(\w+).(cls|tex)/\/src\/\1.\2/' | gzip > "edit/${baseName}.synctex.gz"
 fi
