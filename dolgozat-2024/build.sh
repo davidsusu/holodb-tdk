@@ -68,7 +68,7 @@ cp -f "build/${baseName}.pdf" "out/${outputFileName}"
 if [ "${mode}" = 'edit' ]; then
     rm -rf edit
     mkdir -p edit
-    cp -f "build/${baseName}.pdf" "edit/${outputFileName}"
+    cp -f "build/${baseName}.pdf" "edit/${baseName}.pdf"
     cp -f "build/${baseName}.synctex.gz" "edit/${baseName}.synctex.gz"
     ln -s "$( realpath "src/${inputFileName}" )" "edit/${inputFileName}"
 fi
