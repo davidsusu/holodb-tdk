@@ -61,6 +61,14 @@ eval "${command}"
 
 cd ..
 
-mkdir -p out
-cp -f "build/${baseName}.pdf" "out/${outputFileName}"
+if [ "${mode}" = 'edit' ]; then
+    rm -rf edit
+    mkdir -p edit
+    cp -f "build/${baseName}.pdf" "edit/${outputFileName}"
+    cp -f "build/${baseName}.synctex.gz" "edit/${baseName}.synctex.gz"
+    cp -f "build/${inputFileName}" "out/${inputFileName}"
+fi
+    mkdir -p out
+    cp -f "build/${baseName}.pdf" "out/${outputFileName}"
+fi
 rm -f ./*.out ./*.dvi
