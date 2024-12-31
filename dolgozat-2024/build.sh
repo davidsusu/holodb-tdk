@@ -66,8 +66,8 @@ if [ "${mode}" = 'edit' ]; then
     mkdir -p edit
     cp -f "build/${baseName}.pdf" "edit/${outputFileName}"
     cp -f "build/${baseName}.synctex.gz" "edit/${baseName}.synctex.gz"
-    ln -s "build/${inputFileName}" "out/${inputFileName}"
-fi
+    ln -s "src/${inputFileName}" "out/${inputFileName}"
+else
     mkdir -p out
     cp -f "build/${baseName}.pdf" "out/${outputFileName}"
 fi
