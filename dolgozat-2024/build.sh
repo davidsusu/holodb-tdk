@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# $1: mode: [draft|spare|final] (default: final)
+# $1: mode: [draft|quick|edit|final] (default: final)
 
 
 inputFileName='index.tex'
@@ -48,6 +48,8 @@ cd ..
 
 if [ "${mode}" = 'draft' ]; then
     command="pdflatex --shell-escape -interaction=nonstopmode '\makeatletter\def\@classoptionslist{draft}\makeatother\input{${inputFileName}}'"
+elif [ "${mode}" = 'edit' ]; then
+     command="pdflatex --shell-escape -interaction=nonstopmode '${inputFileName}' --synctex=1"
 else
     command="pdflatex --shell-escape -interaction=nonstopmode '${inputFileName}'"
 fi
