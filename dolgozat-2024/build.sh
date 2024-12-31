@@ -49,10 +49,13 @@ cd ..
 if [ "${mode}" = 'draft' ]; then
     command="pdflatex --shell-escape -interaction=nonstopmode '\makeatletter\def\@classoptionslist{draft}\makeatother\input{${inputFileName}}'"
 elif [ "${mode}" = 'edit' ]; then
-     command="pdflatex --shell-escape -interaction=nonstopmode '${inputFileName}' --synctex=1"
+    command="pdflatex --shell-escape -interaction=nonstopmode '${inputFileName}' --synctex=1"
 else
     command="pdflatex --shell-escape -interaction=nonstopmode '${inputFileName}'"
 fi
+
+echo "${command}"
+exit
 
 eval "${command}"
 bibtex "${baseName}"
