@@ -1046,11 +1046,11 @@ hogy az óriás számok támogatása mellett kis számokon viszonylag gyorsan fu
 \cite{Rosset2019ScalaBigInt}.
 A két megoldás performanciában hasonló,
 a számunkra releváns esetek egy részében (kisebb számok, sokféle művelet)
-a \texttt{LargeInteger} valamivel gyorsabb.
+a \texttt{LargeInteger} \textcolor{red}{valamivel}\todoref{VALAMIVEL} gyorsabb.
 A Scala \texttt{BigInt} (főként kompatibilitási okokból)
 nem használ két különböző típust,
 hanem egyetlen adatstruktúrába sűríti a két esetet,
-így enyhén több memóriát is használ.
+így \textcolor{red}{enyhén}\todoref{ENYHÉN} több memóriát is használ.
 \todoref{LargeInteger: miért nem a BigInt? mérési módsz., JMH, több mérés, memória, optim.}
 
 \begin{figure}[H]
