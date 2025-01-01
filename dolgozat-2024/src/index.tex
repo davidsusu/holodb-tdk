@@ -1020,8 +1020,8 @@ Más műveletek esetében először végrehajtja a primitív műveletet,
 majd ez alapján ellenőrzi, hogy történt-e túlcsordulás.
 Például nem zéróval történő szorzás után az eredményt visszaoszthatjuk a szorzóval,
 és ha nem egyezik a szorzandóval, akkor tudjuk, hogy túlcsordulás volt.
-\texttt{BigInteger} eredmény esetén ellenőrzésre kerül,
-hogy a \texttt{long} értéksávjában van-e,
+\texttt{BigInteger} számítás esetén ellenőrzésre kerül,
+hogy az eredmény a \texttt{long} értéksávjában van-e,
 ez esetben is egy \texttt{ImplSmall} kerül visszaadásra.
 
 Az \texttt{ImplBig} mindig a \texttt{BigInteger}-en keresztül végzi a műveleteket.
