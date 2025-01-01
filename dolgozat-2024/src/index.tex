@@ -1695,17 +1695,17 @@ Ennek kioptimalizálásával most nem foglalkozom.
 Először a korlátlan repetíciót (\regextt{*}, \regextt{+} stb.) elimináljuk rendre az alábbi szabályokkal:
 
 \begin{enumerate}
-    \item \texttt{$A$+} ~ $\longrightarrow$ ~ \texttt{$A$\{1,\}}
-    \item \texttt{$A$\{$n$,\}} ~ $\longrightarrow$ ~ \textt{$A$\{$n$\}$A$*}
-    \item \texttt{$A$*} ~ $\longrightarrow$ ~ \texttt{$A$\{$c$\}} ~~~~~ (ahol $c$ előre definiált konstans)
+    \item \texttt{$A$+} ~~~~~~~ $\longrightarrow$ ~~~ \texttt{$A$\{1,\}}
+    \item \texttt{$A$\{$n$,\}} ~~~ $\longrightarrow$ ~~~ \textt{$A$\{$n$\}$A$*}
+    \item \texttt{$A$*} ~~~~~~~ $\longrightarrow$ ~ \texttt{$A$\{$c$\}} ~~~ (ahol $c$ előre definiált konstans)
 \end{enumerate}
 
 A fix repetíció egyszerű konkatenációvá alakul,
 az opcionális repetíció kifejtése pedig a következő rekurzív módon történik:
 
 \begin{enumerate}
-    \item $R_1~=$ \texttt{$A$\{,1\}} ~ $\longrightarrow$ ~ \texttt{($A$|)}
-    \item $R_n~=$ \texttt{$A$\{,$n$\}} ~ $\longrightarrow$ ~ \texttt{($AR_{n-1}$|)} ~~~~~ (ahol $n>1$)
+    \item $R_1~=$ \texttt{$A$\{,1\}} ~~~ $\longrightarrow$ ~~~ \texttt{($A$|)}
+    \item $R_n~=$ \texttt{$A$\{,$n$\}} ~~~ $\longrightarrow$ ~~~ \texttt{($AR_{n-1}$|)} ~~~~~ (ahol $n>1$)
 \end{enumerate}
 
 Az opcionális előfordulás (\regextt{?}) az $R_1$ esettel egyenlő.
