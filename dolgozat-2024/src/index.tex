@@ -218,7 +218,7 @@ Játékokban és egyszerűbb szimulációkban már igen régóta generálnak kis
 pályákat procedurálisan valamilyen pszeudovéletlen algoritmus segítségével%
 \cite{Smith2015AnalogHistoryProcedural}.
 Ennek azonban komoly méretbeli korlátai vannak.
-Felmerül a gondolat, hogy lehetséges-e óriás méretű világokat konzisztensen
+Felmerül a gondolat, hogy lehetséges-e óriás méretű világokat koherensen
 a játékosok rendelkezésére bocsátani, anélkül, hogy le kellene generálni az egészet.
 
 Univerzumot, nyílt világokat és egyéb óriás rendszereket felvonultató játékokban
@@ -360,8 +360,8 @@ Ebben az adatbázisban ugyanis nincsenek tárolva adatok
 (legfeljebb adatok változásai, ha az írhatóság be van kapcsolva).
 
 A deklaratív konfiguráció alapján a lekérdezések eredménye on-the-fly kerül kiszámításra,
-úgy, hogy a lekérdezések közötti konzisztencia biztosított,
-vagyis az egymás utáni lekérdezések egy koherens adatbázis képét adják.
+úgy, hogy a lekérdezések közötti koherencia biztosított,
+vagyis az egymás utáni lekérdezések egy konzisztens adatbázis képét adják.
 Ezt pusztán adatmezőnként determinisztikusan generált értékekkel is meg lehetne oldani,
 ekkor a kereséshez a teljes tábla szkennelése lenne szükséges
 (vagyis visszajutnánk ugyanahhoz a problémához,
@@ -923,7 +923,7 @@ nem kell más, mint hogy megfelelő viselkedéssel elérhetők legyenek a storag
 A megfelelőség ez esetben két dolgot jelent:
 
 \begin{enumerate}
-  \item \textbf{Lekérdezések közötti konzisztencia:}
+  \item \textbf{Lekérdezések közötti koherencia:}
         felépíthető egy olyan tényleges immutábilis relációs adatbázis ($M$),
         hogy minden lehetséges relációs lekérdezés esetében, amely a közös sémára ($S$) értelmes,
         a virtuális és a tényleges adatbázis esetében visszaadott eredménytábla megegyezik.
@@ -976,7 +976,7 @@ Az adatbázis méretére vonatkozóan nem akartam megkötéseket tenni.
 Nem lett volna célszerű explicit ellenőrzések tömegét beépíteni
 a problémás számítások, potenciális túlcsordulások földerítésére.
 Továbbá az egész számokat egységesen szerettem volna kezelni, függetlenül azok méretétől.
-Így a beépített \texttt{BigInteger} típust egy idő után elvetettem,
+Így a beépített \texttt{BigInteger} típust hamar elvetettem,
 mivel az kisebb számokra a \texttt{long} típushoz képest rendkívül rossz performanciájú.
 
 \subsection{A fő segédtípusok áttekintése}
@@ -1338,7 +1338,7 @@ amelyek biztosítják az alábbiakat:
   \item hatékony pozíció-alapú elérés (random access)
   \item hatékony kereshetőség valamilyen formában
   \item hatékony rendezés
-  \item lekérdezések közötti konzisztencia
+  \item lekérdezések közötti koherencia
 \end{enumerate}
 
 Az egyes esetekben megvizsgálom majd, hogyan teljesíthetők ezek az elvárások.
@@ -1918,7 +1918,8 @@ Egy-egy mezőértékhez még csak a szavak halmazát állítottuk elő.
 Amikor lekérjük a mező konkrét értékét, akkor egy tényleges szöveget szeretnénk kapni,
 mely pontosan ennek a halmaznak a szavait tartalmazza (sorrendtől és multiplicitástól függetlenül),
 és lehetőleg egy viszonylag valóságosnak tűnő szöveg, még ha nem is értelmes.
-Vegyük észre, hogy ebben teljes szabadságunk van, hiszen az érték és index konzisztenciája már biztosított.
+Vegyük észre, hogy ebben teljes szabadságunk van,
+hiszen az érték és index közötti koherencia már biztosított.
 
 Az aktuális \texttt{TreeRandom}, a sorindex és a kapott szóhalmaz függvényében
 a szöveg generálására tetszőleges módszert használhatunk,
@@ -2679,7 +2680,7 @@ vagy a teljesen izolált automatikus integrációs tesztek.
           támogatja az SQL lekérdezések futtatását.
     \item \textbf{Determinisztikus, koherens.} Valóban:
           a hierarchikus véletlengenerátor biztosítja a determinisztikusságot,
-          az értékkiosztások pedig a konzisztens működést adatelérés és index,
+          az értékkiosztások pedig a koherenciát adatelérés és index,
           illetve több lekérdezés között.
     \item \textbf{Az adatok könnyen variálhatóak.} Valóban:
           minden adat függ a konfigurációban elhelyezett root seedtől,
