@@ -1200,7 +1200,7 @@ determinisztikus eredményt tudok előállítani%
 
 A mintavételezéses eljárás többféleképpen is továbbszofisztikálható.
 Egy ilyen lehetőség a szürjektív eredmény biztosítása, amikor szeretnénk, ha minden érték előfordulna
-(a zajosan monoton értékkiosztásoknál ennek lesz egy további alkalmazása).
+(az egyenetlen monoton értékkiosztásoknál ennek lesz egy további alkalmazása).
 Illetve az is lehetséges, hogy konkrét táblázatunk van,
 mely minden értékkészletbeli értékre tartalmazza annak várható előfordulási gyakoriságát.
 Ezeket az előre definiált gyakoriságokat használhatjuk a mintavételezésben,
@@ -1433,7 +1433,7 @@ A felhasználó számára biztosítani kell a gyakoriságok könnyű konfigurál
 ehhez érték-gyakoriság párokat kérünk be.
 A második érték egymáshoz képesti relatív gyakoriságot jelöl.
 
-\subsubsection{Zajosan monoton értékkiosztások}
+\subsubsection{Egyenetlen monoton értékkiosztások}
 
 A rányújtásnak az előzőleg monoton függvény előállításához használt elve
 másféle értékkiosztáshoz is felhasználható,
@@ -1483,7 +1483,7 @@ A felső érték esetében hasonlóan kell eljárni.
 
 A rendezés triviális, mivel az értékek eleve rendezettek.
 
-Ezzel az eljárással nem csak zajossá tudtuk tenni az eloszlást,
+Ezzel az eljárással nem csak egyenetlenné tudtuk tenni a kiosztást,
 de a monotonitás garantálása mellett megengedtük,
 hogy az értékek esetlegesen csomósodhassanak,
 illetve elméletben tetszőlegesen eltávolodhassanak attól a helytől,
@@ -1491,7 +1491,7 @@ amit egy szigorúan egyenletes kiosztás esetén vettek volna föl.
 
 Ez az értékkiosztás különösen alkalmas időbélyegek szimulálására,
 amikor az események általános sűrűsége adott,
-de véletlenszerű, zajos kimenetet szeretnénk látni.
+de véletlenszerű, egyenetlen kimenetet szeretnénk látni.
 
 \subsection{$NULL$ értékek kezelése}
 
