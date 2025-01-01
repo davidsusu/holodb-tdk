@@ -865,6 +865,7 @@ ehhez meg kell adnunk egy olyan osztály nevét, mely implementálja a \texttt{S
 (illetve biztosítani kell, hogy az egyedi osztályok láthatóak legyenek a classpath alatt).
 Az egyéni működések egy része közvetlenül a konfigurációból is hivatkozható:
 
+\vspace{-5pt}
 \begin{minted}[fontsize=\small,framesep=4pt,frame=single,framerule=1.5pt,baselinestretch=1.25,rulecolor=\color{gray!30}]{yaml}
 - name: some_column
   sourceFactory: org.example.myorg.SomeCustomDataFactory
@@ -874,7 +875,7 @@ Az egyéni működések egy része közvetlenül a konfigurációból is hivatko
 - name: some_column
   valuesResource: custom-data.txt
 \end{minted}
-\vspace{-40pt}
+\vspace{-35pt}
 
 A YAML formátum a humán kezelhetőségen kívül azzal az előnnyel is jár, hogy könnyen előfeldolgozható.
 Például egy megfelelő sablonkezelő használatával ugyanazt a vázat használva
