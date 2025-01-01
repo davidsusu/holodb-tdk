@@ -1186,7 +1186,7 @@ A metódus egy variánsa egy \texttt{Range} példányt vár, értelemszerűen á
 
 A legegyszerűbb implementáció a diszkrét lineáris vetítés.
 Az $n$ hosszúságú értékkészletet ekkor úgy vetítjük az $N$ listahosszra,
-hogy az $i$-edik helyre a $\lfloor \frac{n \cdot i}{N} \rfloor$ pozíciójú érték kerül.
+hogy az $i$-edik helyre a $\lfloor \frac{n}{N} i \rfloor$ pozíciójú érték kerül.
 
 A költségesebb, jobb minőségű implementációk pszeudovéletlen mintavételezésen alapulnak.
 Ehhez rekurzívan osztjuk föl az értékkészletet, miközben a felosztás fája determinisztikus, mindig ugyanaz.
