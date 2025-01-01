@@ -1,34 +1,3 @@
-\iffalse
-
-szöveget végignézni, további hivatkozásokat beszúrni
-
-------------------------------------------
-
-Lokalizált:
-
-hivatkozásokat, kiegészítéseket a Tanulmány részbe
---dev-mode és --zero-mode kifejtése
-service és embedded mód
-JPA jobb kifejtése
-migrációs rendszer ötletének kifejtése (ez egyébként diplomamunkának is jó lehet)
-
-------------------------------------------
-
-algoritmusok rendbetétele
-
-mérések: JMH stb.
-LargeInteger méréseinek és indokainak részletezése
-SQL-mérések
-integrált mérések
-egyéb mérések (permutációk)
-quality mutatók
-
-(kérdőív? legalább írni róla, mint következő lépésről)
-
-\fi
-
-
-
 \documentclass[
     parspace,
     noindent,
@@ -196,7 +165,7 @@ Sokkal egyszerűbb lenne az adatbázis szerkezetét egyetlen deklaratív konfigu
 
 A dolgozatban elsősorban ezekre a problémákra kínálok egy újszerű megoldást.
 Mivel a bemutatott szoftver egyúttal egy általános keretrendszer virtuális adattárakhoz,
-számos további alkalmazása is adódhat.
+további alkalmazások is adódhatnak.
 
 \section{Tanulmány}
 
@@ -330,7 +299,7 @@ nem is áll rendelkezésre egy létező produkciós adatbázis.
 És ha rendelkezésre is áll, további probléma,
 hogy az adatok megszerzéséhez az éles adatbázist kell felkeresni,
 ami egyfelől az éles környezet nemkívánatos terhelését jelenti,
-másrészt az oda való beauthentikálás (a konkrét megoldástól függően) biztonsági kockázatot rejthet.
+másrészt az authentikáció (a konkrét megoldástól függően) biztonsági kockázatot rejthet.
 
 Egy általános megoldás tehát aligha épülhet anonimizálásos módszerre.
 
@@ -440,7 +409,7 @@ A fentiek fényében az alábbi területeken biztosan alkalmazható a szoftver:
 
 Mivel az új megoldás erőforrásigénybeli paraméterei
 radikálisan eltérnek a tényleges adatbázisokétól,
-számos olyan helyen is felmerülhet az alkalmazása,
+olyan helyeken is felmerülhet az alkalmazása,
 ahol hagyományosan rossz gyakorlatnak számít adatbázisszervert futtatni.
 Ilyen esetek például a füsttesztek, unit tesztek, serverless;
 vagy a főleg frontend-fejlesztésből ismerős \textit{dev mode} (vagy live mode),
@@ -606,7 +575,7 @@ hiszen egy nagyívű rétegelt architektúráról van szó,
 mely kellően megszilárdult alapvonalakkal rendelkezik a hosszútávú fejlesztéshez.
 Ugyanakkor stabil verzióról még nem beszélhetünk;
 az implementációs részleteket, valós használati eseteket,
-más eszközökkel való integrációt illetően még számos felmérendő, kikísérletezendő dolog adódik.
+más eszközökkel való integrációt illetően még sok felmérendő, kikísérletezendő dolog adódik.
 
 A szerver Docker konténerként is futtatható, amihez a Docker Hubon biztosítok egy testreszabott képet.
 A felhasználói Dockerfile mellé csak a konfigurációs fájlt kell elhelyezni az indításhoz.
@@ -631,7 +600,7 @@ illetve letisztultsága miatt könnyen írhatók hozzá dekorátorok, proxyk.
 Egy (deb csomagként is elérhető) REPL\todoref{Mi az a REPL?} is tartozik hozzá,
 mellyel parancssorból tudunk hálózaton keresztül csatlakozni a MiniConnectet támogató tetszőleges adatbázishoz.
 Ez egyúttal a HoloDB kipróbálásának legkényelmesebb módja,
-számos kényelmi funkciót támogat
+különféle kényelmi funkciókat is támogat
 (szép kimenet, szintaxiskiemelés, automatikus kiegészítés, parancstörténet stb.).
 
 Az architektúra köré sokféle eszközt fejlesztettem,
