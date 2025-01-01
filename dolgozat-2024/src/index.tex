@@ -1643,7 +1643,7 @@ hogy a kapott karakterosztályokból képzett halmazra a fentiek érvényesek le
 Például ha az \regextt{[a-c]}, \regextt{[cf]} és \regextt{[c-e]} jelennek meg alternatívaként,
 akkor ezek szétbomlanak az \regextt{[ab]}, \regextt{[c]}, \regextt{[de]} és \regextt{[f]}
 karakterosztályokra, és értelemszerűen átveszik a korábbiakból elérhető csomópontokat.
-A \regextt{[c]} karakterosztály így egy hármas elágazást vesz át a három eredeti csomópontból.
+A \regextt{[c]} karakterosztály így mind a három eredeti csomópont gyerekeit átveszi.
 A fát egyúttal célszerű úgy továbbalakítani, hogy megszüntetjük az alternációk miatti üres értékű,
 pusztán az elágazás kedvéért felvett csomópontokat,
 ez természetesen az egyenlő csomópontok részfáinak összefésülését vonja maga után.
