@@ -865,7 +865,7 @@ ehhez meg kell adnunk egy olyan osztály nevét, mely implementálja a \texttt{S
 (illetve biztosítani kell, hogy az egyedi osztályok láthatóak legyenek a classpath alatt).
 Az egyéni működések egy része közvetlenül a konfigurációból is hivatkozható:
 
-\begin{minted}[fontsize=\small,framesep=4pt,frame=single,framerule=1.5pt,baselinestretch=2,rulecolor=\color{gray!30}]{yaml}
+\begin{minted}[fontsize=\small,framesep=4pt,frame=single,framerule=1.5pt,baselinestretch=1.25,rulecolor=\color{gray!30}]{yaml}
 - name: some_column
   sourceFactory: org.example.myorg.SomeCustomDataFactory
   sourceFactoryData:
@@ -878,7 +878,7 @@ Az egyéni működések egy része közvetlenül a konfigurációból is hivatko
 A YAML formátum a humán kezelhetőségen kívül azzal az előnnyel is jár, hogy könnyen előfeldolgozható.
 Például egy megfelelő sablonkezelő használatával ugyanazt a vázat használva
 különféle tesztesetekhez finomhangolhatjuk az adatbázist.\footnote{
-    Ilyen megközelítést használ például a \textit{helm} nevű deployment eszköz.
+    Ilyen megközelítést használ például a \textit{Helm} nevű deployment eszköz.
     \todoref{Mi az a Helm? Milyen megközelítés ez?}
 }
 
