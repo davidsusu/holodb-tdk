@@ -604,9 +604,11 @@ különféle kényelmi funkciókkal
 
 Az architektúra köré sokféle eszközt fejlesztettem,
 melyek a robusztusság eltérő fokain állnak.
-Ilyenek például: automatikus REST API, MongoDB/SPARQL/GraphQL adapter, authentikációs proxy, Apache Calcite\protect\cite{Begoli2018ApacheCalcite,SoftwareApacheCalcite} SQL driver stb.
-\todoref{Tisztázni, hogy nem tud natív gráf-/szemantikus adatokat}
-\todoref{A toolokhoz valami leírást még}
+Ilyenek például: automatikus REST API, NoSQL adapterek (MongoDB, SPARQL, GraphQL), authentikációs proxy, Apache Calcite\protect\cite{Begoli2018ApacheCalcite,SoftwareApacheCalcite} SQL driver stb.
+Megjegyzem, hogy a HoloDB nem támogatja natívan dokumentumok vagy szemantikus adatok tárolását,
+hanem a NoSQL API-k háttértáraként használható.
+Az ehhez készült adapterek még meglehetősen kísérleti fázisban vannak,
+egyelőre elsősorban az elméleti lehetőségre kívántam rámutatni.
 
 \begin{figure}[H]
 \centering
@@ -2700,6 +2702,9 @@ vagy a teljesen izolált automatikus integrációs tesztek.
 
 
 \section{Tervek a közeljövőre}
+
+\todoref{+TERVEK: kérdőíves kutatás}
+\todoref{+TERVEK: MongoDB/SPARQL/GraphQL}
 
 A HoloDB egy alapvető, a szoftverfejlesztők többségét érintő probléma megoldását kínálja.
 Ha a szoftver, leküzdve gyermekbetegségeit, eljut egy igazán stabil verzióig,
