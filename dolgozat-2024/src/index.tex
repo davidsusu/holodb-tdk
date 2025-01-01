@@ -751,7 +751,7 @@ különböző adatleíró nyelveken írt fájlokat, karakterláncokat
 A Jackson mappinggel ellátott konfigurációs osztályokhoz formális specifikáció is tartozik,
 így a fájl strukturális és szemantikai helyessége statikusan ellenőrizhető.
 A formális specifikáció használatához csak egy minimalisztikus dedikált csomag
-függőségként való beemelése szükséges (\texttt{jpa-annotations}).
+függőségként való beemelése szükséges (\texttt{config} projekt).
 A konfigurációs adatstruktúra a konfigurációs osztályok közvetlen használatával programozottan is felépíthető.
 
 \begin{figure}[H]
@@ -849,7 +849,9 @@ schemas:
 
 Java JPA\todoref{Mi az a JPA?} projekt esetén JPA-entitásokra helyezett annotációkkal is leírható a teljes konfiguráció,
 így beágyazott adatbázissal, külső eszközök nélkül is futtathatunk teszteket.
-Ehhez elegendő a megfelelő JDBC connection sztringet megadni,
+Az annotációk eléréséhez egy minimalisztikus csomagot kell beemelni (\texttt{jpa-annotations} projekt).
+A mockolást használó projektben a megfelelő függőség beemelésén (\texttt{jpa} projekt) túl
+elegendő a megfelelő JDBC connection sztringet megadni,
 a többit (keretrendszertől függően\footnote{
     A \textit{Spring}, \textit{Micronaut} és \textit{Quarkus} beépítetten támogatott,
     de elméletileg bármilyen rendszerhez igazítható a megoldás.
