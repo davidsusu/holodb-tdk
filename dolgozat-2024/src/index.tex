@@ -234,18 +234,20 @@ majd random jelleggel elő kell állítani bizonyos számú, ezeknek a követelm
 
 Ebbe a kategóriába sorolhatók az úgynevezett faker segédkönyvtárak is.
 Ezek olyan véletlenadat-generálók,
-melyek bizonyos gyakori entitástípusok adatait (pl. személynevek, e-mail, dátum) szolgáltatják%
+melyek bizonyos gyakori entitástípusok adatmezőihez (pl. személynevek, e-mail, dátum)
+generálnak véletlenszerű értékeket%
 \cite{SoftwareRubyFaker,SoftwareJavaFaker}.
 
 Ez a megközelítés természetesen nem is törekszik arra,
 hogy koherens eredményt adjon több lekérés esetén,
-tehát csak olyankor használható, ahol a lekérések nem épülnek egymásra.
-Cserébe erőforrásigénye csekély, nincs szükség az adatok tényleges tárolására.
+tehát csak olyankor használható, amikor a lekérések nem épülnek egymásra.
+Cserébe erőforrásigénye csekély, nincs szükség az adatok tényleges tárolására, lekérdezésére.
 
 \subsection{Seed-alapú virtuális világok}
 
 Játékokban és egyszerűbb szimulációkban már igen régóta generálnak kisebb világokat,
-pályákat procedurálisan valamilyen pszeudovéletlen algoritmus segítségével.
+pályákat procedurálisan valamilyen pszeudovéletlen algoritmus segítségével%
+\cite{Smith2015AnalogHistoryProcedural}.
 Ennek azonban komoly méretbeli korlátai vannak.
 Felmerül a gondolat, hogy lehetséges-e óriás méretű világokat konzisztensen
 a játékosok rendelkezésére bocsátani, anélkül, hogy le kellene generálni az egészet.
@@ -261,7 +263,8 @@ az adott szabályrendszer szerint on-demand legeneráljuk az adott szelet tartal
 A sűrűn benépesített világok szomszédos szeleteinek összeillesztése néha nem triviális.
 Felületszerű, folytonos struktúrák generálása esetén gyakran használnak
 valamilyen eleve interpolált eljárást,
-így biztosítva a töretlen átmenetet a szomszédos szeletek határvonalainál.
+így biztosítva a töretlen átmenetet a szomszédos szeletek határvonalainál%
+\cite{Perlin1985Image,Parberry2014Designer,Krecklau2011Procedural}.
 
 Egy közismert korai példa seed-alapú módszert alkalmazó szoftverre
 az \textit{Elite} nevű 1984-ben kiadott űrhajós videójáték%
