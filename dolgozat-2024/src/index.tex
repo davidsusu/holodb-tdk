@@ -663,10 +663,6 @@ A tipikus szcenáriókban főként egyes konkrét rekordok lesznek módosítva, 
 A tömeges módosítások kérdésével itt nem foglalkozom,
 de nem látszik akadálya az ezek optimalizálását célzó továbbfejlesztésnek.
 
-Az írhatósági réteget arra is használhatjuk,
-hogy egy-egy tesztesethez egyéni rekordokat adjunk hozzá,
-ami megkötéseken keresztül nehézkesebb lenne.
-
 A módosítások támogatásához előszöris a \texttt{Table} interfészt magát
 ki kell egészíteni a megfelelő műveletekkel
 (pl. \texttt{isWritable()}, \texttt{applyPatch(TablePatch)}, \texttt{sequence()}).
@@ -678,6 +674,10 @@ minden műveletet egyszerűen továbbít a dekorált tábla felé.
 Módosítás esetén a különbségeket (módosított értékek, beszúrt és törölt sorok) a memóriában tárolja.
 A további lekérdezésekkor figyelembe veszi a különbségréteget a továbbhíváskor,
 illetve a szükséges mértékben összefésüli az eredményt a különbségekkel.
+
+Az írhatósági réteget arra is használhatjuk,
+hogy egy-egy tesztesethez egyéni rekordokat adjunk hozzá,
+ami megkötéseken keresztül nehézkesebb lenne.
 
 Olyan táblák is dekorálhatók így, amelyek valós adatbázistáblákat használnak backendként.
 Ezzel a módszerrel írhatóan használhatunk egy létező adatbázist,
