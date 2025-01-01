@@ -3061,36 +3061,36 @@
        id="rect107818"
        width="6.1728868"
        height="6.1728868"
-       x="187.45197"
-       y="13.541033" />
+       x="187.98112"
+       y="93.44519" />
     <text
        xml:space="preserve"
        style="font-size:5.64444px;line-height:0;fill:#0000ff;stroke:none;stroke-width:0.529167;stroke-dasharray:none"
-       x="195.79295"
-       y="18.397848"
+       x="196.32211"
+       y="98.302002"
        id="text107924"><tspan
          sodipodi:role="line"
          id="tspan107922"
          style="font-size:5.64444px;stroke-width:0.529167"
-         x="195.79295"
-         y="18.397848">bejárt út</tspan></text>
+         x="196.32211"
+         y="98.302002">bejárt út</tspan></text>
     <rect
        style="fill:#d35f5f;stroke:none;stroke-width:0.529167;stroke-dasharray:none"
        id="rect107818-7"
        width="6.1728868"
        height="6.1728868"
-       x="187.45197"
-       y="24.124365" />
+       x="187.98112"
+       y="104.02852" />
     <text
        xml:space="preserve"
        style="font-size:5.64444px;line-height:0;fill:#d35f5f;stroke:none;stroke-width:0.529167;stroke-dasharray:none"
-       x="195.79295"
-       y="28.98118"
+       x="196.32211"
+       y="108.88533"
        id="text107924-9"><tspan
          sodipodi:role="line"
          id="tspan107922-2"
          style="font-size:5.64444px;fill:#d35f5f;stroke-width:0.529167"
-         x="195.79295"
-         y="28.98118">eliminált út</tspan></text>
+         x="196.32211"
+         y="108.88533">eliminált út</tspan></text>
   </g>
 </svg>
