@@ -863,7 +863,17 @@ a permutációk és rányújtások egyéni implementációjának használatára.
 De maga az értékkiosztási mechanizmus is lecserélhető egyedi implementációra,
 ehhez meg kell adnunk egy olyan osztály nevét, mely implementálja a \texttt{SourceFactory} interfészt
 (illetve biztosítani kell, hogy az egyedi osztályok láthatóak legyenek a classpath alatt).
-Az egyéni működések egy része közvetlenül a konfigurációból is hivatkozható.
+Az egyéni működések egy része közvetlenül a konfigurációból is hivatkozható:
+
+\begin{minted}[fontsize=\small,framesep=4pt,frame=single,framerule=1.5pt,rulecolor=\color{gray!30}]{yaml}
+- name: some_column
+  sourceFactory: org.example.myorg.SomeCustomDataFactory
+  sourceFactoryData:
+    additionalParameter1: 10
+    additionalParameter2: 'lorem ipsum'
+- name: some_column
+  valuesResource: custom-data.txt
+\end{minted}
 
 A YAML formátum a humán kezelhetőségen kívül azzal az előnnyel is jár, hogy könnyen előfeldolgozható.
 Például egy megfelelő sablonkezelő használatával ugyanazt a vázat használva
