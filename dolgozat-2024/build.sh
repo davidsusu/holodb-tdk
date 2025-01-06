@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# $1: mode: [draft|quick|edit|final] (default: final)
+# $1: mode: [draft|quick|final] (default: final)
 
 
 inputFileName='index.tex'
