@@ -1217,9 +1217,8 @@ Az inverz függvényhívást az \texttt{indexOf(value)} metódus deklarálja.
 
 \subsubsection{Permutációk méretigazítása}
 
-A permutáció-implementációk egyes típusai nem támogatnak tetszőleges méretet
-(például csak 2-hatványokat).
-Ekkor egy megfelelő dekorátor objektum alkalmazása szükséges,
+A permutáció-implementációk egyes típusai nem támogatnak tetszőleges hosszt.
+Nem támogatott hossz esetén egy megfelelő dekorátor objektum alkalmazása szükséges,
 mely valamilyen méretigazítást valósít meg.
 Általában a \textit{rejection sampling} technikát érdemes bevetni.
 Az adott $n$ mérethez vesszük azt a legkisebb $N$ támogatott méretet, amely $n$-nél nem kisebb.
