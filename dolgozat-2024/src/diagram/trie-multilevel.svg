@@ -2208,9 +2208,9 @@
      borderopacity="1.0"
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
-     inkscape:zoom="0.79906655"
-     inkscape:cx="558.15126"
-     inkscape:cy="92.608056"
+     inkscape:zoom="1.5981331"
+     inkscape:cx="717.71244"
+     inkscape:cy="97.613897"
      inkscape:document-units="mm"
      inkscape:current-layer="layer1"
      inkscape:document-rotation="0"
@@ -3061,36 +3061,41 @@
        id="rect107818"
        width="6.1728868"
        height="6.1728868"
-       x="198.37453"
+       x="188.84958"
        y="15.789502" />
     <text
        xml:space="preserve"
        style="font-size:5.64444px;line-height:0;fill:#0000ff;stroke:none;stroke-width:0.529167;stroke-dasharray:none"
-       x="206.71552"
+       x="197.19057"
        y="20.646317"
        id="text107924"><tspan
          sodipodi:role="line"
          id="tspan107922"
          style="font-size:5.64444px;stroke-width:0.529167"
-         x="206.71552"
+         x="197.19057"
          y="20.646317">bejárt út</tspan></text>
     <rect
        style="fill:#d35f5f;stroke:none;stroke-width:0.529167;stroke-dasharray:none"
        id="rect107818-7"
        width="6.1728868"
        height="6.1728868"
-       x="198.37453"
+       x="188.84958"
        y="26.372833" />
     <text
        xml:space="preserve"
        style="font-size:5.64444px;line-height:0;fill:#d35f5f;stroke:none;stroke-width:0.529167;stroke-dasharray:none"
-       x="206.71552"
+       x="197.19057"
        y="31.229649"
        id="text107924-9"><tspan
          sodipodi:role="line"
          id="tspan107922-2"
          style="font-size:5.64444px;fill:#d35f5f;stroke-width:0.529167"
-         x="206.71552"
-         y="31.229649">eliminált út</tspan></text>
+         x="197.19057"
+         y="31.229649">eliminált leágazás</tspan><tspan
+         sodipodi:role="line"
+         style="font-size:5.64444px;fill:#d35f5f;stroke-width:0.529167"
+         x="197.19057"
+         y="31.229649"
+         id="tspan663" /></text>
   </g>
 </svg>
