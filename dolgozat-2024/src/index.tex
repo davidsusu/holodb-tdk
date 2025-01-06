@@ -1215,6 +1215,8 @@ A \texttt{Permutation} interfész megvalósításához olyan eljárást keresün
 seed szerint variálható permutációfüggvény és annak inverze előáll, ahol mindkét függvény hatékony.
 Az inverz függvényhívást az \texttt{indexOf(value)} metódus deklarálja.
 
+\subsubsection{Permutációk átméretezése}
+
 A permutáció-implementációk egyes típusai nem támogatnak tetszőleges méretet
 (például csak 2-hatványokat).
 Ekkor egy megfelelő dekorátor objektum alkalmazása szükséges,
@@ -1233,6 +1235,19 @@ Egy extrém eset például, amikor a $\sigma_{+1}^{~N}(i) = (i + 1) \bmod N$ per
 Rejection sampling módszerrel $i = n$ esetén $N - n$ számú extra iterációt kellene végrehajtani,
 ami nagy méret esetén rendkívül költséges.
 Helyette viszont egyszerűen áttérhetünk modulo $n$-re: $\sigma_{+1}^{~n}(i) = (i + 1) \bmod n$.
+
+Általános módszerek is felmerülnek az átméretezésre,
+melyekkel elkerülhetők a rejection sampling problémái.
+A legegyszerűbb, ha nem a következő legkisebb,
+hanem az előző legnagyobb támogatott méretet vesszük,
+és csak az ez alatti bemeneteket permutáljuk.
+Ez a módszer sokféleképpen továbbfejleszthető.
+Például úgy, hogy két vagy több permutációt futtatunk le eltoltan a teljes intervallum támogatott méretű szakaszaira,
+melyek egészében lefedik a teljes intervallumot.
+Egy gyors utólagos permutálással gondoskodhatunk róla, hogy az intervallumok között is keveredés legyen.
+Ha a szakaszok között itt-ott van is átfedés,
+akkor is csak ritka esetben kell kétszer (és soha nem többször)
+lefuttatni az esetleg költséges permutációt.
 
 \subsubsection{Triviális implementációk}
 
