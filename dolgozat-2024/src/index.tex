@@ -1353,11 +1353,10 @@ saját adatai miatt foglal sok memóriát
 Eleve nem a kriptográfiai szintű véletlenszerűség volt a cél,
 így a keveredés méréséhez statisztikai eszközök helyett
 tömörítési eljárások hatékonyságát mértem.
-A 65~536 érték 16 bites, leírtehát 2 bájtos reprezentációkkal,
-A kimenet kiírható egy-egy 131~072 bájt méretű fájlba,
-ezt a fájlt tömörítettem.
-Két erős tömörítést használtam, a \texttt{bzip} programot,
-illetve a \texttt{paq8} programot 4-es erősséggel.
+A 65~536 érték 16 bites, tehát 2 bájtos reprezentációkkal
+ kiírható egy-egy 131~072 bájt méretű fájlba.
+Ezt a fájlt tömörítettem két erős tömörítővel,
+a \texttt{bzip} programmal, illetve a \texttt{paq8} programmal (4-es erősséggel).
 
 A példánylétrehozási és hívási időket itt is JMH-val mértem.
 \todoref{Permutations JMH: mérési paramétereket is leírni}
