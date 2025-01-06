@@ -1012,8 +1012,6 @@ Hasonlóan a másik implementációhoz, szintén utóellenőrzi, hogy az eredmé
 Egy \texttt{LargeInteger} szám akkor és csak akkor csomagolódik \texttt{ImplBig}-ként,
 ha kívül esik a \texttt{long} értékkészletén.
 
-A \texttt{LargeInteger} a \texttt{BigInteger} összes metódusát replikálja,
-illetve számos további kényelmi metódust ad hozzá.
 A \texttt{LargeInteger} konstruktora kívülről nem elérhető,
 ehelyett a statikus \texttt{of()} metódusokon keresztül lehet példányokhoz jutni.
 Feltehető, hogy a zérusközeli értékek a leggyakrabban használtak
@@ -1023,51 +1021,51 @@ Ez nem csak a memóriahasználatot csökkenti,
 de esetenként a performanciát is növelheti
 (például kihasználhatjuk, hogy egyenlő értékek egyúttal egyenlő példányokat jelentenek).
 
-SPIRE\cite{SoftwareScalaSpire}
-
-A Scala standard könyvtárának \texttt{BigInt} típusa szintén a \texttt{long} és \texttt{BigInteger}
-aritmetika váltogatásával oldja meg,
-hogy az óriás számok támogatása mellett kis számokon viszonylag gyorsan fusson%
+Amikor a \texttt{LargeInteger} megfelelő implementációjával kísérletezni kezdtem (a 2019-2021 időszakban),
+párhuzamosan a Scala nyelv standard könyvtárába is bevezetésre kerül
+egy új műkdési elv a beépített \texttt{BigInt} osztályhoz%
 \cite{Rosset2019ScalaBigInt}.
-A két megoldás performanciában hasonló,
-a számunkra releváns esetek egy részében (kisebb számok, sokféle művelet)
-a \texttt{LargeInteger} \textcolor{red}{valamivel} gyorsabb.
-A Scala \texttt{BigInt} (főként kompatibilitási okokból)
-nem használ két különböző típust,
-hanem egyetlen adatstruktúrába sűríti a két esetet,
-így \textcolor{red}{enyhén} több memóriát is használ.
+Az eredeti \texttt{BigInt} egy egyszerű csomagoló osztály volt a Java \texttt{BigInteger} fölött,
+az új megoldás pedig a \texttt{LargeInteger}-hez hasonlóan
+primitív \texttt{long} értékeket használ a kis számokhoz
+(nagyrészt a scalás Spire matematikai keretrendszer \ŧexttt{SafeLong} osztályát alapul véve%
+\cite{SoftwareScalaSpire}).
+A \texttt{BigInt} végülis csak egyetlen osztályt definiál,
+melynek van egy \texttt{long} és egy \texttt{BigInteger} típusú mezője is,
+melyek közül mindig az egyik van használva.
+A JVM általában 12 bájtos fejlécet tárol az objektumokhoz,
+és 4 bájtos tömörített címzést használ a referenciákhoz, ha a heap mérete 32GB alatti,
+a \texttt{long} pedig 8 bájtot foglal.
+Így a \texttt{BigInt} memóriafoglalása kis számokon összesen 24 bájt.
+A \texttt{LargeInteger} kis számokra ugyan csak 20 bájtot foglal,
+a legtöbb JVM azonban 8 bájtos egységeket kezel, és padding bájtokat ad hozzá,
+így végül az is 24 bájtra jön ki.
+Ilyen szempontból a \texttt{BigInt} osztályszerkezete szerencsésen kezelődik.
+Nagy számok esetén a \texttt{LargeInteger} vékony helyfoglalása csak 16 bájt,
+bár ekkor már kevésbé számít.
 
-\textcolor{red}{
-blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah
-blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah
-blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah
-blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah
-blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah
-blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah
-blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah
-blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah
-blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah
-blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah
-blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah
-blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah
-blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah
-blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah
-blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah
-blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah
-blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah
-blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah
-blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah
-blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah
-blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah
-blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah
-blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah
-blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah
-blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah
-blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah
-blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah
-}
-\todoref{LargeInteger: miért nem a BigInt? mérési módsz., JMH, több mérés, mem., optim., valamivel}
+Felmerülhet, hogy miért nem tértem át a \texttt{BigInt} típus használatára.
+Ebben a döntésebben az alábbi szempontok játszották a legfőbb szerepet:
 
+\begin{itemize}
+    \item A scalás osztályok javában nem idiomatikusak.
+          Például beszédes metódusnevek helyett az operátortúlterhelés kódolt neveivel találkozunk
+          (\texttt{n.shiftLeft(m)} helyett \texttt{n.\$less\$less(m)} stb.).
+    \item A Scala standard könyvtár egy nemkívánatos külső függőséget jelentene,
+          mely az implementációs szabadságot és a könyvtár rekurzív méretét is növelné.
+    \item A \texttt{LargeInteger} teljesen replikálja a beépített \texttt{BigInteger} metódusait.
+          Így ismerősebb lehet azok számára, akik rendszeresen használták az utóbbit.
+          Emellett a refaktorálás is egyszerű az új típusra.
+    \item A \texttt{LargeInteger} egy általános célú típus, mely számos kényelmi metódust is ad
+          (\texttt{n.isGreaterThan(m)}, \texttt{n.increment()} stb.).
+    \item Kis számokon a legrelevánsabb műveletekre a \texttt{LargeInteger} gyorsabb.
+          (Igaz, vannak helyzetek, amikor éppen a \texttt{BigInt} gyorsabb,
+          de minden bizonnyal a \texttt{LargeInteger} is bőven optimalizálható még).
+\end{itemize}
+
+\todoref{LargeInteger mérései táblázattal}
+
+\iffalse
 \begin{figure}[H]
     \centering
     \begin{tikzpicture}
@@ -1095,6 +1093,7 @@ blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah 
         egy kis számokon végzett összetett számítás átlagos futási ideje alapján
     }
 \end{figure}
+\fi
 
 
 \subsection{Hierarchikus véletlengenerátorok}
