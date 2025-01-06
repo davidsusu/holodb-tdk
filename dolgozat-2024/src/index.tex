@@ -961,29 +961,6 @@ Ahol szükséges, külön kitérek majd az ezzel kapcsolatos problémákra.
 
 \section{Segédtípusok}
 
-\subsection{Hatékony számítások}
-
-A hagyományos, tényleges adatbázisokban az egyik szűk keresztmetszetet
-az adatok fizikai elérése jelenti.
-Esetünkben ezt a virtuális értékkiosztások fenti függvényei helyettesítik.
-A blokkbetöltés, keresési index-struktúrák, materializált nézetek frissítése
-és hasonló problémák helyett a virtuális adattárban
-a visszaadandó adatok hatékony kiszámítását kell megoldani,
-ami általában az oszlopok értékeinek on-the-fly produkálását és keresését jelenti.
-
-Az on-the-fly értékszámítás során gyakran fordulnak elő átmeneti óriás számok,
-ám nehezen jósolható előre, hogy pontosan mikor.
-Például eleve egy értékkészlet is lehet óriási
-(gondoljunk például a \regextt{{\textbackslash}w\{30\}}
-reguláris kifejezés alapján kitöltött oszlop lehetséges értékeinek számára),
-miközben szükségünk van bármely pozíció közvetlen hivatkozására.
-Az adatbázis méretére vonatkozóan nem akartam megkötéseket tenni.
-Nem lett volna célszerű explicit ellenőrzések tömegét beépíteni
-a problémás számítások, potenciális túlcsordulások földerítésére.
-Továbbá az egész számokat egységesen szerettem volna kezelni, függetlenül azok méretétől.
-Így a beépített \texttt{BigInteger} típust hamar elvetettem,
-mivel az kisebb számokra a \texttt{long} típushoz képest rendkívül rossz performanciájú.
-
 \subsection{A fő segédtípusok áttekintése}
 
 Mielőtt rátérnék a storage API interfészeinek tárgyalására,
@@ -1003,6 +980,9 @@ A következő osztálydiagram összefoglalja ezeket a kiemelt interfészeket:
 
 \subsection{A \texttt{LargeInteger} típus}
 
+A hagyományos, tényleges adatbázisokban az egyik szűk keresztmetszetet
+az adatok fizikai elérése jelenti,
+esetünkben azonban a hangsúly a számításokra helyeződik át.
 A hatékony on-the-fly számításokhoz
 szükségesnek mutatkozott egy olyan egész típus megalkotása,
 mely kis és óriás számokra egyaránt működik,
