@@ -1044,12 +1044,12 @@ Ilyen szempontból a \texttt{BigInt} osztályszerkezete szerencsésen kezelődik
 Nagy számok esetén a \texttt{LargeInteger} vékony helyfoglalása csak 16 bájt,
 bár ekkor már kevésbé számít.
 
-Felmerülhet, hogy miért nem tértem át a \texttt{BigInt} típus használatára.
-Ebben a döntésebben az alábbi szempontok játszották a legfőbb szerepet:
+Abban a döntésben, hogy miért nem tértem át a \texttt{BigInt} típus használatára.
+főként az alábbi megfontolások játszottak szerepet:
 
 \begin{itemize}
-    \item A scalás osztályok javában nem idiomatikusak.
-          Például beszédes metódusnevek helyett az operátortúlterhelés kódolt neveivel találkozunk
+    \item A scalás osztályok javás használata nem idiomatikus.
+          Például beszédes metódusnevek helyett az operátortúlterhelés kódolt nevet kell használnunk
           (\texttt{n.shiftLeft(m)} helyett \texttt{n.\$less\$less(m)} stb.).
     \item A Scala standard könyvtár egy nemkívánatos külső függőséget jelentene,
           mely az implementációs szabadságot és a könyvtár rekurzív méretét is növelné.
