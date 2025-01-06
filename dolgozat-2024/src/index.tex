@@ -1057,7 +1057,7 @@ főként az alábbi megfontolások játszottak szerepet:
     \item Nemkívánatos külső függőséget jelentene,
           mely az implementációs szabadságot és a könyvtár rekurzív méretét is növelné.
     \item A \texttt{LargeInteger} teljesen replikálja a beépített \texttt{BigInteger} metódusait.
-          Így ismerősebb lehet azok számára, akik rendszeresen használták az utóbbit.
+          Így ismerősebb lehet azok számára, akik az utóbbit már használták.
           Emellett a refaktorálás is egyszerű az új típusra.
     \item A \texttt{LargeInteger} egy általános célú típus, mely számos kényelmi metódust is ad
           (\texttt{n.isGreaterThan(m)}, \texttt{n.increment()} stb.).
@@ -1080,7 +1080,8 @@ főként az alábbi megfontolások játszottak szerepet:
     & \multicolumn{1}{>{\centering\arraybackslash}m{1.6cm}|}{\begin{tabular}{c} \small{\textbftt{d}} \\ (ns) \end{tabular}}
     & \multicolumn{1}{>{\centering\arraybackslash}m{1.6cm}|}{\begin{tabular}{c} \small{\textbftt{e}} \\ (ns) \end{tabular}}
     & \multicolumn{1}{>{\centering\arraybackslash}m{1.6cm}|}{\begin{tabular}{c} \small{\textbftt{f}} \\ (ns) \end{tabular}}
-    & \multicolumn{1}{>{\centering\arraybackslash}m{1.6cm}||}{\begin{tabular}{c} \small{\textbftt{g}} \\ (ns) \end{tabular}}\\
+    & \multicolumn{1}{>{\centering\arraybackslash}m{1.6cm}|}{\begin{tabular}{c} \small{\textbftt{g}} \\ (ns) \end{tabular}}
+    & \multicolumn{1}{>{\centering\arraybackslash}m{1.6cm}||}{\begin{tabular}{c} \small{\textbftt{h}} \\ (ns) \end{tabular}}\\
  \hline\hline
  \textbftt{long}                 &  \nodata  &  \nodata  &  \nodata  &   1,1  &  \nodata  &   5,3  &  16,7  &   2,6  \\
  \hhline{|=|=|=|=|=|=|=|=|}
