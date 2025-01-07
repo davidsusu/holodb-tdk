@@ -1088,29 +1088,24 @@ JMH-val lemértem az említett implementációk hatékonyságát.
 Az eredményeket a \ref{table:largeinteger} táblázat tartalmazza.
 Látható, hogy a \texttt{LargeInteger} jól teljesíti a fentebb megfogalmazott elvárásokat.
 
-
-largeAddition	mixedAddition	mixedBottleneck	smallAddition	mixedNumbers	smallNumbersNormal	smallNumbersPow	smallNumbersSimple
-
-
-
-smallAddition  smallNumbersSimple  smallNumbersNormal  smallNumbersPow
-largeAddition
-mixedBottleneck  mixedAddition  mixedNumbers
-
 \begin{table}
 [H]\captionsetup{justification=justified, singlelinecheck=false, margin=0.7cm}
 \begin{center}
 \begin{tabular}{|l||r|r|r|r|r|r|r|r||} 
  \hline
  \multicolumn{1}{|>{\centering\arraybackslash}m{2cm}|}{~}
-    & \multicolumn{1}{>{\centering\arraybackslash}m{1.2cm}|}{\begin{tabular}{c} \small{\textbftt{a}} \\ (ns) \end{tabular}}
-    & \multicolumn{1}{>{\centering\arraybackslash}m{1.2cm}|}{\begin{tabular}{c} \small{\textbftt{b}} \\ (ns) \end{tabular}}
-    & \multicolumn{1}{>{\centering\arraybackslash}m{1.2cm}|}{\begin{tabular}{c} \small{\textbftt{c}} \\ (ns) \end{tabular}}
-    & \multicolumn{1}{>{\centering\arraybackslash}m{1.2cm}|}{\begin{tabular}{c} \small{\textbftt{d}} \\ (ns) \end{tabular}}
-    & \multicolumn{1}{>{\centering\arraybackslash}m{1.2cm}|}{\begin{tabular}{c} \small{\textbftt{e}} \\ (ns) \end{tabular}}
-    & \multicolumn{1}{>{\centering\arraybackslash}m{1.2cm}|}{\begin{tabular}{c} \small{\textbftt{f}} \\ (ns) \end{tabular}}
-    & \multicolumn{1}{>{\centering\arraybackslash}m{1.2cm}|}{\begin{tabular}{c} \small{\textbftt{g}} \\ (ns) \end{tabular}}
-    & \multicolumn{1}{>{\centering\arraybackslash}m{1.2cm}||}{\begin{tabular}{c} \small{\textbftt{h}} \\ (ns) \end{tabular}}\\
+    & \multicolumn{4}{>{\centering\arraybackslash}m{1.2cm}|}{\begin{tabular}{c} \small{\textbftt{SMALL}} \\ (ns) \end{tabular}}
+    & \multicolumn{1}{>{\centering\arraybackslash}m{1.2cm}|}{\begin{tabular}{c} \small{\textbftt{LARGE}} \\ (ns) \end{tabular}}
+    & \multicolumn{3}{>{\centering\arraybackslash}m{1.2cm}||}{\begin{tabular}{c} \small{\textbftt{MIXED}} \\ (ns) \end{tabular}}\\
+ \multicolumn{1}{|>{\centering\arraybackslash}m{2cm}|}{~}
+    & \multicolumn{1}{>{\centering\arraybackslash}m{1.2cm}|}{\begin{tabular}{c} \small{\textbftt{ADD}} \\ (ns) \end{tabular}}
+    & \multicolumn{1}{>{\centering\arraybackslash}m{1.2cm}|}{\begin{tabular}{c} \small{\textbftt{SIMP}} \\ (ns) \end{tabular}}
+    & \multicolumn{1}{>{\centering\arraybackslash}m{1.2cm}|}{\begin{tabular}{c} \small{\textbftt{NORM}} \\ (ns) \end{tabular}}
+    & \multicolumn{1}{>{\centering\arraybackslash}m{1.2cm}|}{\begin{tabular}{c} \small{\textbftt{POW}} \\ (ns) \end{tabular}}
+    & \multicolumn{1}{>{\centering\arraybackslash}m{1.2cm}|}{\begin{tabular}{c} \small{\textbftt{ADD}} \\ (ns) \end{tabular}}
+    & \multicolumn{1}{>{\centering\arraybackslash}m{1.2cm}|}{\begin{tabular}{c} \small{\textbftt{BOTTL}} \\ (ns) \end{tabular}}
+    & \multicolumn{1}{>{\centering\arraybackslash}m{1.2cm}|}{\begin{tabular}{c} \small{\textbftt{ADD}} \\ (ns) \end{tabular}}
+    & \multicolumn{1}{>{\centering\arraybackslash}m{1.2cm}||}{\begin{tabular}{c} \small{\textbftt{CMPLX}} \\ (ns) \end{tabular}}\\
  \hline\hline
  \textbftt{long}                 & \nodata & \nodata & \nodata &   1,1 & \nodata &    5,3 &   16,7 &   2,6 \\
  \hline\hline
