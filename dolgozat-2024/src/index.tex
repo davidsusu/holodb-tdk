@@ -1088,6 +1088,15 @@ JMH-val lemértem az említett implementációk hatékonyságát.
 Az eredményeket a \ref{table:largeinteger} táblázat tartalmazza.
 Látható, hogy a \texttt{LargeInteger} jól teljesíti a fentebb megfogalmazott elvárásokat.
 
+
+largeAddition	mixedAddition	mixedBottleneck	smallAddition	mixedNumbers	smallNumbersNormal	smallNumbersPow	smallNumbersSimple
+
+
+
+smallAddition  smallNumbersSimple  smallNumbersNormal  smallNumbersPow
+largeAddition
+mixedBottleneck  mixedAddition  mixedNumbers
+
 \begin{table}
 [H]\captionsetup{justification=justified, singlelinecheck=false, margin=0.7cm}
 \begin{center}
@@ -1103,18 +1112,35 @@ Látható, hogy a \texttt{LargeInteger} jól teljesíti a fentebb megfogalmazott
     & \multicolumn{1}{>{\centering\arraybackslash}m{1.2cm}|}{\begin{tabular}{c} \small{\textbftt{g}} \\ (ns) \end{tabular}}
     & \multicolumn{1}{>{\centering\arraybackslash}m{1.2cm}||}{\begin{tabular}{c} \small{\textbftt{h}} \\ (ns) \end{tabular}}\\
  \hline\hline
- \textbftt{long}                 & \nodata & \nodata & \nodata &   1,1 & \nodata &    5,3 &  16,7 &   2,6  \\
+ \textbftt{long}                 & \nodata & \nodata & \nodata &   1,1 & \nodata &    5,3 &   16,7 &   2,6 \\
  \hline\hline
- \textbftt{LargeInteger}         &    53,8 &   222,7 &    17,3 &   5,2 &   148,2 &    8,1 &   8,1 &   5,4 \\
+ \textbftt{LargeInteger}         &    53,8 &   222,7 &    17,3 &   5,2 &   148,2 &    8,1 &    8,1 &   5,4 \\
  \hline
- \textbftt{ScalaBigInt}          &    46,0 &   192,8 &    13,7 &   6,0 &   139,1 &   22,3 &  35,6 &   6,9 \\
+ \textbftt{ScalaBigInt}          &    46,0 &   192,8 &    13,7 &   6,0 &   139,1 &   22,3 &   35,6 &   6,9 \\
  \hline
- \textbftt{SafeLong}             &    52,3 &  1002,1 &    16,6 &  12,0 &  1613,2 &   15,0 &  24,6 &   7,3 \\
+ \textbftt{SafeLong}             &    52,3 &  1002,1 &    16,6 &  12,0 &  1613,2 &   15,0 &   24,6 &   7,3 \\
  \hline
- \textbftt{BigInteger}           &    39,2 &   136,6 &    11,6 &  36,8 &   109,8 &   79,5 &  92,3 &  20,9 \\
+ \textbftt{BigInteger}           &    39,2 &   136,6 &    11,6 &  36,8 &   109,8 &   79,5 &   92,3 &  20,9 \\
  \hline
  \textbftt{Apint}                &   471,4 &  1768,8 &    85,6 & 558,6 &  2274,4 & 2405,7 & 2736,6 & 973,5 \\
  \hline
+                                    
+                                    
+                                    
+ \hline\hline
+ \textbftt{long}                 &   1,1 &   2,6 &    5,3 &   16,7 & \nodata & \nodata & \nodata & \nodata 
+ \hline\hline
+ \textbftt{LargeInteger}         &   5,2 &   5,4 &    8,1 &    8,1 &    53,8 &    17,3 &   222,7 &   148,2 
+ \hline
+ \textbftt{ScalaBigInt}          &   6,0 &   6,9 &   22,3 &   35,6 &    46,0 &    13,7 &   192,8 &   139,1 
+ \hline
+ \textbftt{SafeLong}             &  12,0 &   7,3 &   15,0 &   24,6 &    52,3 &    16,6 &  1002,1 &  1613,2 
+ \hline
+ \textbftt{BigInteger}           &  36,8 &  20,9 &   79,5 &   92,3 &    39,2 &    11,6 &   136,6 &   109,8 
+ \hline
+ \textbftt{Apint}                & 558,6 & 973,5 & 2405,7 & 2736,6 &   471,4 &    85,6 &  1768,8 &  2274,4 
+ \hline
+
 \end{tabular}
 \end{center}
 \caption{LARGEINTEGER ÖSSZEH.}
