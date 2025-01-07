@@ -463,7 +463,7 @@ a részterületek mérési adatainak feldolgozására.
 
 \section{JMH mérési környezet}
 
-A dolgozatban szereplő, mikroperformaciára vonatkozó méréseket JMH (\textit{Java Microbenchmark Harness}) keretrendszerben végeztem,
+A dolgozatban szereplő, mikroperformanciára vonatkozó méréseket JMH (\textit{Java Microbenchmark Harness}) keretrendszerben végeztem,
 (jelenleg ez számít sztenderdnek Java környezetben).
 Ezeket méréseket a megfelelő Gradle taszkon keresztül futtattam.
 A mérések a forráskód részei, projektenként a \texttt{jmh} forrásmappában találhatók
@@ -484,7 +484,7 @@ Minden benchmark osztályt az alábbi annotációkkal paramétereztem:
 Futtatókörnyezet:
 
 \begin{itemize}
-    \item Gradle 8.10.2, JMH 1.37
+    \item Gradle 8.10.2, \texttt{me.champeau.jmh} 0.7.2, JMH 1.37
     \item Debian 12, OpenJDK 17.0.13
     \item Intel Core i5-13500H, 16GB RAM
 \end{itemize}
@@ -1057,14 +1057,14 @@ de esetenként a performanciát is növelheti
 
 Amikor a \texttt{LargeInteger} megfelelő implementációjával kísérletezni kezdtem (a 2019-2021 időszakban),
 párhuzamosan a Scala nyelv standard könyvtárába is bevezetésre kerül
-egy új műkdési elv a beépített \texttt{BigInt} osztályhoz%
+egy új működési elv a beépített \texttt{BigInt} osztályhoz%
 \cite{Rosset2019ScalaBigInt}.
 Az eredeti \texttt{BigInt} egy egyszerű csomagoló osztály volt a Java \texttt{BigInteger} fölött,
 az új megoldás pedig a \texttt{LargeInteger}-hez hasonlóan
 primitív \texttt{long} értékeket használ a kis számokhoz
 (nagyrészt a scalás Spire matematikai keretrendszer \ŧexttt{SafeLong} osztályát alapul véve%
 \cite{SoftwareScalaSpire}).
-A \texttt{BigInt} végülis csak egyetlen osztályt definiál,
+A \texttt{BigInt} végül is csak egyetlen osztályt definiál,
 melynek van egy \texttt{long} és egy \texttt{BigInteger} típusú mezője is,
 melyek közül mindig az egyik van használva.
 A JVM általában 12 bájtos fejlécet tárol az objektumokhoz,
@@ -1099,7 +1099,7 @@ főként az alábbi megfontolások játszottak szerepet:
 
 Néhány további létező implementációval is kísérleteztem,
 bár ezek meglehetősen gyenge teljesítményt mutattak.
-Az egytelen ezek közül, amit érdemes megemlíteni,
+Az egyetlen ezek közül, amit érdemes megemlíteni,
 az \texttt{Apint} a típus C++-ból Java nyelvre portolt Apfloat könyvtárból.
 Azonban ennek teljesítménye még a beépített \texttt{BitInteger}-ét is messze alulmúlja\footnote{
     Valószínűleg azért, mert az Apfloat könyvtár elsősorban lebegőpontos számításokra lett kifejlesztve.
