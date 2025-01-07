@@ -2569,9 +2569,9 @@ a HoloDB beágyazott verzióját használtam.
 Az összehasonlítást MySQL-lel (mint az egyik legelterjedtebb szerveradatbázissal)
 és H2-vel (mint a Java környezetben legelterjedtebb beágyazott adatbázissal) valósítottam meg.
 A lekérdezések közvetlen mérésénél az SQL parancsnak a JDBC API-n keresztüli beküldésétől
-az eredménytábla végigiterálásnak végéig eltelt időt mértem.
+az eredménytábla végigiterálásnak végéig eltelt időt mértem
+(ezeknél a méréseknél itt nem használtam JMH-t).
 Különböző bonyolultságú és válaszméretű lekéréseket vizsgáltam.
-\todoref{Mérések: a mérési környezetet leírni, JMH stb.}
 
 Az integrált tesztelést egy Micronaut keretrendszerben implementált
 alkalmazás REST API-n keresztüli hívásával futtattam.
