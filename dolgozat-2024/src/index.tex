@@ -1188,14 +1188,16 @@ A második sor jelentése:
 \textbftt{MCALC}: összetett vegyes számítás overflow-val.
 A képletekben a kisbetűk \texttt{long} értéktartományán belüli,
 a nagybetűk pedig azon kívüli véletlenszámokat jelentenek.
-Lorem ipsum dolor sit amet.
 }
 \label{table:largeinteger}
 \end{table}
 \footnotetext{
-A sorokat ár-érték arány szerint csökkenően igyekeztem rendezni,
-figyelembe véve az értékeket és a vizuális eredményeket.
+A \texttt{LargeInteger} valóban a leggyorsabb kis számokon végzett dinamikus hatványozáskor.
+Ennek oka, hogy ha a pozitív kitevő 5-nél kisebb, akkor optimalizált szorzást végez.
+A \texttt{long} esetén a beépített \texttt{Math.pow} függvényt használtam,
+amelyben nincs ilyen optimalizáció.
 }
+vspace{-20pt}
 
 \subsection{Hierarchikus véletlengenerátorok}
 
