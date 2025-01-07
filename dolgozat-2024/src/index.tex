@@ -1080,17 +1080,9 @@ Azonban ennek teljesítménye még a beépített \texttt{BitInteger}-ét is mess
 illetve sok műveletet közvetlenül egyáltalán nem (például bitszintű műveletek),
 vagy csak az \texttt{ApfloatMath} segédosztályon keresztül támogat.
 
-\textcolor{red}{
-    A táblázatban így meg úgy
-    blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah
-    blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah
-    blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah
-    blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah
-    blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah
-    blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah
-    blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah
-    blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah
-}\todoref{LargeInteger mérési módszertana még...}
+JMH-val mérve összehasonlítottam az említett implementációk hatékonyságát.
+Az eredményeket a \label{table:largeinteger} táblázat tartalmazza.
+Látható, hogy a \texttt{LargeInteger} jól teljesíti a fentebb megfogalmazott elvárásokat.
 
 \begin{table}
 [H]\captionsetup{justification=justified, singlelinecheck=false, margin=0.7cm}
@@ -1122,6 +1114,7 @@ vagy csak az \texttt{ApfloatMath} segédosztályon keresztül támogat.
 \end{tabular}
 \end{center}
 \caption{LARGEINTEGER ÖSSZEH.}
+\label{table:largeinteger}
 \end{table}
 
 \textcolor{red}{
@@ -1397,8 +1390,7 @@ A 65~536 érték 16 bites, tehát 2 bájtos reprezentációkkal
 Ezt a fájlt tömörítettem két erős tömörítővel,
 a \texttt{bzip} programmal, illetve a \texttt{paq8} programmal (4-es erősséggel).
 
-A példánylétrehozási és hívási időket itt is JMH-val mértem.
-\todoref{Permutations JMH: mérési paramétereket is leírni}
+A példánylétrehozási és hívási időket JMH-val mértem.
 Az értékek lekérését és keresését az első 30 pozíción futtattam,
 így egyfelől nagyobb lett a minta,
 másfelől az identikus permutáció (\texttt{ID}) is kibújt az 1 ns érték alól.
