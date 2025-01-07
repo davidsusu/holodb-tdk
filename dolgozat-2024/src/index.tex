@@ -1094,22 +1094,23 @@ Látható, hogy a \texttt{LargeInteger} jól teljesíti a fentebb megfogalmazott
 \begin{center}
 \begin{tabular}{|l||r|r|r|r|r|r|r|r||} 
  \hline
- \multirow{2}{*}{MMM}
- %\multicolumn{1}{|>{\centering\arraybackslash}c|}{~}
+ \multicolumn{1}{|>{\centering\arraybackslash}m{1.2cm}|}{\multirow{2}{*}{MMM}}
     & \multicolumn{4}{>{\centering\arraybackslash}c|}{\textbftt{SMALL}}
     & \multicolumn{1}{>{\centering\arraybackslash}c|}{\textbftt{LARGE}}
-    & \multicolumn{3}{>{\centering\arraybackslash}c||}{\textbftt{MIXED}}\\
-  \hline
- %\multicolumn{1}{|>{\centering\arraybackslash}m{2cm}|}{~}
-    %&
-    \multicolumn{1}{>{\centering\arraybackslash}m{1.2cm}|}{\begin{tabular}{c} \small{\textbftt{ADD}} \\ (ns) \end{tabular}}
-    & \multicolumn{1}{>{\centering\arraybackslash}m{1.2cm}|}{\begin{tabular}{c} \small{\textbftt{SIMP}} \\ (ns) \end{tabular}}
-    & \multicolumn{1}{>{\centering\arraybackslash}m{1.2cm}|}{\begin{tabular}{c} \small{\textbftt{NORM}} \\ (ns) \end{tabular}}
-    & \multicolumn{1}{>{\centering\arraybackslash}m{1.2cm}|}{\begin{tabular}{c} \small{\textbftt{POW}} \\ (ns) \end{tabular}}
-    & \multicolumn{1}{>{\centering\arraybackslash}m{1.2cm}|}{\begin{tabular}{c} \small{\textbftt{ADD}} \\ (ns) \end{tabular}}
-    & \multicolumn{1}{>{\centering\arraybackslash}m{1.2cm}|}{\begin{tabular}{c} \small{\textbftt{BOTTL}} \\ (ns) \end{tabular}}
-    & \multicolumn{1}{>{\centering\arraybackslash}m{1.2cm}|}{\begin{tabular}{c} \small{\textbftt{ADD}} \\ (ns) \end{tabular}}
-    & \multicolumn{1}{>{\centering\arraybackslash}m{1.2cm}||}{\begin{tabular}{c} \small{\textbftt{CMPLX}} \\ (ns) \end{tabular}}\\
+    & \multicolumn{3}{>{\centering\arraybackslash}c||}{\textbftt{MIXED}}
+    \\
+ \cline{2-9}
+ 
+ \multicolumn{1}{|>{\centering\arraybackslash}c|}{~}
+    & \multicolumn{1}{>{\centering\arraybackslash}m{1.2cm}|}{$aaa$} % $\[ \sum_{i=1}^{7} a_i \]$
+    & \multicolumn{1}{>{\centering\arraybackslash}m{1.2cm}|}{\small{\textbftt{SIMP}}}
+    & \multicolumn{1}{>{\centering\arraybackslash}m{1.2cm}|}{\small{\textbftt{NORM}}}
+    & \multicolumn{1}{>{\centering\arraybackslash}m{1.2cm}|}{\small{\textbftt{POW}}}
+    & \multicolumn{1}{>{\centering\arraybackslash}m{1.2cm}|}{\small{\textbftt{ADD}}}
+    & \multicolumn{1}{>{\centering\arraybackslash}m{1.2cm}|}{\small{\textbftt{BOTTL}}}
+    & \multicolumn{1}{>{\centering\arraybackslash}m{1.2cm}|}{\small{\textbftt{ADD}}}
+    & \multicolumn{1}{>{\centering\arraybackslash}m{1.2cm}||}{$xxx$}
+    \\
  \hline\hline
  
  \textbftt{long}                 & \nodata      & \nodata      &       \nodata &   1,1 & \nodata &    5,3 &   16,7 &   2,6 \\
@@ -1119,7 +1120,7 @@ Látható, hogy a \texttt{LargeInteger} jól teljesíti a fentebb megfogalmazott
  
  \textbftt{LargeInteger}         & \textbf{5,2} & \textbf{5,4} &  \textbf{8,1} &  \textbf{8,1} &          53,8  &          17,3  &         222,7  &         148,2  \\
  \hline
- \textbftt{ScalaBigInt}          &         6,0  &         6,9  &         22,3  &         35,6  &  \textbf{46,0} &  \textbf{13,7} & \textbf{192,8} & \textbf{139,1} \\
+ \textbftt{BigInt}          &         6,0  &         6,9  &         22,3  &         35,6  &  \textbf{46,0} &  \textbf{13,7} & \textbf{192,8} & \textbf{139,1} \\
  \hline
  \textbftt{SafeLong}             &         12,0 &         7,3  &         15,0  &         24,6  &          52,3  &          16,6  &        1002,1  &        1613,2  \\
  \hline
@@ -1129,20 +1130,26 @@ Látható, hogy a \texttt{LargeInteger} jól teljesíti a fentebb megfogalmazott
 \end{tabular}
 \end{center}
 \caption{LARGEINTEGER ÖSSZEH.}
+\caption[Tetszőleges méretű egész implementációk jellemzői]{
+Tetszőleges méretű egész implementációk jellemzői.
+\textbf{\textit{A sorok jelentése}}:
+\textbftt{long}: a Java primitív \texttt{long} típusa;
+\textbftt{BigInteger}: a Java beépített \texttt{BigInteger} típusa;
+\textbftt{LargeInteger}: az általam implementált \texttt{LargeInteger};
+\textbftt{BigInt}: a Scala beépített \texttt{BigInt} típusa;
+\textbftt{SafeLong}: a scalás Spire matematikai könyvtár \texttt{SafeLong} típusa;
+\textbftt{Apint}: a javás Apfloat matematikai könyvtár \texttt{Apint} típusa.
+\textbf{\textit{Az oszlopok jelentése}}:
+\textbftt{SMALL}: műveletek a \texttt{long} értéktartományán belül (overflow nélkül);
+\textbftt{LARGE}: műveletek a \texttt{long} értéktartományán kívül;
+\textbftt{MIXED}: műveletek vegyes értéktartományon (overflow is előfordul).
+A második fejlécsorban az elvégzett számítások képletei láthatók.
+A kisbetűk \texttt{long} értéktartományán belüli,
+a nagybetűk pedig azon kívüli számokat jelentenek
+(megfelelő paraméterekkel, véletlenszerűen választva).
+}
 \label{table:largeinteger}
 \end{table}
-
-\textcolor{red}{
-    Láthatjuk, hogy
-    blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah
-    blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah
-    blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah
-    blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah
-    blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah
-    blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah
-    blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah
-    blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah
-}
 
 \subsection{Hierarchikus véletlengenerátorok}
 
