@@ -462,7 +462,21 @@ egyelőre nincsenek további dedikált erőforrásai
 a részterületek mérési adatainak feldolgozására.
 \todoref{a dolgozat koncepciója: a mérések fényében ezen enyhíteni}
 
-\section{Mérési környezet}
+\section{JMH mérési környezet}
+
+A dolgozatban szereplő, mikroperformaciára vonatkozó méréseket JMH (\textit{Java Microbenchmark Harness}) keretrendszerben végeztem,
+(jelenleg ez számít sztenderdnek Java környezetben).
+Ezeket méréseket a megfelelő Gradle taszkon keresztül futtattam.
+A mérések a forráskód részei, projektenként a \texttt{jmh} forrásmappában találhatók
+(a megfelelő linkek a \label{appendix:projectlinks} találhatók).
+
+
+@State(Scope.Benchmark)
+@Fork(value = 1)
+@Warmup(iterations = 1, time = 1, timeUnit = TimeUnit.SECONDS)
+@Measurement(iterations = 1, time = 1, timeUnit = TimeUnit.SECONDS)
+@BenchmarkMode(Mode.AverageTime)
+@OutputTimeUnit(TimeUnit.NANOSECONDS)
 
 \todoref{Mérési környezet (például default JMH setup)}
 
@@ -1153,6 +1167,18 @@ Tetszőleges méretű egész implementációk jellemzői.
 \textbftt{SMALL}: műveletek a \texttt{long} értéktartományán belül (overflow nélkül);
 \textbftt{LARGE}: műveletek a \texttt{long} értéktartományán kívül;
 \textbftt{MIXED}: műveletek vegyes értéktartományon (overflow is előfordul).
+A második sor jelentése:
+\par
+\textbftt{SADD}: $\sum_{i=1}^{7} a_i$~;~
+\textbftt{SSIMP}: $\frac{(a+b)c}{d}$~;~
+\textbftt{SNORM}: összetett számítás ~;~
+\textbftt{SPOW}: összetett számítás (hatványozás is)~;~
+\textbftt{LADD}:  $\sum_{i=1}^{5} X_i$~;~
+\textbftt{MBTL}: $a+X$~;~
+\textbftt{MADD}: összetett összeadás overflow-val ~;~
+\textbftt{MCALC}: összetett vegyes számítás overflow-val.
+A képletekben a kisbetűk \texttt{long} értéktartományán belüli,
+a nagybetűk pedig azon kívüli véletlenszámokat jelentenek.
 }
 \label{table:largeinteger}
 \end{table}
