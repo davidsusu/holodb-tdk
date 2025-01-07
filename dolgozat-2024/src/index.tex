@@ -1201,13 +1201,14 @@ amelyben nincs ilyen optimalizáció.
 
 \subsection{Hierarchikus véletlengenerátorok}
 
-Az adatbázist egy hierarchikus képződményként is fölfoghatjuk,
-ahol a sémákon belül táblák, azokon belül oszlopok,
-azokon belül pedig sorindexekkel megjelölt mezők foglalnak helyet.
+Az adatbázist egy hierarchikus képződményként is fölfoghatjuk:
+a sémákon belül táblák, azokon belül oszlopok,
+azokon belül pedig adatmezők foglalnak helyet.
 Végül a mezők értéke is lehet strukturált adat, melyben a rétegződés folytatódik.
-Azt szeretnénk, hogy az értékek a hierarchiában bárhol
-látszólag nagyjából \textit{véletlenszerűen} álljanak elő,
-ugyanakkor determinisztikusan, egy globális kiinduló seed alapján.
+Szeretnénk, hogy az értékek a hierarchiában bárhol nagyjából \textit{véletlenszerűen},
+de a globális kiinduló seed alapján determinisztikusan álljanak elő,
+Olyan véletlengenerátorra van szükség,
+mely teljesíti a következő követelményeket:
 
 \begin{itemize}
     \item tetszőleges számú bitet képes generálni, mindig ugyanazt a (végtelen) bitsorozatot adva vissza
