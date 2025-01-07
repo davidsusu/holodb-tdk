@@ -468,7 +468,6 @@ A dolgozatban szereplő, mikroperformaciára vonatkozó méréseket JMH (\textit
 Ezeket méréseket a megfelelő Gradle taszkon keresztül futtattam.
 A mérések a forráskód részei, projektenként a \texttt{jmh} forrásmappában találhatók
 (link a forráskódhoz a dolgozat végén, a \hyperref[appendix:projectlinks]{Projektlinkek függelékben} található).
-
 Minden benchmark osztályt az alábbi annotációkkal paramétereztem:
 
 \begin{minted}[fontsize=\small,framesep=4pt,frame=single,framerule=1.5pt,rulecolor=\color{gray!30}]{java}
@@ -479,6 +478,14 @@ Minden benchmark osztályt az alábbi annotációkkal paramétereztem:
 @BenchmarkMode(Mode.AverageTime)
 @OutputTimeUnit(TimeUnit.NANOSECONDS)
 \end{minted}
+
+Futtatókörnyezet:
+
+\begin{itemize}
+    \item Gradle 8.10.2, JMH 1.37
+    \item Debian 11, OpenJDK 17.0.13
+    \item XXXXXXXX
+\end{itemize}
 
 
 \chapter{Architektúra}
