@@ -470,6 +470,7 @@ A mérések a forráskód részei, projektenként a \texttt{jmh} forrásmappába
 (link a forráskódhoz a dolgozat végén, a \hyperref[appendix:projectlinks]{Projektlinkek függelékben} található).
 Minden benchmark osztályt az alábbi annotációkkal paramétereztem:
 
+\vspace{-5pt}
 \begin{minted}[fontsize=\small,framesep=4pt,frame=single,framerule=1.5pt,rulecolor=\color{gray!30}]{java}
 @State(Scope.Benchmark)
 @Fork(value = 1)
@@ -478,13 +479,15 @@ Minden benchmark osztályt az alábbi annotációkkal paramétereztem:
 @BenchmarkMode(Mode.AverageTime)
 @OutputTimeUnit(TimeUnit.NANOSECONDS)
 \end{minted}
+\vspace{-35pt}
 
 Futtatókörnyezet:
 
 \begin{itemize}
+    \setlength\itemsep{10em}
     \item Gradle 8.10.2, JMH 1.37
     \item Debian 11, OpenJDK 17.0.13
-    \item XXXXXXXX
+    \item Intel Core i5-13500H, 16GB RAM
 \end{itemize}
 
 
