@@ -1088,15 +1088,15 @@ JMH-val lemértem az említett implementációk hatékonyságát.
 Az eredményeket a \ref{table:largeinteger} táblázat tartalmazza.
 Látható, hogy a \texttt{LargeInteger} jól teljesíti a fentebb megfogalmazott elvárásokat.
 
-\begin{table}
-[H]\captionsetup{justification=justified, singlelinecheck=false, margin=0.7cm}
+\begin{table}[H]
+\captionsetup{justification=justified, singlelinecheck=false, margin=0.7cm}
 \begin{center}
 \begin{tabular}{|l||r|r|r|r|r|r|r|r||} 
  \hline
  \multicolumn{1}{|>{\centering\arraybackslash}m{2cm}|}{~}
-    & \multicolumn{4}{>{\centering\arraybackslash}m{1.2cm}|}{\begin{tabular}{c} \small{\textbftt{SMALL}} \\ (ns) \end{tabular}}
-    & \multicolumn{1}{>{\centering\arraybackslash}m{1.2cm}|}{\begin{tabular}{c} \small{\textbftt{LARGE}} \\ (ns) \end{tabular}}
-    & \multicolumn{3}{>{\centering\arraybackslash}m{1.2cm}||}{\begin{tabular}{c} \small{\textbftt{MIXED}} \\ (ns) \end{tabular}}\\
+    & \multicolumn{4}{>{\centering\arraybackslash}m{1.2cm}|}{\textbftt{SMALL}}
+    & \multicolumn{1}{>{\centering\arraybackslash}m{1.2cm}|}{\textbftt{LARGE}}
+    & \multicolumn{3}{>{\centering\arraybackslash}m{1.2cm}||}{\textbftt{MIXED}}\\
  \multicolumn{1}{|>{\centering\arraybackslash}m{2cm}|}{~}
     & \multicolumn{1}{>{\centering\arraybackslash}m{1.2cm}|}{\begin{tabular}{c} \small{\textbftt{ADD}} \\ (ns) \end{tabular}}
     & \multicolumn{1}{>{\centering\arraybackslash}m{1.2cm}|}{\begin{tabular}{c} \small{\textbftt{SIMP}} \\ (ns) \end{tabular}}
@@ -1418,8 +1418,8 @@ A színek a HSB komponensenként lettek kalkulálva:
 az árnyalat a legfelső bájt, a telítettség a legalsó bájt,
 a fényerő pedig a bájtok átlaga alapján.
 
-\begin{table}
-[H]\captionsetup{justification=justified, singlelinecheck=false, margin=0.7cm}
+\begin{table}[H]
+\captionsetup{justification=justified, singlelinecheck=false, margin=0.7cm}
 \begin{center}
 \begin{tabular}{|l||r|r|r|r|r|r|r||} 
  \hline
