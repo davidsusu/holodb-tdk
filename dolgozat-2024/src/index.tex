@@ -1111,7 +1111,6 @@ vagy csak az \texttt{ApfloatMath} segédosztályon keresztül támogat.
 JMH-val lemértem az említett implementációk hatékonyságát.
 Az eredményeket a \ref{table:largeinteger} táblázat tartalmazza.
 Látható, hogy a \texttt{LargeInteger} jól teljesíti a fentebb megfogalmazott elvárásokat.
-SPOW SPOW SPOWSPOW SPOWSPOW SPOW SPOWSPOW SPOWSPOW SPOW SPOWSPOW
 
 \begin{table}[H]
 \captionsetup{justification=justified, singlelinecheck=false, margin=0.7cm}
@@ -1153,7 +1152,12 @@ SPOW SPOW SPOWSPOW SPOWSPOW SPOW SPOWSPOW SPOWSPOW SPOW SPOWSPOW
  \textbftt{BigInteger}           &         36,8 &        20,9  &         79,5  &         92,3  &          39,2  &          11,6  &         136,6  &         109,8  \\
  \hline\hline
  
- \textbftt{LargeInteger}         & \textbf{5,2} & \textbf{5,4} &  \textbf{8,1} &  \textbf{8,1} &          53,8  &          17,3  &         222,7  &         148,2  \\
+ \textbftt{LargeInteger}         & \textbf{5,2} & \textbf{5,4} &  \textbf{8,1}\footnote{
+A sorokat ár-érték arány szerint csökkenően igyekeztem rendezni,
+figyelembe véve az értékeket és a vizuális eredményeket.
+Az összbenyomás mérésére nem sikerült egységes képletet találnom,
+így mondhatjuk, hogy a sorrend részben szubjektív.
+} &  \textbf{8,1} &          53,8  &          17,3  &         222,7  &         148,2  \\
  \hline
  \textbftt{BigInt}          &         6,0  &         6,9  &         22,3  &         35,6  &  \textbf{46,0} &  \textbf{13,7} & \textbf{192,8} & \textbf{139,1} \\
  \hline
@@ -1179,11 +1183,10 @@ SPOW SPOW SPOWSPOW SPOWSPOW SPOW SPOWSPOW SPOWSPOW SPOW SPOWSPOW
 \textbftt{LARGE}: műveletek a \texttt{long} értéktartományán kívül;
 \textbftt{MIXED}: műveletek vegyes értéktartományon (overflow is előfordul).
 A második sor jelentése:
-\par
 \textbftt{SADD}: $\sum_{i=1}^{7} a_i$~;~
 \textbftt{SSIMP}: $\frac{(a+b)c}{d}$~;~
 \textbftt{SNORM}: összetett számítás ~;~
-\textbftt{SPOW}: összetett számítás (hatványozás is)~;~
+\textbftt{SPOW}: összetett számítás, hatványozás is ~;~
 \textbftt{LADD}:  $\sum_{i=1}^{5} X_i$~;~
 \textbftt{MBTL}: $a+X$~;~
 \textbftt{MADD}: összetett összeadás overflow-val ~;~
