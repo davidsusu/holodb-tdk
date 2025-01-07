@@ -1192,8 +1192,8 @@ a nagybetűk pedig azon kívüli véletlenszámokat jelentenek.
 \label{table:largeinteger}
 \end{table}
 \footnotetext{
-A \texttt{LargeInteger} valóban a leggyorsabb kis számokon végzett dinamikus hatványozáskor.
-Ennek oka, hogy ha a pozitív kitevő 5-nél kisebb, akkor optimalizált szorzást végez.
+Nem elírás.
+Ha a pozitív kitevő 5-nél kisebb, akkor a \texttt{LargeInteger} optimalizált szorzást végez.
 A \texttt{long} tesztjében a beépített \texttt{Math.pow} függvényt használtam,
 amelyben nincs ilyen optimalizáció.
 }
