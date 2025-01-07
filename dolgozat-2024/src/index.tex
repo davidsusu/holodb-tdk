@@ -469,7 +469,9 @@ Ezeket méréseket a megfelelő Gradle taszkon keresztül futtattam.
 A mérések a forráskód részei, projektenként a \texttt{jmh} forrásmappában találhatók
 (a megfelelő linkek a \ref{appendix:projectlinks} találhatók).
 
+Minden benchmark osztályt az alábbi annotációkkal paramétereztem:
 
+\begin{minted}[fontsize=\small,framesep=4pt,frame=single,framerule=1.5pt,rulecolor=\color{gray!30}]{java}
 @State(Scope.Benchmark)
 @Fork(value = 1)
 @Warmup(iterations = 1, time = 1, timeUnit = TimeUnit.SECONDS)
@@ -478,6 +480,7 @@ A mérések a forráskód részei, projektenként a \texttt{jmh} forrásmappába
 @OutputTimeUnit(TimeUnit.NANOSECONDS)
 
 \todoref{Mérési környezet (például default JMH setup)}
+\end{minted}
 
 
 \chapter{Architektúra}
