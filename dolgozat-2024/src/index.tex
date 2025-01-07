@@ -1102,14 +1102,14 @@ Látható, hogy a \texttt{LargeInteger} jól teljesíti a fentebb megfogalmazott
  \cline{2-9}
  
  \rule{0pt}{2.5em}\multicolumn{1}{|>{\centering\arraybackslash}c|}{~}
-    & \multicolumn{1}{>{\centering\arraybackslash}m{1.2cm}|}{$\sum_{i=1}^{7} a_i$}
-    & \multicolumn{1}{>{\centering\arraybackslash}m{1.2cm}|}{$\frac{(a+b)c}{d}$}
-    & \multicolumn{1}{>{\centering\arraybackslash}m{1.2cm}|}{$\left| \frac{e^2}{2}x \right|$}
-    & \multicolumn{1}{>{\centering\arraybackslash}m{1.2cm}|}{\small{\textbftt{POW}}}
-    & \multicolumn{1}{>{\centering\arraybackslash}m{1.2cm}|}{\small{\textbftt{ADD}}}
-    & \multicolumn{1}{>{\centering\arraybackslash}m{1.2cm}|}{\small{\textbftt{BOTTL}}}
-    & \multicolumn{1}{>{\centering\arraybackslash}m{1.2cm}|}{\small{\textbftt{ADD}}}
-    & \multicolumn{1}{>{\centering\arraybackslash}m{1.2cm}||}{$xxx$}
+    & \multicolumn{1}{>{\centering\arraybackslash}m{1.2cm}|}{\small{\textbftt{SADD}}}
+    & \multicolumn{1}{>{\centering\arraybackslash}m{1.2cm}|}{\small{\textbftt{SSIMP}}}
+    & \multicolumn{1}{>{\centering\arraybackslash}m{1.2cm}|}{\small{\textbftt{SNORM}}}
+    & \multicolumn{1}{>{\centering\arraybackslash}m{1.2cm}|}{\small{\textbftt{SPOW}}}
+    & \multicolumn{1}{>{\centering\arraybackslash}m{1.2cm}|}{\small{\textbftt{LADD}}}
+    & \multicolumn{1}{>{\centering\arraybackslash}m{1.2cm}|}{\small{\textbftt{MBTL}}}
+    & \multicolumn{1}{>{\centering\arraybackslash}m{1.2cm}|}{\small{\textbftt{MADD}}}
+    & \multicolumn{1}{>{\centering\arraybackslash}m{1.2cm}||}{\small{\textbftt{MCALC}}}
     \\
  
  \multicolumn{1}{|>{\centering\arraybackslash}c|}{~}
@@ -1153,8 +1153,17 @@ Tetszőleges méretű egész implementációk jellemzői.
 \textbftt{SMALL}: műveletek a \texttt{long} értéktartományán belül (overflow nélkül);
 \textbftt{LARGE}: műveletek a \texttt{long} értéktartományán kívül;
 \textbftt{MIXED}: műveletek vegyes értéktartományon (overflow is előfordul).
-A második fejlécsorban az elvégzett számítások képletei láthatók.
-A képletekben a kisbetűk \texttt{long} értéktartományán belüli,
+A második sor jelentése:
+\par
+\textbftt{SADD}: $\sum_{i=1}^{7} a_i$~;~
+\textbftt{SSIMP}: $\frac{(a+b)c}{d}$~;~
+\textbftt{SNORM}:  $\left| \frac{e^2}{2}x \right|$~;~
+\textbftt{SPOW}:  $xxx$~;~
+\textbftt{LADD}:  $((a+b)(a-b) + 1) \mod ((c \lan d) \lor e) ~+~ -\max (b, d+ \min(a,\frac{e}{a}))$~;~
+\textbftt{MBTL}:  $xxx$~;~
+\textbftt{MADD}:  $xxx$~;~
+\textbftt{MCALC}:  $xxx$~.
+\parA képletekben a kisbetűk \texttt{long} értéktartományán belüli,
 a nagybetűk pedig azon kívüli számokat jelentenek
 (megfelelő paraméterekkel, véletlenszerűen választva).
 }
