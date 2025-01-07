@@ -11,6 +11,7 @@
 \usepackage{hyperref}
 \usepackage{cleveref}
 \usepackage{caption}
+\usepackage{multirow}
 \usepackage{appendix}
 \usepackage{float}
 \usepackage{pgfplots}
@@ -1093,13 +1094,15 @@ Látható, hogy a \texttt{LargeInteger} jól teljesíti a fentebb megfogalmazott
 \begin{center}
 \begin{tabular}{|l||r|r|r|r|r|r|r|r||} 
  \hline
- \multicolumn{1}{|>{\centering\arraybackslash}c|}{~}
+ \multirow{2}{*}{MMM}
+ %\multicolumn{1}{|>{\centering\arraybackslash}c|}{~}
     & \multicolumn{4}{>{\centering\arraybackslash}c|}{\textbftt{SMALL}}
     & \multicolumn{1}{>{\centering\arraybackslash}c|}{\textbftt{LARGE}}
     & \multicolumn{3}{>{\centering\arraybackslash}c||}{\textbftt{MIXED}}\\
   \hline
- \multicolumn{1}{|>{\centering\arraybackslash}m{2cm}|}{~}
-    & \multicolumn{1}{>{\centering\arraybackslash}m{1.2cm}|}{\begin{tabular}{c} \small{\textbftt{ADD}} \\ (ns) \end{tabular}}
+ %\multicolumn{1}{|>{\centering\arraybackslash}m{2cm}|}{~}
+    %&
+    \multicolumn{1}{>{\centering\arraybackslash}m{1.2cm}|}{\begin{tabular}{c} \small{\textbftt{ADD}} \\ (ns) \end{tabular}}
     & \multicolumn{1}{>{\centering\arraybackslash}m{1.2cm}|}{\begin{tabular}{c} \small{\textbftt{SIMP}} \\ (ns) \end{tabular}}
     & \multicolumn{1}{>{\centering\arraybackslash}m{1.2cm}|}{\begin{tabular}{c} \small{\textbftt{NORM}} \\ (ns) \end{tabular}}
     & \multicolumn{1}{>{\centering\arraybackslash}m{1.2cm}|}{\begin{tabular}{c} \small{\textbftt{POW}} \\ (ns) \end{tabular}}
