@@ -39,9 +39,8 @@ például kicseréli a konfigurációt a `holodb-fine.yaml` változatra.
 
 A dolgozatban bemutatott teszteknél a H2-t a lekérdezésszintű tesztekhez
 a `QUERY_CACHE_SIZE=0` opcióval használtam,
-míg az alkalmazáson keresztüli integrált tesztnél ezt elhagytam
-az authentikusság kedvéért
-(tényleges funkcionális teszteket aligha futtatnak ilyesfajta cache-elés nélkül).
+a MySQL-t pedig a `useServerPrepStmts=false&cachePrepStmts=false` opciókkal
+és a `query_cache_type=OFF` szerveroldali beállítással.
 
 A `run-suite.sh` fájl a tesztek futtatása között fixen várakozik néhány másodpercet,
 plusz előtte kivárja, míg a load-átlag egy megadott érték alá alá esik.

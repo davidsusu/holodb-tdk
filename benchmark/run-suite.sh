@@ -3,8 +3,8 @@
 tests='simple-readonly complex-readonly complex-writeable benchmarks'
 #backends='mysql h2 sqlite holodb-low holodb holodb-fine holoserver'
 #backends='mysql h2 holodb-low holodb holodb-fine'
-backends='h2'
-repeats=1
+backends='mysql'
+repeats=10
 
 checkStartsWith() { # $1: contextString, $2: prefixToCheck
     case "$1" in
@@ -24,9 +24,9 @@ date '+%Y-%m-%d %H:%M:%S.%N'
 printf '\n'
 
 
-printf 'pre . . . '
-./run.sh 'holodb-fine' > /dev/null
-printf 'OK\n'
+#printf 'pre . . . '
+#./run.sh 'holodb-fine' > /dev/null
+#printf 'OK\n'
 
 
 for test in $tests; do

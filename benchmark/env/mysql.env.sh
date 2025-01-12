@@ -1,4 +1,4 @@
-export JDBC_URL='jdbc:mysql://localhost:3306/tdk_benchmark?sslMode=DISABLED'
+export JDBC_URL='jdbc:mysql://localhost:3306/tdk_benchmark?sslMode=DISABLED&useServerPrepStmts=false&cachePrepStmts=false'
 export MYSQL_HOST='localhost'
 export MYSQL_PORT='3306'
 export DB_USERNAME='root'
