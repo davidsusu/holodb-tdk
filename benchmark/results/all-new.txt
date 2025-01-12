@@ -263,3 +263,54 @@ h2 benchmarks 1: 12693 (×10000)    2: 9936 (×10000)    3: 17918 (×10000)    4
 h2 benchmarks 1: 12478 (×10000)    2: 9469 (×10000)    3: 18208 (×10000)    4: 1889008 (×100)    5: 173352 (×10000)    6: 12153 (×10000)
 h2 benchmarks 1: 13173 (×10000)    2: 9348 (×10000)    3: 17765 (×10000)    4: 2002018 (×100)    5: 177529 (×10000)    6: 12341 (×10000)
 h2 benchmarks 1: 12986 (×10000)    2: 9900 (×10000)    3: 17949 (×10000)    4: 1959377 (×100)    5: 175389 (×10000)    6: 12098 (×10000)
+
+
+MySQL without cache:
+--------------------
+# simple-readonly:
+mysql simple-readonly FULL: 7.291470487    FULL-SQL: 10302    FULL-PREP: 0.16845    FULL-EXE: 0.579964
+mysql simple-readonly FULL: 5.116165811    FULL-SQL: 10302    FULL-PREP: 0.165738    FULL-EXE: 0.596625
+mysql simple-readonly FULL: 5.146785894    FULL-SQL: 10302    FULL-PREP: 0.168948    FULL-EXE: 0.587913
+mysql simple-readonly FULL: 5.151189702    FULL-SQL: 10302    FULL-PREP: 0.173211    FULL-EXE: 0.602588
+mysql simple-readonly FULL: 5.076910696    FULL-SQL: 10302    FULL-PREP: 0.166313    FULL-EXE: 0.581379
+mysql simple-readonly FULL: 5.219321119    FULL-SQL: 10302    FULL-PREP: 0.173641    FULL-EXE: 0.61935
+mysql simple-readonly FULL: 5.028069589    FULL-SQL: 10302    FULL-PREP: 0.166756    FULL-EXE: 0.576444
+mysql simple-readonly FULL: 5.100592843    FULL-SQL: 10302    FULL-PREP: 0.173104    FULL-EXE: 0.582089
+mysql simple-readonly FULL: 4.898250033    FULL-SQL: 10302    FULL-PREP: 0.164969    FULL-EXE: 0.567954
+mysql simple-readonly FULL: 4.940347688    FULL-SQL: 10302    FULL-PREP: 0.162709    FULL-EXE: 0.573488
+
+# complex-readonly:
+mysql complex-readonly FULL: 5.397564258    FULL-SQL: 10722    FULL-PREP: 0.173959    FULL-EXE: 0.805237
+mysql complex-readonly FULL: 5.607445517    FULL-SQL: 10722    FULL-PREP: 0.180387    FULL-EXE: 0.847688
+mysql complex-readonly FULL: 5.362210935    FULL-SQL: 10722    FULL-PREP: 0.178375    FULL-EXE: 0.796677
+mysql complex-readonly FULL: 5.434359110    FULL-SQL: 10722    FULL-PREP: 0.179794    FULL-EXE: 0.841712
+mysql complex-readonly FULL: 5.403155172    FULL-SQL: 10722    FULL-PREP: 0.176865    FULL-EXE: 0.788969
+mysql complex-readonly FULL: 5.533356986    FULL-SQL: 10722    FULL-PREP: 0.178674    FULL-EXE: 0.827419
+mysql complex-readonly FULL: 5.794984139    FULL-SQL: 10722    FULL-PREP: 0.196397    FULL-EXE: 0.87706
+mysql complex-readonly FULL: 5.807176540    FULL-SQL: 10722    FULL-PREP: 0.189204    FULL-EXE: 0.892406
+mysql complex-readonly FULL: 5.477577980    FULL-SQL: 10722    FULL-PREP: 0.181225    FULL-EXE: 0.857702
+mysql complex-readonly FULL: 5.374867557    FULL-SQL: 10722    FULL-PREP: 0.174839    FULL-EXE: 0.80118
+
+# complex-writeable:
+mysql complex-writeable FULL: 8.467837534    FULL-SQL: 20881    FULL-PREP: 0.326927    FULL-EXE: 1.30492
+mysql complex-writeable FULL: 8.343703032    FULL-SQL: 20881    FULL-PREP: 0.315254    FULL-EXE: 1.27347
+mysql complex-writeable FULL: 8.337336250    FULL-SQL: 20881    FULL-PREP: 0.312313    FULL-EXE: 1.25417
+mysql complex-writeable FULL: 8.418315000    FULL-SQL: 20881    FULL-PREP: 0.322144    FULL-EXE: 1.2732
+mysql complex-writeable FULL: 8.431480865    FULL-SQL: 20881    FULL-PREP: 0.320459    FULL-EXE: 1.28647
+mysql complex-writeable FULL: 8.308516121    FULL-SQL: 20881    FULL-PREP: 0.314324    FULL-EXE: 1.22672
+mysql complex-writeable FULL: 8.445804563    FULL-SQL: 20881    FULL-PREP: 0.317378    FULL-EXE: 1.23469
+mysql complex-writeable FULL: 8.375857565    FULL-SQL: 20881    FULL-PREP: 0.322235    FULL-EXE: 1.259
+mysql complex-writeable FULL: 8.189779340    FULL-SQL: 20881    FULL-PREP: 0.313031    FULL-EXE: 1.22231
+mysql complex-writeable FULL: 8.626168400    FULL-SQL: 20881    FULL-PREP: 0.318142    FULL-EXE: 1.31804
+
+# benchmarks:
+mysql benchmarks 1: 52302 (×10000)    2: 45047 (×10000)    3: 72930 (×10000)    4: 3234309 (×100)    5: 1393368 (×10000)    6: 48848 (×10000)
+mysql benchmarks 1: 53016 (×10000)    2: 47632 (×10000)    3: 76971 (×10000)    4: 3347519 (×100)    5: 1415605 (×10000)    6: 49251 (×10000)
+mysql benchmarks 1: 49745 (×10000)    2: 45233 (×10000)    3: 73920 (×10000)    4: 3416699 (×100)    5: 1403417 (×10000)    6: 49379 (×10000)
+mysql benchmarks 1: 48721 (×10000)    2: 44683 (×10000)    3: 72895 (×10000)    4: 3509250 (×100)    5: 1442410 (×10000)    6: 49525 (×10000)
+mysql benchmarks 1: 50920 (×10000)    2: 44453 (×10000)    3: 76295 (×10000)    4: 3316696 (×100)    5: 1415794 (×10000)    6: 50938 (×10000)
+mysql benchmarks 1: 51728 (×10000)    2: 47259 (×10000)    3: 73746 (×10000)    4: 3329345 (×100)    5: 1398929 (×10000)    6: 48751 (×10000)
+mysql benchmarks 1: 51204 (×10000)    2: 45900 (×10000)    3: 73392 (×10000)    4: 3498129 (×100)    5: 1473218 (×10000)    6: 48741 (×10000)
+mysql benchmarks 1: 52257 (×10000)    2: 45505 (×10000)    3: 73026 (×10000)    4: 3376846 (×100)    5: 1391522 (×10000)    6: 52737 (×10000)
+mysql benchmarks 1: 48210 (×10000)    2: 45026 (×10000)    3: 72859 (×10000)    4: 3420757 (×100)    5: 1387316 (×10000)    6: 49620 (×10000)
+mysql benchmarks 1: 47874 (×10000)    2: 46269 (×10000)    3: 73016 (×10000)    4: 3392986 (×100)    5: 1428623 (×10000)    6: 49185 (×10000)

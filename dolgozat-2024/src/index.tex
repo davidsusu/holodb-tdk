@@ -2463,35 +2463,12 @@ az operációs rendszer és a JRE testreszabásával ez valószínűleg tovább 
 % https://hub.docker.com/layers/mertcingoz/h2/2.3.232/images/sha256-52b7f6aa8138592c95830a127ac14694ef3fff221a31210a828ca39f00b958de
 % https://hub.docker.com/layers/jochenwierum/openjdk-minimal-jre/17.0.7/images/sha256-978c2b61ab2d04b20c8e4260daa299bec65cab5254e8ad0891bdc47de89cf766
 
-
-\begin{tabular}{|l||r|r|r|r|r||r|r|r||} 
- \hline
- \multicolumn{1}{|>{\centering\arraybackslash}m{1.2cm}|}{\multirow{2}{*}{~}}
-    & \multicolumn{5}{>{\centering\arraybackslash}c|}{\textbftt{QUERY}}
-    & \multicolumn{3}{>{\centering\arraybackslash}c||}{\textbftt{WEB}}
-    \\
- \cline{2-9}
- 
- \multicolumn{1}{|>{\centering\arraybackslash}m{1.7cm}|}{~}
-    & \multicolumn{1}{>{\centering\arraybackslash}m{1.3cm}|}{\begin{tabular}{c} \makebox[0pt]{\footnotesize{\textbftt{Q-FLD}}} \\ ({\textmu}s) \end{tabular}}
-    & \multicolumn{1}{>{\centering\arraybackslash}m{1.3cm}|}{\begin{tabular}{c} \makebox[0pt]{\footnotesize{\textbftt{Q-REC}}} \\ ({\textmu}s) \end{tabular}}
-    & \multicolumn{1}{>{\centering\arraybackslash}m{1.3cm}|}{\begin{tabular}{c} \makebox[0pt]{\footnotesize{\textbftt{Q-CMPX}}} \\ ({\textmu}s) \end{tabular}}
-    & \multicolumn{1}{>{\centering\arraybackslash}m{1.3cm}|}{\begin{tabular}{c} \makebox[0pt]{\footnotesize{\textbftt{Q-TFUL}}} \\ ({\textmu}s) \end{tabular}}
-    & \multicolumn{1}{>{\centering\arraybackslash}m{1.3cm}||}{\begin{tabular}{c} \makebox[0pt]{\footnotesize{\textbftt{Q-MULT}}} \\ ({\textmu}s) \end{tabular}}
-    & \multicolumn{1}{>{\centering\arraybackslash}m{1.3cm}|}{\begin{tabular}{c} \makebox[0pt]{\footnotesize{\textbftt{RO-SIMP}}} \\ (s) \end{tabular}}
-    & \multicolumn{1}{>{\centering\arraybackslash}m{1.3cm}|}{\begin{tabular}{c} \makebox[0pt]{\footnotesize{\textbftt{RO-CMPX}}} \\ (s) \end{tabular}}
-    & \multicolumn{1}{>{\centering\arraybackslash}m{1.3cm}||}{\begin{tabular}{c} \makebox[0pt]{\footnotesize{\textbftt{WR-CMPX}}} \\ (s) \end{tabular}}\\
- \hline\hline
- \textbf{HoloDB/}\textbftt{EXT} &   0,050 & 207,000 & 2540,000 & 1680000 & 8120& 8,82 & 10,58 & 16,77 \\
- \textbf{HoloDB/}\textbftt{DEF} &   0,026 & 140,000 &  294,000 & 1230000 & 4030& 8,18 &  9,42 & 14,49 \\
- \textbf{HoloDB/}\textbftt{MIN} &   0,022 &   0,024 &    0,050 &   32300 &  481& 6,44 &  8,04 & 13,50 \\
- \textbf{H2}                    &   0,013 &   0,013 &    0,022 &    1970 &  190& 5,10 &  5,19 &  8,77 \\
- \textbf{MySQL}                 & 106,000 & 110,000 &  147,000 &     147 & 1640& 7,87 &  9,02 & 14,35 \\
- \hline
-
-\end{tabular}
-
-
+\iffalse
+A dolgozatban bemutatott teszteknél a H2-t a lekérdezésszintű tesztekhez
+a `QUERY_CACHE_SIZE=0` opcióval használtam,
+a MySQL-t pedig a `useServerPrepStmts=false&cachePrepStmts=false` opciókkal
+és a `query_cache_type=OFF` szerveroldali beállítással.
+\fi
 
 \begin{table}[H]
 \captionsetup{justification=justified, singlelinecheck=false, margin=0.7cm}
