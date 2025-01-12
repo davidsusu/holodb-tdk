@@ -2,8 +2,9 @@
 
 tests='simple-readonly complex-readonly complex-writeable benchmarks'
 #backends='mysql h2 sqlite holodb-low holodb holodb-fine holoserver'
-backends='mysql h2 holodb-low holodb holodb-fine'
-repeats=10
+#backends='mysql h2 holodb-low holodb holodb-fine'
+backends='h2'
+repeats=1
 
 checkStartsWith() { # $1: contextString, $2: prefixToCheck
     case "$1" in
