@@ -23,6 +23,8 @@ public class BenchmarkService {
     
     private static final int REPEATS = 10000;
     
+    private static final int LIGHT_REPEATS = 100;
+    
     private static final String[] SQLS = {
             "SELECT firstname FROM students WHERE id = 30",
             "SELECT * FROM students WHERE id = 30",
@@ -34,6 +36,15 @@ public class BenchmarkService {
                     "LEFT JOIN subjects su ON su.id = c.subject_id " +
                     "WHERE s.firstname='Ian' AND su.id=2",
             "SELECT s.id, s.code, s.firstname, s.lastname FROM students s WHERE s.id = 30 LIMIT 1",
+    };
+
+    private static final int[] SQLS_2_REPEATS = {
+            REPEATS,
+            REPEATS,
+            REPEATS,
+            LIGHT_REPEATS,
+            REPEATS,
+            REPEATS,
     };
 
     private final DataSource dataSource;
@@ -48,23 +59,26 @@ public class BenchmarkService {
     @Transactional
     public List<Map<String, Object>> runBenchmark() {
         List<Map<String, Object>> result = new ArrayList<>();
-        int n = 1;
-        for (String sql : SQLS) {
-            long avgNanos = benchmarkQuery(sql, REPEATS);
+        for (int i = 0; i < SQLS.length; i++) {
+            String sql = SQLS[i];
+            int repeats = SQLS_2_REPEATS[i];
+            int n = i + 1;
+            long avgNanos = benchmarkQuery(sql, repeats);
             Map<String, Object> item = new LinkedHashMap<>();
             item.put("n", n);
             item.put("sql", sql);
-            item.put("repeats", REPEATS);
+            item.put("repeats", repeats);
             item.put("avgNanos", avgNanos);
             result.add(item);
-            n++;
         }
         return result;
     }
 
     @Transactional
     public long runSingleBenchmark(int n) {
-        return benchmarkQuery(SQLS[n - 1], REPEATS);
+        String sql = SQLS[n - 1];
+        int repeats = SQLS_2_REPEATS[n - 1];
+        return benchmarkQuery(sql, repeats);
     }
 
     @Transactional

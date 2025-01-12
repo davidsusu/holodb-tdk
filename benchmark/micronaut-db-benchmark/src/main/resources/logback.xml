@@ -1,7 +1,5 @@
 <configuration>
-    <logger category="org.hibernate.stat" use-parent-handlers="true">
-        <level name="info"/>
-    </logger>
+    <logger name="org.hibernate.stat" level="INFO" /> 
     
     <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
         <encoder>

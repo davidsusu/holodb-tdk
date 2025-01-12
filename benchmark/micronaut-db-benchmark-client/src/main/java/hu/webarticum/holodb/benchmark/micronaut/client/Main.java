@@ -31,8 +31,10 @@ public class Main {
             runComplexReadonly();
         } else if (args[0].equals("complex-writeable")) {
             runComplexWriteable();
+        } else if (args[0].equals("benchmarks")) {
+            runBenchmarks();
         } else {
-            throw new IllegalArgumentException("Unkown test type CLI argument: " + args[0]);
+            throw new IllegalArgumentException("Unkown test type CLI argument XXX: " + args[0]);
         }
     }
     
@@ -43,7 +45,7 @@ public class Main {
             getSubject(client, i % 3);
         }
         display(getCourse(client, 1));
-        for (int i = 1; i <= 100; i++) {
+        for (int i = 1; i <= 100; i++) {    
             getCourse(client, i % 30);
         }
         display(getStudent(client, 1));
@@ -112,15 +114,25 @@ public class Main {
         displayLine();
     }
     
+    private static void runBenchmarks() throws IOException {
+        OkHttpClient client = createClient();
+        print(getBenchmarks(client));
+    }
+    
     private static OkHttpClient createClient() {
         return  new OkHttpClient.Builder()
-                .readTimeout(10, TimeUnit.SECONDS)
-                .writeTimeout(10, TimeUnit.SECONDS)
+                .connectTimeout(0, TimeUnit.MILLISECONDS)
+                .readTimeout(0, TimeUnit.MILLISECONDS)
+                .writeTimeout(0, TimeUnit.MILLISECONDS)
                 .build();
     }
 
     private static void display(Object content) {
         displayLine();
+        print(content);
+    }
+
+    private static void print(Object content) {
         System.out.println(content);
     }
 
@@ -129,35 +141,28 @@ public class Main {
     }
     
     private static String getStats(OkHttpClient client) throws IOException {
-        Request request = new Request.Builder()
-                .url(BACKEND_URL + "/stats")
-                .get()
-                .build();
-        Response response = client.newCall(request).execute();
-        return response.body().string();
+        return fetchUrl(client, BACKEND_URL + "/stats");
+    }
+
+    private static String getBenchmarks(OkHttpClient client) throws IOException {
+        return fetchUrl(client, BACKEND_URL + "/benchmark");
     }
 
     private static String getSubject(OkHttpClient client, long id) throws IOException {
-        Request request = new Request.Builder()
-                .url(BACKEND_URL + "/subjects/" + id)
-                .get()
-                .build();
-        Response response = client.newCall(request).execute();
-        return response.body().string();
+        return fetchUrl(client, BACKEND_URL + "/subjects/" + id);
     }
 
     private static String getCourse(OkHttpClient client, long id) throws IOException {
-        Request request = new Request.Builder()
-                .url(BACKEND_URL + "/courses/" + id)
-                .get()
-                .build();
-        Response response = client.newCall(request).execute();
-        return response.body().string();
+        return fetchUrl(client, BACKEND_URL + "/courses/" + id);
     }
 
-    private static String getStudent(OkHttpClient client, long studentId) throws IOException {
+    private static String getStudent(OkHttpClient client, long id) throws IOException {
+        return fetchUrl(client, BACKEND_URL + "/students/" + id);
+    }
+
+    private static String fetchUrl(OkHttpClient client, String url) throws IOException {
         Request request = new Request.Builder()
-                .url(BACKEND_URL + "/students/" + studentId)
+                .url(url)
                 .get()
                 .build();
         Response response = client.newCall(request).execute();

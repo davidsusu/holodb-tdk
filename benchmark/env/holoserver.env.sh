@@ -1,0 +1,6 @@
+export JDBC_URL='jdbc:miniconnect://localhost:3430/university'
+export DB_USERNAME=''
+export DB_PASSWORD=''
+export DB_DRIVER='hu.webarticum.miniconnect.jdbc.MiniJdbcDriver'
+export DB_TYPE='holodb'
+export SQL_DIALECT=''

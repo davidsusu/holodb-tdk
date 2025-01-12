@@ -1184,16 +1184,15 @@ A második sor jelentése:
 \textbftt{SPOW}: összetett számítás, hatványozás is ~;~
 \textbftt{LADD}:  $\sum_{i=1}^{5} X_i$~;~
 \textbftt{MBTL}: $a+X$~;~
-\textbftt{MADD}: összetett összeadás overflow-val ~;~
+\textbftt{MADD}: összetett vegyes összeadás overflow-val ~;~
 \textbftt{MCALC}: összetett vegyes számítás overflow-val.
 A képletekben a kisbetűk \texttt{long} értéktartományán belüli,
-a nagybetűk pedig azon kívüli véletlenszámokat jelentenek.
+a nagybetűk pedig azon kívüli megfelelő véletlenszámokat jelentenek.
 }
 \label{table:largeinteger}
 \end{table}
 \footnotetext{
-Nem elírás.
-Ha a pozitív kitevő nem túl nagy, akkor a \texttt{LargeInteger} optimalizált szorzást végez.
+Ha a pozitív kitevő nem túl nagy, akkor a \texttt{LargeInteger} optimális szorzást végez.
 A \texttt{long} tesztjében a beépített \texttt{Math.pow} függvényt használtam,
 amelyben nincs ilyen optimalizáció.
 }
@@ -1490,10 +1489,10 @@ a fényerő pedig a bájtok átlaga alapján.
     & \multicolumn{1}{>{\centering\arraybackslash}m{1.6cm}|}{\begin{tabular}{c} \small{\textbftt{at×30}} \\ (ns) \end{tabular}}
     & \multicolumn{1}{>{\centering\arraybackslash}m{1.6cm}||}{\begin{tabular}{c} \small{\textbftt{iof×30}} \\ (ns) \end{tabular}}\\
  \hline\hline
- \textbftt{FAV}         &     648 &     648 & 31,54 & 99,77 &  20~487 &  2~871 &   2~882 \\ 
+ \textbftt{FAV}         &     648 &     648 & 31,54 & 99,77 &  20~487 &  2~871 &   2~882 \\
  \hline
  \textbftt{MP1}         &     152 &     152 &  0,19 & 22,13 &     490 &    161 &     164 \\
- \hline z
+ \hline
  \textbftt{FEI-F-4}     &     608 &     608 & 19,56 & 98,19 &     700 & 11~627 &  11~554 \\
  \hline
  \textbftt{FEI-S-2}     & 212~312 &     336 & 97,08 & 99,95 &     459 & 33~648 &  33~393 \\
@@ -2277,10 +2276,9 @@ egyúttal könnyen szimulálható típusát:
   \item \textbf{Egyszerű szöveg:}
     a legegyszerűbb megoldásban egy szótár szavait véletlenszerűen helyezzük egymás után,
     közben feljavítva a szövegképet nagybetűs szavakkal és központozással
-    (az eredmény tovább javítható kifejezésminták használatával,
-    amikor időnként egy többszavas részletre előre adott sablont használunk;
-    de ha a minőség az elsődleges, bevethetünk akár
-    Markov-láncokra épülő egyszerűbb nyelvi modelleket\cite{Amrrs2021MarkovHeadlines})
+    (az eredmény tovább javítható előre adott kifejezésminták használatával,
+    de bevethetünk akár Markov-láncokra épülő egyszerűbb nyelvi modelleket
+    is\cite{Amrrs2021MarkovHeadlines})
   \item \textbf{Strukturált szöveg:}
     először előállítunk egy általános struktúrát (címek, bekezdések stb.),
     majd ennek elemeit feltöltjük szöveggel (lásd az előző pontot),
@@ -2303,11 +2301,6 @@ egyúttal könnyen szimulálható típusát:
     (legegyszerűbb közvetlenül a \texttt{TreeRandom} által szolgáltatott biteket használni)
 \end{itemize}
 
-További indexeletlen eset, amikor az oszlop teljes tartalma explicite felsorolva van megadva,
-például egy listafájlból.
-Nagy táblahossznál érdemes lehet ezt indexeltté tenni egy tényleges adatstruktúrával (például B-Tree),
-mivel ilyenkor valószínűleg úgysem a memóriahasználat minimalizálása a cél.
-
 \subsection{Értékkiosztás oszlopok közötti összefüggéssel}
 
 Az oszlopok közötti összefüggésnek számtalan módja lehetséges.
@@ -2328,7 +2321,7 @@ Ekkor teljes szabadságunk van,
 Életszerű azonban, hogy indexelt mesteroszlopokon túl
 a függő oszlopokra is szeretnénk indexelést.
 Ha egy nagy közös index elég,
-akkor elégséges a függő értékeket becsoportosítani a mesterértékek alá.
+akkor a függő értékeket becsoportosíthatók a mesterértékek alá.
 
 Bonyolult, de még mindig teljesen életszerű eset,
 amikor a függő értékek külön önálló indexeket is kapnak
@@ -2349,17 +2342,15 @@ a hivatkozó oszlop értékkiosztásakor az alaplista a hivatkozott oszlop tarta
 Másként fogalmazva, az értéklistát indextartó módon kell átképezni a másik táblára.
 Ez a fentiek tükrében már egyszerűen biztosítható.
 
-Egyes esetekben (bizonyos típusú 1:1 kapcsolatok) valójában egy tábla kerül szétbontásra több táblára.
+Egyes esetekben (némely 1:1 kapcsolatnál) valójában egyetlen tábla kerül szétbontásra több táblára.
 Ekkor a több táblára bontottság csak külsődleges,
-és az előző részben oszlopok közötti összefüggésekről írottak alkalmazhatók,
+és az előző részben az oszlopok közötti összefüggésekről írottak alkalmazhatók,
 még akkor is, ha a két tábla számossága nem egyezik teljesen
-(a hiányzó sorok a $NULL$ értékek kezelésének fentebb ismertetett
-általános módszerével kerülhetnek kiválasztásra).
+(a hiányzó sorok a $NULL$ értékek kiosztásához hasonlóan kerülhetnek kiválasztásra).
 
-A legbonyolultabb esetben 1:n kapcsolat mellett különféle statisztikai
-vagy egyéb követelményeket biztosító indexelt oszlopokat szeretnénk előállítani.
-Ennek tárgyalása messzire vezet,
-de egy rövid megjegyzéssel érzékeltetném, hogy a dolog nem lehetetlen:
+A legbonyolultabb esetben 1:n kapcsolat mellett statisztikai
+vagy egyéb követelményeket szeretnénk biztosítani indexeltség mellett.
+Ez messzire vezet, csak egy rövid megjegyzéssel érzékeltetném, hogy a dolog nem lehetetlen:
 egy lehetséges kiinduló megközelítés, hogy a két táblát egyként kezeljük,
 az egyesített táblában a kisebb tábla adatait pedig redundánsan szerepeltetjük
 (ez egy oszlopközi összefüggés a fenti értelemben);
@@ -2554,6 +2545,34 @@ akár úgy is, hogy a nem változó oszlopok módosításait megtartjuk.
 
 \textcolor{red}{VALAMI SZCENÁRIÓ}\todoref{Eredményekhez egy szcenáriót}
 
+
+\begin{table}[H]
+\captionsetup{justification=justified, singlelinecheck=false, margin=0.7cm}
+\begin{center}
+\begin{tabular}{|l|r|} 
+ \hline
+ \multicolumn{1}{|>{\centering\arraybackslash}m{7cm}|}{\textbf{Esemény}}
+    & \multicolumn{1}{>{\centering\arraybackslash}m{2.5cm}|}{\begin{tabular}{c} \textbf{Időpont} \\ (ns) \end{tabular}}\\
+ \hline\hline
+ \textbf{Indítási parancs} & 0 \\
+ \textbf{Ready} & 1~234 \\
+ \textbf{Parancs kiadása} & 1~234 \\
+ \textbf{Parancs beérkezése} & 1~234 \\
+ \textbf{Futtatás vége} & 1~234 \\
+ \textbf{Első csomag küldésének kezdete} & 1~234 \\
+ \textbf{Első csomag fogadásának kezdete} & 1~234 \\
+ \textbf{Utolsó csomag küldésének vége} & 1~234 \\
+ \textbf{Utolsó csomag fogadásának vége} & 1~234 \\
+ \textbf{Feldolgozás vége} & 1~234 \\
+ \hline
+\end{tabular}
+\end{center}
+\caption[HoloDB futtatás timeline]{
+HoloDB futtatás timeline.
+}
+\label{table:permutations}
+\end{table}
+
 \subsection{Mérési módszertan}
 
 Mivel a HoloDB preparálási folyamat nélkül rendelkezésre áll,
@@ -2595,322 +2614,111 @@ míg az integrált tesztnél ezt elhagytam az authentikusság kedvéért.
 
 \subsection{Az lekérdezési és integrált tesztek eredménye}
 
-A \ref{fig:benchmarkPage}~ábra felső részén
+\textcolor{red}{
+A XXX ábra felső részén
 az integrált teszt három verziójának eredményei láthatók.
 A \texttt{simple-readonly} teszt főleg egyszerűbb lekérdezéseket tartalmazott,
 a \texttt{complex-readonly} teszt ezt néhány összetettebb lekérdezéssel egészítette ki.
 A \texttt{complex-writeable} tesztben pedig adatírások,
 majd arra épülő lekérdezések is történtek.
+}
 
+\textcolor{red}{
 A lekérdezések esetében kevés adatnál a teljesítmény meglepően jó,
 és drasztikusan romlik nagy eredménytábláknál.
 Vagyis a korábban tárgyalt indexelési technikák jól teljesítenek,
 kulcsfontosságúak a megfelelő teljesítményhez.
 Ugyanakkor az adatelérés kevésbé optimális;
 de feltehetően mind az adatok számítása, mind az eredménytábla továbbítása jelentősen javítható még.
+}
 
+\textcolor{red}{
 Az adatok tárhelyigényében a HoloDB természetesen drasztikus csökkenést mutat,
 hiszen eleve így lett tervezve.
 A szerveres kontextust nézve, a HoloDB Docker-képének mérete jóval kisebb, mint a MySQL-é;
 de a base image változtatásával,
 az operációs rendszer és a JRE testreszabásával ez valószínűleg tovább javítható.
+}
 
-\cleardoublepage
 
-\begin{figure}[H]
-    \centering
 
-    \begin{tikzpicture}
-        \begin{axis}[
-                title={Integrált tesztek átlagos futási idejének összehasonlítása (Micronaut$,$ REST)},
-                symbolic x coords={simple-readonly,complex-readonly,complex-writeable},
-                ybar,
-                axis on top,
-                width={\textwidth},
-                height=6cm,
-                bar width=0.8cm,
-                ymajorgrids,
-                tick align=inside,
-                enlarge y limits={value=.1,upper},
-                enlarge x limits=0.2,
-                ymin=0,
-                ymax=17,
-                axis x line*=bottom,
-                axis y line*=left,
-                tickwidth=1pt,
-                ylabel={Futási idő (s)},
-                xtick=data,
-                nodes near coords={
-                    \pgfmathprintnumber{\pgfplotspointmeta}
-                }
-            ]
-            \addplot[fill=cyan] % MySQL
-                coordinates {
-                    (simple-readonly,7.870093628)
-                    (complex-readonly,9.0179515675)
-                    (complex-writeable,14.3489598653)
-                };
-            \addplot[fill=blue] % H2
-                coordinates {
-                    (simple-readonly,5.103988787)
-                    (complex-readonly,5.1902669386)
-                    (complex-writeable,8.7714582641)
-                };
-            \addplot[fill=yellow] % HoloDB (fapados)
-                coordinates {
-                    (simple-readonly,6.441775179)
-                    (complex-readonly,8.0399578991)
-                    (complex-writeable,13.4957423082)
-                };
-            \addplot[fill=orange] % HoloDB (default)
-                coordinates {
-                    (simple-readonly,8.182373242)
-                    (complex-readonly,9.4207860077)
-                    (complex-writeable,14.4941282014)
-                };
-            \addplot[fill=red] % HoloDB (extra konf.)
-                coordinates {
-                    (simple-readonly,8.819935654)
-                    (complex-readonly,10.5782986771)
-                    (complex-writeable,16.7720866313)
-                };
-            \legend{}
-        \end{axis}
-    \end{tikzpicture}
+\todoref{Mérések részletei, pontos paraméterek, docker build stb.}
 
-    \vspace{\baselineskip}
+% https://hub.docker.com/layers/mertcingoz/h2/2.3.232/images/sha256-52b7f6aa8138592c95830a127ac14694ef3fff221a31210a828ca39f00b958de
+% https://hub.docker.com/layers/jochenwierum/openjdk-minimal-jre/17.0.7/images/sha256-978c2b61ab2d04b20c8e4260daa299bec65cab5254e8ad0891bdc47de89cf766
 
-    \begin{tikzpicture}
-        \begin{axis}[
-                title={Néhány lekérdezéstípus átlagos futási idejének összehasonlítása (log.)},
-                title style={
-                    at={(-0.1,1.15)},
-                    anchor=north west
-                },
-                symbolic x coords={Mező,Rekord,Összetett,Teljes tábla,Többtáblás},
-                ybar,
-                axis on top,
-                width={\textwidth},
-                height=6cm,
-                bar width=0.4cm,
-                ymajorgrids,
-                tick align=inside,
-                enlarge y limits={value=.1,upper},
-                enlarge x limits=0.15,
-                ymin=0,
-                ymax=2000000000,
-                ymode=log,
-                point meta=rawy,
-                every node near coord/.append style={
-                    anchor=west,
-                    rotate=90,
-                    font=\small
-                },
-                axis x line*=bottom,
-                axis y line*=left,
-                tickwidth=1pt,
-                legend style={
-                    at={(0.5,-0.2)},
-                    anchor=north,
-                    legend columns=-1,
-                    /tikz/every even column/.append style={column sep=0.3cm}
-                },
-                ylabel={Futási idő (ns)},
-                xtick=data,
-                nodes near coords={
-                    \pgfmathprintnumber{\pgfplotspointmeta}
-                }
-            ]
-            \addplot[fill=cyan] % MySQL
-                coordinates {
-                    (Mező,106276)
-                    (Rekord,109819)
-                    (Összetett,146710)
-                    (Teljes tábla,146710)
-                    (Többtáblás,1637889)
-                };
-            \addplot[fill=blue] % H2
-                coordinates {
-                    (Mező,12648)
-                    (Rekord,13015)
-                    (Összetett,21927)
-                    (Teljes tábla,1971234)
-                    (Többtáblás,189958)
-                };
-            \addplot[fill=yellow] % HoloDB (fapados)
-                coordinates {
-                    (Mező,21709)
-                    (Rekord,24207)
-                    (Összetett,50474)
-                    (Teljes tábla,32271101)
-                    (Többtáblás,481306)
-                };
-            \addplot[fill=orange] % HoloDB (default)
-                coordinates {
-                    (Mező,25941)
-                    (Rekord,140232)
-                    (Összetett,293885)
-                    (Teljes tábla,1228183178)
-                    (Többtáblás,4030303)
-                };
-            \addplot[fill=red] % HoloDB (extra konf.
-                coordinates {
-                    (Mező,49860)
-                    (Rekord,207383)
-                    (Összetett,2543441)
-                    (Teljes tábla,1676796378)
-                    (Többtáblás,8121736)
-                };
-            \legend{MySQL,H2,HoloDB (fapados),HoloDB (default),HoloDB (extra konf.)}
-        \end{axis}
-    \end{tikzpicture}
 
-    \vspace{\baselineskip}
+\begin{table}[H]
+\captionsetup{justification=justified, singlelinecheck=false, margin=0.7cm}
+\begin{center}
+\begin{tabular}{|l||r|r|r|r|r||r|r|r||} 
+ \hline
+ \multicolumn{1}{|>{\centering\arraybackslash}m{1.2cm}|}{\multirow{2}{*}{~}}
+    & \multicolumn{5}{>{\centering\arraybackslash}c|}{\textbftt{QUERY}}
+    & \multicolumn{3}{>{\centering\arraybackslash}c||}{\textbftt{WEB}}
+    \\
+ \cline{2-9}
+ 
+ \multicolumn{1}{|>{\centering\arraybackslash}m{1.7cm}|}{~}
+    & \multicolumn{1}{>{\centering\arraybackslash}m{1.3cm}|}{\begin{tabular}{c} \makebox[0pt]{\footnotesize{\textbftt{Q-FLD}}} \\ ({\textmu}s) \end{tabular}}
+    & \multicolumn{1}{>{\centering\arraybackslash}m{1.3cm}|}{\begin{tabular}{c} \makebox[0pt]{\footnotesize{\textbftt{Q-REC}}} \\ ({\textmu}s) \end{tabular}}
+    & \multicolumn{1}{>{\centering\arraybackslash}m{1.3cm}|}{\begin{tabular}{c} \makebox[0pt]{\footnotesize{\textbftt{Q-CMPX}}} \\ ({\textmu}s) \end{tabular}}
+    & \multicolumn{1}{>{\centering\arraybackslash}m{1.3cm}|}{\begin{tabular}{c} \makebox[0pt]{\footnotesize{\textbftt{Q-TFUL}}} \\ ({\textmu}s) \end{tabular}}
+    & \multicolumn{1}{>{\centering\arraybackslash}m{1.3cm}||}{\begin{tabular}{c} \makebox[0pt]{\footnotesize{\textbftt{Q-MULT}}} \\ ({\textmu}s) \end{tabular}}
+    & \multicolumn{1}{>{\centering\arraybackslash}m{1.3cm}|}{\begin{tabular}{c} \makebox[0pt]{\footnotesize{\textbftt{RO-SIMP}}} \\ (s) \end{tabular}}
+    & \multicolumn{1}{>{\centering\arraybackslash}m{1.3cm}|}{\begin{tabular}{c} \makebox[0pt]{\footnotesize{\textbftt{RO-CMPX}}} \\ (s) \end{tabular}}
+    & \multicolumn{1}{>{\centering\arraybackslash}m{1.3cm}||}{\begin{tabular}{c} \makebox[0pt]{\footnotesize{\textbftt{WR-CMPX}}} \\ (s) \end{tabular}}\\
+ \hline\hline
+ 
+ \textbf{HoloDB/}\textbftt{EXT} &   0,050 & 207,000 & 2540,000 & 1680000 & 8120& 8,82 & 10,58 & 16,77  \\
+ \textbf{HoloDB/}\textbftt{DEF} &   0,026 & 140,000 &  294,000 & 1230000 & 4030& 8,18 &  9,42 & 14,49  \\
+ \textbf{HoloDB/}\textbftt{MIN} &   0,022 &   0,024 &    0,050 &   32300 &  481& 6,44 &  8,04 & 13,50  \\
+ \textbf{H2}                    &   0,013 &   0,013 &    0,022 &    1970 &  190& 5,10 &  5,19 &  8,77  \\
+ \textbf{MySQL}                 & 106,000 & 110,000 &  147,000 &     147 & 1640& 7,87 &  9,02 & 14,35  \\
+ \hline
 
-    \begin{minipage}[b]{0.25\textwidth}
-        \begin{tikzpicture}
-            \begin{axis}[
-                    symbolic x coords={Docker image},
-                    ybar,
-                    axis on top,
-                    width={\textwidth},
-                    height=7.5cm,
-                    bar width=0.8cm,
-                    ymajorgrids,
-                    tick align=inside,
-                    enlarge y limits={value=.1,upper},
-                    enlarge x limits=0.15,
-                    ymin=0,
-                    ymax=700,
-                    point meta=rawy,
-                    every node near coord/.append style={
-                        anchor=west,
-                        rotate=90,
-                        font=\small
-                    },
-                    axis x line*=bottom,
-                    axis y line*=left,
-                    tickwidth=1pt,
-                    legend style={
-                        at={(0.5,-0.2)},
-                        anchor=north,
-                        legend columns=-1,
-                        /tikz/every even column/.append style={column sep=0.3cm}
-                    },
-                    ylabel={Méret (MB)},
-                    xtick=data,
-                    nodes near coords={
-                        \pgfmathprintnumber{\pgfplotspointmeta}
-                    }
-                ]
-                \addplot[fill=cyan] % MySQL
-                    coordinates { (Docker image,605.3) };
-                \addplot[fill=orange] % HoloDB
-                    coordinates { (Docker image,231.7) };
-                \legend{MySQL,HoloDB}
-            \end{axis}
-        \end{tikzpicture}
-    \end{minipage}
-    \hspace*{\fill}
-    \begin{minipage}[b]{0.25\textwidth}
-        \begin{tikzpicture}
-            \begin{axis}[
-                    symbolic x coords={Shadow JAR},
-                    ybar,
-                    axis on top,
-                    width={\textwidth},
-                    height=7.5cm,
-                    bar width=0.8cm,
-                    ymajorgrids,
-                    tick align=inside,
-                    enlarge y limits={value=.1,upper},
-                    enlarge x limits=0.15,
-                    ymin=0,
-                    ymax=8,
-                    point meta=rawy,
-                    every node near coord/.append style={
-                        anchor=west,
-                        rotate=90,
-                        font=\small
-                    },
-                    axis x line*=bottom,
-                    axis y line*=left,
-                    tickwidth=1pt,
-                    legend style={
-                        at={(0.5,-0.2)},
-                        anchor=north,
-                        legend columns=-1,
-                        /tikz/every even column/.append style={column sep=0.3cm}
-                    },
-                    ylabel={Méret (MB)},
-                    xtick=data,
-                    nodes near coords={
-                        \pgfmathprintnumber{\pgfplotspointmeta}
-                    }
-                ]
-                \addplot[fill=blue] % H2
-                    coordinates { (Shadow JAR,2.49) };
-                \addplot[fill=orange] % HoloDB
-                    coordinates { (Shadow JAR,7.65) };
-                \legend{H2,HoloDB}
-            \end{axis}
-        \end{tikzpicture}
-    \end{minipage}
-    \hspace*{\fill}
-    \begin{minipage}[b]{0.4\textwidth}
-        \begin{tikzpicture}
-            \begin{axis}[
-                    symbolic x coords={Adatméret},
-                    ybar,
-                    axis on top,
-                    width={\textwidth},
-                    height=7.5cm,
-                    bar width=0.8cm,
-                    ymajorgrids,
-                    tick align=inside,
-                    enlarge y limits={value=.1,upper},
-                    enlarge x limits=0.15,
-                    ymin=0,
-                    ymax=2.4,
-                    point meta=rawy,
-                    every node near coord/.append style={
-                        anchor=west,
-                        rotate=90,
-                        font=\small
-                    },
-                    axis x line*=bottom,
-                    axis y line*=left,
-                    tickwidth=1pt,
-                    legend style={
-                        at={(0.5,-0.2)},
-                        anchor=north,
-                        legend columns=-1,
-                        /tikz/every even column/.append style={column sep=0.3cm}
-                    },
-                    ylabel={Méret (MB)},
-                    xtick=data,
-                    nodes near coords={
-                        \pgfmathprintnumber{\pgfplotspointmeta}
-                    }
-                ]
-                \addplot[fill=cyan] % MySQL
-                    coordinates { (Adatméret,2.27) };
-                \addplot[fill=blue] % H2
-                    coordinates { (Adatméret,0.55) };
-                \addplot[fill=orange] % HoloDB
-                    coordinates { (Adatméret,0.001) };
-                \legend{MySQL,H2,HoloDB}
-            \end{axis}
-        \end{tikzpicture}
-    \end{minipage}
+\end{tabular}
+\end{center}
+\caption[Integrált tesztek eredménye]{
+Integrált tesztek eredménye különböző adatbázisokkal.
 
-    \vspace{1.5\baselineskip}
+\textbf{\textit{A sorok jelentése}}:
+\textbf{HoloDB/}\textbftt{EXT}: beágyazott HoloDB legjobb minőségű paraméterekkel;
+\textbf{HoloDB/}\textbftt{DEF}: beágyazott HoloDB alapértelmezett paraméterekkel;
+\textbf{HoloDB/}\textbftt{MIN}: beágyazott HoloDB minimális paraméterekkel;
+\textbf{H2}: beágyazott H2;
+\textbf{MySQL}: MySQL szerver;
+}
+\end{table}
 
-    \caption[Teljesítmény-összehasonlítás]{
-        A különböző megközelítések teljesítményének és tárigényének összehasonlítása
-    }
-    \label{fig:benchmarkPage}
-\end{figure}
+XXXXXXXXXXXXXXXXXXXXXXXXXX
+
+\begin{table}[H]
+\captionsetup{justification=justified, singlelinecheck=false, margin=0.7cm}
+\begin{center}
+\begin{tabular}{|l||r|r|r||} 
+ \hline
+ \multicolumn{1}{|>{\centering\arraybackslash}m{1.7cm}|}{~}
+    & \multicolumn{1}{>{\centering\arraybackslash}m{2.5cm}|}{\begin{tabular}{c} \makebox[0pt]{\footnotesize{\textbf{Docker image}}} \\ (MB) \end{tabular}}
+    & \multicolumn{1}{>{\centering\arraybackslash}m{2.5cm}|}{\begin{tabular}{c} \makebox[0pt]{\footnotesize{\textbf{Shadow JAR}}} \\ (MB) \end{tabular}}
+    & \multicolumn{1}{>{\centering\arraybackslash}m{2.5cm}||}{\begin{tabular}{c} \makebox[0pt]{\footnotesize{\textbf{Adatméret}}} \\ (MB) \end{tabular}}\\
+ \hline\hline
+ 
+ \textbf{HoloDB}     & 237,3 &   23,09 & 0,001 \\
+ \textbf{HoloDB-opt} &  53,6 &   14,37 & 0,001 \\
+ \textbf{H2}         &  45,4 &    2,49 & 0,550 \\
+ \textbf{MySQL}      & 605,3 & \nodata & 2,270 \\
+ \hline
+
+\end{tabular}
+\end{center}
+\caption[XXX]{XXX}
+\end{table}
+
+
+
+
+
 
 
 \chapter{Összegzés}

@@ -28,8 +28,13 @@ dependencies {
     implementation 'com.fasterxml.jackson.core:jackson-core:2.16.0'
     implementation 'com.fasterxml.jackson.core:jackson-databind:2.16.0'
     implementation 'org.hibernate.orm:hibernate-community-dialects:6.4.0.Final'
-    
-    implementation 'hu.webarticum.holodb:embedded:0.4.2-SNAPSHOT'
+
+    implementation 'info.picocli:picocli'
+    implementation 'io.micronaut.picocli:micronaut-picocli:4.2.1'
+
+    implementation 'hu.webarticum.miniconnect:jdbc:0.5.1-SNAPSHOT'
+    implementation 'hu.webarticum.minibase:engine:0.2.1-SNAPSHOT'
+    implementation 'hu.webarticum.holodb:embedded:0.5.1-SNAPSHOT'
     implementation 'mysql:mysql-connector-java:8.0.33'
     implementation 'com.h2database:h2:2.2.224'
 }

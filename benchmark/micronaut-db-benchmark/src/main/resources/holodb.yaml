@@ -1,6 +1,6 @@
 seed: 9042712
 tableDefaults:
-  writeable: true
+  writeable: false
 schemas:
   - name: university
     tables:
@@ -11,7 +11,7 @@ schemas:
             mode: COUNTER
           - name: name
             mode: FIXED
-            values: ['Affective computing', 'Formal semantics', 'Machine Learning']
+            values: ['Affective Computing', 'Formal Semantics', 'Machine Learning']
           - name: credit
             values: [3, 2, 3]
       - name: courses

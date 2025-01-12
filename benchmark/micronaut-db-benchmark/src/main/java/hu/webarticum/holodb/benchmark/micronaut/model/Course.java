@@ -27,8 +27,8 @@ public class Course {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name="school_year", nullable = false)
-    private Integer schoolYear;
+    @Column(name="year", nullable = false)
+    private Integer year;
 
     @Column(nullable = false)
     private Integer term;
@@ -55,12 +55,12 @@ public class Course {
         this.id = id;
     }
 
-    public int getSchoolYear() {
-        return schoolYear;
+    public int getYear() {
+        return year;
     }
 
-    public void setSchoolYear(int schoolYear) {
-        this.schoolYear = schoolYear;
+    public void setYear(int year) {
+        this.year = year;
     }
 
     public int getTerm() {
