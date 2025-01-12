@@ -283,7 +283,7 @@ akkor ki kell dolgoznunk valamilyen módszert a módosulások detektálására, 
 
 Egyes generátorok a séma és az adatok jellegének deklaratív leírását is támogatják,
 ami tárolható egy verziókezelhető, dokumentálható, könnyen szerkeszthető konfigurációs fájlban%
-\cite{Gao2024FakeDB,SoftwareDatamimic,SoftwarePydbgen,SoftwarePostgresqlFaker}.
+\cite{Gao2024FakeDB,SoftwareDatamimic,SoftwarePydbgen}.
 
 \subsection{Relációs adatok anonimizálása}
 
@@ -2521,8 +2521,8 @@ XXXXXXXXXXXXXXXXXXXXXXXXXX
 \begin{tabular}{|l||r|r||} 
  \hline
  \multicolumn{1}{|>{\centering\arraybackslash}m{1.7cm}|}{~}
-    & \multicolumn{1}{>{\centering\arraybackslash}m{2.5cm}|}{\begin{tabular}{c} \makebox[0pt]{\footnotesize{\textbf{Docker image}}} \\ (MB) \end{tabular}}
-    & \multicolumn{1}{>{\centering\arraybackslash}m{2.5cm}|}{\begin{tabular}{c} \makebox[0pt]{\footnotesize{\textbf{Shadow JAR}}} \\ (MB) \end{tabular}}\\
+    & \multicolumn{1}{>{\centering\arraybackslash}m{2.5cm}|}{\begin{tabular}{c} \makebox[0pt]{\footnotesize{\textbf{Docker image}}} \\ (MiB) \end{tabular}}
+    & \multicolumn{1}{>{\centering\arraybackslash}m{2.5cm}|}{\begin{tabular}{c} \makebox[0pt]{\footnotesize{\textbf{Shadow JAR}}} \\ (MiB) \end{tabular}}\\
  \hline\hline
  
  \textbf{HoloDB}     & 237,3 &   23,09 \\
@@ -2544,15 +2544,16 @@ YYYYYYYYYYYYYYYYYYYYYYYYYY
 \begin{tabular}{|l||r|r||r|r||} 
  \hline
  \multicolumn{1}{|>{\centering\arraybackslash}m{1.7cm}|}{~}
-    & \multicolumn{1}{>{\centering\arraybackslash}m{2.5cm}|}{\begin{tabular}{c} \makebox[0pt]{\footnotesize{\textbf{Generálás}}} \\ (s) \end{tabular}}
+    & \multicolumn{1}{>{\centering\arraybackslash}m{2.5cm}|}{\begin{tabular}{c} \makebox[0pt]{\footnotesize{\textbf{Generálás}}} \\ (ms) \end{tabular}}
     & \multicolumn{1}{>{\centering\arraybackslash}m{2.5cm}||}{\begin{tabular}{c} \makebox[0pt]{\footnotesize{\textbf{Indítás}}} \\ (ms) \end{tabular}}
     & \multicolumn{1}{>{\centering\arraybackslash}m{2.5cm}|}{\begin{tabular}{c} \makebox[0pt]{\footnotesize{\textbf{Konfiguráció}}} \\ (B) \end{tabular}}
-    & \multicolumn{1}{>{\centering\arraybackslash}m{2.5cm}||}{\begin{tabular}{c} \makebox[0pt]{\footnotesize{\textbf{Adatméret}}} \\ (KB) \end{tabular}}\\
+    & \multicolumn{1}{>{\centering\arraybackslash}m{2.5cm}||}{\begin{tabular}{c} \makebox[0pt]{\footnotesize{\textbf{Adatméret}}} \\ (MiB) \end{tabular}}\\
  \hline\hline
  
- \textbf{HoloDB}     & 0 s & 280 ms & 1311 bytes & 155848 bytes \\
- \textbf{H2}         & TODO & TODO & TODO &   550 \\
- \textbf{MySQL}      & TODO & TODO & TODO & 2~270 \\
+ \textbf{HoloDB}     &      0 &  280  & 1~311 bytes &    0,16 \\
+ \textbf{H2}         &   TODO &  TODO &       TODO &   550??? \\
+ \textbf{MySQL}      &   TODO &  TODO &       TODO & 2~270??? \\
+ \textbf{Postgres}   & 94~967 & 2~258 &       TODO & 1~409,57 \\
  \hline
 
 \end{tabular}

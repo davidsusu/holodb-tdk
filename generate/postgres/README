@@ -1,0 +1,4 @@
+root # cp <...>/generate.sql /home/postgres/generate-test/generate.sql 
+root # /home/postgres/generate-test/generate.sql
+
+postgres > for i in $(seq 1 10); do printf -- '------------------------------\nDROP . . . '; psql -d employment -f "/home/postgres/generate-test/drop.sql"; printf -- 'OK\n..........\n'; date +"%Y-%m-%d %H:%M:%S.%3N"; psql -d employment -f "/home/postgres/generate-test/generate.sql" ; date +"%Y-%m-%d %H:%M:%S.%3N"; done
