@@ -1,7 +1,7 @@
 #!/bin/bash
 
 tests='simple-readonly complex-readonly complex-writeable benchmarks'
-#backends='mysql h2 holodb-low holodb holodb-fine holoserver'
+#backends='mysql h2 sqlite holodb-low holodb holodb-fine holoserver'
 backends='mysql h2 holodb-low holodb holodb-fine'
 repeats=10
 
