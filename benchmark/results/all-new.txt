@@ -1,0 +1,207 @@
+# simple-readonly:
+mysql simple-readonly FULL: 5.270759678    FULL-SQL: 10302    FULL-PREP: 0.171267    FULL-EXE: 0.629953
+mysql simple-readonly FULL: 5.241278062    FULL-SQL: 10302    FULL-PREP: 0.17244    FULL-EXE: 0.594332
+mysql simple-readonly FULL: 4.919928567    FULL-SQL: 10302    FULL-PREP: 0.161828    FULL-EXE: 0.574514
+mysql simple-readonly FULL: 5.078730374    FULL-SQL: 10302    FULL-PREP: 0.166225    FULL-EXE: 0.583783
+mysql simple-readonly FULL: 5.234957986    FULL-SQL: 10302    FULL-PREP: 0.167262    FULL-EXE: 0.61266
+mysql simple-readonly FULL: 5.009183695    FULL-SQL: 10302    FULL-PREP: 0.164051    FULL-EXE: 0.582879
+mysql simple-readonly FULL: 4.907152159    FULL-SQL: 10302    FULL-PREP: 0.164112    FULL-EXE: 0.560261
+mysql simple-readonly FULL: 5.095229143    FULL-SQL: 10302    FULL-PREP: 0.166692    FULL-EXE: 0.586392
+mysql simple-readonly FULL: 4.955661224    FULL-SQL: 10302    FULL-PREP: 0.166075    FULL-EXE: 0.555142
+mysql simple-readonly FULL: 5.203576779    FULL-SQL: 10302    FULL-PREP: 0.172448    FULL-EXE: 0.622206
+h2 simple-readonly FULL: 3.697329225    FULL-SQL: 10103    FULL-PREP: 0.030555    FULL-EXE: 0.112695
+h2 simple-readonly FULL: 3.762623912    FULL-SQL: 10103    FULL-PREP: 0.0304518    FULL-EXE: 0.115879
+h2 simple-readonly FULL: 3.638001526    FULL-SQL: 10103    FULL-PREP: 0.0306115    FULL-EXE: 0.114525
+h2 simple-readonly FULL: 3.509556753    FULL-SQL: 10103    FULL-PREP: 0.0312679    FULL-EXE: 0.108112
+h2 simple-readonly FULL: 3.554101956    FULL-SQL: 10103    FULL-PREP: 0.0322509    FULL-EXE: 0.107686
+h2 simple-readonly FULL: 3.725609040    FULL-SQL: 10103    FULL-PREP: 0.0391217    FULL-EXE: 0.117766
+h2 simple-readonly FULL: 3.520051230    FULL-SQL: 10103    FULL-PREP: 0.0296417    FULL-EXE: 0.105514
+h2 simple-readonly FULL: 3.636323182    FULL-SQL: 10103    FULL-PREP: 0.0310861    FULL-EXE: 0.116949
+h2 simple-readonly FULL: 3.698698443    FULL-SQL: 10103    FULL-PREP: 0.0326311    FULL-EXE: 0.11535
+h2 simple-readonly FULL: 3.650908528    FULL-SQL: 10103    FULL-PREP: 0.0333222    FULL-EXE: 0.112636
+holodb-low simple-readonly FULL: 4.600552375    FULL-SQL: 10302    FULL-PREP: 0.131713    FULL-EXE: 0.575458
+holodb-low simple-readonly FULL: 4.561592357    FULL-SQL: 10302    FULL-PREP: 0.132764    FULL-EXE: 0.592792
+holodb-low simple-readonly FULL: 4.607137954    FULL-SQL: 10302    FULL-PREP: 0.140754    FULL-EXE: 0.585692
+holodb-low simple-readonly FULL: 4.690661466    FULL-SQL: 10302    FULL-PREP: 0.136012    FULL-EXE: 0.597662
+holodb-low simple-readonly FULL: 4.633685414    FULL-SQL: 10302    FULL-PREP: 0.137607    FULL-EXE: 0.580493
+holodb-low simple-readonly FULL: 4.657221877    FULL-SQL: 10302    FULL-PREP: 0.133307    FULL-EXE: 0.600884
+holodb-low simple-readonly FULL: 4.639014994    FULL-SQL: 10302    FULL-PREP: 0.133996    FULL-EXE: 0.59263
+holodb-low simple-readonly FULL: 4.603620289    FULL-SQL: 10302    FULL-PREP: 0.132512    FULL-EXE: 0.595461
+holodb-low simple-readonly FULL: 4.494844181    FULL-SQL: 10302    FULL-PREP: 0.131348    FULL-EXE: 0.568334
+holodb-low simple-readonly FULL: 4.595561783    FULL-SQL: 10302    FULL-PREP: 0.136109    FULL-EXE: 0.581463
+holodb simple-readonly FULL: 6.434447724    FULL-SQL: 10204    FULL-PREP: 0.140939    FULL-EXE: 1.9089
+holodb simple-readonly FULL: 6.335782223    FULL-SQL: 10204    FULL-PREP: 0.139043    FULL-EXE: 1.88776
+holodb simple-readonly FULL: 6.263026163    FULL-SQL: 10204    FULL-PREP: 0.138442    FULL-EXE: 1.85824
+holodb simple-readonly FULL: 6.362628754    FULL-SQL: 10204    FULL-PREP: 0.140474    FULL-EXE: 1.88186
+holodb simple-readonly FULL: 6.386233649    FULL-SQL: 10204    FULL-PREP: 0.140886    FULL-EXE: 1.8869
+holodb simple-readonly FULL: 6.326465154    FULL-SQL: 10204    FULL-PREP: 0.142975    FULL-EXE: 1.86298
+holodb simple-readonly FULL: 6.452333284    FULL-SQL: 10204    FULL-PREP: 0.144685    FULL-EXE: 1.90461
+holodb simple-readonly FULL: 6.368222449    FULL-SQL: 10204    FULL-PREP: 0.140704    FULL-EXE: 1.89344
+holodb simple-readonly FULL: 6.350300280    FULL-SQL: 10204    FULL-PREP: 0.138823    FULL-EXE: 1.87085
+holodb simple-readonly FULL: 6.357313730    FULL-SQL: 10204    FULL-PREP: 0.139815    FULL-EXE: 1.88091
+holodb-fine simple-readonly FULL: 9.128036478    FULL-SQL: 10302    FULL-PREP: 0.137028    FULL-EXE: 2.28664
+holodb-fine simple-readonly FULL: 6.786683431    FULL-SQL: 10302    FULL-PREP: 0.13928    FULL-EXE: 2.28505
+holodb-fine simple-readonly FULL: 6.770413622    FULL-SQL: 10302    FULL-PREP: 0.145445    FULL-EXE: 2.30443
+holodb-fine simple-readonly FULL: 6.781194397    FULL-SQL: 10302    FULL-PREP: 0.139201    FULL-EXE: 2.28608
+holodb-fine simple-readonly FULL: 6.811304943    FULL-SQL: 10302    FULL-PREP: 0.14065    FULL-EXE: 2.29292
+holodb-fine simple-readonly FULL: 6.842901025    FULL-SQL: 10302    FULL-PREP: 0.139457    FULL-EXE: 2.28683
+holodb-fine simple-readonly FULL: 6.830214757    FULL-SQL: 10302    FULL-PREP: 0.140794    FULL-EXE: 2.31178
+holodb-fine simple-readonly FULL: 6.731074187    FULL-SQL: 10302    FULL-PREP: 0.136945    FULL-EXE: 2.28688
+holodb-fine simple-readonly FULL: 6.840075843    FULL-SQL: 10302    FULL-PREP: 0.14001    FULL-EXE: 2.30036
+holodb-fine simple-readonly FULL: 6.707756093    FULL-SQL: 10302    FULL-PREP: 0.136433    FULL-EXE: 2.27045
+
+# complex-readonly:
+mysql complex-readonly FULL: 5.557306143    FULL-SQL: 10722    FULL-PREP: 0.180942    FULL-EXE: 0.840062
+mysql complex-readonly FULL: 5.561954589    FULL-SQL: 10722    FULL-PREP: 0.180426    FULL-EXE: 0.871142
+mysql complex-readonly FULL: 5.505913123    FULL-SQL: 10722    FULL-PREP: 0.180107    FULL-EXE: 0.854719
+mysql complex-readonly FULL: 5.387433327    FULL-SQL: 10722    FULL-PREP: 0.177925    FULL-EXE: 0.82589
+mysql complex-readonly FULL: 5.333553006    FULL-SQL: 10722    FULL-PREP: 0.173642    FULL-EXE: 0.816286
+mysql complex-readonly FULL: 5.520883397    FULL-SQL: 10722    FULL-PREP: 0.176585    FULL-EXE: 0.820317
+mysql complex-readonly FULL: 5.590234560    FULL-SQL: 10722    FULL-PREP: 0.18686    FULL-EXE: 0.86608
+mysql complex-readonly FULL: 5.527183574    FULL-SQL: 10722    FULL-PREP: 0.175743    FULL-EXE: 0.830256
+mysql complex-readonly FULL: 5.516553545    FULL-SQL: 10722    FULL-PREP: 0.179144    FULL-EXE: 0.837436
+mysql complex-readonly FULL: 5.676625435    FULL-SQL: 10722    FULL-PREP: 0.184102    FULL-EXE: 0.878204
+h2 complex-readonly FULL: 3.738561441    FULL-SQL: 10523    FULL-PREP: 0.0321837    FULL-EXE: 0.123067
+h2 complex-readonly FULL: 3.765758275    FULL-SQL: 10523    FULL-PREP: 0.0346931    FULL-EXE: 0.119437
+h2 complex-readonly FULL: 3.825224295    FULL-SQL: 10523    FULL-PREP: 0.0363535    FULL-EXE: 0.126226
+h2 complex-readonly FULL: 3.785509892    FULL-SQL: 10523    FULL-PREP: 0.0360219    FULL-EXE: 0.12012
+h2 complex-readonly FULL: 3.730819188    FULL-SQL: 10523    FULL-PREP: 0.0340187    FULL-EXE: 0.119715
+h2 complex-readonly FULL: 3.686383936    FULL-SQL: 10523    FULL-PREP: 0.0356762    FULL-EXE: 0.12207
+h2 complex-readonly FULL: 3.674786843    FULL-SQL: 10523    FULL-PREP: 0.0347907    FULL-EXE: 0.120601
+h2 complex-readonly FULL: 3.795647986    FULL-SQL: 10523    FULL-PREP: 0.0344805    FULL-EXE: 0.125704
+h2 complex-readonly FULL: 3.701498008    FULL-SQL: 10523    FULL-PREP: 0.0350765    FULL-EXE: 0.119503
+h2 complex-readonly FULL: 3.699826367    FULL-SQL: 10523    FULL-PREP: 0.0338664    FULL-EXE: 0.114364
+holodb-low complex-readonly FULL: 4.731293476    FULL-SQL: 10722    FULL-PREP: 0.138275    FULL-EXE: 0.607619
+holodb-low complex-readonly FULL: 4.693625810    FULL-SQL: 10722    FULL-PREP: 0.137976    FULL-EXE: 0.612822
+holodb-low complex-readonly FULL: 4.749919604    FULL-SQL: 10722    FULL-PREP: 0.140687    FULL-EXE: 0.617482
+holodb-low complex-readonly FULL: 4.669599575    FULL-SQL: 10722    FULL-PREP: 0.133796    FULL-EXE: 0.607654
+holodb-low complex-readonly FULL: 4.751783090    FULL-SQL: 10722    FULL-PREP: 0.136274    FULL-EXE: 0.607876
+holodb-low complex-readonly FULL: 4.747107412    FULL-SQL: 10722    FULL-PREP: 0.138043    FULL-EXE: 0.61813
+holodb-low complex-readonly FULL: 4.768588505    FULL-SQL: 10722    FULL-PREP: 0.141423    FULL-EXE: 0.615968
+holodb-low complex-readonly FULL: 4.799144036    FULL-SQL: 10722    FULL-PREP: 0.138743    FULL-EXE: 0.617134
+holodb-low complex-readonly FULL: 4.700151608    FULL-SQL: 10722    FULL-PREP: 0.136589    FULL-EXE: 0.613812
+holodb-low complex-readonly FULL: 4.789977944    FULL-SQL: 10722    FULL-PREP: 0.139811    FULL-EXE: 0.62493
+holodb complex-readonly FULL: 6.557092160    FULL-SQL: 10624    FULL-PREP: 0.141294    FULL-EXE: 1.95292
+holodb complex-readonly FULL: 6.616283660    FULL-SQL: 10624    FULL-PREP: 0.147183    FULL-EXE: 1.99082
+holodb complex-readonly FULL: 6.627539036    FULL-SQL: 10624    FULL-PREP: 0.145032    FULL-EXE: 1.96172
+holodb complex-readonly FULL: 6.511528219    FULL-SQL: 10624    FULL-PREP: 0.143419    FULL-EXE: 1.94999
+holodb complex-readonly FULL: 6.695307733    FULL-SQL: 10624    FULL-PREP: 0.146532    FULL-EXE: 1.98212
+holodb complex-readonly FULL: 6.644650571    FULL-SQL: 10624    FULL-PREP: 0.145482    FULL-EXE: 1.96634
+holodb complex-readonly FULL: 6.476395548    FULL-SQL: 10624    FULL-PREP: 0.142119    FULL-EXE: 1.94125
+holodb complex-readonly FULL: 6.594324699    FULL-SQL: 10624    FULL-PREP: 0.145361    FULL-EXE: 1.97095
+holodb complex-readonly FULL: 6.430298640    FULL-SQL: 10624    FULL-PREP: 0.141369    FULL-EXE: 1.94094
+holodb complex-readonly FULL: 6.438616878    FULL-SQL: 10624    FULL-PREP: 0.141874    FULL-EXE: 1.93398
+holodb-fine complex-readonly FULL: 7.068530222    FULL-SQL: 10722    FULL-PREP: 0.144051    FULL-EXE: 2.50444
+holodb-fine complex-readonly FULL: 7.031370017    FULL-SQL: 10722    FULL-PREP: 0.14457    FULL-EXE: 2.50882
+holodb-fine complex-readonly FULL: 7.103282419    FULL-SQL: 10722    FULL-PREP: 0.142479    FULL-EXE: 2.5233
+holodb-fine complex-readonly FULL: 7.113681259    FULL-SQL: 10722    FULL-PREP: 0.142901    FULL-EXE: 2.51016
+holodb-fine complex-readonly FULL: 7.081551257    FULL-SQL: 10722    FULL-PREP: 0.144065    FULL-EXE: 2.50861
+holodb-fine complex-readonly FULL: 7.183694188    FULL-SQL: 10722    FULL-PREP: 0.145828    FULL-EXE: 2.54259
+holodb-fine complex-readonly FULL: 7.089020893    FULL-SQL: 10722    FULL-PREP: 0.143332    FULL-EXE: 2.50059
+holodb-fine complex-readonly FULL: 7.229399481    FULL-SQL: 10722    FULL-PREP: 0.147165    FULL-EXE: 2.56607
+holodb-fine complex-readonly FULL: 7.168327379    FULL-SQL: 10722    FULL-PREP: 0.146115    FULL-EXE: 2.53134
+holodb-fine complex-readonly FULL: 7.208078093    FULL-SQL: 10722    FULL-PREP: 0.147831    FULL-EXE: 2.54503
+
+# complex-writeable:
+mysql complex-writeable FULL: 8.373964979    FULL-SQL: 20881    FULL-PREP: 0.31795    FULL-EXE: 1.28216
+mysql complex-writeable FULL: 8.418270675    FULL-SQL: 20881    FULL-PREP: 0.313722    FULL-EXE: 1.30136
+mysql complex-writeable FULL: 8.288428675    FULL-SQL: 20881    FULL-PREP: 0.308964    FULL-EXE: 1.25564
+mysql complex-writeable FULL: 8.471794639    FULL-SQL: 20881    FULL-PREP: 0.312689    FULL-EXE: 1.31243
+mysql complex-writeable FULL: 8.548165388    FULL-SQL: 20881    FULL-PREP: 0.317658    FULL-EXE: 1.28443
+mysql complex-writeable FULL: 8.514595246    FULL-SQL: 20881    FULL-PREP: 0.318427    FULL-EXE: 1.31171
+mysql complex-writeable FULL: 8.325871449    FULL-SQL: 20881    FULL-PREP: 0.313076    FULL-EXE: 1.26489
+mysql complex-writeable FULL: 8.423765520    FULL-SQL: 20881    FULL-PREP: 0.318421    FULL-EXE: 1.26511
+mysql complex-writeable FULL: 8.326832360    FULL-SQL: 20881    FULL-PREP: 0.314611    FULL-EXE: 1.23176
+mysql complex-writeable FULL: 8.497127843    FULL-SQL: 20881    FULL-PREP: 0.322058    FULL-EXE: 1.27755
+h2 complex-writeable FULL: 5.508238205    FULL-SQL: 20582    FULL-PREP: 0.0592962    FULL-EXE: 0.203168
+h2 complex-writeable FULL: 5.622277091    FULL-SQL: 20582    FULL-PREP: 0.0554447    FULL-EXE: 0.213146
+h2 complex-writeable FULL: 5.472873740    FULL-SQL: 20582    FULL-PREP: 0.0543745    FULL-EXE: 0.200879
+h2 complex-writeable FULL: 5.528925077    FULL-SQL: 20582    FULL-PREP: 0.0525941    FULL-EXE: 0.201124
+h2 complex-writeable FULL: 5.473268513    FULL-SQL: 20582    FULL-PREP: 0.0546244    FULL-EXE: 0.200347
+h2 complex-writeable FULL: 5.519483946    FULL-SQL: 20582    FULL-PREP: 0.0582208    FULL-EXE: 0.207238
+h2 complex-writeable FULL: 5.633989847    FULL-SQL: 20582    FULL-PREP: 0.0528056    FULL-EXE: 0.214801
+h2 complex-writeable FULL: 5.711883188    FULL-SQL: 20582    FULL-PREP: 0.0568918    FULL-EXE: 0.212128
+h2 complex-writeable FULL: 5.683797821    FULL-SQL: 20582    FULL-PREP: 0.0565061    FULL-EXE: 0.210617
+h2 complex-writeable FULL: 5.527476464    FULL-SQL: 20582    FULL-PREP: 0.0538634    FULL-EXE: 0.203168
+holodb-low complex-writeable FULL: 7.499270331    FULL-SQL: 20881    FULL-PREP: 0.246241    FULL-EXE: 1.11583
+holodb-low complex-writeable FULL: 7.542323188    FULL-SQL: 20881    FULL-PREP: 0.247266    FULL-EXE: 1.12164
+holodb-low complex-writeable FULL: 7.513418029    FULL-SQL: 20881    FULL-PREP: 0.246854    FULL-EXE: 1.12125
+holodb-low complex-writeable FULL: 7.545431994    FULL-SQL: 20881    FULL-PREP: 0.246108    FULL-EXE: 1.11488
+holodb-low complex-writeable FULL: 7.503598446    FULL-SQL: 20881    FULL-PREP: 0.245108    FULL-EXE: 1.10278
+holodb-low complex-writeable FULL: 7.555328463    FULL-SQL: 20881    FULL-PREP: 0.249982    FULL-EXE: 1.12433
+holodb-low complex-writeable FULL: 7.576522549    FULL-SQL: 20881    FULL-PREP: 0.247533    FULL-EXE: 1.11567
+holodb-low complex-writeable FULL: 7.536935403    FULL-SQL: 20881    FULL-PREP: 0.245717    FULL-EXE: 1.11007
+holodb-low complex-writeable FULL: 7.654360686    FULL-SQL: 20881    FULL-PREP: 0.250098    FULL-EXE: 1.13095
+holodb-low complex-writeable FULL: 7.486019207    FULL-SQL: 20881    FULL-PREP: 0.245281    FULL-EXE: 1.10963
+holodb complex-writeable FULL: 11.079931935    FULL-SQL: 20733    FULL-PREP: 0.257956    FULL-EXE: 3.64606
+holodb complex-writeable FULL: 11.067029602    FULL-SQL: 20733    FULL-PREP: 0.256703    FULL-EXE: 3.67565
+holodb complex-writeable FULL: 11.088713663    FULL-SQL: 20733    FULL-PREP: 0.25854    FULL-EXE: 3.67912
+holodb complex-writeable FULL: 11.103153254    FULL-SQL: 20733    FULL-PREP: 0.259364    FULL-EXE: 3.70189
+holodb complex-writeable FULL: 11.220240843    FULL-SQL: 20733    FULL-PREP: 0.26825    FULL-EXE: 3.72738
+holodb complex-writeable FULL: 11.220211534    FULL-SQL: 20733    FULL-PREP: 0.26003    FULL-EXE: 3.72534
+holodb complex-writeable FULL: 11.056554870    FULL-SQL: 20733    FULL-PREP: 0.260814    FULL-EXE: 3.67407
+holodb complex-writeable FULL: 10.946481850    FULL-SQL: 20733    FULL-PREP: 0.257275    FULL-EXE: 3.65738
+holodb complex-writeable FULL: 11.237888453    FULL-SQL: 20733    FULL-PREP: 0.265872    FULL-EXE: 3.73
+holodb complex-writeable FULL: 11.150087323    FULL-SQL: 20733    FULL-PREP: 0.262537    FULL-EXE: 3.70441
+holodb-fine complex-writeable FULL: 12.254544145    FULL-SQL: 20881    FULL-PREP: 0.267029    FULL-EXE: 4.69195
+holodb-fine complex-writeable FULL: 12.052246728    FULL-SQL: 20881    FULL-PREP: 0.259078    FULL-EXE: 4.63645
+holodb-fine complex-writeable FULL: 12.156151304    FULL-SQL: 20881    FULL-PREP: 0.263245    FULL-EXE: 4.64726
+holodb-fine complex-writeable FULL: 12.189192893    FULL-SQL: 20881    FULL-PREP: 0.263789    FULL-EXE: 4.68176
+holodb-fine complex-writeable FULL: 12.240413171    FULL-SQL: 20881    FULL-PREP: 0.261576    FULL-EXE: 4.67397
+holodb-fine complex-writeable FULL: 12.197686478    FULL-SQL: 20881    FULL-PREP: 0.263455    FULL-EXE: 4.67118
+holodb-fine complex-writeable FULL: 12.155790502    FULL-SQL: 20881    FULL-PREP: 0.262235    FULL-EXE: 4.65394
+holodb-fine complex-writeable FULL: 12.091840726    FULL-SQL: 20881    FULL-PREP: 0.259185    FULL-EXE: 4.63702
+holodb-fine complex-writeable FULL: 12.150447887    FULL-SQL: 20881    FULL-PREP: 0.266522    FULL-EXE: 4.66466
+holodb-fine complex-writeable FULL: 12.187494857    FULL-SQL: 20881    FULL-PREP: 0.265226    FULL-EXE: 4.6925
+
+# benchmarks:
+mysql benchmarks 1: 52917 (×10000)    2: 46741 (×10000)    3: 73413 (×10000)    4: 3434552 (×100)    5: 1474617 (×10000)    6: 49026 (×10000)
+mysql benchmarks 1: 50217 (×10000)    2: 45141 (×10000)    3: 77911 (×10000)    4: 3427169 (×100)    5: 1427064 (×10000)    6: 51887 (×10000)
+mysql benchmarks 1: 51114 (×10000)    2: 46801 (×10000)    3: 76302 (×10000)    4: 3469625 (×100)    5: 1445685 (×10000)    6: 49309 (×10000)
+mysql benchmarks 1: 50124 (×10000)    2: 47774 (×10000)    3: 72598 (×10000)    4: 3417246 (×100)    5: 1372522 (×10000)    6: 49868 (×10000)
+mysql benchmarks 1: 48234 (×10000)    2: 47025 (×10000)    3: 74228 (×10000)    4: 3329164 (×100)    5: 1436659 (×10000)    6: 49625 (×10000)
+mysql benchmarks 1: 48636 (×10000)    2: 45681 (×10000)    3: 77445 (×10000)    4: 3410240 (×100)    5: 1415577 (×10000)    6: 50548 (×10000)
+mysql benchmarks 1: 54544 (×10000)    2: 45296 (×10000)    3: 75213 (×10000)    4: 3238620 (×100)    5: 1454175 (×10000)    6: 48562 (×10000)
+mysql benchmarks 1: 49589 (×10000)    2: 45986 (×10000)    3: 74855 (×10000)    4: 3302249 (×100)    5: 1421068 (×10000)    6: 49012 (×10000)
+mysql benchmarks 1: 54319 (×10000)    2: 47204 (×10000)    3: 72559 (×10000)    4: 3412268 (×100)    5: 1403902 (×10000)    6: 50528 (×10000)
+mysql benchmarks 1: 50434 (×10000)    2: 46360 (×10000)    3: 72695 (×10000)    4: 3277443 (×100)    5: 1443873 (×10000)    6: 49068 (×10000)
+h2 benchmarks 1: 6385 (×10000)    2: 4859 (×10000)    3: 6170 (×10000)    4: 837461 (×100)    5: 8146 (×10000)    6: 5304 (×10000)
+h2 benchmarks 1: 6407 (×10000)    2: 4763 (×10000)    3: 5586 (×10000)    4: 536867 (×100)    5: 6744 (×10000)    6: 4706 (×10000)
+h2 benchmarks 1: 5765 (×10000)    2: 4626 (×10000)    3: 5471 (×10000)    4: 588367 (×100)    5: 7116 (×10000)    6: 4312 (×10000)
+h2 benchmarks 1: 6115 (×10000)    2: 4563 (×10000)    3: 5328 (×10000)    4: 570751 (×100)    5: 6905 (×10000)    6: 4629 (×10000)
+h2 benchmarks 1: 6126 (×10000)    2: 4386 (×10000)    3: 5491 (×10000)    4: 559885 (×100)    5: 6693 (×10000)    6: 5006 (×10000)
+h2 benchmarks 1: 5976 (×10000)    2: 4292 (×10000)    3: 5390 (×10000)    4: 578009 (×100)    5: 7008 (×10000)    6: 5010 (×10000)
+h2 benchmarks 1: 6155 (×10000)    2: 4603 (×10000)    3: 5195 (×10000)    4: 585856 (×100)    5: 6903 (×10000)    6: 5054 (×10000)
+h2 benchmarks 1: 6050 (×10000)    2: 4748 (×10000)    3: 5715 (×10000)    4: 635003 (×100)    5: 6681 (×10000)    6: 4329 (×10000)
+h2 benchmarks 1: 5931 (×10000)    2: 5285 (×10000)    3: 5819 (×10000)    4: 608568 (×100)    5: 7125 (×10000)    6: 4356 (×10000)
+h2 benchmarks 1: 6090 (×10000)    2: 4691 (×10000)    3: 5284 (×10000)    4: 567809 (×100)    5: 7305 (×10000)    6: 4906 (×10000)
+holodb-low benchmarks 1: 22578 (×10000)    2: 19989 (×10000)    3: 44562 (×10000)    4: 25454661 (×100)    5: 364854 (×10000)    6: 31155 (×10000)
+holodb-low benchmarks 1: 22890 (×10000)    2: 21992 (×10000)    3: 45610 (×10000)    4: 26955497 (×100)    5: 371722 (×10000)    6: 31345 (×10000)
+holodb-low benchmarks 1: 22818 (×10000)    2: 20218 (×10000)    3: 44575 (×10000)    4: 25908346 (×100)    5: 364958 (×10000)    6: 31382 (×10000)
+holodb-low benchmarks 1: 22755 (×10000)    2: 19763 (×10000)    3: 45753 (×10000)    4: 26541553 (×100)    5: 365647 (×10000)    6: 31443 (×10000)
+holodb-low benchmarks 1: 23153 (×10000)    2: 20000 (×10000)    3: 43153 (×10000)    4: 25734529 (×100)    5: 372010 (×10000)    6: 31713 (×10000)
+holodb-low benchmarks 1: 22178 (×10000)    2: 20151 (×10000)    3: 43729 (×10000)    4: 26019124 (×100)    5: 363341 (×10000)    6: 31274 (×10000)
+holodb-low benchmarks 1: 22828 (×10000)    2: 20207 (×10000)    3: 44861 (×10000)    4: 26408053 (×100)    5: 370759 (×10000)    6: 31829 (×10000)
+holodb-low benchmarks 1: 22537 (×10000)    2: 20682 (×10000)    3: 44929 (×10000)    4: 25730555 (×100)    5: 367002 (×10000)    6: 31395 (×10000)
+holodb-low benchmarks 1: 23432 (×10000)    2: 21526 (×10000)    3: 43856 (×10000)    4: 26828104 (×100)    5: 374188 (×10000)    6: 31669 (×10000)
+holodb-low benchmarks 1: 22927 (×10000)    2: 19520 (×10000)    3: 44165 (×10000)    4: 25320294 (×100)    5: 367435 (×10000)    6: 31557 (×10000)
+holodb benchmarks 1: 24883 (×10000)    2: 129794 (×10000)    3: 226787 (×10000)    4: 1146659461 (×100)    5: 3596207 (×10000)    6: 136586 (×10000)
+holodb benchmarks 1: 25399 (×10000)    2: 126555 (×10000)    3: 242848 (×10000)    4: 1143439620 (×100)    5: 3601824 (×10000)    6: 136291 (×10000)
+holodb benchmarks 1: 25371 (×10000)    2: 128730 (×10000)    3: 226161 (×10000)    4: 1143898985 (×100)    5: 3607258 (×10000)    6: 138237 (×10000)
+holodb benchmarks 1: 24301 (×10000)    2: 126156 (×10000)    3: 225004 (×10000)    4: 1139088065 (×100)    5: 3606937 (×10000)    6: 136261 (×10000)
+holodb benchmarks 1: 24663 (×10000)    2: 130082 (×10000)    3: 225174 (×10000)    4: 1143721383 (×100)    5: 3591891 (×10000)    6: 136083 (×10000)
+holodb benchmarks 1: 24460 (×10000)    2: 130929 (×10000)    3: 230266 (×10000)    4: 1142948297 (×100)    5: 3605992 (×10000)    6: 138786 (×10000)
+holodb benchmarks 1: 24505 (×10000)    2: 128913 (×10000)    3: 223610 (×10000)    4: 1139720304 (×100)    5: 3600468 (×10000)    6: 136645 (×10000)
+holodb benchmarks 1: 24912 (×10000)    2: 128903 (×10000)    3: 226569 (×10000)    4: 1146332460 (×100)    5: 3601080 (×10000)    6: 136958 (×10000)
+holodb benchmarks 1: 24295 (×10000)    2: 129992 (×10000)    3: 227821 (×10000)    4: 1147965210 (×100)    5: 3588918 (×10000)    6: 137058 (×10000)
+holodb benchmarks 1: 25186 (×10000)    2: 131232 (×10000)    3: 226987 (×10000)    4: 1147953586 (×100)    5: 3616192 (×10000)    6: 137389 (×10000)
+holodb-fine benchmarks 1: 42909 (×10000)    2: 182717 (×10000)    3: 2000455 (×10000)    4: 1515349164 (×100)    5: 6858090 (×10000)    6: 189947 (×10000)
+holodb-fine benchmarks 1: 43355 (×10000)    2: 180519 (×10000)    3: 2016500 (×10000)    4: 1512655290 (×100)    5: 6854311 (×10000)    6: 190807 (×10000)
+holodb-fine benchmarks 1: 43471 (×10000)    2: 182566 (×10000)    3: 2012924 (×10000)    4: 1516450651 (×100)    5: 6873283 (×10000)    6: 189471 (×10000)
+holodb-fine benchmarks 1: 43002 (×10000)    2: 180347 (×10000)    3: 1981975 (×10000)    4: 1514177388 (×100)    5: 6818845 (×10000)    6: 189291 (×10000)
+holodb-fine benchmarks 1: 43068 (×10000)    2: 182294 (×10000)    3: 2011371 (×10000)    4: 1511142703 (×100)    5: 6834592 (×10000)    6: 189630 (×10000)
+holodb-fine benchmarks 1: 43841 (×10000)    2: 181909 (×10000)    3: 2026817 (×10000)    4: 1514562839 (×100)    5: 6843765 (×10000)    6: 191411 (×10000)
+holodb-fine benchmarks 1: 42960 (×10000)    2: 181809 (×10000)    3: 2018996 (×10000)    4: 1509766276 (×100)    5: 6843486 (×10000)    6: 190123 (×10000)
+holodb-fine benchmarks 1: 43821 (×10000)    2: 182272 (×10000)    3: 2033036 (×10000)    4: 1514658939 (×100)    5: 6881201 (×10000)    6: 190331 (×10000)
+holodb-fine benchmarks 1: 43067 (×10000)    2: 180621 (×10000)    3: 1993019 (×10000)    4: 1500508451 (×100)    5: 6797265 (×10000)    6: 189720 (×10000)
+holodb-fine benchmarks 1: 42887 (×10000)    2: 181358 (×10000)    3: 2025732 (×10000)    4: 1517161541 (×100)    5: 6859050 (×10000)    6: 189615 (×10000)

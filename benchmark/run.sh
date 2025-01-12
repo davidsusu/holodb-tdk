@@ -122,7 +122,7 @@ kill "$backendPid"
 
 # restore services
 
-if checkEndsWith "$benchmarkTestType" 'readonly' && checkStartsWith "$dbType" 'holodb'; then
+if checkStartsWith "$dbType" 'holodb'; then && [ -f "${resourcesDir}/${dbType}.yaml.bup" ]; then
     rm "${resourcesDir}/${dbType}.yaml"
     mv "${resourcesDir}/${dbType}.yaml.bup" "${resourcesDir}/${dbType}.yaml"
 fi
