@@ -2464,6 +2464,35 @@ az operációs rendszer és a JRE testreszabásával ez valószínűleg tovább 
 % https://hub.docker.com/layers/jochenwierum/openjdk-minimal-jre/17.0.7/images/sha256-978c2b61ab2d04b20c8e4260daa299bec65cab5254e8ad0891bdc47de89cf766
 
 
+\begin{tabular}{|l||r|r|r|r|r||r|r|r||} 
+ \hline
+ \multicolumn{1}{|>{\centering\arraybackslash}m{1.2cm}|}{\multirow{2}{*}{~}}
+    & \multicolumn{5}{>{\centering\arraybackslash}c|}{\textbftt{QUERY}}
+    & \multicolumn{3}{>{\centering\arraybackslash}c||}{\textbftt{WEB}}
+    \\
+ \cline{2-9}
+ 
+ \multicolumn{1}{|>{\centering\arraybackslash}m{1.7cm}|}{~}
+    & \multicolumn{1}{>{\centering\arraybackslash}m{1.3cm}|}{\begin{tabular}{c} \makebox[0pt]{\footnotesize{\textbftt{Q-FLD}}} \\ ({\textmu}s) \end{tabular}}
+    & \multicolumn{1}{>{\centering\arraybackslash}m{1.3cm}|}{\begin{tabular}{c} \makebox[0pt]{\footnotesize{\textbftt{Q-REC}}} \\ ({\textmu}s) \end{tabular}}
+    & \multicolumn{1}{>{\centering\arraybackslash}m{1.3cm}|}{\begin{tabular}{c} \makebox[0pt]{\footnotesize{\textbftt{Q-CMPX}}} \\ ({\textmu}s) \end{tabular}}
+    & \multicolumn{1}{>{\centering\arraybackslash}m{1.3cm}|}{\begin{tabular}{c} \makebox[0pt]{\footnotesize{\textbftt{Q-TFUL}}} \\ ({\textmu}s) \end{tabular}}
+    & \multicolumn{1}{>{\centering\arraybackslash}m{1.3cm}||}{\begin{tabular}{c} \makebox[0pt]{\footnotesize{\textbftt{Q-MULT}}} \\ ({\textmu}s) \end{tabular}}
+    & \multicolumn{1}{>{\centering\arraybackslash}m{1.3cm}|}{\begin{tabular}{c} \makebox[0pt]{\footnotesize{\textbftt{RO-SIMP}}} \\ (s) \end{tabular}}
+    & \multicolumn{1}{>{\centering\arraybackslash}m{1.3cm}|}{\begin{tabular}{c} \makebox[0pt]{\footnotesize{\textbftt{RO-CMPX}}} \\ (s) \end{tabular}}
+    & \multicolumn{1}{>{\centering\arraybackslash}m{1.3cm}||}{\begin{tabular}{c} \makebox[0pt]{\footnotesize{\textbftt{WR-CMPX}}} \\ (s) \end{tabular}}\\
+ \hline\hline
+ \textbf{HoloDB/}\textbftt{EXT} & 43,002 & 180,347 & 1981,975 & 1514177 & 6818 & 6.79 & 7.10 & 12.16 \\
+ \textbf{HoloDB/}\textbftt{DEF} & 24,663 & 130,082 &  225,174 & 1143721 & 3592 & 6.36 & 6.56 & 11.09 \\
+ \textbf{HoloDB/}\textbftt{MIN} & 22,818 &  20,218 &   44,575 &   25909 &  365 & 4.60 & 4.76 &  7.54 \\
+ \textbf{H2}                    &  6,090 &   4,691 &    5,284 &     568 &    7 & 3.64 & 3.73 &  5.53 \\
+ \textbf{MySQL}                 & 50,434 &  46,360 &   72,695 &    3277 & 1444 & 5.08 & 5.52 &  8.42 \\
+ \hline
+
+\end{tabular}
+
+
+
 \begin{table}[H]
 \captionsetup{justification=justified, singlelinecheck=false, margin=0.7cm}
 \begin{center}

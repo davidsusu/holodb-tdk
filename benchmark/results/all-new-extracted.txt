@@ -1,0 +1,37 @@
+3 mysql simple-readonly FULL: 5.078730374    FULL-SQL: 10302    FULL-PREP: 0.166225    FULL-EXE: 0.583783
+5 mysql complex-readonly FULL: 5.520883397    FULL-SQL: 10722    FULL-PREP: 0.176585    FULL-EXE: 0.820317
+1 mysql complex-writeable FULL: 8.418270675    FULL-SQL: 20881    FULL-PREP: 0.313722    FULL-EXE: 1.30136
+9 mysql benchmarks 1: 50434 (×10000)    2: 46360 (×10000)    3: 72695 (×10000)    4: 3277443 (×100)    5: 1443873 (×10000)    6: 49068 (×10000)
+
+2 h2 simple-readonly FULL: 3.638001526    FULL-SQL: 10103    FULL-PREP: 0.0306115    FULL-EXE: 0.114525
+4 h2 complex-readonly FULL: 3.730819188    FULL-SQL: 10523    FULL-PREP: 0.0340187    FULL-EXE: 0.119715
+9 h2 complex-writeable FULL: 5.527476464    FULL-SQL: 20582    FULL-PREP: 0.0538634    FULL-EXE: 0.203168
+9 h2 benchmarks 1: 6090 (×10000)    2: 4691 (×10000)    3: 5284 (×10000)    4: 567809 (×100)    5: 7305 (×10000)    6: 4906 (×10000)
+
+7 holodb-low simple-readonly FULL: 4.603620289    FULL-SQL: 10302    FULL-PREP: 0.132512    FULL-EXE: 0.595461
+5 holodb-low complex-readonly FULL: 4.747107412    FULL-SQL: 10722    FULL-PREP: 0.138043    FULL-EXE: 0.61813
+7 holodb-low complex-writeable FULL: 7.536935403    FULL-SQL: 20881    FULL-PREP: 0.245717    FULL-EXE: 1.11007
+2 holodb-low benchmarks 1: 22818 (×10000)    2: 20218 (×10000)    3: 44575 (×10000)    4: 25908346 (×100)    5: 364958 (×10000)    6: 31382 (×10000)
+
+9 holodb simple-readonly FULL: 6.357313730    FULL-SQL: 10204    FULL-PREP: 0.139815    FULL-EXE: 1.88091
+0 holodb complex-readonly FULL: 6.557092160    FULL-SQL: 10624    FULL-PREP: 0.141294    FULL-EXE: 1.95292
+2 holodb complex-writeable FULL: 11.088713663    FULL-SQL: 20733    FULL-PREP: 0.25854    FULL-EXE: 3.67912
+4 holodb benchmarks 1: 24663 (×10000)    2: 130082 (×10000)    3: 225174 (×10000)    4: 1143721383 (×100)    5: 3591891 (×10000)    6: 136083 (×10000)
+
+1 holodb-fine simple-readonly FULL: 6.786683431    FULL-SQL: 10302    FULL-PREP: 0.13928    FULL-EXE: 2.28505
+2 holodb-fine complex-readonly FULL: 7.103282419    FULL-SQL: 10722    FULL-PREP: 0.142479    FULL-EXE: 2.5233
+2 holodb-fine complex-writeable FULL: 12.156151304    FULL-SQL: 20881    FULL-PREP: 0.263245    FULL-EXE: 4.64726
+3 holodb-fine benchmarks 1: 43002 (×10000)    2: 180347 (×10000)    3: 1981975 (×10000)    4: 1514177388 (×100)    5: 6818845 (×10000)    6: 189291 (×10000)
+
+
+
+1   Q-FLD   SELECT firstname FROM students WHERE id = 30
+2   Q-REC   SELECT * FROM students WHERE id = 30
+3   Q-CMPX  SELECT s.lastname FROM students s WHERE s.firstname='Ian' LIMIT 20
+4   Q-TFUL  SELECT * FROM students
+5   Q-MULT  SELECT s.lastname FROM students s
+                LEFT JOIN course_student cs ON cs.student_id = s.id
+                LEFT JOIN courses c ON c.id = cs.course_id
+                LEFT JOIN subjects su ON su.id = c.subject_id
+                WHERE s.firstname='Ian' AND su.id=2
+6   ....    SELECT s.id, s.code, s.firstname, s.lastname FROM students s WHERE s.id = 30 LIMIT 1
