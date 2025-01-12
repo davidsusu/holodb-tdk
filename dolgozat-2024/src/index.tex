@@ -2393,8 +2393,6 @@ HoloDB futtatás timeline.
 
 \section{Integrált tesztek eredménye}
 
-\subsection{Mérési módszertan}
-
 Mivel a HoloDB preparálási folyamat nélkül rendelkezésre áll,
 lényegileg azonnal elindul és minimális memóriát fogyaszt,
 ezekben a paraméterekben nem volt értelme összevetni
@@ -2431,8 +2429,6 @@ A lekérdezésszintű tesztekhez a H2-t a \texttt{QUERY\_CACHE\_SIZE{=}0} opció
 míg az integrált tesztnél ezt elhagytam az authentikusság kedvéért.
 (A teljes benchmarkért ld.: \autoref{appendix:projectlinks}).
 \todoref{További mérések: ...}
-
-\subsection{A lekérdezési és integrált tesztek eredménye}
 
 \textcolor{red}{
 A XXX ábra felső részén
@@ -2560,7 +2556,7 @@ rosszabb esetben egy generáló szkript teljes újrafuttatását.
 A HoloDB esetében azonban ezek a költségek nincsenek vagy minimálisak,
 így lehetővé válik, hogy a lokális tesztadatbázist dev mode-ban futtassuk.
 
-\subsection{Zero mode}
+\section{Zero mode}
 
 A dev mode elképzelését tovább is vihetjük egy egészen radikális változatig,
 melyet \textit{zero mode}-nak nevezek.
