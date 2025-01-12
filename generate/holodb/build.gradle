@@ -1,0 +1,61 @@
+plugins {
+    id 'java-library'
+    id 'application'
+    id 'io.micronaut.application' version '3.2.2'
+}
+
+sourceCompatibility = 1.8
+targetCompatibility = 1.8
+
+description "HoloDB embedded demo"
+
+repositories {
+    mavenCentral()
+    mavenLocal()
+}
+
+dependencies {
+    implementation 'hu.webarticum.miniconnect:jdbc:0.5.1-SNAPSHOT'
+    implementation 'hu.webarticum.minibase:engine:0.2.1-SNAPSHOT'
+    implementation 'hu.webarticum.holodb:embedded:0.5.1-SNAPSHOT'
+    
+    /*
+    implementation 'io.micronaut:micronaut-http-client'
+    implementation 'io.micronaut:micronaut-jackson-databind'
+    implementation 'io.micronaut:micronaut-validation'*/
+    implementation 'io.micronaut.sql:micronaut-jdbc-hikari'
+    implementation 'jakarta.annotation:jakarta.annotation-api'
+    implementation 'info.picocli:picocli'
+    implementation 'io.micronaut.picocli:micronaut-picocli:4.2.1'
+    implementation 'org.openjdk.jol:jol-core:0.17'
+    
+    //runtimeOnly 'io.micronaut.configuration:micronaut-jdbc-hikari'
+    
+    annotationProcessor 'io.micronaut.data:micronaut-data-processor'
+    annotationProcessor 'io.micronaut:micronaut-http-validation'
+}
+
+application {
+    mainClass = "hu.webarticum.miniconnect.generaldocs.examples.holodbembedded.Application"
+    applicationDefaultJvmArgs = ["-Djdk.attach.allowAttachSelf=true"]
+}
+
+tasks.named("run") {
+    jvmArgs = ["-Djdk.attach.allowAttachSelf=true"]
+    doFirst {
+        def dateTimeFormatter = java.time.format.DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss.SSS")
+        def now = java.time.ZonedDateTime.now(java.time.ZoneId.systemDefault());
+        println "Start timestamp: " + now.format(dateTimeFormatter) + " (" + now.toInstant().toEpochMilli() + ")"
+    }
+}
+
+graalvmNative.toolchainDetection = false
+micronaut {
+    version '3.2.2'
+    runtime("netty")
+    testRuntime("junit5")
+    processing {
+        incremental(true)
+        annotations("com.example.*")
+    }
+}

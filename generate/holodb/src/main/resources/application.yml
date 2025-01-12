@@ -1,0 +1,13 @@
+micronaut:
+  application:
+    name: holodb-embedded-demo
+netty:
+  default:
+    allocator:
+      max-order: 3
+datasources:
+  default:
+    url: 'jdbc:holodb:embedded:resource://holodb.yaml?schema=employment'
+    username: ''
+    password: ''
+    driverClassName: 'hu.webarticum.holodb.embedded.HoloEmbeddedDriver'

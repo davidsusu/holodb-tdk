@@ -283,7 +283,7 @@ akkor ki kell dolgoznunk valamilyen módszert a módosulások detektálására, 
 
 Egyes generátorok a séma és az adatok jellegének deklaratív leírását is támogatják,
 ami tárolható egy verziókezelhető, dokumentálható, könnyen szerkeszthető konfigurációs fájlban%
-\cite{Gao2024FakeDB,SoftwareDatamimic,SoftwarePydbgen}.
+\cite{Gao2024FakeDB,SoftwareDatamimic,SoftwarePydbgen,SoftwarePostgresqlFaker}.
 
 \subsection{Relációs adatok anonimizálása}
 
@@ -2544,13 +2544,13 @@ YYYYYYYYYYYYYYYYYYYYYYYYYY
 \begin{tabular}{|l||r|r||r|r||} 
  \hline
  \multicolumn{1}{|>{\centering\arraybackslash}m{1.7cm}|}{~}
-    & \multicolumn{1}{>{\centering\arraybackslash}m{2.5cm}||}{\begin{tabular}{c} \makebox[0pt]{\footnotesize{\textbf{Generálás}}} \\ (s) \end{tabular}}
-    & \multicolumn{1}{>{\centering\arraybackslash}m{2.5cm}||}{\begin{tabular}{c} \makebox[0pt]{\footnotesize{\textbf{Indítás}}} \\ (s) \end{tabular}}
-    & \multicolumn{1}{>{\centering\arraybackslash}m{2.5cm}||}{\begin{tabular}{c} \makebox[0pt]{\footnotesize{\textbf{Konfiguráció}}} \\ (KB) \end{tabular}}
+    & \multicolumn{1}{>{\centering\arraybackslash}m{2.5cm}|}{\begin{tabular}{c} \makebox[0pt]{\footnotesize{\textbf{Generálás}}} \\ (s) \end{tabular}}
+    & \multicolumn{1}{>{\centering\arraybackslash}m{2.5cm}||}{\begin{tabular}{c} \makebox[0pt]{\footnotesize{\textbf{Indítás}}} \\ (ms) \end{tabular}}
+    & \multicolumn{1}{>{\centering\arraybackslash}m{2.5cm}|}{\begin{tabular}{c} \makebox[0pt]{\footnotesize{\textbf{Konfiguráció}}} \\ (B) \end{tabular}}
     & \multicolumn{1}{>{\centering\arraybackslash}m{2.5cm}||}{\begin{tabular}{c} \makebox[0pt]{\footnotesize{\textbf{Adatméret}}} \\ (KB) \end{tabular}}\\
  \hline\hline
  
- \textbf{HoloDB}     & TODO & TODO & TODO &     1 \\
+ \textbf{HoloDB}     & 0 s & 280 ms & 1311 bytes & 155848 bytes \\
  \textbf{H2}         & TODO & TODO & TODO &   550 \\
  \textbf{MySQL}      & TODO & TODO & TODO & 2~270 \\
  \hline

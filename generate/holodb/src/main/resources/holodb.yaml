@@ -1,0 +1,47 @@
+seed: 1234
+tableDefaults:
+  writeable: true
+schemas:
+  - name: employment
+    tables:
+      - name: companies
+        size: 2000
+        columns:
+          - name: id
+            mode: COUNTER
+          - name: name
+            valuesPattern: 'Company [A-Z][a-z]{3} [A-Z][a-z]{5}'
+          - name: city
+            valuesBundle: cities
+          - name: contact_phone
+            nullCount: 50
+            valuesPattern: '\+1 \d{3}-\d{3}-\d{4}'
+      - name: employees
+        size: 1000000
+        columns:
+          - name: id
+            mode: COUNTER
+          - name: company_id
+            valuesForeignColumn: [companies, id]
+            shuffleQuality: LOW
+          - name: firstname
+            valuesBundle: forenames
+          - name: lastname
+            valuesBundle: surnames
+          - name: birth_year
+            type: java.lang.Integer
+            valuesRange: [1950, 2000]
+          - name: birth_country
+            valuesBundle: countries
+          - name: preferred_color
+            valuesBundle: colors
+      - name: coupons
+        size: 10000000
+        columns:
+          - name: id
+            mode: COUNTER
+          - name: employee_id
+            valuesForeignColumn: [employees, id]
+          - name: identifier
+            valuesPattern: '[A-F]{3}-\d{12}'
+                  
