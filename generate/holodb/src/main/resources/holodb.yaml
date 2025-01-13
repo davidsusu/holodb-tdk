@@ -5,7 +5,7 @@ schemas:
   - name: employment
     tables:
       - name: companies
-        size: 2000
+        size: 200
         columns:
           - name: id
             mode: COUNTER
@@ -17,7 +17,7 @@ schemas:
             nullCount: 50
             valuesPattern: '\+1 \d{3}-\d{3}-\d{4}'
       - name: employees
-        size: 1000000
+        size: 2000
         columns:
           - name: id
             mode: COUNTER
@@ -36,7 +36,7 @@ schemas:
           - name: preferred_color
             valuesBundle: colors
       - name: coupons
-        size: 10000000
+        size: 5000
         columns:
           - name: id
             mode: COUNTER

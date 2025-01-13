@@ -1,0 +1,14 @@
+php artisan db:wipe; printf -- 'OK\n..........\n'; date +"%Y-%m-%d %H:%M:%S.%3N"; php artisan migrate:fresh --seed; date +"%Y-%m-%d %H:%M:%S.%3N";
+
+for i in $(seq 1 3); do printf -- '------------------------------\nDROP . . . '; php artisan db:wipe; printf -- 'OK\n..........\n'; date +"%Y-%m-%d %H:%M:%S.%3N"; php artisan migrate:fresh --seed; date +"%Y-%m-%d %H:%M:%S.%3N"; done
+
+mysql -u root -proot -e 'SELECT COUNT(*) FROM `laravel-seeder-test`.`coupons`'
+
+watch -n 1 "mysql -u root -proot -e 'SELECT COUNT(*) FROM \`laravel-seeder-test\`.\`companies\`; SELECT COUNT(*) FROM \`laravel-seeder-test\`.\`employees\`; SELECT COUNT(*) FROM \`laravel-seeder-test\`.\`coupons\`'"
+
+SELECT 
+    table_schema,
+    SUM(data_length + index_length) AS total_size
+FROM information_schema.tables
+WHERE table_schema = 'laravel-seeder-test'
+GROUP BY table_schema;

@@ -1,4 +1,15 @@
 root # cp <...>/generate.sql /home/postgres/generate-test/generate.sql 
 root # /home/postgres/generate-test/generate.sql
 
-postgres > for i in $(seq 1 10); do printf -- '------------------------------\nDROP . . . '; psql -d employment -f "/home/postgres/generate-test/drop.sql"; printf -- 'OK\n..........\n'; date +"%Y-%m-%d %H:%M:%S.%3N"; psql -d employment -f "/home/postgres/generate-test/generate.sql" ; date +"%Y-%m-%d %H:%M:%S.%3N"; done
+postgres > for i in $(seq 1 10); do printf -- '------------------------------\nDROP . . . '; psql -d employment -f "/home/postgres/generate-test/drop.sql"; printf -- 'OK\n..........\n'; date +"%Y-%m-%d %H:%M:%S.%3N"; psql -d employment -f "/home/postgres/generate-test/generate.sql"; date +"%Y-%m-%d %H:%M:%S.%3N"; done
+
+SELECT 
+    SUM(pg_total_relation_size(pg_class.oid)) AS total_size_bytes
+FROM 
+    pg_class
+JOIN 
+    pg_namespace ON pg_namespace.oid = pg_class.relnamespace
+WHERE 
+    pg_namespace.nspname = 'public'
+    AND pg_class.relkind = 'r';
+
