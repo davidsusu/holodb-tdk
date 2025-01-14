@@ -2570,15 +2570,13 @@ tárolja és optimalizálja az alkalmazás menedzselt objektumai közötti függ
 így általában gyorsabban is indul el, mint az előző kettő,
 így performancia-tesztekre is alkalmasabb.
 
+Pontosan ugyanazt az adatbázistartalmat használtam,
+mint az előző fejezet lekérdezési tesztjeinél.
+
 Az alkalmazás futtatását egy POSIX shell szkript vezérli.
 Egy további Bash szkript az előbbi fájlt hívja többszörösen,
 közben átírja a konfigurációs fájlt, hogy különböző teszteket hajtson végre.
 A bash szkript a futtatási ciklusok között legalább 5 másodperc szünetet vár.
-
-A lekérdezésszintű tesztekhez a H2-t a \texttt{QUERY\_CACHE\_SIZE{=}0} opcióval használtam,
-míg az integrált tesztnél ezt elhagytam az authentikusság kedvéért.
-
-
 
 (A teljes benchmarkért lásd: \autoref{appendix:projectlinks}).
 
@@ -2591,34 +2589,12 @@ A \texttt{complex-writeable} tesztben pedig adatírások,
 majd arra épülő lekérdezések is történtek.
 }
 
-\textcolor{red}{
 A lekérdezések esetében kevés adatnál a teljesítmény meglepően jó,
 és drasztikusan romlik nagy eredménytábláknál.
 Vagyis a korábban tárgyalt indexelési technikák jól teljesítenek,
 kulcsfontosságúak a megfelelő teljesítményhez.
 Ugyanakkor az adatelérés kevésbé optimális;
 de feltehetően mind az adatok számítása, mind az eredménytábla továbbítása jelentősen javítható még.
-}
-
-\textcolor{red}{
-Az adatok tárhelyigényében a HoloDB természetesen drasztikus csökkenést mutat,
-hiszen eleve így lett tervezve.
-A szerveres kontextust nézve, a HoloDB Docker-képének mérete XXXXXXXXX, mint a MariaDB-é;
-XXXX a base image változtatásával,
-az operációs rendszer és a JRE testreszabásával ez valószínűleg tovább javítható.
-}
-
-
-
-% https://hub.docker.com/layers/mertcingoz/h2/2.3.232/images/sha256-52b7f6aa8138592c95830a127ac14694ef3fff221a31210a828ca39f00b958de
-% https://hub.docker.com/layers/jochenwierum/openjdk-minimal-jre/17.0.7/images/sha256-978c2b61ab2d04b20c8e4260daa299bec65cab5254e8ad0891bdc47de89cf766
-
-\iffalse
-A dolgozatban bemutatott teszteknél a H2-t a lekérdezésszintű tesztekhez
-a `QUERY_CACHE_SIZE=0` opcióval használtam,
-a MariaDB-t pedig a `useServerPrepStmts=false&cachePrepStmts=false` opciókkal
-és a `query_cache_type=OFF` szerveroldali beállítással.
-\fi
 
 \begin{table}[H]
 \captionsetup{justification=justified, singlelinecheck=false, margin=0.7cm}
@@ -2642,8 +2618,8 @@ a MariaDB-t pedig a `useServerPrepStmts=false&cachePrepStmts=false` opciókkal
 \end{center}
 \caption[Integrált tesztek eredménye]{
 Integrált tesztek eredménye különböző adatbázisokkal.
-
-\textbf{\textit{A sorok jelentése}}: Lásd: ...
+\textbf{\textit{A sorok jelentése}}: Lásd a \ref{table:queryComparison} táblázatot.
+\textbf{\textit{Az oszlopok jelentése}}: Lásd a főszöveget.
 }
 \end{table}
 
