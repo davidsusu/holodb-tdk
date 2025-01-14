@@ -2835,9 +2835,9 @@ vagy a dev mode és zero mode.
           Ez esetenként bizonyos adatstruktúrák legenerálását is jelenti,
           de láttuk, hogy az indítási idő ekkor is rövid.
     \item \textbf{Kevés memóriát foglal, az adatokat on-the-fly számítja.} Valóban;
-          maguk az adatok egyáltalán nincsenek tárolva, lekérdezéskor kerülnek számításra,
-          néhány esetben kisebb adatstruktúrák generálódnak (pl. regex szófák),
-          melyek mérete a táblamérettől független.
+          maguk az adatok egyáltalán nincsenek tárolva, lekérdezéskor kerülnek számításra.
+          Néhány esetben kisebb adatstruktúrák generálódnak,
+          ezek azonban elenyészőek a szimulált adatmennyiséghez képest.
     \item \textbf{Könnyen és rugalmasan konfigurálható.} Valóban;
           a deklaratív YAML konfigurációs fájl könnyen kezelhető és verziókezelhető,
           minden fontosabb paraméter beállítására alkalmas.
