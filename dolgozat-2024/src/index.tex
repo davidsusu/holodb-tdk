@@ -2359,9 +2359,32 @@ az egyesített táblában a kisebb tábla adatait pedig redundánsan szerepeltet
 
 \textcolor{red}{MEGÍRNI}\todoref{Chapter: Tapasztalatok}
 
-\section{Általános jellemzők}
+\section{Általános tapasztalatok}
 
 \textcolor{red}{MEGÍRNI}
+
+XXXXXXXXXXXXXXXXXXXXXXXXXX
+
+\begin{table}[H]
+\captionsetup{justification=justified, singlelinecheck=false, margin=0.7cm}
+\begin{center}
+\begin{tabular}{|l||r|r||} 
+ \hline
+ \multicolumn{1}{|>{\centering\arraybackslash}m{1.7cm}|}{~}
+    & \multicolumn{1}{>{\centering\arraybackslash}m{2.5cm}|}{\begin{tabular}{c} \makebox[0pt]{\footnotesize{\textbf{Docker image}}} \\ (MiB) \end{tabular}}
+    & \multicolumn{1}{>{\centering\arraybackslash}m{2.5cm}|}{\begin{tabular}{c} \makebox[0pt]{\footnotesize{\textbf{Shadow JAR}}} \\ (MiB) \end{tabular}}\\
+ \hline\hline
+ 
+ \textbf{HoloDB}     & 237,3 &   23,09 \\
+ \textbf{HoloDB-opt} &  53,6 &   14,37 \\
+ \textbf{H2}         &  45,4 &    2,49 \\
+ \textbf{MySQL}      & 605,3 & \nodata \\
+ \hline
+
+\end{tabular}
+\end{center}
+\caption[XXX]{XXX}
+\end{table}
 
 
 \section{Lekérdezések sebessége}
@@ -2477,30 +2500,21 @@ a MySQL-t pedig a `useServerPrepStmts=false&cachePrepStmts=false` opciókkal
 \begin{table}[H]
 \captionsetup{justification=justified, singlelinecheck=false, margin=0.7cm}
 \begin{center}
-\begin{tabular}{|l||r|r|r|r|r||r|r|r||} 
+\begin{tabular}{|l||r|r|r|r|r||} 
  \hline
- \multicolumn{1}{|>{\centering\arraybackslash}m{1.2cm}|}{\multirow{2}{*}{~}}
-    & \multicolumn{5}{>{\centering\arraybackslash}c|}{\textbftt{QUERY}}
-    & \multicolumn{3}{>{\centering\arraybackslash}c||}{\textbftt{WEB}}
-    \\
- \cline{2-9}
- 
  \multicolumn{1}{|>{\centering\arraybackslash}m{1.7cm}|}{~}
     & \multicolumn{1}{>{\centering\arraybackslash}m{1.3cm}|}{\begin{tabular}{c} \makebox[0pt]{\footnotesize{\textbftt{Q-FLD}}} \\ ({\textmu}s) \end{tabular}}
     & \multicolumn{1}{>{\centering\arraybackslash}m{1.3cm}|}{\begin{tabular}{c} \makebox[0pt]{\footnotesize{\textbftt{Q-REC}}} \\ ({\textmu}s) \end{tabular}}
     & \multicolumn{1}{>{\centering\arraybackslash}m{1.3cm}|}{\begin{tabular}{c} \makebox[0pt]{\footnotesize{\textbftt{Q-CMPX}}} \\ ({\textmu}s) \end{tabular}}
     & \multicolumn{1}{>{\centering\arraybackslash}m{1.3cm}|}{\begin{tabular}{c} \makebox[0pt]{\footnotesize{\textbftt{Q-TFUL}}} \\ ({\textmu}s) \end{tabular}}
-    & \multicolumn{1}{>{\centering\arraybackslash}m{1.3cm}||}{\begin{tabular}{c} \makebox[0pt]{\footnotesize{\textbftt{Q-MULT}}} \\ ({\textmu}s) \end{tabular}}
-    & \multicolumn{1}{>{\centering\arraybackslash}m{1.3cm}|}{\begin{tabular}{c} \makebox[0pt]{\footnotesize{\textbftt{RO-SIMP}}} \\ (s) \end{tabular}}
-    & \multicolumn{1}{>{\centering\arraybackslash}m{1.3cm}|}{\begin{tabular}{c} \makebox[0pt]{\footnotesize{\textbftt{RO-CMPX}}} \\ (s) \end{tabular}}
-    & \multicolumn{1}{>{\centering\arraybackslash}m{1.3cm}||}{\begin{tabular}{c} \makebox[0pt]{\footnotesize{\textbftt{WR-CMPX}}} \\ (s) \end{tabular}}\\
+    & \multicolumn{1}{>{\centering\arraybackslash}m{1.3cm}||}{\begin{tabular}{c} \makebox[0pt]{\footnotesize{\textbftt{Q-MULT}}} \\ ({\textmu}s) \end{tabular}}\\
  \hline\hline
  
- \textbf{HoloDB/}\textbftt{EXT} & 43,00 & 180,35 & 1~981,98 & 1~514~177 & 6~818 & 6,79 & 7,10 & 12,16 \\
- \textbf{HoloDB/}\textbftt{DEF} & 24,66 & 130,08 &   225,17 & 1~143~721 & 3~592 & 6,36 & 6,56 & 11,09 \\
- \textbf{HoloDB/}\textbftt{MIN} & 22,82 &  20,22 &    44,58 &    25~909 &   365 & 4,60 & 4,76 &  7,54 \\
- \textbf{H2}                    & 12,77 &   9,73 &    17,60 &     1~965 &   177 & 3,92 & 4,02 &  6,07 \\
- \textbf{MySQL}                 & 47,87 &  46,27 &    73,02 &     3~393 & 1~429 & 5,10 & 5,43 &  8,38 \\
+ \textbf{HoloDB/}\textbftt{EXT} & 43,00 & 180,35 & 1~981,98 & 1~514~177 & 6~818 \\
+ \textbf{HoloDB/}\textbftt{DEF} & 24,66 & 130,08 &   225,17 & 1~143~721 & 3~592 \\
+ \textbf{HoloDB/}\textbftt{MIN} & 22,82 &  20,22 &    44,58 &    25~909 &   365 \\
+ \textbf{H2}                    & 12,77 &   9,73 &    17,60 &     1~965 &   177 \\
+ \textbf{MySQL}                 & 47,87 &  46,27 &    73,02 &     3~393 & 1~429 \\
  \hline
 
 \end{tabular}
@@ -2514,30 +2528,37 @@ Integrált tesztek eredménye különböző adatbázisokkal.
 \textbf{HoloDB/}\textbftt{MIN}: beágyazott HoloDB minimális paraméterekkel;
 \textbf{H2}: beágyazott H2;
 \textbf{MySQL}: MySQL szerver;
+\textbf{\textit{A sorok jelentése}}: Lásd a főszöveget.
 }
 \end{table}
 
-XXXXXXXXXXXXXXXXXXXXXXXXXX
+
 
 \begin{table}[H]
 \captionsetup{justification=justified, singlelinecheck=false, margin=0.7cm}
 \begin{center}
-\begin{tabular}{|l||r|r||} 
+\begin{tabular}{|l||r|r|r||} 
  \hline
  \multicolumn{1}{|>{\centering\arraybackslash}m{1.7cm}|}{~}
-    & \multicolumn{1}{>{\centering\arraybackslash}m{2.5cm}|}{\begin{tabular}{c} \makebox[0pt]{\footnotesize{\textbf{Docker image}}} \\ (MiB) \end{tabular}}
-    & \multicolumn{1}{>{\centering\arraybackslash}m{2.5cm}|}{\begin{tabular}{c} \makebox[0pt]{\footnotesize{\textbf{Shadow JAR}}} \\ (MiB) \end{tabular}}\\
+    & \multicolumn{1}{>{\centering\arraybackslash}m{1.3cm}|}{\begin{tabular}{c} \makebox[0pt]{\footnotesize{\textbftt{RO-SIMP}}} \\ (s) \end{tabular}}
+    & \multicolumn{1}{>{\centering\arraybackslash}m{1.3cm}|}{\begin{tabular}{c} \makebox[0pt]{\footnotesize{\textbftt{RO-CMPX}}} \\ (s) \end{tabular}}
+    & \multicolumn{1}{>{\centering\arraybackslash}m{1.3cm}||}{\begin{tabular}{c} \makebox[0pt]{\footnotesize{\textbftt{WR-CMPX}}} \\ (s) \end{tabular}}\\
  \hline\hline
  
- \textbf{HoloDB}     & 237,3 &   23,09 \\
- \textbf{HoloDB-opt} &  53,6 &   14,37 \\
- \textbf{H2}         &  45,4 &    2,49 \\
- \textbf{MySQL}      & 605,3 & \nodata \\
+ \textbf{HoloDB/}\textbftt{EXT} & 6,79 & 7,10 & 12,16 \\
+ \textbf{HoloDB/}\textbftt{DEF} & 6,36 & 6,56 & 11,09 \\
+ \textbf{HoloDB/}\textbftt{MIN} & 4,60 & 4,76 &  7,54 \\
+ \textbf{H2}                    & 3,92 & 4,02 &  6,07 \\
+ \textbf{MySQL}                 & 5,10 & 5,43 &  8,38 \\
  \hline
 
 \end{tabular}
 \end{center}
-\caption[XXX]{XXX}
+\caption[Integrált tesztek eredménye]{
+Integrált tesztek eredménye különböző adatbázisokkal.
+
+\textbf{\textit{A sorok jelentése}}: Lásd: ...
+}
 \end{table}
 
 YYYYYYYYYYYYYYYYYYYYYYYYYY
