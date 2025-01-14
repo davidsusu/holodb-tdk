@@ -2450,15 +2450,43 @@ SELECT firstname FROM students WHERE id = 30
 \end{minted}
 \vspace{-35pt}
 
-            "SELECT firstname FROM students WHERE id = 30",
-            "SELECT * FROM students WHERE id = 30",
-            "SELECT s.lastname FROM students s WHERE s.firstname='Ian' LIMIT 20",
-            "SELECT * FROM students",
-            "SELECT s.lastname FROM students s " +
-                    "LEFT JOIN course_student cs ON cs.student_id = s.id "+
-                    "LEFT JOIN courses c ON c.id = cs.course_id " +
-                    "LEFT JOIN subjects su ON su.id = c.subject_id " +
-                    "WHERE s.firstname='Ian' AND su.id=2",
+XXXX
+
+\vspace{-5pt}
+\begin{minted}[fontsize=\small,framesep=4pt,frame=single,framerule=1.5pt,rulecolor=\color{gray!30}]{sql}
+SELECT * FROM students WHERE id = 30
+\end{minted}
+\vspace{-35pt}
+
+XXXX
+
+\vspace{-5pt}
+\begin{minted}[fontsize=\small,framesep=4pt,frame=single,framerule=1.5pt,rulecolor=\color{gray!30}]{sql}
+SELECT s.lastname FROM students s WHERE s.firstname='Ian' LIMIT 20
+\end{minted}
+\vspace{-35pt}
+
+XXXX
+
+\vspace{-5pt}
+\begin{minted}[fontsize=\small,framesep=4pt,frame=single,framerule=1.5pt,rulecolor=\color{gray!30}]{sql}
+SELECT * FROM students
+\end{minted}
+\vspace{-35pt}
+
+XXXX
+
+\vspace{-5pt}
+\begin{minted}[fontsize=\small,framesep=4pt,frame=single,framerule=1.5pt,rulecolor=\color{gray!30}]{sql}
+SELECT s.lastname FROM students s
+LEFT JOIN course_student cs ON cs.student_id = s.id
+LEFT JOIN courses c ON c.id = cs.course_id
+LEFT JOIN subjects su ON su.id = c.subject_id
+WHERE s.firstname='Ian' AND su.id=2
+\end{minted}
+\vspace{-35pt}
+
+A \ref{table:queryComparison} táblázat XXXXXXXXXXX
 
 \begin{table}[H]
 \captionsetup{justification=justified, singlelinecheck=false, margin=0.7cm}
@@ -2493,6 +2521,7 @@ Integrált tesztek eredménye különböző adatbázisokkal.
 \textbf{MariaDB}: MySQL/MariaDB szerver;
 \textbf{\textit{A sorok jelentése}}: Lásd a főszöveget.
 }
+\label{table:queryComparison}
 \end{table}
 
 
