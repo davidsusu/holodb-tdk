@@ -2459,8 +2459,8 @@ SELECT firstname FROM students WHERE id = 30
 \vspace{-35pt}
 
 A második teszt (\textbftt{Q-REC}) hasonló,
-de az összes oszlopból kerestem ki az értékeket,
-azaz egy teljes rekordot kértem le:
+de az összes oszlopból keresem ki az értékeket,
+azaz egy teljes rekordot kérek le:
 
 \vspace{-5pt}
 \begin{minted}[fontsize=\small,framesep=4pt,frame=single,framerule=1.5pt,rulecolor=\color{gray!30}]{sql}
@@ -2468,9 +2468,9 @@ SELECT * FROM students WHERE id = 30
 \end{minted}
 \vspace{-35pt}
 
-A harmadik tesztben (\textbftt{Q-CMPX}) a kulcsmezőtől eltérő mezőre kerestem rá,
+A harmadik tesztben (\textbftt{Q-CMPX}) a kulcsmezőtől eltérő mezőre keresek rá,
 ami így több találatot eredményez.
-A találatok számát 20-ra limitáltam:
+A találatok számát 20-ra limitálom:
 
 \vspace{-5pt}
 \begin{minted}[fontsize=\small,framesep=4pt,frame=single,framerule=1.5pt,rulecolor=\color{gray!30}]{sql}
@@ -2478,7 +2478,7 @@ SELECT s.lastname FROM students s WHERE s.firstname='Ian' LIMIT 20
 \end{minted}
 \vspace{-35pt}
 
-A negyedik tesztben (\textbftt{Q-TFUL}) lekértem a teljes táblát:
+A negyedik tesztben (\textbftt{Q-TFUL}) lekérem a teljes táblát:
 
 \vspace{-5pt}
 \begin{minted}[fontsize=\small,framesep=4pt,frame=single,framerule=1.5pt,rulecolor=\color{gray!30}]{sql}
@@ -2488,7 +2488,7 @@ SELECT * FROM students
 
 Az ötödik tesztben (\textbftt{Q-MULT}) több táblából gyűjtöm az adatokat,
 melyeket a kulcsmezőkkel fűztem össze (\texttt{LEFT JOIN}).
-Egyúttal dupla keresési feltételt is megadtam:
+Egyúttal dupla keresési feltételt is megadok:
 
 \vspace{-5pt}
 \begin{minted}[fontsize=\small,framesep=4pt,frame=single,framerule=1.5pt,rulecolor=\color{gray!30}]{sql}
