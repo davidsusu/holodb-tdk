@@ -2432,6 +2432,27 @@ XXXXXXXXXXXXXXXXXXXXXXXXXX
 \section{Lekérdezések sebessége}
 
 \textcolor{red}{MEGÍRNI}
+A lekérdezések közvetlen mérésénél az SQL parancsnak a JDBC API-n keresztüli beküldésétől
+az eredménytábla végigiterálásnak végéig eltelt időt mértem
+egyszerűen \texttt{System.nanoTime()} hívások visszaadott értékeinek különbségeit nézve.
+5 különböző bonyolultságú és válaszméretű fix lekérést mértem,
+alapesetben 10~000-szerfuttatva,
+a teljes tábla kivételével, ahol 100-szor.
+
+Az első tesztben (\textbftt{Q-FLD}) egyetlen mező lekérését néztem.
+Ekkor egy adott táblában keressük az \texttt{id} oszlop egy adott értékének pozícióját,
+és visszaadjuk egy másik oszlop értékét ezen a pozíción.
+Konkrétan ezt az SQL-t futtattam:
+
+            "SELECT firstname FROM students WHERE id = 30",
+            "SELECT * FROM students WHERE id = 30",
+            "SELECT s.lastname FROM students s WHERE s.firstname='Ian' LIMIT 20",
+            "SELECT * FROM students",
+            "SELECT s.lastname FROM students s " +
+                    "LEFT JOIN course_student cs ON cs.student_id = s.id "+
+                    "LEFT JOIN courses c ON c.id = cs.course_id " +
+                    "LEFT JOIN subjects su ON su.id = c.subject_id " +
+                    "WHERE s.firstname='Ian' AND su.id=2",
 
 \begin{table}[H]
 \captionsetup{justification=justified, singlelinecheck=false, margin=0.7cm}
@@ -2470,23 +2491,6 @@ Integrált tesztek eredménye különböző adatbázisokkal.
 
 
 \section{Integrált tesztek eredménye}
-
-Mivel a HoloDB preparálási folyamat nélkül rendelkezésre áll,
-lényegileg azonnal elindul és minimális memóriát fogyaszt,
-ezekben a paraméterekben nem volt értelme összevetni
-a radikálisan eltérő opciókkal.
-Így alapvetően a lekérdezési sebességre koncentráltam,
-azt szűk keresztmetszetében és end-to-end jellegű integrált tesztekkel is megvizsgáltam.
-A performanciával kapcsolatban a várakozás mindössze annyi volt,
-hogy legyen összemérhető a valódi adatbázisokéval.
-A Docker-képek összehasonlítását leszámítva minden esetben
-a HoloDB beágyazott verzióját használtam.
-Az összehasonlítást MariaDB-vel
-és H2-vel (mint a Java környezetben legelterjedtebb beágyazott adatbázissal) valósítottam meg.
-A lekérdezések közvetlen mérésénél az SQL parancsnak a JDBC API-n keresztüli beküldésétől
-az eredménytábla végigiterálásnak végéig eltelt időt mértem
-(ezeknél a méréseknél itt nem használtam JMH-t).
-Különböző bonyolultságú és válaszméretű lekéréseket vizsgáltam.
 
 Az integrált tesztelést egy Micronaut keretrendszerben implementált
 alkalmazás REST API-n keresztüli hívásával futtattam.
@@ -2676,6 +2680,10 @@ elsőként a következő két SQL-lekérdezés érkezik:
   SELECT email FROM customers WHERE vip=1 LIMIT 10;
   SELECT COUNT(*) FROM customers WHERE phone IS NOT NULL;
 \end{verbatim}
+\begin{minted}[fontsize=\small,framesep=4pt,frame=single,framerule=1.5pt,rulecolor=\color{gray!30}]{java}
+  SELECT email FROM customers WHERE vip=1 LIMIT 10;
+  SELECT COUNT(*) FROM customers WHERE phone IS NOT NULL;
+\end{minted}
 
 Amikor az első lekérdezést értelmezzük, már tudjuk,
 hogy elvileg lennie kell egy \texttt{customers} nevű táblának,
