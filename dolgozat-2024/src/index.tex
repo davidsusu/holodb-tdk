@@ -2448,8 +2448,8 @@ a standalone JAR fájl indításával vagy a telepíthető Debian csomag
 A szerver indításához körülbelül minimum 8MB heap-méretre van szükségünk,
 de a használat körülbelül 10MB-nál mondható biztonságosnak.
 Ha nem töltünk be óriás értékkészleteket és egyedi működéseket,
-akkor egy munkamenettel csatlakozva ez a 10MB már elégséges
-akár bonyolult lekérdezések futtatásához is akár óriás adatbázison
+akkor egyetlen munkamenettel csatlakozva ez a 10MB már elégséges
+bonyolult lekérdezések futtatásához is akár óriás adatbázison
 (például a \texttt{-Xms5M -Xmx10M -XX:+UseG1GC} JVM kapcsolókkal).
 
 Javás programkörnyezetből A MiniConnect API-n keresztül vagy pedig JDBC-vel
