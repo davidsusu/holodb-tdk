@@ -2364,7 +2364,7 @@ Az ebben a fejezetben leírt mérések nem JMH alapokon történtek,
 hiszen főként end-to-end vagy integrált jellegűek,
 illetve több helyen más adatbázisokkal vetettem össze az eredményeket.
 Minden mérést ugyanazon a Debian 12 GNU/Linux rendszerű gépen futtattam
-(az egyéb paramétereket lásd az \ref{jmhBenchmarkEnvironment} szekcióban).
+(az egyéb paramétereket lásd az \ref{jmhBenchmarkEnvironment} alfejezetet).
 A táblázatoknál a konkrét mérési módszert a táblázat alatti leírásban írtam le.
 Az összehasonlításoknál a következő szoftververziókat használtam
 (az alapértelmezett kiegészítő eszközökkel együtt értve):
@@ -2394,7 +2394,45 @@ Az összehasonlító méréseknél használt egyéb rendszerek verziói
 \end{table}
 
 
-\section{Általános tapasztalatok}
+\section{Általános futtatási tapasztalatok}
+
+Felhasználói oldalról a HoloDB használata főként három dolgot jelent:
+a konfigurációt, a futtatást, illetve a tesztadatbázishoz való csatlakozást.
+A konfigurációról már volt szó,
+a következőkben a futtatásról és csatlakozásról lesz szó.
+
+A HoloDB szerver használható önálló alkalmazásként vagy Docker konténerként.
+Önálló alkalmazásként forráskódból a megfelelő `gradle run` taszkkal,
+a standalone jar fájl indításával vagy a telepíthető Debian csomag `holodb-server`
+parancsával tudjuk futtatni.
+
+A dockeres indítás akár egyetlen paranccsal is történhet, például:
+
+\vspace{-5pt}
+\begin{minted}[fontsize=\small,framesep=4pt,frame=single,framerule=1.5pt,rulecolor=\color{gray!30}]{shell}
+docker run --rm -v sample-config.yaml:/app/config.yaml -p 3430:3430 -it miniconnect/holodb:latest
+\end{minted}
+\vspace{-35pt}
+
+A \texttt{sample-config.yaml} helyén megadhatjuk a saját konfigurációs fájlunkat,
+az kettőspont bal oldalán lévő \texttt{3430} helyett pedig egy egyedi portot,
+amelyen az adatbázist el kívánjuk érni.
+
+Az adatbázishoz interaktívan csatlakozni a `micl` klienssel lehet
+(telepítéshez lásd a \ŧexttt{miniconnect-client} project \texttt{README.md} fájlját).
+Ez a REPL kliens azonnal csatlakozik a MiniConnect API-val kompatibilis adatbázishoz
+a megadott hoszton és porton (alapértelmezetten \texttt{localhost:3430}).
+Gépeléskor szintaxiskiemelést, automatikus kiegészítést és parancstörténetet kapunk,
+az eredménytáblák pedig szépen formázottan jelennek meg.
+
+........
+
+Javás programkörnyezetből A MiniConnect API-n keresztül vagy pedig JDBC-vel
+tudunk csatlakozni az adatbázishoz.
+Ehhez Gradle vagy Maven projekt esetén
+a \texttt{hu.webarticum.holodb:embedded:\$\{holodbVersion\}} függőség beállítása szükséges.
+A JDBC URL
+
 
 \textcolor{red}{MEGÍRNI}
 
