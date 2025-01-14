@@ -2444,6 +2444,12 @@ Ekkor egy adott táblában keressük az \texttt{id} oszlop egy adott értékéne
 és visszaadjuk egy másik oszlop értékét ezen a pozíción.
 Konkrétan ezt az SQL-t futtattam:
 
+\vspace{-5pt}
+\begin{minted}[fontsize=\small,framesep=4pt,frame=single,framerule=1.5pt,rulecolor=\color{gray!30}]{sql}
+SELECT firstname FROM students WHERE id = 30
+\end{minted}
+\vspace{-35pt}
+
             "SELECT firstname FROM students WHERE id = 30",
             "SELECT * FROM students WHERE id = 30",
             "SELECT s.lastname FROM students s WHERE s.firstname='Ian' LIMIT 20",
@@ -2677,9 +2683,9 @@ Tegyük föl például, hogy a frissen indított zero mode szerverre
 elsőként a következő két SQL-lekérdezés érkezik:
 
 \vspace{-5pt}
-\begin{minted}[fontsize=\small,framesep=4pt,frame=single,framerule=1.5pt,rulecolor=\color{gray!30}]{java}
-  SELECT email FROM customers WHERE vip=1 LIMIT 10;
-  SELECT COUNT(*) FROM customers WHERE phone IS NOT NULL;
+\begin{minted}[fontsize=\small,framesep=4pt,frame=single,framerule=1.5pt,rulecolor=\color{gray!30}]{sql}
+SELECT email FROM customers WHERE vip=1 LIMIT 10;
+SELECT COUNT(*) FROM customers WHERE phone IS NOT NULL;
 \end{minted}
 \vspace{-35pt}
 
