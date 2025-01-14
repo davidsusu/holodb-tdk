@@ -2634,8 +2634,8 @@ Integrált tesztek eredménye különböző adatbázisokkal.
 \section{Adatgenerálás, indítás és tárigény}
 
 A HoloDB esetében nincs szükség adatgenerálásra,
-ám a konfigurációjának méretét,
-az indítási idejét\footnote{
+ám konfigurációjának méretét,
+indítási idejét\footnote{
   Jelenleg indításkor a HoloDB konfigurációjában megadott összes oszlop
   szükséges adatstruktúrái legenerálódnak.
   Ez természetesen erősen optimalizálható.
@@ -2643,7 +2643,7 @@ az indítási idejét\footnote{
   az indítási időt szinte a JVM indulási idejére lehetne redukálni.
   Fejlesztői gépeken még ezt is ki lehetne küszöbölni egy daemon futtatásával.
 }
-és a tárhelyigényét összemérhetjük más adatbázisokéval.
+és tárhelyigényét összemérhetjük más adatbázisokéval.
 Természetesen ezek azok az aspektusok, ahol a HoloDB diadalmenetét várjuk,
 ez adja az egész projekt értelmét.
 
@@ -2665,11 +2665,11 @@ kiemelkedik a nyílt forrású adatbázis-szerverek közül.
 A generálást egy SQL-szkripttel végeztem.
 Az egyes speciális értékek előállításához (nevek, városok stb.)
 bevett extensionöket is igénybe vettem
-(\texttt{postgresql\_anonymizer} \textcolor{red}{(REF)}, \texttt{postgresql\_faker} \textcolor{red}{(REF)}).
+(\texttt{postgresql\_anonymizer} \textcolor{red}{(R)}, \texttt{postgresql\_faker} \textcolor{red}{(R)}).
 
 Népszerű keretrendszerként a Laravel PHP-keretrendszert választottam.
 A Laravel beépített megoldást tartalmaz
-az adatmodell leírásához és tesztadatok generálásához \textcolor{red}{(REF)}.
+az adatmodell leírásához és tesztadatok generálásához \textcolor{red}{(R)}.
 A generáláshoz a beépített \texttt{artisan} szkript által biztosított
 standard migráló eszözöket használtam.
 Sajnos a nagyméretű esetben a Laravel megoldása órákig való futás után sem végzett,
