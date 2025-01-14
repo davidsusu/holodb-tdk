@@ -2383,7 +2383,7 @@ Az összehasonlításoknál a következő szoftververziókat használtam
  \textbf{H2}         & \texttt{2.2.224} & \texttt{mertcingoz/h2:2.3.232} \\
  \textbf{MariaDB}    & \texttt{10.11.6} ~~ (MySQL \texttt{15.1}) & \texttt{mariadb:10.11.6-jammy} (official) \\
  \textbf{PostgreSQL} & \texttt{15.10} & \nodata \\
- \textbf{Laravel}    & \texttt{11.31} & \nodata \\
+ \textbf{Laravel}    & \texttt{11.36.1} & \nodata \\
  \hline
 
 \end{tabular}
@@ -2665,11 +2665,14 @@ kiemelkedik a nyílt forrású adatbázis-szerverek közül.
 A generálást egy SQL-szkripttel végeztem.
 Az egyes speciális értékek előállításához (nevek, városok stb.)
 bevett extensionöket is igénybe vettem
-(\texttt{postgresql\_anonymizer} \textcolor{red}{(R)}, \texttt{postgresql\_faker} \textcolor{red}{(R)}).
+(\texttt{postgresql\_anonymizer}\cite{SoftwarePostgreSqlAnonymizer},
+\texttt{postgresql\_faker}\cite{SoftwarePostgreSqlFaker}).
 
-Népszerű keretrendszerként a Laravel PHP-keretrendszert választottam.
+Népszerű keretrendszerként a Laravel PHP-keretrendszert%
+\cite{SoftwareLaravel}
+választottam.
 A Laravel beépített megoldást tartalmaz
-az adatmodell leírásához és tesztadatok generálásához \textcolor{red}{(R)}.
+az adatmodell leírásához és tesztadatok generálásához.
 A generáláshoz a beépített \texttt{artisan} szkript által biztosított
 standard migráló eszözöket használtam.
 Sajnos a nagyméretű esetben a Laravel megoldása órákig való futás után sem végzett,
@@ -2738,7 +2741,6 @@ A nagyméretű adathalmaz esetében pedig az eredmények a következők:
 Nagyméretű adathalmaz generálása különböző megoldásokkal. (Több mint tízmillió rekord.)
 }
 \end{table}
-
 
 
 \chapter{Extrém használati példák}
