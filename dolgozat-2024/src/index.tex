@@ -2838,10 +2838,12 @@ vagy a dev mode és zero mode.
 \begin{enumerate}
     \setlength\itemsep{-0.5em}
     \item \textbf{Támogatja a relációs adatmodellt.} Valóban:
-          a megoldás megvalósítja a relációs storage API-t és
+          a relációs adatmodell entitásait a relációs storage API-val definiáltuk,
+          a bemutatott megoldás pedig megvalósítja ezt az API-t és
           támogatja az SQL lekérdezések futtatását.
     \item \textbf{Determinisztikus, koherens.} Valóban:
-          a hierarchikus véletlengenerátor biztosítja a determinisztikusságot,
+          a \texttt{TreeRandom} mint hierarchikus véletlengenerátor
+          biztosítja a determinisztikusságot,
           az értékkiosztások pedig a koherenciát adatelérés és index,
           illetve több lekérdezés között.
     \item \textbf{Az adatok könnyen variálhatóak.} Valóban:
@@ -2875,19 +2877,6 @@ vagy a dev mode és zero mode.
           az írhatósági és az egyszerű tranzakciókezelési réteg
           lehetővé teszi az írási műveletek hatásainak megjegyzését.
 \end{enumerate}
-
-\textcolor{red}{
-blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah
-blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah
-blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah
-blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah
-blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah
-blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah
-blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah
-blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah
-blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah
-}
-\todoref{Célkitűzések teljesülését a mérések alapján kiegészíteni}
 
 
 \section{Tervek a közeljövőre}
