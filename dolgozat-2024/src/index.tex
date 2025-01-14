@@ -2446,8 +2446,10 @@ a standalone JAR fájl indításával vagy a telepíthető Debian csomag `holodb
 parancsával tudjuk futtatni.
 
 A szerver indításához körülbelül minimum 8MB heap-méretre van szükségünk,
-10MB mérettel pedig már biztonságosan futtathatunk akár óriásadatbázisos
-bonyolult lekérdezéseket is
+de a használat körülbelül 10MB-nál mondható biztonságosnak.
+Ha nem töltünk be óriás értékkészleteket és egyedi működéseket,
+akkor egy munkamenettel csatlakozva ez a 10MB már elégséges
+akár bonyolult lekérdezések futtatásához is akár óriás adatbázison
 (például a \texttt{-Xms5M -Xmx10M -XX:+UseG1GC} JVM kapcsolókkal).
 
 Javás programkörnyezetből A MiniConnect API-n keresztül vagy pedig JDBC-vel
@@ -2467,7 +2469,7 @@ az eredménytáblák pedig szépen formázottan jelennek meg.
 \begin{figure}[H]
 \centering
 \includegraphics[height=0.4\textwidth]{image/miniconnect-repl}
-\caption{MiniConnect REPL használat közben}
+\caption{A MiniConnect REPL használat közben}
 \end{figure}
 
 
