@@ -2171,7 +2171,7 @@ kereséskor pedig a kettő által adott találatok metszetét.
 Megjegyzem, ha vannak kiemelt szavak, akkor a többi szó halmaza részben vagy egészben
 akár mesterségesen előállított szavakból is állhat.
 Ekkor egy minta alapján generálunk szavakat
-(on-the-fly, ld. a reguláris kifejezések kapcsán írottakat),
+(on-the-fly, lásd a reguláris kifejezések kapcsán írottakat),
 majd például a Zipf-törvény alapján hozzájuk rendeljük a gyakoriságokat.
 Ha így járunk el, megspóroljuk a konkrét szavak tárolásának tárhelyigényét.
 
@@ -2438,7 +2438,7 @@ melyben három tábla található:
 \texttt{courses} (4 oszlop, 30 rekord),
 \texttt{students} (4 oszlop, 10~000 rekord) és
 \texttt{course\_student} (kapcsolótábla, 3000 rekord).
-(A konkrét konfigurációs fájlt lásd a tesztrepóban.)
+(A konkrét konfigurácihoz lásd: \autoref{appendix:projectlinks})
 
 A lekérdezések közvetlen mérésénél az SQL parancsnak a JDBC API-n keresztüli beküldésétől
 az eredménytábla végigiterálásnak végéig eltelt időt mértem
@@ -2577,7 +2577,10 @@ A bash szkript a futtatási ciklusok között legalább 5 másodperc szünetet v
 
 A lekérdezésszintű tesztekhez a H2-t a \texttt{QUERY\_CACHE\_SIZE{=}0} opcióval használtam,
 míg az integrált tesztnél ezt elhagytam az authentikusság kedvéért.
-(A teljes benchmarkért ld.: \autoref{appendix:projectlinks}).
+
+
+
+(A teljes benchmarkért lásd: \autoref{appendix:projectlinks}).
 
 \textcolor{red}{
 A XXX ábra felső részén
