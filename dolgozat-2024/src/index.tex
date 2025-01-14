@@ -2515,6 +2515,9 @@ mivel az érték kiszámítását minden egyes visszaadott mezőre el kell vége
   hogy az eredménytábla közös értékre vagy mezőre mutató hozzáférési pontjai
   közös lazy-computing referenciát használjanak.
 }.
+Ugyanakkor kevés adatnál a teljesítmény meglepően jó,
+vagyis a korábban tárgyalt indexelési technikák jól teljesítenek.
+
 Az összehasonlítást beágyazott H2-vel és (nem dockeres) MariaDB szerverrel végeztem,
 ezekhez az \textbftt{EXT} eset adatbázistartalmát materializáltam le.
 A \ref{table:queryComparison} táblázat mutatja a futási időket mikromásodpercben.
