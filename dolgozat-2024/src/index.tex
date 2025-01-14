@@ -2403,40 +2403,8 @@ a következőkben a futtatásról és csatlakozásról lesz szó.
 
 A HoloDB szerver használható önálló alkalmazásként vagy Docker konténerként.
 Önálló alkalmazásként forráskódból a megfelelő `gradle run` taszkkal,
-a standalone jar fájl indításával vagy a telepíthető Debian csomag `holodb-server`
+a standalone JAR fájl indításával vagy a telepíthető Debian csomag `holodb-server`
 parancsával tudjuk futtatni.
-
-A dockeres indítás akár egyetlen paranccsal is történhet, például:
-
-\vspace{-5pt}
-\begin{minted}[fontsize=\small,framesep=4pt,frame=single,framerule=1.5pt,rulecolor=\color{gray!30}]{shell}
-docker run --rm -v sample-config.yaml:/app/config.yaml -p 3430:3430 -it miniconnect/holodb:latest
-\end{minted}
-\vspace{-35pt}
-
-A \texttt{sample-config.yaml} helyén megadhatjuk a saját konfigurációs fájlunkat,
-az kettőspont bal oldalán lévő \texttt{3430} helyett pedig egy egyedi portot,
-amelyen az adatbázist el kívánjuk érni.
-
-Az adatbázishoz interaktívan csatlakozni a `micl` klienssel lehet
-(telepítéshez lásd a \ŧexttt{miniconnect-client} project \texttt{README.md} fájlját).
-Ez a REPL kliens azonnal csatlakozik a MiniConnect API-val kompatibilis adatbázishoz
-a megadott hoszton és porton (alapértelmezetten \texttt{localhost:3430}).
-Gépeléskor szintaxiskiemelést, automatikus kiegészítést és parancstörténetet kapunk,
-az eredménytáblák pedig szépen formázottan jelennek meg.
-
-........
-
-Javás programkörnyezetből A MiniConnect API-n keresztül vagy pedig JDBC-vel
-tudunk csatlakozni az adatbázishoz.
-Ehhez Gradle vagy Maven projekt esetén
-a \texttt{hu.webarticum.holodb:embedded:\$\{holodbVersion\}} függőség beállítása szükséges.
-A JDBC URL
-
-
-\textcolor{red}{MEGÍRNI}
-
-XXXXXXXXXXXXXXXXXXXXXXXXXX
 
 \begin{table}[H]
 \captionsetup{justification=justified, singlelinecheck=false, margin=0.7cm}
@@ -2456,8 +2424,45 @@ XXXXXXXXXXXXXXXXXXXXXXXXXX
 
 \end{tabular}
 \end{center}
-\caption[XXX]{XXX}
+\caption[JAR fájl és Docker-kép mérete]{
+JAR fájl és Docker-kép mérete összehasonlításban.
+A \textbf{HoloDB-opt} sor egy \textit{kísérleti} disztribúciót mutat,
+ahol a JAR fájlban a Proguard eszközzel kirostáltam a függőségeket nem használt részeit,
+illetve egy minimális \texttt{alpine}-alapú Docker-képet használtam minimális Java-telepítéssel.
+}
 \end{table}
+
+A dockeres indítás akár egyetlen paranccsal is történhet, például:
+
+\vspace{-5pt}
+\begin{minted}[fontsize=\small,framesep=4pt,frame=single,framerule=1.5pt,rulecolor=\color{gray!30}]{shell}
+docker run --rm -v sample-config.yaml:/app/config.yaml -p 3430:3430 -it miniconnect/holodb:latest
+\end{minted}
+\vspace{-35pt}
+
+A \texttt{sample-config.yaml} helyén megadhatjuk a saját konfigurációs fájlunkat,
+az kettőspont bal oldalán lévő \texttt{3430} helyett pedig egy egyedi portot,
+amelyen az adatbázist el kívánjuk érni.
+
+Javás programkörnyezetből A MiniConnect API-n keresztül vagy pedig JDBC-vel
+tudunk csatlakozni az adatbázishoz.
+Java projekt esetén beágyazott adatbázis is használható,
+ami akár JPA entitásokra helyezett annotációkkal is indítható.
+(A részleteket lásd a \ŧexttt{miniconnect-client} project \texttt{README.md} fájljában,
+illetve a példaprojektekben.)
+
+Interaktívan csatlakozni a `micl` klienssel lehet
+(telepítéshez lásd a \ŧexttt{miniconnect-client} project \texttt{README.md} fájlját).
+Ez a REPL kliens azonnal csatlakozik a MiniConnect API-val kompatibilis adatbázishoz
+a megadott hoszton és porton (alapértelmezetten \texttt{localhost:3430}).
+Gépeléskor szintaxiskiemelést, automatikus kiegészítést és parancstörténetet kapunk,
+az eredménytáblák pedig szépen formázottan jelennek meg.
+
+\begin{figure}[H]
+\centering
+\includesvg[height=0.8\textwidth]{image/miniconnect-repl}
+\caption{MiniConnect REPL használat közben}
+\end{figure}
 
 
 \section{Terheléses teszt}
