@@ -2676,10 +2676,12 @@ Kihasználjuk, hogy egy-egy lekérdezés implicite többé-kevésbé megmondja, 
 Tegyük föl például, hogy a frissen indított zero mode szerverre
 elsőként a következő két SQL-lekérdezés érkezik:
 
+\vspace{-5pt}
 \begin{minted}[fontsize=\small,framesep=4pt,frame=single,framerule=1.5pt,rulecolor=\color{gray!30}]{java}
   SELECT email FROM customers WHERE vip=1 LIMIT 10;
   SELECT COUNT(*) FROM customers WHERE phone IS NOT NULL;
 \end{minted}
+\vspace{-35pt}
 
 Amikor az első lekérdezést értelmezzük, már tudjuk,
 hogy elvileg lennie kell egy \texttt{customers} nevű táblának,
