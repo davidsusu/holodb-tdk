@@ -2837,38 +2837,40 @@ vagy a dev mode és zero mode.
 
 \begin{enumerate}
     \setlength\itemsep{-0.5em}
-    \item \textbf{Támogatja a relációs adatmodellt.} Valóban,
+    \item \textbf{Támogatja a relációs adatmodellt.} Valóban;
           a relációs adatmodell entitásait a relációs storage API-val definiáltuk,
           a bemutatott megoldás pedig megvalósítja ezt az API-t és
           támogatja az SQL lekérdezések futtatását.
-    \item \textbf{Determinisztikus, koherens.} Valóban,
+    \item \textbf{Determinisztikus, koherens.} Valóban;
           a \texttt{TreeRandom} mint hierarchikus véletlengenerátor
           biztosítja a determinisztikusságot,
           az értékkiosztások pedig a koherenciát adatelérés és index,
           illetve több lekérdezés között.
-    \item \textbf{Az adatok könnyen variálhatóak.} Valóban,
+    \item \textbf{Az adatok könnyen variálhatóak.} Valóban;
           minden számítás véletlenfaktora a fő \texttt{TreeRandom} példányból származik.
           Ez a konfigurációban elhelyezett root seed alapján példányosodik,
           így a root seed módosításával a teljes adatbázis megváltozik.
-    \item \textbf{Óriás adatmennyiséget is képes szimulálni.} Valóban,
+    \item \textbf{Óriás adatmennyiséget is képes szimulálni.} Valóban;
           mivel az adatok nincsenek tárolva, a mennyiség önmagában nem jelent problémát.
           Az értékkiosztások, SQL-futtatók és más számítások pedig
           a nagy számokat is támogató beépített aritmetikát használják.
           Láttuk, hogy a HoloDB a gyakorlatban is jól kezeli az óriás táblákat.
-    \item \textbf{Gyors, indexelt keresést nyújt, a lekérések időigénye elfogadható.} Valóban,
+    \item \textbf{Gyors, indexelt keresést nyújt, a lekérések időigénye elfogadható.} Valóban;
           az értékkiosztásokban alkalmazott megoldások lehetővé teszik a virtuális indexeket.
           Az óriás számokat is támogató beépített aritmetika kis számokon nagyon hatékony.
           Végeredményben, az empirikus tesztek alapján a lekérdezések sebessége elfogadható.
-    \item \textbf{Azonnal elindul, nincs számottevő preparálási folyamat.} Valóban:
+    \item \textbf{Azonnal elindul, nincs számottevő preparálási folyamat.} Valóban;
           alapértelmezetten pusztán a konfiguráció betöltése történik meg az indításkor.
-    \item \textbf{Kevés memóriát foglal, az adatokat on-the-fly számítja.} Valóban:
+          Ez esetenként bizonyos adatstruktúrák legenerálását is jelenti,
+          de láttuk, hogy az indítási idő ekkor is rövid.
+    \item \textbf{Kevés memóriát foglal, az adatokat on-the-fly számítja.} Valóban;
           maguk az adatok egyáltalán nincsenek tárolva, lekérdezéskor kerülnek számításra,
           néhány esetben kisebb adatstruktúrák generálódnak (pl. regex szófák),
           melyek mérete a táblamérettől független.
-    \item \textbf{Könnyen és rugalmasan konfigurálható.} Valóban:
+    \item \textbf{Könnyen és rugalmasan konfigurálható.} Valóban;
           a deklaratív YAML konfigurációs fájl könnyen kezelhető és verziókezelhető,
           minden fontosabb paraméter beállítására alkalmas.
-    \item \textbf{Skálázható, finomhangolható.} Valóban:
+    \item \textbf{Skálázható, finomhangolható.} Valóban;
           lényegileg minden komponens skálázható, illetve akár kicserélhető,
           különösen az értékkészletek, monoton méretigazítások és permutációk
           vannak hatással a teljesítményre és az eredmény minőségére.
@@ -2876,7 +2878,7 @@ vagy a dev mode és zero mode.
           lehetőség van az értékkiosztások egyedi Java osztályokkal való implementálására,
           ami nagyrészt a konfigurációban is megadható,
           emellett egy programozható API is rendelkezésre áll.
-    \item \textbf{Opcionálisan írható.} Valóban:
+    \item \textbf{Opcionálisan írható.} Valóban;
           a módosító SQL-ek is támogatottak,
           az írhatósági és az egyszerű tranzakciókezelési réteg
           lehetővé teszi az írási műveletek hatásainak megjegyzését.
