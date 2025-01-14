@@ -2848,8 +2848,8 @@ vagy a dev mode és zero mode.
           illetve több lekérdezés között.
     \item \textbf{Az adatok könnyen variálhatóak.} Valóban:
           minden számítás véletlenfaktora a fő \texttt{TreeRandom} példányból származik,
-          így minden adat függ a konfigurációban elhelyezett root seedtől,
-          melynek módosításával a teljes adatbázis megváltozik.
+          mely a konfigurációban elhelyezett root seed alapján példányosodik,
+          így a root seed módosításával a teljes adatbázis megváltozik.
     \item \textbf{Óriás adatmennyiséget is képes szimulálni.} Valóban:
           mivel az adatok nincsenek tárolva, a mennyiség önmagában nem jelent problémát;
           az aritmetika a nagy számokkal történő számoláshoz lett igazítva.
