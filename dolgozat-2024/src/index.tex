@@ -2848,12 +2848,14 @@ vagy a dev mode és zero mode.
           vannak hatással a teljesítményre és az eredmény minőségére.
     \item \textbf{Egyedi működéssel könnyen bővíthető.} Valóban:
           lehetőség van az értékkiosztások egyedi Java osztályokkal való implementálására,
-          ami nagyrészt a konfigurációban is megadható,
-          emellett egy programozható API is rendelkezésre áll.
+          ami nagyrészt a konfigurációban is megadható.
+          Emellett egy programozható API is rendelkezésre áll.
     \item \textbf{Opcionálisan írható.} Valóban;
-          a módosító SQL-ek is támogatottak,
-          az írhatósági és az egyszerű tranzakciókezelési réteg
-          lehetővé teszi az írási műveletek hatásainak megjegyzését.
+          a \texttt{Table} interfész támogatja a módosító műveleteket,
+          melyeket a \texttt{DiffTable} dekorációval valósít meg,
+          megjegyezve a módosításokat.
+          Az SQL-futtató rétegbena egy egyszerű tranzakciókezelés
+          és a módosító SQL-ek is támogatottak.
 \end{enumerate}
 
 
