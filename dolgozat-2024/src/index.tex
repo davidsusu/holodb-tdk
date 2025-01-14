@@ -460,6 +460,7 @@ illetve a szélesebb összehasonlító elemzésre
 majd csak egy későbbi fázisban kerülhet sor.
 
 \section{JMH mérési környezet}
+\label{jmhBenchmarkEnvironment}
 
 A dolgozatban szereplő, mikroperformanciára vonatkozó méréseket JMH (\textit{Java Microbenchmark Harness}) keretrendszerben végeztem,
 (jelenleg ez számít standardnak Java környezetben).
@@ -483,7 +484,7 @@ Futtatókörnyezet:
 
 \begin{itemize}
     \item Gradle 8.10.2, \texttt{me.champeau.jmh} 0.7.2, JMH 1.37
-    \item Debian 12, OpenJDK 17.0.13
+    \item Debian 12 GNU/Linux, OpenJDK 17.0.13
     \item Intel Core i5-13500H, 16GB RAM
 \end{itemize}
 
@@ -2358,6 +2359,38 @@ az egyesített táblában a kisebb tábla adatait pedig redundánsan szerepeltet
 \chapter{Empirikus tapasztalatok, összehasonlítás}
 
 
+\section{Mérési környezet}
+
+Az ebben a fejezetben leírt mérések nem JMH alapokon történtek,
+hiszen főként end-to-end vagy integrált jellegűek,
+illetve több helyen más adatbázisokkal vetettem össze az eredményeket.
+Minden mérést ugyanazon a Debian 12 GNU/Linux rendszerű gépen futtattam
+(az egyéb paramétereket lásd a \ref{jmhBenchmarkEnvironment} szekcióban).
+A táblázatoknál a konkrét mérési módszert a táblázat alatti leírásban írtam le.
+Az összehasonlításoknál a következő szoftververziókat használtam:
+
+\begin{table}[H]
+\captionsetup{justification=justified, singlelinecheck=false, margin=0.7cm}
+\begin{center}
+\begin{tabular}{|l||r|r||} 
+ \hline
+ \multicolumn{1}{|>{\centering\arraybackslash}m{2cm}|}{~}
+    & \multicolumn{1}{>{\centering\arraybackslash}m{3cm}|}{\textbf{Standalone}}
+    & \multicolumn{1}{>{\centering\arraybackslash}m{3cm}|}{\textbf{Docker}}\\
+ \hline\hline
+ 
+ \textbf{H2}         & \texttt{2.2.224} & \texttt{mertcingoz/h2:2.3.232} \\
+ \textbf{MariaDB}    & \texttt{10.11.6} (MySQL 15,1) & \texttt{mariadb:10.11.6-jammy} (official) \\
+ \textbf{PostgreSQL} & \texttt{15.10} & \nodata \\
+ \textbf{Laravel}    & \texttt{11.31} & \nodata \\
+ \hline
+
+\end{tabular}
+\end{center}
+\caption[XXX]{XXX}
+\end{table}
+
+
 \todoref{Chapter: Tapasztalatok}
 
 Bevezetés, általános paraméterek:
@@ -2366,6 +2399,7 @@ MariaDB szerver: mysql  Ver 15.1 Distrib 10.11.6-MariaDB, for debian-linux-gnu (
 PostgreSQL szerver: psql (PostgreSQL) 15.10 (Debian 15.10-0+deb12u1)
 Laravel: "laravel/framework": "^11.31"
 MariaDB docker: mariadb:10.11.6-jammy
+
 
 \section{Általános tapasztalatok}
 
