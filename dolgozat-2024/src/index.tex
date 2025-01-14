@@ -2837,23 +2837,24 @@ vagy a dev mode és zero mode.
 
 \begin{enumerate}
     \setlength\itemsep{-0.5em}
-    \item \textbf{Támogatja a relációs adatmodellt.} Valóban:
+    \item \textbf{Támogatja a relációs adatmodellt.} Valóban,
           a relációs adatmodell entitásait a relációs storage API-val definiáltuk,
           a bemutatott megoldás pedig megvalósítja ezt az API-t és
           támogatja az SQL lekérdezések futtatását.
-    \item \textbf{Determinisztikus, koherens.} Valóban:
+    \item \textbf{Determinisztikus, koherens.} Valóban,
           a \texttt{TreeRandom} mint hierarchikus véletlengenerátor
           biztosítja a determinisztikusságot,
           az értékkiosztások pedig a koherenciát adatelérés és index,
           illetve több lekérdezés között.
-    \item \textbf{Az adatok könnyen variálhatóak.} Valóban:
-          minden számítás véletlenfaktora a fő \texttt{TreeRandom} példányból származik,
-          mely a konfigurációban elhelyezett root seed alapján példányosodik,
+    \item \textbf{Az adatok könnyen variálhatóak.} Valóban,
+          minden számítás véletlenfaktora a fő \texttt{TreeRandom} példányból származik.
+          Ez a konfigurációban elhelyezett root seed alapján példányosodik,
           így a root seed módosításával a teljes adatbázis megváltozik.
-    \item \textbf{Óriás adatmennyiséget is képes szimulálni.} Valóban:
-          mivel az adatok nincsenek tárolva, a mennyiség önmagában nem jelent problémát;
-          az értékkiosztások és más számítások
-          a nagy számokat is támogató, kis számokon pedig hatékony beépített aritmetikát használják.
+    \item \textbf{Óriás adatmennyiséget is képes szimulálni.} Valóban,
+          mivel az adatok nincsenek tárolva, a mennyiség önmagában nem jelent problémát.
+          Az értékkiosztások, SQL-futtatók és más számítások pedig
+          a nagy számokat is támogató beépített aritmetikát használják.
+          Láttuk, hogy a HoloDB a gyakorlatban is jól kezeli az óriás táblákat.
     \item \textbf{Gyors, indexelt keresést nyújt, a lekérések időigénye elfogadható.} Valóban:
           az értékkiosztásokban alkalmazott megoldások lehetővé teszik a virtuális indexeket;
           a lekérdezések sebessége az empirikus tesztek alapján is elfogadható.
