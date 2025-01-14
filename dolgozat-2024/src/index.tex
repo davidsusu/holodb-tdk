@@ -2847,7 +2847,8 @@ vagy a dev mode és zero mode.
           az értékkiosztások pedig a koherenciát adatelérés és index,
           illetve több lekérdezés között.
     \item \textbf{Az adatok könnyen variálhatóak.} Valóban:
-          minden adat függ a konfigurációban elhelyezett root seedtől,
+          minden számítás véletlenfaktora a fő \texttt{TreeRandom} példányból származik,
+          így minden adat függ a konfigurációban elhelyezett root seedtől,
           melynek módosításával a teljes adatbázis megváltozik.
     \item \textbf{Óriás adatmennyiséget is képes szimulálni.} Valóban:
           mivel az adatok nincsenek tárolva, a mennyiség önmagában nem jelent problémát;
