@@ -2567,27 +2567,39 @@ Az integrált tesztelést egy Micronaut keretrendszerben implementált
 alkalmazás REST API-n keresztüli hívásával futtattam.
 A Micronaut keretrendszer egy kis erőforrásigényű Java keretrendszer,
 amely minimális erőforrás-lábnyománál fogva a legalkalmasabbnak tűnt a mérésre.
-
 A Spring és Quarkus rendszerekkel szemben a Micronaut már fordítási időben
 tárolja és optimalizálja az alkalmazás menedzselt objektumai közötti függőségeket,
 így általában gyorsabban is indul el, mint az előző kettő,
 így performancia-tesztekre is alkalmasabb.
 
+A mérési apparátus egy szerver és egy kliens alkalmazásból áll.
+A szerver tartja a kapcsolatot az adatbázissal JDBC-n keresztül,
+és REST API-t biztosít hozzá.
+A szintén Micronaut keretrendszerben írt kliens ezt a REST API-t hívogatja tömegesen.
+
 Pontosan ugyanazt az induló adatbázistartalmat használtam,
 mint az előző fejezet lekérdezési tesztjeinél.
 Az adatgenerálás maga nem része a mérésnek.
 
-Az alkalmazás futtatását egy POSIX shell szkript vezérli.
+Az alkalmazások futtatását egy POSIX shell szkript vezérli.
 Egy további Bash szkript az előbbi fájlt hívja ciklusban,
 közben átírja a konfigurációs fájlt az egyes tesztekhez igazítva.
 A bash szkript a futtatási ciklusok között legalább 5 másodperc szünetet vár.
 (A teljes benchmarkért lásd: \autoref{appendix:projectlinks}).
 
-\textcolor{red}{
-\textbftt{RO-SIMP}
-\textbftt{RO-CMPX}
-\textbftt{RO-CMPX}
-}
+A \textbftt{RO-SIMP} tesztben csak egyszerű entitás-adatlekérdezési
+összesen (10~203 hívás történik).
+HoloDB esetén minden tábla csak-olvasható módban van
+(vagyis a \texttt{TableDiff} dekorátor nélkül).
+
+A \textbftt{RO-CMPX} teszt is csak-olvasható.
+A \textbftt{RO-SIMP} hívásain túl egy külön végpont is meghívásra kerül,
+mely néhány egyszerű statisztikai lekérdezést hajt végre.
+
+A \textbftt{WR-CMPX} tesztben írási műveletek is végrehajtásra kerülnek.
+A \textbftt{RO-SIMP} hívásain túl 50 entitás-módosítási kérés is megy a REST API-ra.
+HoloDB esetén ekkor minden tábla írható módban van
+(vagyis a \texttt{TableDiff} dekorátor használatával).
 
 \begin{table}[H]
 \captionsetup{justification=justified, singlelinecheck=false, margin=2.5cm}
