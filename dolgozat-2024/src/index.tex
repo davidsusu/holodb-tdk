@@ -2398,34 +2398,47 @@ XXXXXXXXXXXXXXXXXXXXXXXXXX
 
 \textcolor{red}{MEGÍRNI}
 
+\begin{table}[H]
+\captionsetup{justification=justified, singlelinecheck=false, margin=0.7cm}
+\begin{center}
+\begin{tabular}{|l||r|r|r|r|r||} 
+ \hline
+ \multicolumn{1}{|>{\centering\arraybackslash}m{1.7cm}|}{~}
+    & \multicolumn{1}{>{\centering\arraybackslash}m{1.3cm}|}{\begin{tabular}{c} \makebox[0pt]{\footnotesize{\textbftt{Q-FLD}}} \\ ({\textmu}s) \end{tabular}}
+    & \multicolumn{1}{>{\centering\arraybackslash}m{1.3cm}|}{\begin{tabular}{c} \makebox[0pt]{\footnotesize{\textbftt{Q-REC}}} \\ ({\textmu}s) \end{tabular}}
+    & \multicolumn{1}{>{\centering\arraybackslash}m{1.3cm}|}{\begin{tabular}{c} \makebox[0pt]{\footnotesize{\textbftt{Q-CMPX}}} \\ ({\textmu}s) \end{tabular}}
+    & \multicolumn{1}{>{\centering\arraybackslash}m{1.3cm}|}{\begin{tabular}{c} \makebox[0pt]{\footnotesize{\textbftt{Q-TFUL}}} \\ ({\textmu}s) \end{tabular}}
+    & \multicolumn{1}{>{\centering\arraybackslash}m{1.3cm}||}{\begin{tabular}{c} \makebox[0pt]{\footnotesize{\textbftt{Q-MULT}}} \\ ({\textmu}s) \end{tabular}}\\
+ \hline\hline
+ 
+ \textbf{HoloDB/}\textbftt{EXT} & 43,00 & 180,35 & 1~981,98 & 1~514~177 & 6~818 \\
+ \textbf{HoloDB/}\textbftt{DEF} & 24,66 & 130,08 &   225,17 & 1~143~721 & 3~592 \\
+ \textbf{HoloDB/}\textbftt{MIN} & 22,82 &  20,22 &    44,58 &    25~909 &   365 \\
+ \textbf{H2}                    & 12,77 &   9,73 &    17,60 &     1~965 &   177 \\
+ \textbf{MySQL}                 & 47,87 &  46,27 &    73,02 &     3~393 & 1~429 \\
+ \hline
+
+\end{tabular}
+\end{center}
+\caption[Integrált tesztek eredménye]{
+Integrált tesztek eredménye különböző adatbázisokkal.
+
+\textbf{\textit{A sorok jelentése}}:
+\textbf{HoloDB/}\textbftt{EXT}: beágyazott HoloDB legjobb minőségű paraméterekkel;
+\textbf{HoloDB/}\textbftt{DEF}: beágyazott HoloDB alapértelmezett paraméterekkel;
+\textbf{HoloDB/}\textbftt{MIN}: beágyazott HoloDB minimális paraméterekkel;
+\textbf{H2}: beágyazott H2;
+\textbf{MySQL}: MySQL szerver;
+\textbf{\textit{A sorok jelentése}}: Lásd a főszöveget.
+}
+\end{table}
+
+
+
 
 \section{Általános jellemzők}
 
 \textcolor{red}{MEGÍRNI}
-
-
-\begin{table}[H]
-\captionsetup{justification=justified, singlelinecheck=false, margin=0.7cm}
-\begin{center}
-\begin{tabular}{|l|r|} 
- \hline
- \multicolumn{1}{|>{\centering\arraybackslash}m{7cm}|}{\textbf{Esemény}}
-    & \multicolumn{1}{>{\centering\arraybackslash}m{2.5cm}|}{\begin{tabular}{c} \textbf{Időpont} \\ (ns) \end{tabular}}\\
- \hline\hline
- \textbf{Indítási parancs} & 0 \\
- \textbf{Ready} & 1~234 \\
- \textbf{Parancs kiadása} & 1~234 \\
- \textbf{Parancs beérkezése} & 1~234 \\
- \textbf{Futtatás vége} & 1~234 \\
- \textbf{...} & 1~234 \\
- \textbf{Feldolgozás vége} & 1~234 \\
- \hline
-\end{tabular}
-\end{center}
-\caption[HoloDB futtatás timeline]{
-HoloDB futtatás timeline.
-}
-\end{table}
 
 
 \section{Integrált tesztek eredménye}
@@ -2503,43 +2516,6 @@ a `QUERY_CACHE_SIZE=0` opcióval használtam,
 a MySQL-t pedig a `useServerPrepStmts=false&cachePrepStmts=false` opciókkal
 és a `query_cache_type=OFF` szerveroldali beállítással.
 \fi
-
-\begin{table}[H]
-\captionsetup{justification=justified, singlelinecheck=false, margin=0.7cm}
-\begin{center}
-\begin{tabular}{|l||r|r|r|r|r||} 
- \hline
- \multicolumn{1}{|>{\centering\arraybackslash}m{1.7cm}|}{~}
-    & \multicolumn{1}{>{\centering\arraybackslash}m{1.3cm}|}{\begin{tabular}{c} \makebox[0pt]{\footnotesize{\textbftt{Q-FLD}}} \\ ({\textmu}s) \end{tabular}}
-    & \multicolumn{1}{>{\centering\arraybackslash}m{1.3cm}|}{\begin{tabular}{c} \makebox[0pt]{\footnotesize{\textbftt{Q-REC}}} \\ ({\textmu}s) \end{tabular}}
-    & \multicolumn{1}{>{\centering\arraybackslash}m{1.3cm}|}{\begin{tabular}{c} \makebox[0pt]{\footnotesize{\textbftt{Q-CMPX}}} \\ ({\textmu}s) \end{tabular}}
-    & \multicolumn{1}{>{\centering\arraybackslash}m{1.3cm}|}{\begin{tabular}{c} \makebox[0pt]{\footnotesize{\textbftt{Q-TFUL}}} \\ ({\textmu}s) \end{tabular}}
-    & \multicolumn{1}{>{\centering\arraybackslash}m{1.3cm}||}{\begin{tabular}{c} \makebox[0pt]{\footnotesize{\textbftt{Q-MULT}}} \\ ({\textmu}s) \end{tabular}}\\
- \hline\hline
- 
- \textbf{HoloDB/}\textbftt{EXT} & 43,00 & 180,35 & 1~981,98 & 1~514~177 & 6~818 \\
- \textbf{HoloDB/}\textbftt{DEF} & 24,66 & 130,08 &   225,17 & 1~143~721 & 3~592 \\
- \textbf{HoloDB/}\textbftt{MIN} & 22,82 &  20,22 &    44,58 &    25~909 &   365 \\
- \textbf{H2}                    & 12,77 &   9,73 &    17,60 &     1~965 &   177 \\
- \textbf{MySQL}                 & 47,87 &  46,27 &    73,02 &     3~393 & 1~429 \\
- \hline
-
-\end{tabular}
-\end{center}
-\caption[Integrált tesztek eredménye]{
-Integrált tesztek eredménye különböző adatbázisokkal.
-
-\textbf{\textit{A sorok jelentése}}:
-\textbf{HoloDB/}\textbftt{EXT}: beágyazott HoloDB legjobb minőségű paraméterekkel;
-\textbf{HoloDB/}\textbftt{DEF}: beágyazott HoloDB alapértelmezett paraméterekkel;
-\textbf{HoloDB/}\textbftt{MIN}: beágyazott HoloDB minimális paraméterekkel;
-\textbf{H2}: beágyazott H2;
-\textbf{MySQL}: MySQL szerver;
-\textbf{\textit{A sorok jelentése}}: Lásd a főszöveget.
-}
-\end{table}
-
-
 
 \begin{table}[H]
 \captionsetup{justification=justified, singlelinecheck=false, margin=0.7cm}
