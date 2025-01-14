@@ -2401,10 +2401,7 @@ a konfigurációt, a futtatást, illetve a tesztadatbázishoz való csatlakozás
 A konfigurációról már volt szó,
 a következőkben a futtatásról és csatlakozásról lesz szó.
 
-A HoloDB szerver használható önálló alkalmazásként vagy Docker konténerként.
-Önálló alkalmazásként forráskódból a megfelelő `gradle run` taszkkal,
-a standalone JAR fájl indításával vagy a telepíthető Debian csomag `holodb-server`
-parancsával tudjuk futtatni.
+A HoloDB szerver használható Docker konténerként vagy önálló alkalmazásként.
 
 \begin{table}[H]
 \captionsetup{justification=justified, singlelinecheck=false, margin=0.7cm}
@@ -2443,6 +2440,15 @@ docker run --rm -v sample-config.yaml:/app/config.yaml -p 3430:3430 -it miniconn
 A \texttt{sample-config.yaml} helyén megadhatjuk a saját konfigurációs fájlunkat,
 az kettőspont bal oldalán lévő \texttt{3430} helyett pedig egy egyedi portot,
 amelyen az adatbázist el kívánjuk érni.
+
+Önálló alkalmazásként forráskódból a megfelelő `gradle run` taszkkal,
+a standalone JAR fájl indításával vagy a telepíthető Debian csomag `holodb-server`
+parancsával tudjuk futtatni.
+
+A szerver indításához körülbelül minimum 8MB heap-méretre van szükségünk,
+10MB mérettel pedig már biztonságosan futtathatunk akár óriásadatbázisos
+bonyolult lekérdezéseket is
+(például a \texttt{-Xms5M -Xmx10M -XX:+UseG1GC} JVM kapcsolókkal).
 
 Javás programkörnyezetből A MiniConnect API-n keresztül vagy pedig JDBC-vel
 tudunk csatlakozni az adatbázishoz.
