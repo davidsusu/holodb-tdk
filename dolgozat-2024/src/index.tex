@@ -2367,20 +2367,21 @@ illetve több helyen más adatbázisokkal vetettem össze az eredményeket.
 Minden mérést ugyanazon a Debian 12 GNU/Linux rendszerű gépen futtattam
 (az egyéb paramétereket lásd a \ref{jmhBenchmarkEnvironment} szekcióban).
 A táblázatoknál a konkrét mérési módszert a táblázat alatti leírásban írtam le.
-Az összehasonlításoknál a következő szoftververziókat használtam:
+Az összehasonlításoknál a következő szoftververziókat használtam
+(az alapértelmezett kiegészítő eszközökkel együtt értve):
 
 \begin{table}[H]
 \captionsetup{justification=justified, singlelinecheck=false, margin=0.7cm}
 \begin{center}
-\begin{tabular}{|l||r|r||} 
+\begin{tabular}{|l||l|l||} 
  \hline
- \multicolumn{1}{|>{\centering\arraybackslash}m{2cm}|}{~}
-    & \multicolumn{1}{>{\centering\arraybackslash}m{3cm}|}{\textbf{Standalone}}
-    & \multicolumn{1}{>{\centering\arraybackslash}m{3cm}|}{\textbf{Docker}}\\
+ \multicolumn{1}{|>{\centering\arraybackslash}m{3cm}|}{~}
+    & \multicolumn{1}{>{\centering\arraybackslash}m{5cm}|}{\textbf{Standalone}}
+    & \multicolumn{1}{>{\centering\arraybackslash}m{5cm}|}{\textbf{Docker}}\\
  \hline\hline
  
  \textbf{H2}         & \texttt{2.2.224} & \texttt{mertcingoz/h2:2.3.232} \\
- \textbf{MariaDB}    & \texttt{10.11.6} (MySQL 15,1) & \texttt{mariadb:10.11.6-jammy} (official) \\
+ \textbf{MariaDB}    & \texttt{10.11.6} () & \texttt{mariadb:10.11.6-jammy} (official) \\
  \textbf{PostgreSQL} & \texttt{15.10} & \nodata \\
  \textbf{Laravel}    & \texttt{11.31} & \nodata \\
  \hline
