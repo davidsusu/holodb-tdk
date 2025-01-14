@@ -2478,10 +2478,10 @@ XXXX
 \vspace{-5pt}
 \begin{minted}[fontsize=\small,framesep=4pt,frame=single,framerule=1.5pt,rulecolor=\color{gray!30}]{sql}
 SELECT s.lastname FROM students s
-LEFT JOIN course_student cs ON cs.student_id = s.id
-LEFT JOIN courses c ON c.id = cs.course_id
-LEFT JOIN subjects su ON su.id = c.subject_id
-WHERE s.firstname='Ian' AND su.id=2
+    LEFT JOIN course_student cs ON cs.student_id = s.id
+    LEFT JOIN courses c ON c.id = cs.course_id
+    LEFT JOIN subjects su ON su.id = c.subject_id
+    WHERE s.firstname='Ian' AND su.id=2
 \end{minted}
 \vspace{-35pt}
 
