@@ -13,7 +13,9 @@ class CompanySeeder extends Seeder
     public function run(): void
     {
         DB::statement('ALTER TABLE companies DISABLE KEYS');
-        Company::factory()->count(200)->create();
+        foreach (range(1, 2) as $batch) {
+            Company::factory()->count(1000)->create();
+        }
         DB::statement('ALTER TABLE companies ENABLE KEYS');
     }
 }

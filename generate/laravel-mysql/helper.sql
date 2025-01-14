@@ -9,14 +9,15 @@ ALTER TABLE coupons DROP INDEX idx_coupons_identifier;
 SET FOREIGN_KEY_CHECKS = 0;
 ALTER TABLE coupons DISABLE KEYS;
 
-DROP PROCEDURE IF EXISTS InsertCouponRecords;
+DROP PROCEDURE IF EXISTS populate_coupons;
 
 DELIMITER //
-CREATE PROCEDURE InsertCouponRecords()
+CREATE PROCEDURE populate_coupons()
 BEGIN
     DECLARE counter BIGINT DEFAULT 1;
     WHILE counter <= 10000000 DO
-        INSERT INTO coupons (employee_id, identifier) VALUES (
+        INSERT INTO coupons (id, employee_id, identifier) VALUES (
+            counter,
             (RAND()*1000000) + 1,
             CONCAT(
                 CHAR(FLOOR(RAND()*6)+65),
@@ -32,14 +33,14 @@ END;
 //
 DELIMITER ;
 
-CALL InsertCouponRecords();
+CALL populate_coupons();
 
-DROP PROCEDURE InsertCouponRecords;
-
-CREATE INDEX idx_coupons_identifier ON coupons(identifier);
+DROP PROCEDURE populate_coupons;
 
 SET FOREIGN_KEY_CHECKS = 1;
 ALTER TABLE coupons ENABLE KEYS;
+
+CREATE INDEX idx_coupons_identifier ON coupons(identifier);
 
 ALTER TABLE coupons ADD PRIMARY KEY (id);
 ALTER TABLE coupons MODIFY id BIGINT NOT NULL AUTO_INCREMENT;

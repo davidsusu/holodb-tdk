@@ -13,7 +13,7 @@ class EmployeeSeeder extends Seeder
     public function run(): void
     {
         DB::statement('ALTER TABLE companies DISABLE KEYS');
-        foreach (range(1, 2) as $batch) {
+        foreach (range(1, 1000) as $batch) {
             Employee::factory()->count(1000)->create();
         }
         DB::statement('ALTER TABLE companies ENABLE KEYS');

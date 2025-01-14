@@ -12,3 +12,19 @@ SELECT
 FROM information_schema.tables
 WHERE table_schema = 'laravel-seeder-test'
 GROUP BY table_schema;
+
+-- `laravel-seeder-test`.coupons definition
+
+-- without keys:
+CREATE TABLE `coupons` (
+  `id` bigint(20) unsigned NOT NULL,
+  `employee_id` bigint(20) unsigned NOT NULL,
+  `identifier` varchar(255) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- add keys:
+ALTER TABLE `coupons` ADD PRIMARY KEY (`id`);
+ALTER TABLE `coupons` MODIFY id BIGINT NOT NULL AUTO_INCREMENT;
+ALTER TABLE `coupons` AUTO_INCREMENT = 10000001;
+CREATE INDEX `idx_coupons_identifier` ON `coupons`(`identifier`);
+ALTER TABLE `coupons` ADD CONSTRAINT `fk_coupons_employee` FOREIGN KEY (`employee_id`) REFERENCES `employees`(`id`) ON DELETE CASCADE ON UPDATE CASCADE;
