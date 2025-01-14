@@ -2855,9 +2855,10 @@ vagy a dev mode és zero mode.
           Az értékkiosztások, SQL-futtatók és más számítások pedig
           a nagy számokat is támogató beépített aritmetikát használják.
           Láttuk, hogy a HoloDB a gyakorlatban is jól kezeli az óriás táblákat.
-    \item \textbf{Gyors, indexelt keresést nyújt, a lekérések időigénye elfogadható.} Valóban:
-          az értékkiosztásokban alkalmazott megoldások lehetővé teszik a virtuális indexeket;
-          a lekérdezések sebessége az empirikus tesztek alapján is elfogadható.
+    \item \textbf{Gyors, indexelt keresést nyújt, a lekérések időigénye elfogadható.} Valóban,
+          az értékkiosztásokban alkalmazott megoldások lehetővé teszik a virtuális indexeket.
+          Az óriás számokat is támogató beépített aritmetika kis számokon nagyon hatékony.
+          Végeredményben, az empirikus tesztek alapján a lekérdezések sebessége elfogadható.
     \item \textbf{Azonnal elindul, nincs számottevő preparálási folyamat.} Valóban:
           alapértelmezetten pusztán a konfiguráció betöltése történik meg az indításkor.
     \item \textbf{Kevés memóriát foglal, az adatokat on-the-fly számítja.} Valóban:
