@@ -2647,13 +2647,45 @@ az indítási időt\footnote{
 Természetesen ezek azok az aspektusok, ahol a HoloDB diadalmenetét várjuk,
 ez adja az egész projekt értelmét.
 
-TODO: az oszlopok lazy inicializálása jelentősen csökkentheti az indítási időt
+Úgy gondoltam, legcélszerűbb,
+ha egy nagyon gyors, natív megoldást,
+illetve egy népszerű keretrendszer megoldását veszem bele az összehasonlításba.
 
+Három táblát használtam:
+\texttt{companies} (4 oszlop),
+\texttt{employees} (7 oszlop),
+\texttt{coupons} (3 oszlop).
+Az adatokat két méretbeli változatban generáltam:
+az első, kisméretű esetben 200, 2~000, illetve 5~000;
+az második, nagyméretű esetben pedig 2~000, 1~000~000, illetve 10~000~000 rekordszámmal.
 
-Konfiguráció:
-HoloDB: N/A;
-Postgres: SQL szkript;
-MariaDB+Laravel: factory + seeder;
+Gyors generáló környezetként a PostgreSQL-re esett a választásom,
+egyszerűen azért, mert performancia és testreszabhatóság tekintetében
+kiemelkedik a nyílt forrású adatbázis-szerverek közül.
+A generálást egy SQL-szkripttel végeztem.
+Az egyes speciális értékek előállításához (nevek, városok stb.)
+igénybe vettem néhány bevett extensiont is
+(\texttt{postgresql_anonymizer} \textcolor{red}{(REF)}, \texttt{postgresql_faker} \textcolor{red}{(REF)}).
+
+Népszerű keretrendszerként a Laravel PHP-keretrendszert választottam.
+A Laravel beépített megoldást tartalmaz
+az adatmodell leírásához és tesztadatok generálásához \textcolor{red}{(REF)}.
+A generáláshoz a beépített \texttt{artisan} szkript által biztosított
+standard migráló eszözöket használtam.
+Sajnos a nagyméretű esetben a Laravel megoldása órákig való futás után sem végzett,
+és egyre lassabban futott;
+így kénytelen voltam kerülőmegoldásokat beépíteni,
+azaz a generálás egy részét közvetlen SQL-lekérdezésekkel futtatni
+(még így is rengeteg időt vett igénybe,
+maga a MySQL/MariaDB is gyengébb teljesítményt nyújt, mint a PostgreSQL).
+
+Az eredményeket 10 futtatás átlagából számoltam.
+Kivétel a Laravel+MySQL/MariaDB a nagyméretű esetben,
+a jelentős időigény miatt ezt csak 3-szor futtattam le, és a leggyorsabb esetet vettem.
+
+(A teljes generáló környezetért lásd: \autoref{appendix:projectlinks}).
+
+A kisméretű adathalmaz esetében a következő eredmények születtek:
 
 \begin{table}[H]
 \captionsetup{justification=justified, singlelinecheck=false, margin=0.7cm}
@@ -2675,13 +2707,12 @@ MariaDB+Laravel: factory + seeder;
 
 \end{tabular}
 \end{center}
-\caption[GEN1]{~200 + 2~000 + 5~000 ::: 100 futtatás}
+\caption[Kisméretű generálás összehasonlítása]{
+Kisméretű adathalmaz generálása különböző megoldásokkal. (Összesen néhány ezer rekord.)
+}
 \end{table}
 
-Konfiguráció:
-HoloDB: N/A;
-Postgres: SQL szkript;
-MariaDB+Laravel: factory + seeder;
+A nagyméretű adathalmaz esetében pedig az eredmények a következők:
 
 \begin{table}[H]
 \captionsetup{justification=justified, singlelinecheck=false, margin=0.7cm}
@@ -2703,7 +2734,9 @@ MariaDB+Laravel: factory + seeder;
 
 \end{tabular}
 \end{center}
-\caption[GEN2]{~2000 + 1~000~000 + 10~000~000 ::: 10 futtatás, kivéve MariaDB+Laravel, ott 3}
+\caption[Nagyméretű generálás összehasonlítása]{
+Nagyméretű adathalmaz generálása különböző megoldásokkal. (Több mint tízmillió rekord.)
+}
 \end{table}
 
 
