@@ -2432,6 +2432,14 @@ XXXXXXXXXXXXXXXXXXXXXXXXXX
 
 \section{Lekérdezések sebessége}
 
+A lekérdezéseket egy nem túl nagy adatbázison futtattam,
+melyben három tábla található:
+\texttt{subjects} (3 oszlop, 3 rekord),
+\texttt{courses} (4 oszlop, 30 rekord) és
+\texttt{students} (4 oszlop, 1~0000 rekord).
+\texttt{course_student} (kapcsolótábla, 30~100 rekord).
+(a konkrét konfigurációs fájlt lásd a tesztrepóban).
+
 A lekérdezések közvetlen mérésénél az SQL parancsnak a JDBC API-n keresztüli beküldésétől
 az eredménytábla végigiterálásnak végéig eltelt időt mértem
 egyszerűen \texttt{System.nanoTime()} hívások visszaadott értékeinek különbségeit nézve.
@@ -2460,7 +2468,9 @@ SELECT * FROM students WHERE id = 30
 \end{minted}
 \vspace{-35pt}
 
-A harmadik teszt (\textbftt{Q-CMPX}) XXXXXXXXXXXXX
+A harmadik tesztben (\textbftt{Q-CMPX}) a kulcsmezőtől eltérő mezőre kerestem rá,
+ami így több találatot eredményez.
+A találatok számát 20-ra limitáltam:
 
 \vspace{-5pt}
 \begin{minted}[fontsize=\small,framesep=4pt,frame=single,framerule=1.5pt,rulecolor=\color{gray!30}]{sql}
@@ -2468,7 +2478,7 @@ SELECT s.lastname FROM students s WHERE s.firstname='Ian' LIMIT 20
 \end{minted}
 \vspace{-35pt}
 
-A negyedik teszt (\textbftt{Q-TFUL}) XXXXXXXXXXXXX
+A negyedik tesztben (\textbftt{Q-TFUL}) lekértem a teljes táblát:
 
 \vspace{-5pt}
 \begin{minted}[fontsize=\small,framesep=4pt,frame=single,framerule=1.5pt,rulecolor=\color{gray!30}]{sql}
@@ -2476,7 +2486,9 @@ SELECT * FROM students
 \end{minted}
 \vspace{-35pt}
 
-Az ötödik teszt (\textbftt{Q-MULT}) XXXXXXXXXXXXX
+Az ötödik teszt (\textbftt{Q-MULT}) több táblából gyűjt adatokat,
+melyeket a kulcsmezőkkel fűztem össze (\texttt{LEFT JOIN}).
+Egyúttal dupla keresési feltételt is megadtam:
 
 \vspace{-5pt}
 \begin{minted}[fontsize=\small,framesep=4pt,frame=single,framerule=1.5pt,rulecolor=\color{gray!30}]{sql}
@@ -2503,7 +2515,8 @@ mivel az érték kiszámítását minden egyes visszaadott mezőre el kell vége
   hogy az eredménytábla közös értékre vagy mezőre mutató hozzáférési pontjai
   közös lazy-computing referenciát használjanak.
 }.
-Az összehasonlítást beágyazott H2-vel és (nem dockeres) MariaDB szerverrel végeztem.
+Az összehasonlítást beágyazott H2-vel és (nem dockeres) MariaDB szerverrel végeztem,
+ezekhez az \textbftt{EXT} eset adatbázistartalmát materializáltam le.
 A \ref{table:queryComparison} táblázat mutatja a futási időket mikromásodpercben.
 
 
