@@ -2360,6 +2360,13 @@ az egyesített táblában a kisebb tábla adatait pedig redundánsan szerepeltet
 
 \todoref{Chapter: Tapasztalatok}
 
+Bevezetés, általános paraméterek:
+H2: com.h2database:h2:2.2.224
+MariaDB szerver: mysql  Ver 15.1 Distrib 10.11.6-MariaDB, for debian-linux-gnu (x86_64) using  EditLine wrapper
+PostgreSQL szerver: psql (PostgreSQL) 15.10 (Debian 15.10-0+deb12u1)
+Laravel: "laravel/framework": "^11.31"
+MariaDB docker: mariadb:10.11.6-jammy
+
 \section{Általános tapasztalatok}
 
 \textcolor{red}{MEGÍRNI}
@@ -2379,7 +2386,7 @@ XXXXXXXXXXXXXXXXXXXXXXXXXX
  \textbf{HoloDB}     & 237,3 &   23,09 \\
  \textbf{HoloDB-opt} &  53,6 &   14,37 \\
  \textbf{H2}         &  45,4 &    2,49 \\
- \textbf{MySQL}      & 605,3 & \nodata \\
+ \textbf{MariaDB}    & 116,7 & \nodata \\
  \hline
 
 \end{tabular}
@@ -2414,7 +2421,7 @@ XXXXXXXXXXXXXXXXXXXXXXXXXX
  \textbf{HoloDB/}\textbftt{DEF} & 24,66 & 130,08 &   225,17 & 1~143~721 & 3~592 \\
  \textbf{HoloDB/}\textbftt{MIN} & 22,82 &  20,22 &    44,58 &    25~909 &   365 \\
  \textbf{H2}                    & 12,77 &   9,73 &    17,60 &     1~965 &   177 \\
- \textbf{MySQL}                 & 47,87 &  46,27 &    73,02 &     3~393 & 1~429 \\
+ \textbf{MariaDB}               & 47,87 &  46,27 &    73,02 &     3~393 & 1~429 \\
  \hline
 
 \end{tabular}
@@ -2427,7 +2434,7 @@ Integrált tesztek eredménye különböző adatbázisokkal.
 \textbf{HoloDB/}\textbftt{DEF}: beágyazott HoloDB alapértelmezett paraméterekkel;
 \textbf{HoloDB/}\textbftt{MIN}: beágyazott HoloDB minimális paraméterekkel;
 \textbf{H2}: beágyazott H2;
-\textbf{MySQL}: MySQL szerver;
+\textbf{MariaDB}: MySQL/MariaDB szerver;
 \textbf{\textit{A sorok jelentése}}: Lásd a főszöveget.
 }
 \end{table}
@@ -2445,7 +2452,7 @@ A performanciával kapcsolatban a várakozás mindössze annyi volt,
 hogy legyen összemérhető a valódi adatbázisokéval.
 A Docker-képek összehasonlítását leszámítva minden esetben
 a HoloDB beágyazott verzióját használtam.
-Az összehasonlítást MySQL-lel (mint az egyik legelterjedtebb szerveradatbázissal)
+Az összehasonlítást MariaDB-vel
 és H2-vel (mint a Java környezetben legelterjedtebb beágyazott adatbázissal) valósítottam meg.
 A lekérdezések közvetlen mérésénél az SQL parancsnak a JDBC API-n keresztüli beküldésétől
 az eredménytábla végigiterálásnak végéig eltelt időt mértem
@@ -2492,8 +2499,8 @@ de feltehetően mind az adatok számítása, mind az eredménytábla továbbít�
 \textcolor{red}{
 Az adatok tárhelyigényében a HoloDB természetesen drasztikus csökkenést mutat,
 hiszen eleve így lett tervezve.
-A szerveres kontextust nézve, a HoloDB Docker-képének mérete jóval kisebb, mint a MySQL-é;
-de a base image változtatásával,
+A szerveres kontextust nézve, a HoloDB Docker-képének mérete XXXXXXXXX, mint a MariaDB-é;
+XXXX a base image változtatásával,
 az operációs rendszer és a JRE testreszabásával ez valószínűleg tovább javítható.
 }
 
@@ -2505,7 +2512,7 @@ az operációs rendszer és a JRE testreszabásával ez valószínűleg tovább 
 \iffalse
 A dolgozatban bemutatott teszteknél a H2-t a lekérdezésszintű tesztekhez
 a `QUERY_CACHE_SIZE=0` opcióval használtam,
-a MySQL-t pedig a `useServerPrepStmts=false&cachePrepStmts=false` opciókkal
+a MariaDB-t pedig a `useServerPrepStmts=false&cachePrepStmts=false` opciókkal
 és a `query_cache_type=OFF` szerveroldali beállítással.
 \fi
 
@@ -2524,7 +2531,7 @@ a MySQL-t pedig a `useServerPrepStmts=false&cachePrepStmts=false` opciókkal
  \textbf{HoloDB/}\textbftt{DEF} & 6,36 & 6,56 & 11,09 \\
  \textbf{HoloDB/}\textbftt{MIN} & 4,60 & 4,76 &  7,54 \\
  \textbf{H2}                    & 3,92 & 4,02 &  6,07 \\
- \textbf{MySQL}                 & 5,10 & 5,43 &  8,38 \\
+ \textbf{MariaDB}               & 5,10 & 5,43 &  8,38 \\
  \hline
 
 \end{tabular}
@@ -2547,7 +2554,7 @@ TODO: az oszlopok lazy inicializálása jelentősen csökkentheti az indítási 
 Konfiguráció:
 HoloDB: N/A;
 Postgres: SQL szkript;
-Mysql+Laravel: factory + seeder;
+MariaDB+Laravel: factory + seeder;
 
 \begin{table}[H]
 \captionsetup{justification=justified, singlelinecheck=false, margin=0.7cm}
@@ -2563,7 +2570,7 @@ Mysql+Laravel: factory + seeder;
  \hline\hline
  
  \textbf{HoloDB}   & \nodata                 & 0,00 & 0,28 & 1~303 & 0.16 \\
- \textbf{MySQL}    & \textbf{Laravel seeder} & 7,08 & 0,28 & 7~944 & 0,45 \\
+ \textbf{MariaDB}  & \textbf{Laravel seeder} & 7,08 & 0,28 & 7~944 & 0,45 \\
  \textbf{Postgres} & \textbf{SQL-szkript}    & 0,20 & 2,25 & 2~005 & 1,40 \\
  \hline
 
@@ -2575,7 +2582,7 @@ Mysql+Laravel: factory + seeder;
 Konfiguráció:
 HoloDB: N/A;
 Postgres: SQL szkript;
-Mysql+Laravel: factory + seeder;
+MariaDB+Laravel: factory + seeder;
 
 \begin{table}[H]
 \captionsetup{justification=justified, singlelinecheck=false, margin=0.7cm}
@@ -2591,13 +2598,13 @@ Mysql+Laravel: factory + seeder;
  \hline\hline
  
  \textbf{HoloDB}   & \nodata                 &      0 & 0,28 & 1~311 &     0,16 \\
- \textbf{MySQL}    & \textbf{Laravel seeder} & 15~734 & 0,30 & 8~008 & 1~101,47 \\
+ \textbf{MariaDB}  & \textbf{Laravel seeder} & 15~734 & 0,30 & 8~008 & 1~101,47 \\
  \textbf{Postgres} & \textbf{SQL-szkript}    &     95 & 2,26 & 2~017 & 1~409,57 \\
  \hline
 
 \end{tabular}
 \end{center}
-\caption[GEN2]{~2000 + 1~000~000 + 10~000~000 ::: 10 futtatás, kivéve MySQL+Laravel, ott 3}
+\caption[GEN2]{~2000 + 1~000~000 + 10~000~000 ::: 10 futtatás, kivéve MariaDB+Laravel, ott 3}
 \end{table}
 
 
