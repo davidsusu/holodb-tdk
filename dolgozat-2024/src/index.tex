@@ -2495,7 +2495,7 @@ A \textbftt{DEF} esetben mindent az alapértelmezett beállításokon hagytam.
 Az \textbftt{EXT} esetben pedig a legjobb kimeneti minőségű implementációkat állítottam be,
 ami természetesen a performancia rovására megy,
 különösen a teljes tábla lekérésekor,
-mivel ekkor minden egyes visszaadott értéknél el kell végezni a számítást\footnote{
+mivel az érték kiszámítását minden egyes visszaadott mezőre el kell végezni\footnote{
   Ez bőven optimalizálható még.
   Jelenleg például ugyanannak az értékkészlet-pozíciónak, sőt ugyannak a mezőnek
   az értékét is minden hozzáférés akalmával kiszámítjuk.
