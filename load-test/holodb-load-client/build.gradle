@@ -1,0 +1,25 @@
+plugins {
+    id 'java-library'
+    id 'application'
+}
+
+sourceCompatibility = 1.8
+targetCompatibility = 1.8
+
+description "HoloDB load test client"
+
+ext.miniConnectApiVersion = '0.2.1-SNAPSHOT'
+ext.miniConnectVersion = '0.5.1-SNAPSHOT'
+
+repositories {
+    mavenCentral()
+    mavenLocal()
+}
+
+dependencies {
+    implementation "hu.webarticum.miniconnect.api:api:${miniConnectApiVersion}"
+    implementation "hu.webarticum.miniconnect:impl:${miniConnectVersion}"
+    implementation "hu.webarticum.miniconnect:record:${miniConnectVersion}"
+    implementation "hu.webarticum.miniconnect:messenger:${miniConnectVersion}"
+    implementation "hu.webarticum.miniconnect:server:${miniConnectVersion}"
+}
