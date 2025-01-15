@@ -1,5 +1,7 @@
 package hu.webarticum.miniconnect.test.holodbloadclient;
 
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.function.Supplier;
 
 import hu.webarticum.miniconnect.api.MiniSession;
@@ -21,22 +23,25 @@ public class LoadMain {
             "WHERE c.id = ?";
 
     private static final String SQL_PATTERN_3 = "SELECT * FROM employees ORDER BY lastname ASC, firstname DESC LIMIT 20";
+
+    private static final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss.SSS");
     
     private static volatile boolean stopped = false;
     
     public static void main(String[] args) throws InterruptedException {
+        System.out.println("Start: " + LocalDateTime.now().format(formatter));
         Supplier<String> sqlSupplier1 = () -> SQL_PATTERN_1.replace("?", "" + ((int) (Math.random() * 100)));
-        for (int i = 0; i < 3; i++) {
+        for (int i = 0; i < 15; i++) {
             startNewClientThread(sqlSupplier1);
         }
         
         Supplier<String> sqlSupplier2 = () -> SQL_PATTERN_2.replace("?", "" + ((int) (Math.random() * 100)));
-        for (int i = 0; i < 3; i++) {
+        for (int i = 0; i < 15; i++) {
             startNewClientThread(sqlSupplier2);
         }
         
         Supplier<String> sqlSupplier3 = () -> SQL_PATTERN_3;
-        for (int i = 0; i < 3; i++) {
+        for (int i = 0; i < 15; i++) {
             startNewClientThread(sqlSupplier3);
         }
         
@@ -50,7 +55,7 @@ public class LoadMain {
     
     private static void runClient(Supplier<String> sqlSupplier) {
         long threadId = Thread.currentThread().getId();
-        System.out.println("Thread started: " + threadId);
+        System.out.println("Thread (" + threadId + ") started at " + LocalDateTime.now().format(formatter));
         try (ClientMessenger clientMessenger = new ClientMessenger(HOST, PORT)) {
             MiniSessionManager sessionManager = new MessengerSessionManager(clientMessenger);
             try (MiniSession session = sessionManager.openSession()) {
@@ -67,7 +72,7 @@ public class LoadMain {
                 }
             }
         }
-        System.out.println("Thread finished: " + threadId);
+        System.out.println("Thread (" + threadId + ") finished at " + LocalDateTime.now().format(formatter));
     }
 
 }

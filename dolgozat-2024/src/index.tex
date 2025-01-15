@@ -2565,7 +2565,6 @@ Az összehasonlítást beágyazott H2-vel és (nem dockeres) MariaDB szerverrel 
 ezekhez az \textbftt{EXT} eset adatbázistartalmát materializáltam le.
 A \ref{table:queryComparison} táblázat mutatja a futási időket mikromásodpercben.
 
-
 \begin{table}[H]
 \captionsetup{justification=justified, singlelinecheck=false, margin=0.7cm}
 \begin{center}
@@ -2793,7 +2792,10 @@ Nagyméretű adathalmaz (11~002~000 rekord) generálása különböző megoldás
 \begin{figure}[H]
 \centering
 \includegraphics[height=0.4\textwidth]{image/load-test}
-\caption{Terheléses teszt eredménye.}
+\caption[Terheléses teszt eredménye]{
+Terheléses teszt eredménye.
+Az árnyékolt terület mutatja a kliens futási ablakát.
+}
 \end{figure}
 
 
