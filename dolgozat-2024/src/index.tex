@@ -2787,11 +2787,26 @@ Nagyméretű adathalmaz (11~002~000 rekord) generálása különböző megoldás
 
 \section{Terheléses teszt}
 
-\textcolor{red}{ENYHE TERHELÉSSEL FUTTATTAM, VISUALVM-MEL VIZUALIZÁLTAM}
+\textcolor{red}{ENYHE TERHELÉSSEL FUTTATTAM, VISUALVM-MEL VIZUALIZÁLTAM, }
+
+szerver:
+-Xms8M -Xmx50M -XX:+UseG1GC
+
+kliens:
+15+15+15
+
+    private static final String SQL_PATTERN_1 = "SELECT * FROM employees WHERE id = ?";
+    
+    private static final String SQL_PATTERN_2 =
+            "SELECT e.*, c.identifier FROM coupons c \n" +
+            "LEFT JOIN employees e ON c.employee_id=e.id \n" +
+            "WHERE c.id = ?";
+
+    private static final String SQL_PATTERN_3 = "SELECT * FROM employees ORDER BY lastname ASC, firstname DESC LIMIT 20";
 
 \begin{figure}[H]
 \centering
-\includegraphics[height=0.4\textwidth]{image/load-test}
+\includegraphics[with=\textwidth]{image/load-test}
 \caption[Terheléses teszt eredménye]{
 Terheléses teszt eredménye.
 Az árnyékolt terület mutatja a kliens futási ablakát.
