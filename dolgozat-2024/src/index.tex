@@ -2393,14 +2393,6 @@ Az összehasonlító méréseknél használt egyéb rendszerek verziói
 }
 \end{table}
 
-XXXXX
-
-XXXXX
-
-XXXXX
-
-XXXXX
-
 
 \section{Általános futtatási tapasztalatok}
 
@@ -2571,6 +2563,7 @@ vagyis a korábban tárgyalt indexelési technikák jól teljesítenek.
 
 Az összehasonlítást beágyazott H2-vel és (nem dockeres) MariaDB szerverrel végeztem,
 ezekhez az \textbftt{EXT} eset adatbázistartalmát materializáltam le.
+
 A \ref{table:queryComparison} táblázat mutatja a futási időket mikromásodpercben.
 
 \begin{table}[H]
@@ -2707,6 +2700,7 @@ Három táblát használtam:
 Az adatokat két méretbeli változatban generáltam:
 az első, kisméretű esetben 200, 2~000, illetve 5~000;
 az második, nagyméretű esetben pedig 2~000, 1~000~000, illetve 10~000~000 rekordszámmal.
+A HoloDB alapértelmezett beállításait használtam.
 
 Úgy gondoltam, legcélszerűbb,
 ha egy nagyon gyors, natív megoldást,
@@ -2797,6 +2791,9 @@ Nagyméretű adathalmaz (11~002~000 rekord) generálása különböző megoldás
 
 Több szálon futó klienssel teszteltem,
 hogyan reagál a HoloDB szerver tömegesen beérkező változó lekérdezésekre.
+A konfiguráció ugyanaz volt,
+mint az előbbi nagyméretű generálás esetében.
+
 A szervert önálló alkalmazásként futtattam a \texttt{-Xms8M -Xmx50M -XX:+UseG1GC} JVM argumentumokkal.
 A kliens egy egyszerű Java program volt,
 mely 45 szálon 10 másodpercig küldött kéréseket.
