@@ -3220,7 +3220,7 @@ melybe fejlesztőket, technikai vezetőket és oktatókat egyaránt érdemes len
     \State \texttt{nextInputs $\gets$ \Call{collectNextInputs{\textunderscore}Helper}{parentNodeValue,noAnchor,children}}
     \State \texttt{normalizedNextInputs $\gets$ \Call{createEmptySortedMap}{}}
     \ForAll{\texttt{nextInput} \textbf{in} \texttt{nextInputs}}
-        \State \texttt{normalizedNextInputs $\gets$ \Call{mergeIntoNormalizedMap{\textunderscore}OuterHelper}{normalizedNextInputs,nextInput}}
+        \State \texttt{normalizedNextInputs $\gets$ \Call{mergeIntoNormalizedMap{\textunderscore}ExternalHelper}{normalizedNextInputs,nextInput}}
     \EndFor
     \State \texttt{resultQueue $\gets$ \Call{newEmptyQueue}{}}
     \ForAll{\texttt{astNode, associatedChildren} \textbf{in} \texttt{normalizedNextInputs}}
