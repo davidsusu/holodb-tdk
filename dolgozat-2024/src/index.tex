@@ -2509,7 +2509,7 @@ azaz egy teljes rekordot kérek le:
 \begin{minted}[fontsize=\small,framesep=4pt,frame=single,framerule=1.5pt,rulecolor=\color{gray!30}]{sql}
 SELECT * FROM students WHERE id = 30
 \end{minted}
-\vspace{-35pt}
+\vspace{-5pt}
 
 A harmadik tesztben (\textbftt{Q-CMPX}) a kulcsmezőtől eltérő mezőben keresek,
 ami így több találatot eredményez.
@@ -2519,7 +2519,7 @@ A találatok számát 20-ra limitálom:
 \begin{minted}[fontsize=\small,framesep=4pt,frame=single,framerule=1.5pt,rulecolor=\color{gray!30}]{sql}
 SELECT s.lastname FROM students s WHERE s.firstname='Ian' LIMIT 20
 \end{minted}
-\vspace{-35pt}
+\vspace{-5pt}
 
 A negyedik tesztben (\textbftt{Q-TFUL}) lekérem a teljes táblát:
 
@@ -2527,7 +2527,7 @@ A negyedik tesztben (\textbftt{Q-TFUL}) lekérem a teljes táblát:
 \begin{minted}[fontsize=\small,framesep=4pt,frame=single,framerule=1.5pt,rulecolor=\color{gray!30}]{sql}
 SELECT * FROM students
 \end{minted}
-\vspace{-35pt}
+\vspace{-5pt}
 
 Az ötödik tesztben (\textbftt{Q-MULT}) több táblából gyűjtöm az adatokat,
 melyeket a kulcsmezőkkel fűztem össze (\texttt{LEFT JOIN}).
@@ -2541,7 +2541,7 @@ SELECT s.lastname FROM students s
     LEFT JOIN subjects su ON su.id = c.subject_id
     WHERE s.firstname='Ian' AND su.id=2
 \end{minted}
-\vspace{-35pt}
+\vspace{-5pt}
 
 A lekérdezéseket a beágyazott HoloDB három különböző skálázási szintjén mértem.
 A \textbftt{MIN} esetben mindenből a leggyorsabb, legfapadosabb implementációt használtam
