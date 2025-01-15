@@ -103,27 +103,32 @@ A modern szoftverfejlesztési módszertanok fő fókuszai közé tartozik
 a gyors prototípusgyártás és a (kézi, illetve automatizált) integrált tesztelés.
 Mindkét esetben tesztadatokat kell biztosítanunk az alkalmazás működtetéséhez.
 Ugyanakkor általában demóadatokra számos egyéb helyzetben is szükségünk lehet
-(például mockolás, füst-teszt, szoftverbemutató, edukáció).
+(például mockolás, füst-teszt, szoftverbemutató).
 Nem csak a demóadatok előállítása (jellemzően generálás vagy anonimizálás)
 jelent folyamatos terhelést a fejlesztési infrastruktúrára,
-de azok indítási, működtetési és memóriaigénye is jelentős, hiszen hús-vér adatbázisokról van szó.
+de azok indítási, működtetési és memóriaigénye is jelentős.
+
 A pályamunkában egy jelentősen újszerű megközelítést mutatok be,
 mely szükségtelenné teszi az adatok előzetes előállítását.
 A HoloDB egy (felhasználói szemszögből szokványos) relációs adatbázis,
 mely minimális indulási idővel és memóriaigénnyel futtatható
 egy deklaratív konfigurációs fájlból, mely tömören leírja az adatbázis szerkezetét
 és az adataival szembeni követelményeket.
+Számos részmegoldás (köztük kriptográfiai módszerek) együttes alkalmazásával
+koherens és gyors működést biztosító adatelérési technikák váltak lehetővé (például a virtuális indexek),
+
 Az on-the-fly generálás miatt maguk az adatok nem foglalnak memóriát,
 ugyanakkor a szerver egy lekérések között is koherens adathalmazt szolgáltat.
-Számos célmegoldás (köztük kriptográfiai módszerek) együttes alkalmazásával
-koherens és gyors működést biztosító adatelérési technikák váltak lehetővé (például a virtuális indexek),
 így a HoloDB (alkalmas skálázás mellett) runtime performanciában
-sem marad alul a hagyományos adatbázisokkal szemben.
-A relációs modell a megfelelő adapterekkel könnyen kiterjeszthető más adatmodellekre is
-(például NoSQL, GraphQL).
-Az új megoldás reményeim szerint további előnyök mellett
-ötvözi a korábbi megoldások erősségeit, míg kikerüli azok fő hátrányait.
-Valamint olyan új lehetőségek nyílnak meg, mint a „dev mode”
+is összemérhető a hagyományos adatbázisokkal.
+A relációs modell a megfelelő adapterekkel könnyen kiterjeszthető más adatmodellekre is.
+
+Az új megoldás további előnyök mellett
+ötvözi a korábbi megoldások erősségeit, míg kikerüli a főbb hátrányokat,
+különösen a generálási költséget.
+A HoloDB potenciálisan széleskörűen alkalmazható adatbázismockoló eszközként,
+és a meglévő folyamatokba is könnyen integrálható.
+Továbbá olyan új lehetőségek is megnyílnak, mint a „dev mode”
 (az adatbázis azonnali frissülése a konfigurációs fájl módosításakor)
 vagy a serverless adatbázis-szolgáltatás.
 \end{abstract}
