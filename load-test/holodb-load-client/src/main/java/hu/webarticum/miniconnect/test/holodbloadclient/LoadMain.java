@@ -39,11 +39,11 @@ public class LoadMain {
         for (int i = 0; i < 15; i++) {
             startNewClientThread(sqlSupplier2);
         }
-        
+        /*
         Supplier<String> sqlSupplier3 = () -> SQL_PATTERN_3;
         for (int i = 0; i < 15; i++) {
             startNewClientThread(sqlSupplier3);
-        }
+        }*/
         
         Thread.sleep(10000);
         stopped = true;
@@ -56,14 +56,16 @@ public class LoadMain {
     private static void runClient(Supplier<String> sqlSupplier) {
         long threadId = Thread.currentThread().getId();
         System.out.println("Thread (" + threadId + ") started at " + LocalDateTime.now().format(formatter));
+        int i = 0;
         try (ClientMessenger clientMessenger = new ClientMessenger(HOST, PORT)) {
             MiniSessionManager sessionManager = new MessengerSessionManager(clientMessenger);
             try (MiniSession session = sessionManager.openSession()) {
                 session.execute("USE employment");
                 while (!stopped) {
                     String sql = sqlSupplier.get();
+                    i++;
                     try {
-                        session.execute(sql);
+                        session.execute(sql).resultSet().close();;
                         Thread.sleep(200);
                     } catch (Exception e) {
                         e.printStackTrace();
@@ -72,7 +74,7 @@ public class LoadMain {
                 }
             }
         }
-        System.out.println("Thread (" + threadId + ") finished at " + LocalDateTime.now().format(formatter));
+        System.out.println("Thread (" + threadId + ") finished at " + LocalDateTime.now().format(formatter) + " :: count: " + i);
     }
 
 }

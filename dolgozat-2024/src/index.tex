@@ -2787,22 +2787,27 @@ Nagyméretű adathalmaz (11~002~000 rekord) generálása különböző megoldás
 
 \section{Terheléses teszt}
 
-\textcolor{red}{ENYHE TERHELÉSSEL FUTTATTAM, VISUALVM-MEL VIZUALIZÁLTAM, }
+Több szálon futó klienssel teszteltem,
+hogyan reagál a HoloDB szerver tömegesen beérkező változó lekérdezésekre.
+A szervert önálló alkalmazásként futtattam a \texttt{-Xms8M -Xmx50M -XX:+UseG1GC} JVM argumentumokkal.
+A kliens egy egyszerű Java program volt,
+mely 45 szálon 10 másodpercig küldött kéréseket.
+Minden szál 0,2 másodperc szünetet tartott két kérés között.
+A szálak háromféle SQL-t küldtek (mindegyiket 15 szál):
 
-szerver:
--Xms8M -Xmx50M -XX:+UseG1GC
+\begin{minted}[fontsize=\small,framesep=4pt,frame=single,framerule=1.5pt,rulecolor=\color{gray!30}]{sql}
+SELECT * FROM employees WHERE id = ?
+SELECT e.*, c.identifier FROM coupons c LEFT JOIN employees e ON c.employee_id=e.id WHERE c.id = ?
+SELECT * FROM employees ORDER BY lastname ASC, firstname DESC LIMIT 20
+\end{minted}
 
-kliens:
-15+15+15
+A kérdőjelek helyére kérésenként véletlenszámok kerültek behelyettesítésre.
 
-    private static final String SQL_PATTERN_1 = "SELECT * FROM employees WHERE id = ?";
-    
-    private static final String SQL_PATTERN_2 =
-            "SELECT e.*, c.identifier FROM coupons c \n" +
-            "LEFT JOIN employees e ON c.employee_id=e.id \n" +
-            "WHERE c.id = ?";
+A szerver a kéréseket jól fogadta, bár a hálózati átviteli sebesség egyelőre nem túl jó.
+Egy-egy kérés end-to-end feldolgozási ideje az első két SQL esetében kb 0,25 másodperc volt,
+a harmadik kérés esetében akár 4-5 másodpercre is megnyúlt.
+A hálózati átvitelen tehát még bőven van fejleszteni való.
 
-    private static final String SQL_PATTERN_3 = "SELECT * FROM employees ORDER BY lastname ASC, firstname DESC LIMIT 20";
 
 \begin{figure}[H]
 \centering
@@ -3100,6 +3105,8 @@ Optimalizáláson nem csak a performancia tuningolását,
 de az architekturális célszerűség növelését és a felhasználói élmény javítását is értem.
 Ebbe a logikus, könnyen érthető, lényegre törő konfiguráció éppúgy beletartozik,
 mint a kiegészítő eszközök ergonómiája.
+Kiemelendő még a hálózati átvitel átviteli sebességének javítása,
+ami minden alkalmazást értint, amely nem beágyazottan futtatja a tesztadatbázist.
 
 Az új eszközök fejlesztése elsősorban a különféle meglévő technológiákkal történő integrációt jelenti
 (tervezőeszközök, adatbázis-böngészők, programozási környezetek stb.).
