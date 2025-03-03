@@ -1,29 +1,41 @@
 package hu.webarticum.miniconnect.test.holodbloadclient;
 
+import java.lang.invoke.MethodHandles;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Supplier;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import hu.webarticum.miniconnect.api.MiniResult;
 import hu.webarticum.miniconnect.api.MiniResultSet;
 import hu.webarticum.miniconnect.api.MiniSession;
 import hu.webarticum.miniconnect.api.MiniSessionManager;
 import hu.webarticum.miniconnect.messenger.adapter.MessengerSessionManager;
+import hu.webarticum.miniconnect.record.ResultRecord;
+import hu.webarticum.miniconnect.record.ResultTable;
 import hu.webarticum.miniconnect.server.ClientMessenger;
 
 public class LoadMain {
+
+    private static final Logger logger =
+            LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
+    
 
     private static String HOST = "localhost";
 
     private static int PORT = 3430;
     
-    private static int FULL_MILLIS = 500;
-    
-    private static int SLEEP_MILLIS = 10;
-    
-    private static final String SQL_PATTERN_1 = "SELECT 1"; // "SELECT * FROM employees WHERE id = ?";
+    private static int FULL_MILLIS = 3_000;
+
+    //private static int SLEEP_MILLIS = 10;
+    private static int SLEEP_MILLIS = 1;
+
+    //private static final String SQL_PATTERN_1 = "SELECT 1";
+    private static final String SQL_PATTERN_1 = "SELECT * FROM employees WHERE id = ?";
     
     private static final String SQL_PATTERN_2 =
             "SELECT e.*, c.identifier FROM coupons c \n" +
@@ -37,18 +49,18 @@ public class LoadMain {
     private static volatile boolean stopped = false;
     
     public static void main(String[] args) throws InterruptedException {
-        System.out.println("Start: " + LocalDateTime.now().format(formatter));
-        
+        logger.info("LoadMain.main() started");
+        /*
         Supplier<String> sqlSupplier1 = () -> SQL_PATTERN_1.replace("?", "" + ((int) (Math.random() * 100)));
-        for (int i = 0; i < 1; i++) {
+        for (int i = 0; i < 100; i++) {
             startNewClientThread(sqlSupplier1);
         }
-        /*
+        */
         Supplier<String> sqlSupplier2 = () -> SQL_PATTERN_2.replace("?", "" + ((int) (Math.random() * 100)));
-        for (int i = 0; i < 15; i++) {
+        for (int i = 0; i < 5; i++) {
             startNewClientThread(sqlSupplier2);
         }
-        
+        /*
         Supplier<String> sqlSupplier3 = () -> SQL_PATTERN_3;
         for (int i = 0; i < 1; i++) {
             startNewClientThread(sqlSupplier3);
@@ -63,8 +75,8 @@ public class LoadMain {
     }
     
     private static void runClient(Supplier<String> sqlSupplier) {
-        long threadId = Thread.currentThread().getId();
-        System.out.println("Thread (" + threadId + ") started at " + LocalDateTime.now().format(formatter));
+        logger.info("Thread started");
+        
         List<Long> times = new ArrayList<>(200);
         int i = 0;
         try (ClientMessenger clientMessenger = new ClientMessenger(HOST, PORT)) {
@@ -77,6 +89,10 @@ public class LoadMain {
                     try {
                         long start = System.currentTimeMillis();
                         MiniResult result = session.execute(sql);
+                        if (!result.success()) {
+                            logger.error("ERROR: {}, SQL: {}", result.error().message(), sql);
+                            break;
+                        }
                         try (MiniResultSet resultSet = result.resultSet()) {
                             while (resultSet.fetch() != null) {
                                 // nothing to do
@@ -89,11 +105,11 @@ public class LoadMain {
                         e.printStackTrace();
                         break;
                     }
-                    System.out.println();
                 }
             }
         }
-        System.out.println("Thread (" + threadId + ") finished at " + LocalDateTime.now().format(formatter) + " :: count: " + i + ", times: " + times);
+        
+        logger.info("Thread finished (count: {}, times: {})", i, times);
     }
 
 }

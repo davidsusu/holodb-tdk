@@ -22,4 +22,12 @@ dependencies {
     implementation "hu.webarticum.miniconnect:record:${miniConnectVersion}"
     implementation "hu.webarticum.miniconnect:messenger:${miniConnectVersion}"
     implementation "hu.webarticum.miniconnect:server:${miniConnectVersion}"
+    
+    implementation 'org.slf4j:slf4j-api:1.7.35'
+    implementation 'org.apache.logging.log4j:log4j-core:2.24.3'
+    implementation 'org.apache.logging.log4j:log4j-slf4j-impl:2.24.3'
+}
+
+application {
+    mainClass = 'hu.webarticum.miniconnect.test.holodbloadclient.LoadMain'
 }
