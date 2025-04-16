@@ -458,6 +458,30 @@ schemas:
 \end{frame}
 
 \begin{frame}
+    \slidetitle{\sectionshorttitle}{Írhatósági réteg}
+    
+    {\color{beamer@blendedblue}A \texttt{DiffTable} dekorátor}
+    
+    \begin{itemize}
+        \item csak olvassa az alárendelt táblaobjektumot
+        \item amíg nincs módosítás, átlátszóan működik
+        \item memóriában tárolja a módosításokat
+        \item szükség szerint kiegészíti a lekérést és összefésüli az eredménytáblát
+    \end{itemize}
+    
+    \vspace{0.4cm}
+    
+    {\color{beamer@blendedblue}Tranzakciókezelés}
+    
+    \begin{itemize}
+        \item kétféle tranzakciós stratégia: írási ablakok vagy MVCC
+        \item kétféle commit mód: \texttt{AUTOCOMMIT} vagy explicit lockolás
+        \item mindegyik változat ACID-kompatibilis
+        \item nagyon sok írási művelet esetén nem igazán hatékony
+    \end{itemize}
+\end{frame}
+
+\begin{frame}
     \slidetitle{\sectionshorttitle}{Kétlépcsős értékkiosztás: adatlekérés}
     
     \centering
@@ -555,30 +579,6 @@ schemas:
     \vspace{1.2cm}
     
     \includesvg[width=\textwidth]{diagram/trie-simple-compact}
-\end{frame}
-
-\begin{frame}
-    \slidetitle{\sectionshorttitle}{Írhatósági réteg}
-    
-    {\color{beamer@blendedblue}A \texttt{DiffTable} dekorátor}
-    
-    \begin{itemize}
-        \item csak olvassa az alárendelt táblaobjektumot
-        \item amíg nincs módosítás, átlátszóan működik
-        \item memóriában tárolja a módosításokat
-        \item szükség szerint kiegészíti a lekérést és összefésüli az eredménytáblát
-    \end{itemize}
-    
-    \vspace{0.4cm}
-    
-    {\color{beamer@blendedblue}Tranzakciókezelés}
-    
-    \begin{itemize}
-        \item kétféle tranzakciós stratégia: írási ablakok vagy MVCC
-        \item kétféle commit mód: \texttt{AUTOCOMMIT} vagy explicit lockolás
-        \item mindegyik változat ACID-kompatibilis
-        \item nagyon sok írási művelet esetén nem igazán hatékony
-    \end{itemize}
 \end{frame}
 
 \section{Tapasztalatok, mérési eredmények}
@@ -975,8 +975,8 @@ schemas:
     
     \vspace{3em}
     
-    \hspace*{\fill}
-    \begin{minipage}[c]{0.8\textwidth}
+    \hspace*{\fill}%
+    \begin{minipage}[c]{0.75\textwidth}
         \begin{flushleft}
             \normalsize
             
@@ -1005,10 +1005,11 @@ schemas:
             \href{mailto:horvathdown@student.elte.hu}{horvathdown@student.elte.hu}
         \end{flushleft}
     \end{minipage}%
-    \hspace*{\fill}
-    \begin{minipage}[c]{0.19\textwidth}
-        \scalebox{1.3}{\qrcode{https://github.com/miniconnect/holodb}}
+    \hspace*{\fill}%
+    \begin{minipage}[c]{0.24\textwidth}
+        \scalebox{1.5}{\qrcode{https://github.com/miniconnect/holodb}}
     \end{minipage}%
+    \hspace*{\fill}%
 \end{frame}
 
 \appendix
