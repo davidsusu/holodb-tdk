@@ -447,42 +447,47 @@ schemas:
 \end{frame}
 
 \begin{frame}
-    \slidetitle{\sectionshorttitle}{Általános kétlépcsős értékkiosztás}
+    \slidetitle{\sectionshorttitle}{Általános kétlépéses értékkiosztás}
     
     \centering
     
     \includegraphics[height=0.7\textheight]{diagram/distribution}
     
-    A kétlépcsős értékkiosztás alapelve: \par
+    A kétlépéses értékkiosztás alapelve: \par
     visszafejthető disztribúció és permutáció kompozíciója
 \end{frame}
 
 \begin{frame}
     \slidetitle{\sectionshorttitle}{Írhatósági réteg}
     
-    {\color{beamer@blendedblue}A \texttt{DiffTable} dekorátor}
-    
-    \begin{itemize}
-        \item csak olvassa az alárendelt táblaobjektumot
-        \item amíg nincs módosítás, átlátszóan működik
-        \item memóriában tárolja a módosításokat
-        \item szükség szerint kiegészíti a lekérést és összefésüli az eredménytáblát
-    \end{itemize}
-    
-    \vspace{0.4cm}
-    
-    {\color{beamer@blendedblue}Tranzakciókezelés}
-    
-    \begin{itemize}
-        \item kétféle tranzakciós stratégia: írási ablakok vagy MVCC
-        \item kétféle commit mód: \texttt{AUTOCOMMIT} vagy explicit lockolás
-        \item mindegyik változat ACID-kompatibilis
-        \item nagyon sok írási művelet esetén nem igazán hatékony
-    \end{itemize}
+    \begin{minipage}[c]{0.5\textwidth}
+        {\color{beamer@blendedblue}A \texttt{DiffTable} dekorátor}
+        
+        \begin{itemize}
+            \item csak olvassa az alárendelt táblaobjektumot
+            \item amíg nincs módosítás, átlátszóan működik
+            \item memóriában tárolja a módosításokat
+            \item átírhatja a lekérést és összefésülheti az eredménytáblát
+        \end{itemize}
+        
+        \vspace{0.4cm}
+        
+        {\color{beamer@blendedblue}Tranzakciókezelés}
+        
+        \begin{itemize}
+            \item kétféle tranzakciós stratégia: írási ablakok vagy MVCC
+            \item kétféle commit mód: \texttt{AUTOCOMMIT} vagy explicit lockolás
+            \item mindegyik változat ACID-kompatibilis
+            \item nagyon sok írási művelet esetén nem igazán hatékony
+        \end{itemize}
+    \end{minipage}%
+    \begin{minipage}[c]{0.5\textwidth}
+        \includegraphics[height=0.85\textheight]{diagram/treerandom-0}
+    \end{minipage}
 \end{frame}
 
 \begin{frame}
-    \slidetitle{\sectionshorttitle}{Kétlépcsős értékkiosztás: adatlekérés}
+    \slidetitle{\sectionshorttitle}{Kétlépéses értékkiosztás: adatlekérés}
     
     \centering
     
@@ -501,7 +506,7 @@ schemas:
 \end{frame}
 
 \begin{frame}
-    \slidetitle{\sectionshorttitle}{Kétlépcsős értékkiosztás: keresés}
+    \slidetitle{\sectionshorttitle}{Kétlépéses értékkiosztás: keresés}
     
     \centering
     
@@ -518,7 +523,7 @@ schemas:
 \end{frame}
 
 \begin{frame}
-    \slidetitle{\sectionshorttitle}{Kétlépcsős értékkiosztás: nincs találat}
+    \slidetitle{\sectionshorttitle}{Kétlépéses értékkiosztás: nincs találat}
     
     \centering
     
@@ -530,7 +535,7 @@ schemas:
 \end{frame}
 
 \begin{frame}
-    \slidetitle{\sectionshorttitle}{Kétlépcsős értékkiosztás: értéksáv keresése}
+    \slidetitle{\sectionshorttitle}{Kétlépéses értékkiosztás: értéksáv keresése}
     
     \centering
     
@@ -919,7 +924,7 @@ schemas:
 \end{frame}
 
 \begin{frame}
-    \slidetitle{\sectionshorttitle}{Mit nyertünk még?}
+    \slidetitle{\sectionshorttitle}{További lehetőségek}
     
     \begin{itemize}
         \setlength\itemsep{1em}
