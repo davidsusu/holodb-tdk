@@ -19,6 +19,7 @@
 \usepackage{minted}
 \usepackage[hungarian]{babel}
 \usepackage[none]{hyphenat}
+\usepackage{textpos}
 \usepackage{qrcode}
 
 \pgfplotsset{
@@ -55,6 +56,12 @@
 \newcommand{\slidetitle}[2]{\frametitle{{\small #1 ~ \ding{226} ~ } \normalsize \textbf{#2} }}
 
 \newcommand{\greencheck}{{\color{green!65!black}\ding{51}}}
+
+\newcommand{\brqr}{
+  \begin{textblock*}{2.5cm}[1,1](\dimexpr\paperwidth-0.5cm\relax,\dimexpr\paperheight-0.5cm\relax)
+    \scalebox{1.5}{\qrcode{https://github.com/miniconnect/holodb}}
+  \end{textblock*}
+}
 
 \begin{document}
 \beamertemplatenavigationsymbolsempty
@@ -1010,6 +1017,8 @@ schemas:
 
 \begin{frame}[noframenumbering]
     ~~~
+    
+    \brqr
 \end{frame}
 
 \begin{frame}[t,noframenumbering]
@@ -1028,6 +1037,8 @@ schemas:
         \setlength\itemsep{1em}
         \item LOREM IPSUM
     \end{itemize}
+    
+    \brqr
 \end{frame}
 
 \begin{frame}[t,noframenumbering]
@@ -1045,6 +1056,8 @@ schemas:
         \setlength\itemsep{1em}
         \item LOREM IPSUM
     \end{itemize}
+    
+    \brqr
 \end{frame}
 
 \begin{frame}[t,noframenumbering]
@@ -1062,6 +1075,8 @@ schemas:
         \setlength\itemsep{1em}
         \item LOREM IPSUM
     \end{itemize}
+    
+    \brqr
 \end{frame}
 
 \endgroup
