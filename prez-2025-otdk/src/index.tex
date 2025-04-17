@@ -136,9 +136,18 @@
     \begin{minipage}[c]{0.35\textwidth}
         \centering
         
-        LOREM
+        \begin{columns}[t]
+            \column{.5\textwidth}
+            \includegraphics[width=\linewidth, frame]{image/starflight}
+            \includegraphics[width=\linewidth, frame]{image/starfield}
+            \column{.5\textwidth}
+            \includegraphics[width=\linewidth, frame]{image/minecraft}
+            \includegraphics[width=\linewidth, frame]{image/starmade}
+        \end{columns}
         
         \pause
+        
+        \vspace{10pt}
         
         IPSUM
     \end{minipage}%
@@ -1000,7 +1009,7 @@ schemas:
 \end{frame}
 
 \begin{frame}[t,noframenumbering]
-    \slidetitle{\sectionshorttitle}{1. kérdés}
+    \slidetitle{\sectionshorttitle}{1. Több SQL dialektus}
     
     \textbf{%
     Tudna-e a rendszer támogatni különböző query nyelveket
@@ -1018,7 +1027,7 @@ schemas:
 \end{frame}
 
 \begin{frame}[t,noframenumbering]
-    \slidetitle{\sectionshorttitle}{1. kérdés}
+    \slidetitle{\sectionshorttitle}{2. ORM-integráció}
     
     \textbf{%
     Lehetne-e integrációt nyújtani meglévő ORM keretrendszerekhez
@@ -1035,7 +1044,7 @@ schemas:
 \end{frame}
 
 \begin{frame}[t,noframenumbering]
-    \slidetitle{\sectionshorttitle}{1. kérdés}
+    \slidetitle{\sectionshorttitle}{3. Komplex megkötések}
     
     \textbf{%
     Tudna-e támogatni a megoldás egy tábla oszlopai közötti
