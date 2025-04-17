@@ -86,13 +86,13 @@
                 \begin{minipage}[c]{\linewidth}~~\textbf{mockolás, fejlesztés} \par ~~~~
                     csak legyen ott valami, hogy fusson
                 \end{minipage}
-            \item[\raisebox{-0.75em}{\includegraphics[width=2em,height=2em]{image/dbnow-test}}]
-                \begin{minipage}[c]{\linewidth}~~\textbf{integrált tesztelés} \par ~~~~
-                    kellenének adatok a tesztfuttatáshoz
-                \end{minipage}
             \item[\raisebox{-0.75em}{\includegraphics[width=2em,height=2em]{image/dbnow-prot}}]
                 \begin{minipage}[c]{\linewidth}~~\textbf{tervezés, prototipizálás, kísérletezés} \par ~~~~
                     szeretnénk folyamatosan újragondolni
+                \end{minipage}
+            \item[\raisebox{-0.75em}{\includegraphics[width=2em,height=2em]{image/dbnow-test}}]
+                \begin{minipage}[c]{\linewidth}~~\textbf{integrált tesztelés} \par ~~~~
+                    kellenének adatok a tesztfuttatáshoz
                 \end{minipage}
             \item[\raisebox{-0.75em}{\includegraphics[width=2em,height=2em]{image/dbnow-pres}}]
                 \begin{minipage}[c]{\linewidth}~~\textbf{bemutatók, koncepciótervek} \par ~~~~
@@ -107,24 +107,12 @@
     \end{minipage}%
     \hspace*{\fill}%
     \begin{minipage}[c]{0.38\textwidth}
-         LOREM
+        \centering
+        
+        \includegraphics[height=\textwidth]{diagram/database-tasks-compressed}
     \end{minipage}%
+    \hspace*{\fill}%
 \end{frame}
-
-\begin{frame}
-    \slidetitle{\sectionshorttitle}{Tesztadatbázis biztosításának nehézségei}
-    
-    Egy adatbázisszerver ad hoc odateremtése nem egyszerű.
-    
-    \vspace{1.5em}
-
-    \centering
-    
-    \includegraphics[height=0.4\textwidth]{diagram/database-tasks-compressed}
-\end{frame}
-
-\section{A létező megközelítések}
-\def\sectionshorttitle{Megközelítések}
 
 \begin{frame}
     \slidetitle{\sectionshorttitle}{A szokásos megoldások}
@@ -177,19 +165,6 @@
     \smallskip
     
     Részlet a \textit{No Man's Sky Origins} játékból (hivatalos trailer)
-\end{frame}
-
-\begin{frame}[noframenumbering]
-    \slidetitle{\sectionshorttitle}{Alternatív ihletforrások}
-    
-    \begin{columns}[t]
-    \column{.4\textwidth}
-    \includegraphics[width=\linewidth, frame]{image/starflight}
-    \includegraphics[width=\linewidth, frame]{image/starfield}
-    \column{.4\textwidth}
-    \includegraphics[width=\linewidth, frame]{image/minecraft}
-    \includegraphics[width=\linewidth, frame]{image/starmade}
-    \end{columns}
 \end{frame}
 
 \section{A HoloDB felépítése}
