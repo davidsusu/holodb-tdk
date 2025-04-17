@@ -1,10 +1,10 @@
-<mxfile host="Electron" modified="2025-04-17T21:05:38.822Z" agent="Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) draw.io/22.1.2 Chrome/114.0.5735.289 Electron/25.9.4 Safari/537.36" etag="5KGC1vHCEv8ji10DzagB" version="22.1.2" type="device">
+<mxfile host="Electron" modified="2025-04-17T21:10:30.976Z" agent="Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) draw.io/22.1.2 Chrome/114.0.5735.289 Electron/25.9.4 Safari/537.36" etag="2K_YafJRAyOtKvgXy5Yn" version="22.1.2" type="device">
   <diagram name="1 oldal" id="9zMQckgTDTX1H3_rx6Bh">
     <mxGraphModel dx="574" dy="385" grid="0" gridSize="10" guides="0" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
       <root>
         <mxCell id="0" />
         <mxCell id="1" parent="0" />
-        <mxCell id="uyWOBw3hdMBUtZMzsZzs-72" value="" style="rounded=0;whiteSpace=wrap;html=1;strokeColor=#999999;strokeWidth=0.5;" vertex="1" parent="1">
+        <mxCell id="uyWOBw3hdMBUtZMzsZzs-72" value="" style="rounded=0;whiteSpace=wrap;html=1;strokeColor=#4D4D4D;strokeWidth=0.5;" vertex="1" parent="1">
           <mxGeometry x="511" y="237" width="32" height="333" as="geometry" />
         </mxCell>
         <mxCell id="LfwBUIai21lKe5tmic68-26" value="A" style="rounded=0;whiteSpace=wrap;html=1;" parent="1" vertex="1">
@@ -352,7 +352,7 @@
             <mxPoint x="574" y="340" as="targetPoint" />
           </mxGeometry>
         </mxCell>
-        <mxCell id="uyWOBw3hdMBUtZMzsZzs-73" value="diff layer" style="rounded=0;whiteSpace=wrap;html=1;strokeColor=#999999;fontSize=9;strokeWidth=0.5;" vertex="1" parent="1">
+        <mxCell id="uyWOBw3hdMBUtZMzsZzs-73" value="diff layer" style="rounded=0;whiteSpace=wrap;html=1;strokeColor=#4D4D4D;fontSize=9;strokeWidth=0.5;fontColor=#4D4D4D;" vertex="1" parent="1">
           <mxGeometry x="501" y="570" width="69" height="19" as="geometry" />
         </mxCell>
         <mxCell id="uyWOBw3hdMBUtZMzsZzs-77" value="" style="shape=trapezoid;perimeter=trapezoidPerimeter;whiteSpace=wrap;html=1;fixedSize=1;size=3.4069192751235278;strokeColor=none;" vertex="1" parent="1">
