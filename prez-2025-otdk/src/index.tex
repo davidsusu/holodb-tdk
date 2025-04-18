@@ -19,7 +19,7 @@
 \usepackage{minted}
 \usepackage[hungarian]{babel}
 \usepackage[none]{hyphenat}
-\usepackage{textpos}
+\usepackage[absolute,overlay]{textpos}
 \usepackage{qrcode}
 
 \pgfplotsset{
@@ -58,9 +58,9 @@
 \newcommand{\greencheck}{{\color{green!65!black}\ding{51}}}
 
 \newcommand{\brqr}{
-  \begin{textblock*}{2.5cm}[1,1](\dimexpr\paperwidth-0.5cm\relax,\dimexpr\paperheight-0.5cm\relax)
-    \scalebox{1.5}{\qrcode{https://github.com/miniconnect/holodb}}
-  \end{textblock*}
+    \begin{textblock*}{2cm}[0,0](\dimexpr\paperwidth-2.5cm\relax,\dimexpr\paperheight-2.5cm\relax)
+        \resizebox{2cm}{!}{\qrcode{https://github.com/miniconnect/holodb}}
+    \end{textblock*}
 }
 
 \begin{document}
@@ -1015,8 +1015,16 @@ schemas:
 \section{Bírálói kérdések}
 \def\sectionshorttitle{Kérdések}
 
-\begin{frame}[noframenumbering]
+\begin{frame}[c,noframenumbering]
     ~~~
+    
+    \brqr
+\end{frame}
+
+\begin{frame}[c,noframenumbering]
+    \centering
+    
+    \Huge Bírálói kérdések
     
     \brqr
 \end{frame}
@@ -1035,13 +1043,26 @@ schemas:
     
     \begin{itemize}
         \setlength\itemsep{1em}
-        \item LOREM IPSUM
+        \item \textbf{igen}
+        \begin{itemize}
+            \item a \texttt{QueryExecutor} implementációja cserélhető, jelenleg kétféle lehet:
+            \begin{itemize}
+                \item \texttt{default} (limitált SQL, gyors)
+                \item Apache Calcite (kb. 40-féle dialektust támogat)
+            \end{itemize}
+            \item kezdetleges támogatás további lekérdezési módokhoz is elérhető:
+            \begin{itemize}
+                \item REST API
+                \item GraphQL (GraphQL-Java)
+                \item SPARQL (Quetzal)
+            \end{itemize}
+        \end{itemize}
     \end{itemize}
     
     \brqr
 \end{frame}
 
-\begin{frame}[t,noframenumbering]
+\begin{frame}[t,noframenumbering,fragile]
     \slidetitle{\sectionshorttitle}{2. ORM-integráció}
     
     \textbf{%
@@ -1050,12 +1071,45 @@ schemas:
     Mennyire látja ezt megvalósíthatónak?
     }
     
-    \vspace{0.7cm}
+    \vspace{0.3cm}
     
     \begin{itemize}
         \setlength\itemsep{1em}
-        \item LOREM IPSUM
+        \item JPA entitásokból \textbf{jelenleg is konfigurálható} (opcionális kiegészítő annotációkkal):
     \end{itemize}
+    
+    \hspace*{0.05\textwidth}
+    \begin{minipage}{0.72\textwidth}
+        \begin{minted}[
+            fontsize=\tiny,
+            framesep=4pt,
+            frame=single,
+            framerule=1.5pt,
+            rulecolor=\color{gray!30}
+        ]{java}
+@Entity
+@Table(name = "posts")
+@HoloTable(size = 500)
+public class Post {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+    
+    @Column
+    @HoloColumn(valuesBundle = "lorem")
+    private String title;
+
+    @Column(name = "tag")
+    @ElementCollection
+    @CollectionTable(name = "post_tags", joinColumns = { @JoinColumn(name = "post_id") })
+    @HoloTable(size = 20)
+    @HoloColumn(values = { "tag1", "tag2", "tag3" })
+    @HoloVirtualColumn(name = "color", valuesBundle = "colors")
+    private Set<String> tags;
+
+    // ...
+        \end{minted}
+    \end{minipage}
     
     \brqr
 \end{frame}
@@ -1073,7 +1127,7 @@ schemas:
     
     \begin{itemize}
         \setlength\itemsep{1em}
-        \item LOREM IPSUM
+        \item jelenleg csak \textbf{részlegesen}
     \end{itemize}
     
     \brqr
