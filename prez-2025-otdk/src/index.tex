@@ -464,30 +464,53 @@ schemas:
         \end{itemize}
     \end{minipage}%
     \begin{minipage}[c]{0.5\textwidth}
-    
-    \begin{tabular}{|l||r|r|r|r|r|r|r||} 
-    \hline
-    \multicolumn{1}{|>{\centering\arraybackslash}m{2cm}|}{~}
-        & \multicolumn{1}{>{\centering\arraybackslash}m{1.6cm}|}{\begin{tabular}{c} \footnotesize{\textbftt{mem}} \\ (bytes) \end{tabular}}
-        & \multicolumn{1}{>{\centering\arraybackslash}m{1.6cm}|}{\begin{tabular}{c} \footnotesize{\textbftt{paq8/4}} \\ (\%) \end{tabular}}
-        & \multicolumn{1}{>{\centering\arraybackslash}m{1.6cm}|}{\begin{tabular}{c} \small{\textbftt{create}} \\ (ns) \end{tabular}}
-        & \multicolumn{1}{>{\centering\arraybackslash}m{1.6cm}|}{\begin{tabular}{c} \small{\textbftt{at×30}} \\ (ns) \end{tabular}}
-        & \multicolumn{1}{>{\centering\arraybackslash}m{1.6cm}||}{\begin{tabular}{c} \small{\textbftt{iof×30}} \\ (ns) \end{tabular}}\\
-    \hline\hline
-    \textbftt{FAV}         &     648 & 31,54 & 968 &  2~040 &   2~007 \\
-    \hline
-    \textbftt{MP1}         &     152 &  0,19 & 267 &    161 &     188 \\
-    \hline
-    \textbftt{FEI-F-4}     &     608 & 19,56 & 660 &  8~800 &   9~185 \\
-    \hline
-    \textbftt{FEI-S-2}     & 212~312 & 97,08 & 434 & 32~221 &  32~536 \\
-    \hline
-    \textbftt{FPE1}        & 211~352 & 97,07 & 540 & 67~155 &  68~192 \\
-    \hline
-    \end{tabular} 
-    
-    KÉPEK
-    
+        \centering
+        
+        \begin{tabular}{|l||r|r|r|r|r|r|r||} 
+        \hline
+        \multicolumn{1}{|>{\centering\arraybackslash}m{2cm}|}{~}
+            & \multicolumn{1}{>{\centering\arraybackslash}m{1.6cm}|}{\begin{tabular}{c} \footnotesize{\textbftt{mem}} \\ (bytes) \end{tabular}}
+            & \multicolumn{1}{>{\centering\arraybackslash}m{1.6cm}|}{\begin{tabular}{c} \footnotesize{\textbftt{paq8/4}} \\ (\%) \end{tabular}}
+            & \multicolumn{1}{>{\centering\arraybackslash}m{1.6cm}|}{\begin{tabular}{c} \small{\textbftt{create}} \\ (ns) \end{tabular}}
+            & \multicolumn{1}{>{\centering\arraybackslash}m{1.6cm}|}{\begin{tabular}{c} \small{\textbftt{at×30}} \\ (ns) \end{tabular}}
+            & \multicolumn{1}{>{\centering\arraybackslash}m{1.6cm}||}{\begin{tabular}{c} \small{\textbftt{iof×30}} \\ (ns) \end{tabular}}\\
+        \hline\hline
+        \textbftt{FAV}         &     648 & 31,54 & 968 &  2~040 \\
+        \hline
+        \textbftt{MP1}         &     152 &  0,19 & 267 &    161 \\
+        \hline
+        \textbftt{FEI-F-4}     &     608 & 19,56 & 660 &  8~800 \\
+        \hline
+        \textbftt{FEI-S-2}     & 212~312 & 97,08 & 434 & 32~221 \\
+        \hline
+        \textbftt{FPE1}        & 211~352 & 97,07 & 540 & 67~155 \\
+        \hline
+        \end{tabular} 
+        
+        \begin{minipage}[b]{0.23\textwidth}
+            \centering
+            \includegraphics[width=\textwidth]{image/permutation-fav.png}
+            \par FAV
+        \end{minipage}
+        \hspace*{\fill}
+        \begin{minipage}[b]{0.23\textwidth}
+            \centering
+            \includegraphics[width=\textwidth]{image/permutation-mp1.png}
+            \par MP1
+        \end{minipage}
+        \hspace*{\fill}
+        \begin{minipage}[b]{0.23\textwidth}
+            \centering
+            \includegraphics[width=\textwidth]{image/permutation-feif4.png}
+            \par FEI-F-4
+        \end{minipage}
+        \hspace*{\fill}
+        \begin{minipage}[b]{0.23\textwidth}
+            \centering
+            \includegraphics[width=\textwidth]{image/permutation-feis2.png}
+            \par FEI-S-2
+        \end{minipage}
+        
     \end{minipage}
 \end{frame}
 
