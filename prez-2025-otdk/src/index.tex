@@ -998,18 +998,21 @@ schemas:
     \slidetitle{\sectionshorttitle}{XXXXXXXXXX}
     
     {\footnotesize
-    \begin{tabular}{|l||r|r||} 
+    \begin{tabular}{|l||r|r|r||} 
     \hline
     ~
-        & \begin{tabular}{c} Docker image \\ (MiB) \end{tabular}
-        & \begin{tabular}{c} Shadow JAR \\ (MiB) \end{tabular}\\
+        & \begin{tabular}{c} \makebox[0pt]{\footnotesize{\textbftt{RO-SIMP}}} \\ (s) \end{tabular}
+        & \begin{tabular}{c} \makebox[0pt]{\footnotesize{\textbftt{RO-CMPX}}} \\ (s) \end{tabular}
+        & \begin{tabular}{c} \makebox[0pt]{\footnotesize{\textbftt{WR-CMPX}}} \\ (s) \end{tabular}\\
     \hline\hline
     
-    \textbf{HoloDB} & 237,3 & 23,09 \\
-    \textbf{HoloDB (opt.)} & 53,6 & 14,37 \\
-    \textbf{H2} & \best{45,4} & \best{2,49} \\
-    \textbf{MariaDB} & 116,7 & \nodata \\
+    \textbf{HoloDB/}\textbftt{EXT} & 6,79 & 7,10 & 12,16 \\
+    \textbf{HoloDB/}\textbftt{DEF} & 6,36 & 6,56 & 11,09 \\
+    \textbf{HoloDB/}\textbftt{MIN} & 4,60 & 4,76 &  7,54 \\
+    \textbf{H2}                    & 3,92 & 4,02 &  6,07 \\
+    \textbf{MariaDB}               & 5,10 & 5,43 &  8,38 \\
     \hline
+
     \end{tabular}
     }
 \end{frame}
