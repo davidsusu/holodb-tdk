@@ -714,7 +714,11 @@ schemas:
             baselinestretch=1,
             linenos=false,
         ]{sql}
-SELECT
+SELECT s.lastname FROM students s
+LEFT JOIN course_student cs ON cs.sid=s.id
+LEFT JOIN courses c ON c.id=cs.cid
+LEFT JOIN subjects su ON su.id=c.sid
+WHERE s.firstname='Ian' AND su.id=2
         \end{minted}
     \end{minipage}
     \hspace*{\fill}%
