@@ -1045,6 +1045,29 @@ schemas:
     Integrált tesztek eredménye különböző adatbázisokkal.
 \end{frame}
 
+\begin{frame}
+    \slidetitle{\sectionshorttitle}{XXXXXXXXXX}
+    
+    \centering
+    
+    \begin{tabular}{|l|l||r|r||r|r||} 
+    \hline
+    ~
+        & \textbf{Generátor}
+        & \begin{tabular}{c} \textbf{Generálás} \\ (s) \end{tabular}
+        & \begin{tabular}{c} \textbf{Indítás} \\ (s) \end{tabular}
+        & \begin{tabular}{c} \textbf{Konfiguráció} \\ (B) \end{tabular}
+        & \begin{tabular}{c} \textbf{Tárigény} \\ (MiB) \end{tabular}\\
+    \hline\hline
+    \textbf{HoloDB} & \nodata & \best{0} & \best{0,28} & \best{1~311} & \best{0,16} \\
+    \textbf{MariaDB} & \textbf{Laravel seeder} & \bad{15~734} & 0,30 & 8~008 & \bad{1~101,47} \\
+    \textbf{Postgres} & \textbf{SQL-szkript} & 95 & 2,26 & 2~017 & \bad{1~409,57} \\
+    \hline
+    \end{tabular}
+    
+    Nagyméretű adathalmaz (11~002~000 rekord) generálása különböző megoldásokkal.
+\end{frame}
+
 \section{Összegzés}
 \def\sectionshorttitle{\arabic{section}. Összegzés}
 
