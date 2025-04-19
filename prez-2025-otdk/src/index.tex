@@ -689,22 +689,22 @@ schemas:
     \vspace{1em}
     
     \hspace*{\fill}%
-    \begin{minipage}[c]{0.52\textwidth}
+    \begin{minipage}[t]{0.52\textwidth}
         \makebox[3.5em][l]{\small{\textbftt{Q-FLD}:}}
         {\scriptsize{\mintinline{sql}{SELECT fn FROM students WHERE id=30}}}
         
-        \vspace{1em}
+        \vspace{0.8em}
         
         \makebox[3.5em][l]{\small{\textbftt{Q-REC}:}}
         {\scriptsize{\mintinline{sql}{SELECT * FROM students WHERE id=30}}}
         
-        \vspace{1em}
+        \vspace{0.8em}
         
         \makebox[3.5em][l]{\small{\textbftt{Q-TFUL}:}}
         {\scriptsize{\mintinline{sql}{SELECT * FROM students}}}
     \end{minipage}
     \hspace*{\fill}%
-    \begin{minipage}[c]{0.45\textwidth}
+    \begin{minipage}[t]{0.45\textwidth}
         {\small{\textbftt{Q-MULT}:}}
         
         \vspace{-2em}
@@ -722,7 +722,6 @@ LEFT JOIN courses c ON c.id=cs.cid
 LEFT JOIN subjects su ON su.id=c.sid
 WHERE s.firstname='Ian' AND su.id=2
         \end{minted}
-        \vspace{-1em}
     \end{minipage}
     \hspace*{\fill}%
 \end{frame}
