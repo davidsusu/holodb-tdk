@@ -995,31 +995,51 @@ schemas:
 \end{frame}
 
 \begin{frame}
-    \slidetitle{\sectionshorttitle}{Lekérdezések sebessége}
+    \slidetitle{\sectionshorttitle}{Adathalmaz előállása}
     
     \centering
     
-    \begin{tabular}{|l||r|r|r|r|r||} 
+    \begin{tabular}{|l|l||r|r||r|r||}
     \hline
     ~
-        & \begin{tabular}{c} \textbftt{Q-FLD} \\ ({\textmu}s) \end{tabular}
-        & \begin{tabular}{c} \textbftt{Q-REC} \\ ({\textmu}s) \end{tabular}
-        & \begin{tabular}{c} \textbftt{Q-CMPX} \\ ({\textmu}s) \end{tabular}
-        & \begin{tabular}{c} \textbftt{Q-TFUL} \\ ({\textmu}s) \end{tabular}
-        & \begin{tabular}{c} \textbftt{Q-MULT} \\ ({\textmu}s) \end{tabular}\\
+        & \textbf{Generátor}
+        & \begin{tabular}{c} \textbf{Generálás} \\ (s) \end{tabular}
+        & \begin{tabular}{c} \textbf{Indítás} \\ (s) \end{tabular}
+        & \begin{tabular}{c} \textbf{Konfiguráció} \\ (B) \end{tabular}
+        & \begin{tabular}{c} \textbf{Tárigény} \\ (MiB) \end{tabular}\\
     \hline\hline
 
-    \textbf{HoloDB/}\textbftt{EXT} & 43,00 & 180,35 & \bad{1~981,98} & \bad{1~514~177} & \bad{6~818} \\
-    \textbf{HoloDB/}\textbftt{DEF} & 24,66 & 130,08 & 225,17 & \bad{1~143~721} & \bad{3~592 \\
-    \textbf{HoloDB/}\textbftt{MIN} & 22,82 & 20,22 & 44,58 & 25~909 & 365 \\
-    \textbf{H2}& \best{12,77} & \best{9,73} & \best{17,60} & \best{1~965} & \best{177} \\
-    \textbf{MariaDB} & 47,87 & 46,27 & 73,02 & 3~393 & 1~429 \\
+    \textbf{HoloDB} & \nodata & \best{0,00} & \best{0,28} & \best{1~303} & \best{0.16} \\
+    \textbf{MariaDB} & \textbf{Laravel seeder} & 7,08 & \best{0,28} & 7~944 & 0,45 \\
+    \textbf{Postgres} & \textbf{SQL-szkript} & 0,20 & 2,25 & 2~005 & 1,40 \\
     \hline
     \end{tabular}
     
     \vspace{0.5em}
     
-    Lekérdezési tesztek eredménye különböző adatbázisokkal.
+    Kisméretű adathalmaz (7~200 rekord) előállása különböző megoldásokkal.
+    \pause
+    
+    \vspace{1em}
+    
+    \begin{tabular}{|l|l||r|r||r|r||} 
+    \hline
+    ~
+        & \textbf{Generátor}
+        & \begin{tabular}{c} \textbf{Generálás} \\ (s) \end{tabular}
+        & \begin{tabular}{c} \textbf{Indítás} \\ (s) \end{tabular}
+        & \begin{tabular}{c} \textbf{Konfiguráció} \\ (B) \end{tabular}
+        & \begin{tabular}{c} \textbf{Tárigény} \\ (MiB) \end{tabular}\\
+    \hline\hline
+    \textbf{HoloDB} & \nodata & \best{0} & \best{0,28} & \best{1~311} & \best{0,16} \\
+    \textbf{MariaDB} & \textbf{Laravel seeder} & \bad{15~734} & 0,30 & 8~008 & \bad{1~101,47} \\
+    \textbf{Postgres} & \textbf{SQL-szkript} & 95 & 2,26 & 2~017 & \bad{1~409,57} \\
+    \hline
+    \end{tabular}
+    
+    \vspace{0.5em}
+    
+    Nagyméretű adathalmaz (11~002~000 rekord) előállása különböző megoldásokkal.
 \end{frame}
 
 \section{Összegzés}
