@@ -26,27 +26,27 @@
      inkscape:zoom="6.5555556"
      inkscape:cx="-12.050847"
      inkscape:cy="18"
-     inkscape:window-width="950"
-     inkscape:window-height="1125"
+     inkscape:window-width="1920"
+     inkscape:window-height="1135"
      inkscape:window-x="0"
      inkscape:window-y="0"
-     inkscape:window-maximized="0"
+     inkscape:window-maximized="1"
      inkscape:current-layer="svg10" />
   <path
      fill="currentColor"
-     d="M9 17.41V27h9.59l-2-2H11v-5.59z"
+     d="m 27.876588,17.811904 v 9.59 h -9.59 l 2,-2 h 5.59 v -5.59 z"
      class="clr-i-outline clr-i-outline-path-1"
      id="path2"
      style="fill:#b5b5cb;fill-opacity:1" />
   <path
      fill="currentColor"
-     d="M34.87 32.29L32 29.38V32H4v-4.15h2v-1.6H4V19.6h2V18H4v-6.4h2V10H4V4.41l15.94 15.85v-2.82L3.71 1.29A1 1 0 0 0 2 2v31a1 1 0 0 0 1 1h31.16a1 1 0 0 0 .71-1.71"
+     d="m 2.0065881,32.691904 2.87,-2.91 v 2.62 H 32.876588 v -4.15 h -2 v -1.6 h 2 v -6.65 h -2 v -1.6 h 2 v -6.4 h -2 v -1.6 h 2 V 4.8119041 l -15.94,15.8499999 v -2.82 l 16.23,-16.1499999 a 1,1 0 0 1 1.71,0.71 V 33.401904 a 1,1 0 0 1 -1,1 H 2.7165881 a 1,1 0 0 1 -0.71,-1.71"
      class="clr-i-outline clr-i-outline-path-2"
      id="path4"
      style="fill:#b5b5cb;fill-opacity:1" />
   <path
      fill="currentColor"
-     d="M24 30h4a2 2 0 0 0 2-2V8.7l-2.3-4.23a2 2 0 0 0-1.76-1a2 2 0 0 0-1.76 1.08L22 8.72V28a2 2 0 0 0 2 2m0-20.8l1.94-3.77L28 9.21V24h-4Zm0 16.43h4v2.44h-4Z"
+     d="M 12.876588,3.8717104 H 8.8765881 a 2,2 0 0 0 -2,2 V 25.17171 l 2.3,4.23 a 2,2 0 0 0 1.7599999,1 2,2 0 0 0 1.76,-1.08 l 2.18,-4.17 V 5.8717104 a 2,2 0 0 0 -2,-2 m 0,20.7999996 -1.94,3.77 -2.0599999,-3.78 V 9.8717104 h 3.9999999 z m 0,-16.4299996 H 8.8765881 v -2.44 h 3.9999999 z"
      class="clr-i-outline clr-i-outline-path-3"
      id="path6"
      style="fill:#b5b5cb;fill-opacity:1" />
