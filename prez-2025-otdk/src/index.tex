@@ -66,6 +66,10 @@
     \end{textblock*}
 }
 
+\newcommand{\best}[1]{{\textcolor{green}\underline{#1}}}
+
+\newcommand{\bad}[1]{{\textcolor{red}#1}}
+
 \begin{document}
 \beamertemplatenavigationsymbolsempty
 
@@ -487,15 +491,15 @@ schemas:
             & \begin{tabular}{c} \textbftt{create} \\ {\footnotesize{(ns)}} \end{tabular}
             & \begin{tabular}{c} \textbftt{at×30} \\ {\footnotesize{(ns)}} \end{tabular}\\
         \hline\hline
-        \textbftt{FAV}         &     648 & 31,54 & 968 &  2~040 \\
+        \textbftt{FAV} & 648 & 31,54 & 968 &  2~040 \\
         \hline
-        \textbftt{MP1}         &     152 &  0,19 & 267 &    161 \\
+        \textbftt{MP1} & \best{152} & \bad{0,19} & \best{267} & \best{161} \\
         \hline
-        \textbftt{FEI-F-4}     &     608 & 19,56 & 660 &  8~800 \\
+        \textbftt{FEI-F-4} & 608 & 19,56 & 660 & 8~800 \\
         \hline
-        \textbftt{FEI-S-2}     & 212~312 & 97,08 & 434 & 32~221 \\
+        \textbftt{FEI-S-2} & \bad{212~312} & 97,08 & 434 & \bad{32~221} \\
         \hline
-        \textbftt{FPE1}        & 211~352 & 97,07 & 540 & 67~155 \\
+        \textbftt{FPE1} & \bad{211~352} & \best{97,07} & 540 & \bad{67~155} \\
         \hline
         \end{tabular}
         }
