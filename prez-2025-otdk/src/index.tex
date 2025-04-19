@@ -1015,8 +1015,9 @@ schemas:
     \textbf{H2}& \best{12,77} & \best{9,73} & \best{17,60} & \best{1~965} & \best{177} \\
     \textbf{MariaDB} & 47,87 & 46,27 & 73,02 & 3~393 & 1~429 \\
     \hline
-
     \end{tabular}
+    
+    \vspace{1em}
     
     Lekérdezési tesztek eredménye különböző adatbázisokkal.
 \end{frame}
@@ -1042,13 +1043,37 @@ schemas:
     \hline
     \end{tabular}
     
+    \vspace{1em}
+    
     Integrált tesztek eredménye különböző adatbázisokkal.
 \end{frame}
 
 \begin{frame}
-    \slidetitle{\sectionshorttitle}{XXXXXXXXXX}
+    \slidetitle{\sectionshorttitle}{Adathalmaz előállása}
     
     \centering
+    
+    \begin{tabular}{|l|l||r|r||r|r||}
+    \hline
+    ~
+        & \textbf{Generátor}
+        & \begin{tabular}{c} \textbf{Generálás} \\ (s) \end{tabular}
+        & \begin{tabular}{c} \textbf{Indítás} \\ (s) \end{tabular}
+        & \begin{tabular}{c} \textbf{Konfiguráció} \\ (B) \end{tabular}
+        & \begin{tabular}{c} \textbf{Tárigény} \\ (MiB) \end{tabular}\\
+    \hline\hline
+
+    \textbf{HoloDB} & \nodata & 0,00 & 0,28 & 1~303 & 0.16 \\
+    \textbf{MariaDB} & \textbf{Laravel seeder} & 7,08 & 0,28 & 7~944 & 0,45 \\
+    \textbf{Postgres} & \textbf{SQL-szkript} & 0,20 & 2,25 & 2~005 & 1,40 \\
+    \hline
+    \end{tabular}
+    
+    \vspace{0.5em}
+    
+    Kisméretű adathalmaz (7~200 rekord) generálása különböző megoldásokkal.
+    
+    \vspace{1em}
     
     \begin{tabular}{|l|l||r|r||r|r||} 
     \hline
@@ -1065,6 +1090,8 @@ schemas:
     \hline
     \end{tabular}
     
+    \vspace{0.5em}
+    
     Nagyméretű adathalmaz (11~002~000 rekord) generálása különböző megoldásokkal.
 \end{frame}
 
@@ -1073,7 +1100,7 @@ schemas:
 
 \begin{frame}
     \slidetitle{\sectionshorttitle}{Elvárások teljesítése}
-    
+%    
     \begin{itemize}
         \setlength\itemsep{0.5em}
         \item[\greencheck] {\color{red}relációs adatmodell}re épül
