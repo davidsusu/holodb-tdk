@@ -994,7 +994,7 @@ schemas:
     \end{tikzpicture}
 \end{frame}
 
-\begin{frame}
+\begin{frame}[fragile]
     \slidetitle{\sectionshorttitle}{Lekérdezések sebessége}
     
     \centering
@@ -1021,27 +1021,6 @@ schemas:
     Lekérdezési tesztek eredménye különböző adatbázisokkal.
     
     \vspace{1em}
-    
-    \hspace*{\fill}%
-    \begin{minipage}[c]{0.47\textwidth}
-        \makebox[3em][l]{\textbftt{Q-FLD}:}
-        {\footnotesize\mintinline{sql}{SELECT fname FROM students WHERE id=30}}
-        
-        \vspace{0.2em}
-        
-        \makebox[3em][l]{\textbftt{Q-REC}:}
-        {\footnotesize\mintinline{sql}{SELECT * FROM students WHERE id=30}}
-        
-        \vspace{0.2em}
-        
-        \makebox[3em][l]{\textbftt{Q-TFUL}:}
-        {\footnotesize\mintinline{sql}{SELECT * FROM students}}
-    \end{minipage}
-    \hspace*{\fill}%
-    \begin{minipage}[c]{0.47\textwidth}
-        \textbftt{Q-MULT}:
-    \end{minipage}
-    \hspace*{\fill}%
 \end{frame}
 
 \begin{frame}
