@@ -1004,22 +1004,37 @@ schemas:
     ~
         & \begin{tabular}{c} \textbftt{Q-FLD} \\ ({\textmu}s) \end{tabular}
         & \begin{tabular}{c} \textbftt{Q-REC} \\ ({\textmu}s) \end{tabular}
-        & \begin{tabular}{c} \textbftt{Q-CMPX} \\ ({\textmu}s) \end{tabular}
         & \begin{tabular}{c} \textbftt{Q-TFUL} \\ ({\textmu}s) \end{tabular}
         & \begin{tabular}{c} \textbftt{Q-MULT} \\ ({\textmu}s) \end{tabular}\\
     \hline\hline
 
-    \textbf{HoloDB/}\textbftt{EXT} & 43,00 & 180,35 & \bad{1~981,98} & \bad{1~514~177} & \bad{6~818} \\
-    \textbf{HoloDB/}\textbftt{DEF} & 24,66 & 130,08 & 225,17 & \bad{1~143~721} & \bad{3~592} \\
-    \textbf{HoloDB/}\textbftt{MIN} & 22,82 & 20,22 & 44,58 & 25~909 & 365 \\
-    \textbf{H2}& \best{12,77} & \best{9,73} & \best{17,60} & \best{1~965} & \best{177} \\
-    \textbf{MariaDB} & 47,87 & 46,27 & 73,02 & 3~393 & 1~429 \\
+    \textbf{HoloDB/}\textbftt{EXT} & 43,00 & 180,35 & \bad{1~514~177} & \bad{6~818} \\
+    \textbf{HoloDB/}\textbftt{DEF} & 24,66 & 130,08 & \bad{1~143~721} & \bad{3~592} \\
+    \textbf{HoloDB/}\textbftt{MIN} & 22,82 & 20,22 & 25~909 & 365 \\
+    \textbf{H2}& \best{12,77} & \best{9,73} & \best{1~965} & \best{177} \\
+    \textbf{MariaDB} & 47,87 & 46,27 & 3~393 & 1~429 \\
     \hline
     \end{tabular}
     
     \vspace{0.5em}
     
     Lekérdezési tesztek eredménye különböző adatbázisokkal.
+    
+    \vspace{1em}
+    
+    \hspace*{\fill}%
+    \begin{minipage}[t]{0.47\textwidth}
+        \textbftt{Q-FLD}: Lorem ipsum
+        
+        \textbftt{Q-REC}: dolor sit amet
+        
+        \textbftt{Q-TFUL}: asdf fdsa
+    \end{minipage}
+    \hspace*{\fill}%
+    \begin{minipage}[t]{0.47\textwidth}
+        \textbftt{Q-MULT}: adkfjaldsfja skdfjl
+    \end{minipage}
+    \hspace*{\fill}%
 \end{frame}
 
 \begin{frame}
@@ -1074,7 +1089,7 @@ schemas:
         & \begin{tabular}{c} \textbf{Tárigény} \\ (MiB) \end{tabular}\\
     \hline\hline
 
-    \textbf{HoloDB} & \nodata & \best{0,00} & \best{0,28} & \best{1~303} & \best{0.16} \\
+    \textbf{HoloDB} & \nodata & \best{0,00} & \best{0,28} & \best{1~303} & \best{0,16} \\
     \textbf{MariaDB} & \textbf{Laravel seeder} & 7,08 & \best{0,28} & 7~944 & 0,45 \\
     \textbf{Postgres} & \textbf{SQL-szkript} & 0,20 & 2,25 & 2~005 & 1,40 \\
     \hline
