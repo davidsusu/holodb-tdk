@@ -1025,21 +1025,35 @@ schemas:
     \hspace*{\fill}%
     \begin{minipage}[c]{0.47\textwidth}
         \makebox[3em][l]{\textbftt{Q-FLD}:}
-        \mintinline{sql}{SELECT firstname FROM students WHERE id = 30}
+        {\footnotesize{\mintinline{sql}{SELECT fname FROM students WHERE id=30}}
         
         \vspace{0.2em}
         
-        \makebox[3em][l]{\textbftt{Q-REC}:} dolor sit amet
-        \mintinline{sql}{SELECT * FROM students WHERE id = 30}
+        \makebox[3em][l]{\textbftt{Q-REC}:}
+        {\footnotesize{\mintinline{sql}{SELECT * FROM students WHERE id=30}}
         
         \vspace{0.2em}
         
-        \makebox[3em][l]{\textbftt{Q-TFUL}:} asdf fdsa
-        \mintinline{sql}{SELECT * FROM students}
+        \makebox[3em][l]{\textbftt{Q-TFUL}:}
+        {\footnotesize{\mintinline{sql}{SELECT * FROM students}}
     \end{minipage}
     \hspace*{\fill}%
     \begin{minipage}[c]{0.47\textwidth}
-        \textbftt{Q-MULT}: LOREM IPSUM
+        \textbftt{Q-MULT}:
+        
+        \begin{minted}[
+            fontsize=\footnotesize,
+            frame=none,
+            bgcolor=white,
+            baselinestretch=1,
+            linenos=false,
+        ]{sql}
+SELECT s.lastname FROM students s
+    LEFT JOIN course_student cs ON cs.sid=s.id
+    LEFT JOIN courses c ON c.id=cs.cid
+    LEFT JOIN subjects su ON su.id=c.sid
+    WHERE s.firstname='Ian' AND su.id=2
+        \end{minted}
     \end{minipage}
     \hspace*{\fill}%
 \end{frame}
