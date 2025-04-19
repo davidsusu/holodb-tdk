@@ -995,6 +995,32 @@ schemas:
 \end{frame}
 
 \begin{frame}
+    \slidetitle{\sectionshorttitle}{Integrált teszt webes alkalmazással}
+    
+    \centering
+    
+    \begin{tabular}{|l||r|r|r||} 
+    \hline
+    ~
+        & \begin{tabular}{c} \textbftt{RO-SIMP} \\ (s) \end{tabular}
+        & \begin{tabular}{c} \textbftt{RO-CMPX} \\ (s) \end{tabular}
+        & \begin{tabular}{c} \textbftt{WR-CMPX} \\ (s) \end{tabular}\\
+    \hline\hline
+    
+    \textbf{HoloDB/}\textbftt{EXT} & 6,79 & 7,10 & 12,16 \\
+    \textbf{HoloDB/}\textbftt{DEF} & 6,36 & 6,56 & 11,09 \\
+    \textbf{HoloDB/}\textbftt{MIN} & 4,60 & 4,76 &  7,54 \\
+    \textbf{H2} & \best{3,92} & \best{4,02} &  \best{6,07} \\
+    \textbf{MariaDB} & 5,10 & 5,43 &  8,38 \\
+    \hline
+    \end{tabular}
+    
+    \vspace{0.5em}
+    
+    Integrált tesztek eredménye különböző adatbázisokkal.
+\end{frame}
+
+\begin{frame}
     \slidetitle{\sectionshorttitle}{Adathalmaz előállása}
     
     \centering
