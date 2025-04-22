@@ -329,7 +329,7 @@ Egy általános megoldás tehát aligha épülhet anonimizálásos módszerre.
 
 \subsection{Nagy teljesítményű megoldások}
 
-Számos nagyteljesítményű szolgáltatás érhető el a piacon szintetikus adatok generálásához.
+Számos nagy teljesítményű szolgáltatás érhető el a piacon szintetikus adatok generálásához.
 A \textit{MOSTLY AI} megoldása az akkurátus adatokra helyezi a hangsúlyt.
 Az adatok statisztikai jellemzői és mintázatának lényeges elemei
 jól illeszkednek a valós adatoknál látható mintázatokra%
@@ -513,7 +513,7 @@ mely egy \textbf{tetszőlegesen nagy méretű, koherens és kereshető} adattár
 miközben mindebből semmi sem létezik fizikálisan.
 Hogy egy koherens adattároló látszatát elérjük,
 apró eszközök egész tárát kell összeverbuválni,
-akár olyan távol eső területekről mint az automataelmélet és a kriptográfia.
+akár olyan távol eső területekről, mint az automataelmélet és a kriptográfia.
 Mivel a cél egy felhasználói szemszögből is áttekinthető és rugalmas eszköz biztosítása,
 választanunk kell egy kellően általános adathozzáférési modellt a virtuális adathalmaz prezentálásához.
 Ez az adatmodell a relációs adatmodell lesz,
@@ -678,7 +678,7 @@ Egy-egy oszlop elvont tulajdonságait a \texttt{ColumnDefinition} típus fogja �
 Bár az egyes mezők értékeit általában oszloporientáltan állítjuk elő
 (jellemzően az értéklistákat megadó \texttt{Source} objektumok használatával),
 a lekérések szemszögéből jobbnak mutatkozik egy rekordorientált nézet.
-A rekordot a \textt{Row} típus reprezentálja,
+A rekordot a \texttt{Row} típus reprezentálja,
 ezen keresztül kérhetőek le a konkrét mezőértékek
 az oszlopnév vagy oszloppozíció megadásával.
 
@@ -694,7 +694,7 @@ Ha többoszlopos, akkor az oszloplista bármely prefixére is indexként működ
 A másik két típus találatainak rendezése definiálatlan.
 Egyik sem ad vissza $NULL$ mezőket.
 
-A következő osztálydiagramon a vázlatosan összefoglaltam az interfészeket:
+A következő osztálydiagramon vázlatosan összefoglaltam az interfészeket:
 
 \begin{figure}[H]
 \centering
@@ -786,7 +786,7 @@ Az oszlopok értékkészlete, keverési módja és egyéb paraméterei kényelme
 például előre adott értéklistákkal vagy akár reguláris kifejezéssel.
 A szerver kész Docker konténerrel is indítható,
 tehát dockeres környezetben a konfigurációs fájlon kívül
-pusztán a megfelelő \textit{docker} parancs kiadására van szükség az indításhoz.
+pusztán a megfelelő \texttt{docker} parancs kiadására van szükség az indításhoz.
 
 A konfigurációs fájl alapértelmezetten YAML formátumú,
 de más adatleíró nyelv is használható
@@ -1097,7 +1097,7 @@ főként az alábbi megfontolások játszottak szerepet:
 
 \begin{itemize}
     \item A scalás osztályok javás használata nem idiomatikus.
-          Például beszédes metódusnevek helyett az operátortúlterhelés kódolt nevet kell használnunk
+          Például beszédes metódusnevek helyett az operátortúlterhelés kódolt nevét kell használnunk
           (\texttt{n.shiftLeft(m)} helyett \texttt{n.\$less\$less(m)} stb.).
     \item Nemkívánatos külső függőséget jelentene,
           mely az implementációs szabadságot és a könyvtár rekurzív méretét is növelné.
@@ -1391,7 +1391,7 @@ Az XOR tulajdonságai miatt ez reverzibilis (bármi legyen is a hash-függvény)
 újraalkalmazva az eredeti bitsorozatot kapjuk vissza
 (a forrásbiteket ezen a ponton még nem írtuk felül).
 Tehát a Feistel-hálózattal kapott kód visszafejtése úgy történik, hogy a lépéseket visszafelé újra végrehajtjuk.
-Általában nem szükséges, hogy a minden körhöz más hashelést használjunk,
+Általában nem szükséges, hogy minden körhöz más hashelést használjunk,
 bőven elég, ha a páros és páratlan körökhöz eltérő függvényt alkalmazunk (szigorúan még ez sem lenne szükséges).
 
 A Feistel-hálózatokkal való kísérletezés során észrevettem,
@@ -1476,7 +1476,7 @@ A példánylétrehozási és hívási időket JMH-val mértem.
 Az értékek lekérését és keresését az első 30 pozíción futtattam,
 így egyfelől nagyobb lett a minta,
 másfelől az identikus permutáció (\texttt{ID}) is kibújt az 1 ns érték alól.
-A \texttt{FAV} esetében a létrehozási idő nagy azért magas,
+A \texttt{FAV} esetében a létrehozási idő azért magas,
 mert a második \texttt{MP1}-hez új kulcsot generál.
 Ez valószínűleg elkerülhető, egyelőre ezzel nem foglalkoztam.
 
@@ -2380,7 +2380,7 @@ Az ebben a fejezetben leírt mérések nem JMH alapokon történtek,
 hiszen főként end-to-end vagy integrált jellegűek,
 illetve több helyen más adatbázisokkal vetettem össze az eredményeket.
 Minden mérést ugyanazon a Debian 12 GNU/Linux rendszerű gépen futtattam
-(az egyéb paramétereket lásd az \ref{jmhBenchmarkEnvironment} alfejezetet).
+(az egyéb paramétereket lásd az \ref{jmhBenchmarkEnvironment} alfejezetben).
 A táblázatoknál a konkrét mérési módszert a táblázat alatti leírásban írtam le.
 Az összehasonlításoknál a következő szoftververziókat használtam
 (az alapértelmezett kiegészítő eszközökkel együtt értve):
@@ -2691,7 +2691,7 @@ indítási idejét\footnote{
   Jelenleg indításkor a HoloDB konfigurációjában megadott összes oszlop
   szükséges adatstruktúrái legenerálódnak.
   Ez természetesen erősen optimalizálható.
-  Ha ezeket a genrálások csak később, on-demand jelleggel futnának,
+  Ha ezek a generálások csak később, on-demand jelleggel futnának,
   az indítási időt szinte a JVM indulási idejére lehetne redukálni.
   Fejlesztői gépeken még ezt is ki lehetne küszöbölni egy daemon futtatásával.
 }
@@ -2905,7 +2905,7 @@ a kérések beérkezési sorrendjétől.
 Az elsőt nevezhetjük \textit{simple mode}-nak.
 Ekkor pusztán a tábla és az oszlopok neveiből indulunk ki
 (valamint a root seed értékből).
-A tábla mérete és egyéb jellemző a táblanév alapján kerülnek meghatározásra,
+A tábla mérete és egyéb jellemzői a táblanév alapján kerülnek meghatározásra,
 az oszlop típusa és egyéb jellemzői pedig az oszlop neve alapján
 (mellékes, hogy pontosan milyen módszerrel).
 Természetesen érdemes bevetni olyan heurisztikákat,
@@ -3085,7 +3085,7 @@ vagy a dev mode.
           Emellett egy programozható API is rendelkezésre áll.
     \item \textbf{Opcionálisan írható.} Valóban;
           a \texttt{Table} interfész támogatja a módosító műveleteket,
-          melyeket a \texttt{DiffTable} dekorációval valósít meg,
+          melyeket a \texttt{DiffTable} dekorátorral valósít meg,
           csak a módosítások számontartásával
           Az SQL-futtató réteg egy egyszerű tranzakciókezelést
           és módosító SQL-eket is támogat
