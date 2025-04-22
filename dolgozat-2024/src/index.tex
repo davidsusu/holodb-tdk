@@ -308,7 +308,7 @@ Ha már rendelkezésre áll egy éles adatbázis, kézenfekvőnek látszik,
 hogy ennek replikáit használjuk a teszt- vagy mockadatbázis kiindulópontjaként,
 így rögtön egy valószerű adathalmazzal indulunk,
 Az érzékeny adatok miatt azonban anonimizálásra lehet szükség.
-tehát a generáláshoz szükséges számítási igényt összességében
+Tehát a generáláshoz szükséges számítási igényt összességében
 felcseréljük a másolás és anonimizáció költségeivel%
 \cite{SoftwareArx,SoftwareAnonymeter}.
 
@@ -1076,7 +1076,7 @@ egy új működési elv a beépített \texttt{BigInt} osztályhoz%
 Az eredeti \texttt{BigInt} egy egyszerű csomagoló osztály volt a Java \texttt{BigInteger} fölött,
 az új megoldás pedig a \texttt{LargeInteger}-hez hasonlóan
 primitív \texttt{long} értékeket használ a kis számokhoz
-(nagyrészt a scalás Spire matematikai keretrendszer \ŧexttt{SafeLong} osztályát alapul véve%
+(nagyrészt a scalás Spire matematikai keretrendszer \texttt{SafeLong} osztályát alapul véve%
 \cite{SoftwareScalaSpire}).
 A \texttt{BigInt} végül is csak egyetlen osztályt definiál,
 melynek van egy \texttt{long} és egy \texttt{BigInteger} típusú mezője is,
@@ -1219,7 +1219,7 @@ a sémákon belül táblák, azokon belül oszlopok,
 azokon belül pedig adatmezők foglalnak helyet.
 Végül a mezők értéke is lehet strukturált adat, melyben a rétegződés folytatódik.
 Szeretnénk, hogy az értékek a hierarchiában bárhol nagyjából \textit{véletlenszerűen},
-de a globális kiinduló seed alapján determinisztikusan álljanak elő,
+de a globális kiinduló seed alapján determinisztikusan álljanak elő.
 Olyan véletlengenerátorra van szükség,
 mely teljesíti a következő követelményeket:
 
@@ -2754,7 +2754,7 @@ A kisméretű adathalmaz esetében a következő eredmények születtek:
     & \multicolumn{1}{>{\centering\arraybackslash}m{2cm}||}{\begin{tabular}{c} \makebox[0pt]{\footnotesize{\textbf{Tárigény}}} \\ (MiB) \end{tabular}}\\
  \hline\hline
  
- \textbf{HoloDB}   & \nodata                 & 0,00 & 0,28 & 1~303 & 0.16 \\
+ \textbf{HoloDB}   & \nodata                 & 0,00 & 0,28 & 1~303 & 0,16 \\
  \textbf{MariaDB}  & \textbf{Laravel seeder} & 7,08 & 0,28 & 7~944 & 0,45 \\
  \textbf{Postgres} & \textbf{SQL-szkript}    & 0,20 & 2,25 & 2~005 & 1,40 \\
  \hline
