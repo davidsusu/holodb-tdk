@@ -9,7 +9,7 @@
 \setlength{\parindent}{0pt}
 
 \title{Összefoglaló leírás innOtdk pályázathoz \\ ~ \\ ~ \\ {\Large Az eredeti TDK-pályamunka címe: \\ ~ \\ HoloDB: Relációs demóadatok konzisztens on-the-fly \\ generálása deklaratív konfigurációból} \\ ~}
-\author{Horváth Dávid}
+\author{Horváth Dávid (ELTE-IK) \\ horvathdown@student.elte.hu}
 \date{2025. május 15.}
 
 \begin{document}
@@ -23,14 +23,14 @@
 
 A HoloDB egy java nyelven írt általános célú adatbázismockoló eszköz, mely egy valószerű adatokkal feltöltött, ténylegesen funkcionáló relációs adatbázist szimulál, pusztán egy tömör, deklaratív konfiguráció alapján.
 
-[konkrétabb motiváció, előzmény, célcsoport, a probléma valós volta]
+[konkrétabb motiváció, előzmény, célcsoport, a probléma valós volta, vagy tárolt, vagy nem konzisztens, vagy nem kereshető stb.]
 
-A HoloDB mögötti kutatás arra kereste a választ, hogy lehetséges-e szintetikus adatok számításigényes generálása (vagy meglévő adatok anonimizálása) és memóriaigényes tárolása nélkül adatok egy koherens körét kereshetően is szolgáltatni, a lehető legáltalánosabb módon, elfogadható teljesítmény mellett.
-A kereshetőséget virtuális indexek biztosítják, amelyek külön-külön skálázható kétirányban működő elemek (például eloszlás, permutáció) kompozíciója által vannak megvalósítva.
+A HoloDB mögötti kutatás arra kereste a választ, hogy lehetséges-e szintetikus adatok egy koherens körét kereshetően is szolgáltatni, azok előre történő, számításigényes generálása (vagy meglévő adatok anonimizálása) és memóriaigényes tárolása nélkül. Fontos szempont volt, hogy ezt a lehető legáltalánosabb módon, egyúttal elfogadható teljesítmény mellett kell megoldani.
+A kereshetőséget virtuális indexek biztosítják, amelyek külön-külön skálázható kétirányban működő operátorok (például eloszlás, permutáció) kompozíciója által vannak megvalósítva.
 Opcionálisan a táblák fölé helyezhető egy az írási műveleteket is támogató, a módosításokat tömören tároló, átlászó írási réteg.
 A megvalósítás távoli szakterületeket ötvöz (azokban is több olyan ötletet felmutatva, amelyek további kidolgozás után önálló publikálásra lehetnek alkalmasak); a fő nóvum azonban a sok elem összeillesztéséséből létrejövő újszerű szoftvertípus.
 
-A HoloDB teljesen megszüntetni a preparálási költségeket, általában jelentősen csökkenti a tesztadatokkal való bajlódás miatt fellépő idő- és infrastruktúraigényt, és akár óriás adatbázist is képes szimulálni minimális memóriahasználat mellett.
+A HoloDB teljesen megszüntetni a preparálási költségeket, általában jelentősen csökkenti a demóadatokkal való bajlódás miatt fellépő idő- és infrastruktúraigényt, és akár óriás adatbázist is képes szimulálni minimális memóriahasználat mellett.
 Ez szembemegy áll azzal a jelenlegi dogmával, hogy szükségszerű lenne egy hús-vér adatbázist populálni és működtetni annak minden erőforrásigényével együtt olyan esetben is, amikor valójában nincs szükség valós adatokra (vagy azok éppen nemkívánatosak, például érzékeny adatok esetén, melyeket minimum anonimizálni kellene).
 Az erőforrás-használat csökkenése annál látványosabb, minél nagyobb az adathalmaz, ahogy azt a performanciatesztek is igazolták.
 Az erőforráscsökkentéssel kapcsolatos főbb összehasonlító teszteredmények az OTDK-pályamunkában is bemutatásra kerültek.
@@ -45,13 +45,32 @@ A HoloDB nyílt forráskódú projektként elérhető.
 A meglévő prototípust bárki kipróbálhatja, annak működőképességéről meggyőződhet.
 Például docker konténerként futtatva REST API-n vagy MiniConnect API-n keresztül lehet csatlakozni bármilyen programból, amely ezeket támogatja
 (a MiniConnect egy adatbáziselérési API, melyet a JDBC minimalista alternatívájának szántam, illetve a hozzá tartozó kliens-agnosztikus hálózati protokoll).
-Java környezet esetében további lehetőség a beágyazott elérés, illetve a JPA entitások közvetlen használata konfiguráció helyett.
-A HoloDB körül egy gazdag eszközinfrastruktúra kiépítése zajlik, magába foglalva többek között a következőket: felhasználóbarát parancssori REPL, adatbázisböngészők támogatása (DBeaver), NoSQL adapterek (MongoDB, GraphQL, SPARQL stb.), GraalVM-támogatás, 
-[JDBC-vel is működik, JDBC nehézkessége, miniconnect api, hálózati protokoll etc.]
+A HoloDB körül egy gazdag eszközinfrastruktúra kiépítése zajlik, magába foglalva többek között a következőket: felhasználóbarát parancssori REPL, adatbázisböngészők támogatása (DBeaver), NoSQL adapterek (MongoDB, GraphQL, SPARQL stb.), GraalVM-támogatás stb.
+Java környezet esetében további lehetőség a JDBC-n keresztüli használat,
+a beágyazott elérés, illetve a JPA entitások közvetlen használata konfiguráció helyett.
 
-[toolok]
+Jelenleg a megoldás körülbelül TRL5 szintre tehető:
+viszonylag könnyen telepíthető és indítható a legtöbb rendszeren,
+az alapfunkciók end-to-end működnek,
+és a kényelmi funkciók a nem-szakértő felhasználók számára is lehetővé teszik a használatot.
+Azonban világosan mutatkoznak a legfontosabb fejlesztésre váró területek is.
 
-Ezek az eszközök kizárólag szabad szoftverek.
-[monetizálási lehetőségek] [support, adoptálás, stb.] [speciális tool-ok]
+Az innOtdk keretében a következő négy célt tűztem ki:
+
+\paragraph{1. Stabil alapok:}{
+SQL, performance, config, criteria: test with a real system
+}
+
+\paragraph{2. Integráció és kompatibilitás:}{
+Dbeaver, multi-language driver
+}
+
+\paragraph{3. SaaS platform és monetizáció:}{
+SaaS platform, web page
+}
+
+\paragraph{4. Nyilvános bemutató:}{
+quick reload of browseable dataa, something that could not be done with other solutions
+}
 
 \end{document}
