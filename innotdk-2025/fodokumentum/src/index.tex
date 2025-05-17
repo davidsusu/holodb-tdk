@@ -21,14 +21,14 @@
 
 \cleardoublepage
 
-A HoloDB egy java nyelven írt általános célú adatbázismockoló eszköz, mely egy valószerű adatokkal feltöltött, ténylegesen funkcionáló relációs adatbázist szimulál, pusztán egy tömör, deklaratív konfiguráció alapján.
+A HoloDB egy Java nyelven írt általános célú adatbázismockoló eszköz, mely egy valószerű adatokkal feltöltött, ténylegesen funkcionáló relációs adatbázist szimulál, pusztán egy tömör, deklaratív konfiguráció alapján.
 
 [konkrétabb motiváció, előzmény, célcsoport, a probléma valós volta, vagy tárolt, vagy nem konzisztens, vagy nem kereshető stb.]
 
 A HoloDB mögötti kutatás arra kereste a választ, hogy lehetséges-e szintetikus adatok egy koherens körét kereshetően is szolgáltatni, azok előre történő, számításigényes generálása (vagy meglévő adatok anonimizálása) és memóriaigényes tárolása nélkül. Fontos szempont volt, hogy ezt a lehető legáltalánosabb módon, egyúttal elfogadható teljesítmény mellett kell megoldani.
 A kereshetőséget virtuális indexek biztosítják, amelyek külön-külön skálázható kétirányban működő operátorok (például eloszlás, permutáció) kompozíciója által vannak megvalósítva.
 Opcionálisan a táblák fölé helyezhető egy az írási műveleteket is támogató, a módosításokat tömören tároló, átlászó írási réteg.
-[a tesztek alapján működőképes]
+A teszteredméynek alapján a megoldás működőképes, valamint futásidejű teljesítménye is megfelelő.
 A megvalósítás távoli szakterületeket ötvöz. Azok külön-külön is felmutat néhány ötletet, amelyek további kidolgozás után önálló publikálásra lehetnek alkalmasak, a fő nóvum azonban a sok elem összeillesztéséséből létrejövő újszerű szoftvertípus.
 
 A HoloDB teljesen megszünteti a preparálási költségeket, általában jelentősen csökkenti a demóadatokkal való bajlódás miatt fellépő idő- és infrastruktúraigényt, és akár óriás adatbázist is képes szimulálni minimális memóriahasználat mellett.
@@ -44,7 +44,7 @@ A projekt innovációs potenciálját az intézményi és az országos bírálat
 
 A HoloDB nyílt forráskódú projektként elérhető.
 A meglévő prototípust bárki kipróbálhatja, annak működőképességéről meggyőződhet.
-Például docker konténerként futtatva REST API-n vagy MiniConnect API-n keresztül lehet csatlakozni bármilyen programból, amely ezeket támogatja
+Például Docker konténerként futtatva REST API-n vagy MiniConnect API-n keresztül lehet csatlakozni bármilyen programból, amely ezeket támogatja
 (a MiniConnect egy adatbáziselérési API, melyet a JDBC minimalista alternatívájának szántam, illetve a hozzá tartozó kliens-agnosztikus hálózati protokoll).
 A HoloDB körül egy gazdag eszközinfrastruktúra kiépítése zajlik, magába foglalva többek között a következőket: felhasználóbarát parancssori REPL, adatbázisböngészők támogatása (DBeaver), NoSQL adapterek (MongoDB, GraphQL, SPARQL stb.), GraalVM-támogatás stb.
 Java környezet esetében további lehetőség a JDBC-n keresztüli használat,
@@ -63,11 +63,17 @@ SQL, performance, config, criteria: test with a real system
 }
 
 \paragraph{2. Integráció és kompatibilitás:}{
-Dbeaver, multi-language driver
+Jelenleg elsősorban JVM környezetben, valamint a beépített klienseken (például REPL) keresztül való használat támogatott.
+Cél, hogy bármilyen programnyelvi környezetből könnyen lehessen csatlakozni a szerverhez,
+valamint hogy az elterjedt grafikus adatbázisböngészőkkel (például DBeaver) is hozzáférhető legyen.
 }
 
 \paragraph{3. PaaS platform és monetizáció:}{
-PaaS platform, web page
+A cél egy fizetős megoldásként is működtethető PaaS platform kialakítása,
+mely HoloDB példányokat futtat,
+részben frontendes (WebAssembly alapú) számításokkal tehermentesítve a backenden futó konténereket.
+Az ehhez tartozó webes felületen a felhasználók a feltöltött (vagy online szerkesztett)
+konfigurációt adatbázisként működtethetik, és meg is oszthatják.
 }
 
 \paragraph{4. Nyilvános bemutató:}{
