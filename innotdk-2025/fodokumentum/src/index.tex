@@ -32,17 +32,18 @@ Az alacsony memóriahasználatot úgy érjük el, hogy a szintetikus adatok val�
 A kereshetőséget virtuális indexek biztosítják, melyeket külön-külön skálázható, kétirányban működő operátorok (például eloszlás, permutáció) kompozíciója valósít meg.
 Opcionálisan a táblák fölé helyezhető egy az írási műveleteket is támogató, a módosításokat tömören tároló, átlászó írási réteg;
 így az egyébként immutábilis adathalmaz effektíve írhatóvá válik.
-A teszteredmények alapján a megoldás működőképes, futásidejű teljesítménye megfelelő, memóriaigénye pedig minimális.
-Az ezt igazoló főbb összehasonlító teszteredmények bemutatásra kerültek az OTDK-pályamunkában.
-Mindezz szembemegy a meglévő dogmával, miszerint mindenképpen egy hús-vér adatbázist kell felpopulálni és működtetni annak minden erőforrásigényével együtt, olyan esetben is, amikor egyáltalán nincs szükség valós adatokra (vagy azok nemkívánatosak, például érzékeny adatok esetén, melyeket minimum anonimizálni kellene),
-vagy éppen, mikor valós adatok még nem is állnak rendelkezésre.
-A HoloDB egyszerűen egy takarékosabb, zöldebb alternatívát kínál.
+Az ötletben rejlő innovációs potenciált az intézményi és az országos TDK-bírálatok is kiemelték, ezért is döntöttem úgy, hogy jelentkezem az innOtdk pályázatra.
 
-A HoloDB tehát teljesen megszünteti a preparálási költségeket, általában jelentősen csökkenti a demóadatokkal való bajlódás miatt fellépő idő- és infrastruktúraigényt, és akár óriás adatbázist is képes szimulálni minimális memóriahasználat mellett.
-A gyakorlatban ez azt jelenti, hogy különösebb indítási költség nélkül, minimális memóriaigénnyel odavarázsolhatjuk az éppen kívánt adathalmazt, például fejlesztéshez, demózáshoz, teszteléshez és egyéb helyzetekben.
+A teszteredmények alapján a megoldás működőképes, futásidejű teljesítménye megfelelő, memóriaigénye pedig minimális.
+A HoloDB megszünteti a preparálási költségeket, általában jelentősen csökkenti a demóadatokkal való bajlódás miatt fellépő idő- és infrastruktúraigényt, és akár óriás adatbázist is képes szimulálni.
+Ez szembemegy a meglévő dogmával, miszerint mindenképpen egy hús-vér adatbázist kell felpopulálni és működtetni annak minden erőforrásigényével együtt, olyan esetben is, amikor egyáltalán nincs szükség valós adatokra.
+A HoloDB összességében egy takarékosabb, zöldebb alternatívát kínál.
+Az ezt igazoló főbb összehasonlító teszteredmények már bemutatásra kerültek a TDK-n.
+
+A gyakorlatban mindez azt jelenti, hogy különösebb indítási költség nélkül, csekély memóriahasználattal odavarázsolhatjuk az éppen kívánt adathalmazt, például fejlesztéshez, demózáshoz, teszteléshez és egyéb helyzetekben.
 A fejlesztőknek, tesztelőknek, prezentálóknak nem kell adatgenerálásra várniuk, sem az érzékeny adatok anonimizálásával törődniük.
+Mivel a konfiguráció gyorsan betöltődik, lehetőség van újraindítás nélkül is frissíteni az adathalmazt a konfigurációs fájl módosulásakor, ami különösen jól jön prototipizáláskor, amikor a gyors iterációk az adatok szerkezetét is gyakran érintik (ekkor meglévő, valós adatok még nem is állnak rendelkezésre).
 De teljesen más felhasználási lehetőségek is adódnak, a mockadatbázis például leegyszerűsítheti a homokozó adathalmaz rendelkezésre bocsátását oktatási szituációkban.
-Mivel a konfiguráció gyorsan betöltődik, lehetőség van újraindítás nélkül is frissíteni az adathalmazt a konfigurációs fájl módosulásakor, ami különösen jól jön prototipizáláskor, amikor a gyors iterációk az adatok szerkezetét is gyakran érintik.
 
 A HoloDB nyílt forráskódú projektként elérhető.
 A meglévő, Java nyelven írt prototípust bárki kipróbálhatja, annak működőképességéről meggyőződhet.
