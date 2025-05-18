@@ -22,7 +22,7 @@
 \cleardoublepage
 
 A HoloDB egy általános célú adatbázis-szimuláló eszköz, mely egy valószerű adatokkal feltöltött, kereshető relációs adatbázist nyújt, minimális költségek mellett,
-pusztán egy tömör, deklaratív konfiguráció alapján.
+pilanatok alatt betöltve azt egy tömör, deklaratív konfigurációból.
 A HoloDB nem pusztán egy újabb eszköz, hanem egyúttal teljesen új paradigmát is kínál a szintetikus adatok terén.
 
 A HoloDB mögötti kutatás arra kereste a választ, hogy lehetséges-e szintetikus adatok egy koherens körét kereshetően is szolgáltatni, azok előre történő, számításigényes generálása (vagy meglévő adatok anonimizálása) és memóriaigényes tárolása nélkül.
@@ -61,37 +61,33 @@ Azonban világosan mutatkoznak a legfontosabb fejlesztésre váró területek is
 
 Az innOtdk keretében a következő négy célkitűzést tervezem megvalósítani:
 
-\paragraph{1. Stabil alapok nyílt forráskóddal:}{
+\paragraph{1. Stabil alapok nyílt forráskóddal:}
 A nyílt forráskódú alapot minden lényeges szempontból produkciókész szintre kell hozni.
 Ehhez minimum szükséges az alap SQL-futtatóban a támogatott SQL-funkciók bővítése,
 további teljesítményjavítások,
 a konfiguráció bővítése és felülvizsgálata,
 valamint helyességi tesztek bevezetése.
 A stabilitás legfőbb validációja egy összetettebb valós projekten való tesztelés lenne.
-}
 
-\paragraph{2. Integráció és kompatibilitás:}{
+\paragraph{2. Integráció és kompatibilitás:}
 Jelenleg a JVM környezetben, valamint a beépített klienseken (például REPL) keresztül való használat támogatott elsődletesen.
 Cél, hogy bármilyen programnyelvi környezetből könnyen lehessen csatlakozni a szerverhez,
 és hogy hozzáférhető legyen valamely elterjedt grafikus adatbázis-böngészővel (például DBeaver).
-}
 
-\paragraph{3. PaaS platform és monetizáció:}{
+\paragraph{3. PaaS platform és monetizáció:}
 A cél egy fizetős megoldásként is működtethető \mbox{PaaS} platform kialakítása,
 mely HoloDB példányokat futtat,
 humán böngészés esetén részben frontendes (WebAssembly-re portolt) számításokkal tehermentesítve a backenden futó konténereket.
 Az ehhez tartozó webes felületen a felhasználók a feltöltött (vagy online szerkesztett)
 konfigurációt adatbázisként működtethetik, és meg is oszthatják.
-}
 
-\paragraph{4. Nyilvános bemutató:}{
+\paragraph{4. Nyilvános bemutató:}
 A nagyközönségnek szánt bemutatón egy egyszerű de látványos alkalmazáson keresztül kell bemutatni a megoldásban rejlő fő képességeket.
 A pulthoz érkező felhasználó két képernyőt kap:
 az egyiken a konfigurációt módosíthatja valamilyen könnyített (akár gamifikált) módon,
 a másikon pedig az azonnal megváltozó viselkedést próbálhatja ki, mely egy nagy adathalmazon alapszik.
 Olyan alkalmazást kell választani, melyen látványosan illusztrálható az óriás kereshető adathalmaz azonnali újrarendeződése,
 ami az egyéb létező technológiákkal jelenleg nem megoldható.
-}
 
 [TODO: kérdőív, felmérés, külső szakértők?]
 
