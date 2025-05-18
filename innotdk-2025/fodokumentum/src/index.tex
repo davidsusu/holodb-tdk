@@ -22,14 +22,16 @@
 \cleardoublepage
 
 A HoloDB egy általános célú adatbázis-szimuláló eszköz, mely egy valószerű adatokkal feltöltött, kereshető relációs adatbázist nyújt, minimális költségek mellett,
-pilanatok alatt betöltve azt egy tömör, deklaratív konfigurációból.
-A HoloDB nem pusztán egy újabb eszköz, hanem egyúttal teljesen új paradigmát is kínál a szintetikus adatok terén.
+pillanatok alatt betöltve azt egy tömör, deklaratív konfigurációból.
+A HoloDB nem pusztán egy újabb fejlesztői eszköz, hanem teljesen új paradigmát kínál a szintetikus adatok terén.
 
 A HoloDB mögötti kutatás arra kereste a választ, hogy lehetséges-e szintetikus adatok egy koherens körét kereshetően is szolgáltatni, azok előre történő, számításigényes generálása (vagy meglévő adatok anonimizálása) és memóriaigényes tárolása nélkül.
 Fontos szempont volt, hogy ezt a lehető legáltalánosabb módon, egyúttal elfogadható teljesítmény mellett kell megoldani.
-A megvalósítás távoli szakterületeket ötvöz. Azokban külön-külön is felmutat néhány ötletet, amelyek további kidolgozás után önálló publikálásra lehetnek alkalmasak, a fő nóvum azonban a sok elem összeillesztéséből létrejövő újszerű szoftvertípus.
-A kereshetőséget virtuális indexek biztosítják, amelyek külön-külön skálázható kétirányban működő operátorok (például eloszlás, permutáció) kompozíciója által vannak megvalósítva.
-Opcionálisan a táblák fölé helyezhető egy az írási műveleteket is támogató, a módosításokat tömören tároló, átlászó írási réteg.
+A megvalósítás távoli szakterületeken elért eredményeket ötvöz, a fő nóvum pedig az ezek összeillesztéséből létrejövő újszerű szoftvertípus.
+Az alacsony memóriahasználatot úgy érjük el, hogy a szintetikus adatok valójában egyáltalán nincsenek tárolva, hanem on-the-fly kerülnek csak kiszámításra egy-egy lekérdezés közben.
+A kereshetőséget virtuális indexek biztosítják, melyeket külön-külön skálázható, kétirányban működő operátorok (például eloszlás, permutáció) kompozíciója valósít meg.
+Opcionálisan a táblák fölé helyezhető egy az írási műveleteket is támogató, a módosításokat tömören tároló, átlászó írási réteg;
+így az egyébként immutábilis adathalmaz effektíve írhatóvá válik.
 A teszteredmények alapján a megoldás működőképes, futásidejű teljesítménye megfelelő, memóriaigénye pedig minimális.
 Az ezt igazoló főbb összehasonlító teszteredmények bemutatásra kerültek az OTDK-pályamunkában.
 
