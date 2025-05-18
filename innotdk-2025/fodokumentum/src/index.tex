@@ -21,18 +21,21 @@
 
 \cleardoublepage
 
-A HoloDB egy Java nyelven írt általános célú adatbázismockoló, illetve -szimuláló eszköz, mely egy valószerű adatokkal feltöltött, ténylegesen funkcionáló relációs adatbázist képét nyújtja, pusztán egy tömör, deklaratív konfiguráció alapján.
+A HoloDB egy általános célú adatbázis-szimulátor, mely egy valószerű adatokkal feltöltött, kereshető relációs adatbázist nyújt, minimális költségek mellett,
+pusztán egy tömör, deklaratív konfiguráció alapján.
+A HoloDB nem pusztán egy újabb eszköz, hanem egyúttal teljesen új paradigmát is kínál a szintetikus adatok terén.
 
-A HoloDB mögötti kutatás arra kereste a választ, hogy lehetséges-e szintetikus adatok egy koherens körét kereshetően is szolgáltatni, azok előre történő, számításigényes generálása (vagy meglévő adatok anonimizálása) és memóriaigényes tárolása nélkül. Fontos szempont volt, hogy ezt a lehető legáltalánosabb módon, egyúttal elfogadható teljesítmény mellett kell megoldani.
+A HoloDB mögötti kutatás arra kereste a választ, hogy lehetséges-e szintetikus adatok egy koherens körét kereshetően is szolgáltatni, azok előre történő, számításigényes generálása (vagy meglévő adatok anonimizálása) és memóriaigényes tárolása nélkül.
+Fontos szempont volt, hogy ezt a lehető legáltalánosabb módon, egyúttal elfogadható teljesítmény mellett kell megoldani.
 A kereshetőséget virtuális indexek biztosítják, amelyek külön-külön skálázható kétirányban működő operátorok (például eloszlás, permutáció) kompozíciója által vannak megvalósítva.
 Opcionálisan a táblák fölé helyezhető egy az írási műveleteket is támogató, a módosításokat tömören tároló, átlászó írási réteg.
 A teszteredmények alapján a megoldás működőképes, valamint futásidejű teljesítménye is megfelelő.
 A megvalósítás távoli szakterületeket ötvöz. Azokban külön-külön is felmutat néhány ötletet, amelyek további kidolgozás után önálló publikálásra lehetnek alkalmasak, a fő nóvum azonban a sok elem összeillesztéséből létrejövő újszerű szoftvertípus.
 
 A HoloDB teljesen megszünteti a preparálási költségeket, általában jelentősen csökkenti a demóadatokkal való bajlódás miatt fellépő idő- és infrastruktúraigényt, és akár óriás adatbázist is képes szimulálni minimális memóriahasználat mellett.
+Az erőforrás-használat csökkenése annál látványosabb, minél nagyobb az adathalmaz, ahogy azt a performanciatesztek is igazolták.
 Ez szembemegy azzal a jelenlegi dogmával, hogy szükségszerű lenne egy hús-vér adatbázist populálni és működtetni annak minden erőforrásigényével együtt olyan esetben is, amikor valójában nincs szükség valós adatokra (vagy azok éppen nemkívánatosak, például érzékeny adatok esetén, melyeket minimum anonimizálni kellene),
 vagy éppen, mikor valós adatok még nem is állnak rendelkezésre.
-Az erőforrás-használat csökkenése annál látványosabb, minél nagyobb az adathalmaz, ahogy azt a performanciatesztek is igazolták.
 Az erőforráscsökkentéssel kapcsolatos főbb összehasonlító teszteredmények az OTDK-pályamunkában is bemutatásra kerültek.
 Konklózióként elmondható, hogy a HoloDB összességében egy takarékosabb, zöldebb alternatívát kínál.
 
@@ -42,7 +45,7 @@ De teljesen más felhasználási lehetőségek is adódnak, a mockadatbázis pé
 A projekt innovációs potenciálját az intézményi és az országos bírálatok is kiemelték.
 
 A HoloDB nyílt forráskódú projektként elérhető.
-A meglévő prototípust bárki kipróbálhatja, annak működőképességéről meggyőződhet.
+A meglévő, Java nyelven írt prototípust bárki kipróbálhatja, annak működőképességéről meggyőződhet.
 Például Docker konténerként futtatva REST API-n vagy MiniConnect API-n keresztül lehet csatlakozni bármilyen programból, amely ezeket támogatja
 (a MiniConnect egy adatbáziselérési API, melyet a JDBC minimalista alternatívájának szántam, illetve a hozzá tartozó kliens-agnosztikus hálózati protokoll).
 A HoloDB körül folyamatban van egy gazdag eszközinfrastruktúra kiépítése, magába foglalva többek között a következőket: felhasználóbarát parancssori REPL, NoSQL adapterek (például MongoDB, GraphQL, SPARQL), GraalVM-támogatás, integráció más elterjedt rendszerekkel stb.
