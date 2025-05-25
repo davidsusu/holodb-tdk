@@ -10,8 +10,8 @@
 
 \setlength{\parindent}{0pt}
 
-\title{Összefoglaló leírás innOtdk pályázathoz \\ ~ \\ ~ \\ {\Large Az eredeti TDK-pályamunka címe: \\ ~ \\ HoloDB: Relációs demóadatok konzisztens on-the-fly \\ generálása deklaratív konfigurációból} \\ ~}
-\author{Horváth Dávid (ELTE-IK) \\ horvathdown@student.elte.hu}
+\title{Összefoglaló leírás innOtdk pályázathoz \\ ~ \\ ~ \\ {\Large A TDK-pályamunka eredeti címe: \\ ~ \\ HoloDB: Relációs demóadatok konzisztens on-the-fly \\ generálása deklaratív konfigurációból} \\ ~}
+\author{Horváth Dávid (ELTE-IK) \\ horvathdown@student.elte.hu \\ ~ \\ Témavezető:\\ Dr. Vincellér Zoltán, Mesteroktató (ELTE-IK)}
 \date{2025. május 15.}
 
 \begin{document}
@@ -25,19 +25,19 @@
 
 A HoloDB egy általános célú adatbázis-szimuláló eszköz, mely képes valószerű adatokkal feltöltött, kereshető relációs adatbázis látszatát kelteni
 minimális költségek mellett, pillanatok alatt betöltve azt egy tömör, deklaratív konfigurációból.
-A HoloDB nem pusztán egy újabb fejlesztői eszköz, de a szintetikus adatok kezelésében lényegesen új megközelítést kínál.
+Nem pusztán egy újabb fejlesztői eszközről van szó, a HoloDB a szintetikus adatok kezelésében jelentősen új megközelítést kínál.
 
 A HoloDB mögötti kutatás arra kereste a választ, hogy lehetséges-e szintetikus adatok egy koherens körét kereshetően is szolgáltatni, mégpedig azok előre történő, számításigényes legenerálása és memóriaigényes tárolása nélkül.
 Fontos szempont volt, hogy ezt a lehető legáltalánosabb módon, egyúttal elfogadható teljesítmény mellett kell megoldani.
 A megvalósítás távoli szakterületeken elért eredményeket ötvöz, a fő nóvum pedig az ezekből összeálló újszerű szoftvertípus.
 A különösen alacsony memóriahasználatot az teszi lehetővé, hogy a szintetikus adatok valójában egyáltalán nincsenek tárolva, hanem on-the-fly kerülnek csak kiszámításra egy-egy lekérdezés kiszolgálása közben.
-A kereshetőséget virtuális indexek biztosítják, melyeket külön-külön skálázható, kétirányban működő operátorok (például eloszlás, permutáció) kompozíciói valósítanak meg.
+A kereshetőséget teljesen virtuális indexek biztosítják, melyeket külön-külön skálázható, kétirányban működő operátorok (például eloszlás, permutáció) kompozíciói valósítanak meg.
 Opcionálisan a táblák fölé helyezhető egy az írási műveleteket is támogató, a módosításokat tömören tároló írási réteg;
 így az egyébként immutábilis adathalmaz a kliens felé már effektíve írhatónak mutatkozik.
-Az ötletben rejlő innovációs potenciált az intézményi és az országos TDK-bírálatok is kiemelték, ez is motivált abban, hogy a pályamunkát az innOtdk pályázatra továbbvigyem.
+Az ötletben rejlő innovációs potenciált az intézményi és az országos TDK-bírálatok is kiemelték; ez is motivált abban, hogy a pályamunkát az innOtdk pályázatra továbbvigyem.
 
-A teszteredmények alapján a megoldás működőképes, futásidejű teljesítménye megfelelő, memóriaigénye minimális, a preparálási költségeket pedig teljesen megszünteti.
-A HoloDB összességében jelentősen csökkenti a demóadatokkal való bajlódás miatt fellépő idő- és infrastruktúraigényt, és akár óriás adatbázist is képes szimulálni.
+A teszteredmények alapján a megoldás működőképes, futásidejű teljesítménye megfelelő, memóriaigénye minimális, a preparálási költségeket pedig egészében megszünteti.
+Összességében jelentősen csökkenti a demóadatokkal való bajlódás miatt fellépő idő- és infrastruktúraigényt, és akár óriás adatbázist is képes szimulálni.
 Ez szembemegy a meglévő dogmával, miszerint mindenképpen egy hús-vér adatbázist kell felpopulálni és működtetni annak minden erőforrásigényével együtt, olyan esetben is, amikor egyáltalán nincs szükség valós adatokra.
 A HoloDB végeredményben egy takarékosabb, zöldebb alternatíva.
 Az ezt igazoló főbb összehasonlító teszteredmények bemutatásra kerültek a TDK-n.
@@ -71,7 +71,7 @@ a konfiguráció bővítése és felülvizsgálata,
 valamint end-to-end helyességi tesztek bevezetése.
 
 \paragraph{2. Integráció és kompatibilitás:}
-Jelenleg elsösorban a JVM környezetben, valamint a beépített klienseken (például REPL) keresztül való használat tesztelt és támogatott.
+Jelenleg elsősorban a JVM környezetben, valamint a beépített klienseken (például REPL) keresztül való használat tesztelt és támogatott.
 Cél, hogy bármilyen programnyelvi környezetből könnyen lehessen csatlakozni a szerverhez,
 és hogy hozzáférhető legyen valamely elterjedt grafikus adatbázis-böngészőből (például DBeaver).
 
@@ -87,7 +87,7 @@ Az on-site bemutatón egy egyszerű de látványos alkalmazáson keresztül lenn
 A tervezett szcenárióban a pulthoz érkező érdeklődő két képernyőt kap:
 az egyiken a konfigurációt módosíthatja valamilyen könnyített (akár gamifikált) módon,
 a másikon pedig az azonnal megváltozó viselkedést próbálhatja ki, mely egy nagy adathalmazon alapszik.
-Olyan alkalmazást kell választani, melyen látványosan illusztrálható az óriás kereshető adathalmaz azonnali újrarendeződése,
+Olyan alkalmazást kell választani, melyen látványosan illusztrálható a kereshető óriás adathalmaz azonnali újrarendeződése,
 ami az egyéb létező technológiákkal jelenleg nem megoldható.
 
 Párhuzamosan szeretném felmérni a fejlesztők, technológiai vezetők, módszertani szakértők véleményét az ötlet alkalmazhatóságáról a gyakorlatban.
