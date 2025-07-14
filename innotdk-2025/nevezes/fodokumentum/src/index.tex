@@ -1,0 +1,97 @@
+\documentclass[12pt]{article}
+
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[magyar]{babel}
+\usepackage[a4paper, total={6.7in, 9.3in}]{geometry}
+\usepackage{parskip}
+\usepackage{hyperref}
+\usepackage{xcolor}
+
+\setlength{\parindent}{0pt}
+
+\title{Összefoglaló leírás innOtdk pályázathoz \\ ~ \\ ~ \\ {\Large A TDK-pályamunka eredeti címe: \\ ~ \\ HoloDB: Relációs demóadatok konzisztens on-the-fly \\ generálása deklaratív konfigurációból} \\ ~}
+\author{Horváth Dávid (ELTE-IK) \\ horvathdown@student.elte.hu \\ ~ \\ Témavezető:\\ Dr. Vincellér Zoltán, Mesteroktató (ELTE-IK)}
+\date{2025. május 15.}
+
+\begin{document}
+
+\begin{titlepage}
+\maketitle
+\thispagestyle{empty}
+\end{titlepage}
+
+\cleardoublepage
+
+A HoloDB egy általános célú adatbázis-szimuláló eszköz, mely képes valószerű adatokkal feltöltött, kereshető relációs adatbázis látszatát kelteni
+minimális költségek mellett, pillanatok alatt betöltve azt egy tömör, deklaratív konfigurációból.
+Nem pusztán egy újabb fejlesztői eszközről van szó, a HoloDB a szintetikus adatok kezelésében jelentősen új megközelítést kínál.
+
+A HoloDB mögötti kutatás arra kereste a választ, hogy lehetséges-e szintetikus adatok egy koherens körét kereshetően is szolgáltatni, mégpedig azok előre történő, számításigényes legenerálása és memóriaigényes tárolása nélkül.
+Fontos szempont volt, hogy ezt a lehető legáltalánosabb módon, egyúttal elfogadható teljesítmény mellett kell megoldani.
+A megvalósítás távoli szakterületeken elért eredményeket ötvöz, a fő nóvum pedig az ezekből összeálló újszerű szoftvertípus.
+A különösen alacsony memóriahasználatot az teszi lehetővé, hogy a szintetikus adatok valójában egyáltalán nincsenek tárolva, hanem on-the-fly kerülnek csak kiszámításra egy-egy lekérdezés kiszolgálása közben.
+A kereshetőséget teljesen virtuális indexek biztosítják, melyeket külön-külön skálázható, kétirányban működő operátorok (például eloszlás, permutáció) kompozíciói valósítanak meg.
+Opcionálisan a táblák fölé helyezhető egy az írási műveleteket is támogató, a módosításokat tömören tároló írási réteg;
+így az egyébként immutábilis adathalmaz a kliens felé már effektíve írhatónak mutatkozik.
+Az ötletben rejlő innovációs potenciált az intézményi és az országos TDK-bírálatok is kiemelték; ez is motivált abban, hogy a pályamunkát az innOtdk pályázatra továbbvigyem.
+
+A teszteredmények alapján a megoldás működőképes, futásidejű teljesítménye megfelelő, memóriaigénye minimális, a preparálási költségeket pedig egészében megszünteti.
+Összességében jelentősen csökkenti a demóadatokkal való bajlódás miatt fellépő idő- és infrastruktúraigényt, és akár óriás adatbázist is képes szimulálni.
+Ez szembemegy a meglévő dogmával, miszerint mindenképpen egy hús-vér adatbázist kell felpopulálni és működtetni annak minden erőforrásigényével együtt, olyan esetben is, amikor egyáltalán nincs szükség valós adatokra.
+A HoloDB végeredményben egy takarékosabb, zöldebb alternatíva.
+Az ezt igazoló főbb összehasonlító teszteredmények bemutatásra kerültek a TDK-n.
+
+A gyakorlatban mindez azt jelenti, hogy különösebb indítási költség nélkül, csekély memóriahasználattal odavarázsolhatjuk az éppen kívánt adathalmazt, például fejlesztéshez, teszteléshez, demózáshoz és egyéb helyzetekben.
+A fejlesztőknek, tesztelőknek, prezentálóknak nem kell adatgenerálásra várniuk, sem az érzékeny adatok anonimizálásával bajlódniuk (amennyiben valós kiinduló adatok egyáltalán rendelkezésre állnak).
+Mivel a konfiguráció gyorsan betöltődik, lehetőség van újraindítás nélkül is frissíteni az adathalmazt a konfigurációs fájl módosulásakor, ami különösen jól jön prototipizáláskor, hiszen ekkor a gyors iterációk jellemzően az adatmodellt is érintik.
+De teljesen más felhasználási lehetőségek is adódnak, a deklaratív adatbázis például leegyszerűsítheti a homokozó adathalmaz rendelkezésre bocsátását oktatási szituációkban.
+
+A HoloDB nyílt forráskódú projektként elérhető ({\small \url{https://github.com/miniconnect/holodb}}).
+A meglévő, Java nyelven írt prototípust bárki kipróbálhatja, annak működőképességéről meggyőződhet.
+Például Docker konténerként futtatva REST API-n vagy MiniConnect API-n keresztül lehet csatlakozni bármilyen programból, amely ezeket támogatja
+(a MiniConnect: egy adatbázis-elérési API, melyet a JDBC minimalista alternatívájának szántam, illetve a hozzá tartozó kliens-agnosztikus hálózati protokoll).
+A HoloDB körül folyamatban van egy kiterjedtebb eszközinfrastruktúra kiépítése, magába foglalva többek között a következőket: felhasználóbarát parancssori REPL, NoSQL adapterek (például MongoDB, GraphQL, SPARQL), GraalVM-es változat, integráció más rendszerekkel.
+Java környezet esetében további lehetőség a JDBC-n keresztüli használat,
+a beágyazott elérés, illetve a JPA entitások közvetlen használata konfiguráció helyett.
+
+A megoldás jelen állapotában nagyjából TRL5 szintre tehető:
+viszonylag könnyen telepíthető és indítható a legtöbb rendszeren,
+az alapfunkciók end-to-end működnek,
+és a kényelmi funkciók a nem-szakértő felhasználók számára is lehetővé teszik a használatot.
+Azonban világosan mutatkoznak a legfontosabb fejlesztésre váró területek is.
+
+Az innOtdk keretében a következő négy célkitűzést tervezem megvalósítani:
+
+\paragraph{1. Stabil alapok nyílt forráskóddal:}
+A nyílt forráskódú komponenseket minden lényeges szempontból produkciókész szintre kell hozni ahhoz, hogy egy robusztus infrastruktúra alapját képezhessék.
+Ehhez szükséges az alapértelmezett lekérdezésfuttatóban a támogatott SQL-funkciók bővítése,
+további teljesítményjavítások,
+a konfiguráció bővítése és felülvizsgálata,
+valamint end-to-end helyességi tesztek bevezetése.
+
+\paragraph{2. Integráció és kompatibilitás:}
+Jelenleg elsősorban a JVM környezetben, valamint a beépített klienseken (például REPL) keresztül való használat tesztelt és támogatott.
+Cél, hogy bármilyen programnyelvi környezetből könnyen lehessen csatlakozni a szerverhez,
+és hogy hozzáférhető legyen valamely elterjedt grafikus adatbázis-böngészőből (például DBeaver).
+
+\paragraph{3. PaaS platform és monetizáció:}
+A cél egy fizetős megoldásként is működtethető \mbox{PaaS} szolgáltatás kialakítása,
+mely HoloDB példányokat futtat,
+humán böngészés esetén részben frontendes (WebAssembly-re portolt) számításokkal tehermentesítve a backenden futó konténereket.
+Az ehhez tartozó webes felületen a felhasználók a feltöltött (vagy online szerkesztett)
+konfigurációt adatbázisként működtethetik, és meg is oszthatják.
+
+\paragraph{4. Nyilvános bemutató:}
+Az on-site bemutatón egy egyszerű de látványos alkalmazáson keresztül lenne célszerű bemutatni a megoldás erősségeit.
+A tervezett szcenárióban a pulthoz érkező érdeklődő két képernyőt kap:
+az egyiken a konfigurációt módosíthatja valamilyen könnyített (akár gamifikált) módon,
+a másikon pedig az azonnal megváltozó viselkedést próbálhatja ki, mely egy nagy adathalmazon alapszik.
+Olyan alkalmazást kell választani, melyen meggyőzően illusztrálható a kereshető óriás adathalmaz azonnali újrarendeződése,
+ami az egyéb létező technológiákkal jelenleg nem megoldható.
+
+Továbbá párhuzamosan, amennyire a keretek engedik,
+szeretném felmérni a fejlesztők, technológiai vezetők, módszertani szakértők véleményét az ötlet alkalmazhatóságáról a gyakorlatban.
+Ez a kérdőíves formától egészen a valós projektekben való kipróbálásig terjedhet.
+
+\end{document}
