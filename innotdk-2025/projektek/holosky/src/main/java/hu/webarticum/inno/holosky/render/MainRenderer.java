@@ -15,14 +15,17 @@ import com.jogamp.opengl.glu.GLU;
 import com.jogamp.opengl.util.awt.TextRenderer;
 
 public class MainRenderer implements GLEventListener {
+
     private final ViewState view;
+    private final DisplayState displayState;
     private final Random rand = new Random(42);
     private final List<double[]> stars = new ArrayList<>();
     
     private TextRenderer textRenderer;
     
-    public MainRenderer(ViewState view) {
+    public MainRenderer(ViewState view, DisplayState displayState) {
         this.view = view;
+        this.displayState = displayState;
     }
 
     @Override
@@ -33,24 +36,32 @@ public class MainRenderer implements GLEventListener {
         gl.glEnable(GL2ES1.GL_POINT_SMOOTH);
         gl.glEnable(GL.GL_BLEND);
         gl.glBlendFunc(GL.GL_SRC_ALPHA, GL.GL_ONE_MINUS_SRC_ALPHA);
-        gl.glPointSize(6.0f);
-        for (int i = 0; i < 200; i++) {
+        gl.glPointSize(3.0f);
+        for (int i = 0; i < 1000; i++) {
             double theta = rand.nextDouble() * 2 * Math.PI;
             double phi = Math.pow(rand.nextDouble(), 2) * Math.PI / 2;
             double x = Math.cos(theta) * Math.cos(phi);
             double y = Math.sin(theta) * Math.cos(phi);
             double z = Math.sin(phi);
-            stars.add(new double[] {x, y, z});
+            stars.add(new double[] { x, y, z });
         }
         
         // XXX
-        for (int i = 0; i < 30; i++) {
-            double theta = (i * 0.01) * 2 * Math.PI;
+        for (int i = 0; i < 60; i++) {
+            double theta = (i * 0.005) * 2 * Math.PI;
             double phi = 0.3 * Math.PI / 2;
             double x = Math.cos(theta) * Math.cos(phi);
             double y = Math.sin(theta) * Math.cos(phi);
             double z = Math.sin(phi);
-            stars.add(new double[] {x, y, z});
+            stars.add(new double[] { x, y, z });
+        }
+        for (int i = 0; i < 30; i++) {
+            double theta = 0;
+            double phi = (i * 0.01) * Math.PI / 2;
+            double x = Math.cos(theta) * Math.cos(phi);
+            double y = Math.sin(theta) * Math.cos(phi);
+            double z = Math.sin(phi);
+            stars.add(new double[] { x, y, z });
         }
         
         textRenderer = new TextRenderer(new Font("SansSerif", Font.BOLD, 16));
@@ -64,14 +75,7 @@ public class MainRenderer implements GLEventListener {
     @Override
     public void reshape(GLAutoDrawable drawable, int x, int y, int width, int height) {
         GL2 gl = drawable.getGL().getGL2();
-        float aspect = (float) width / height;
-
-        gl.glMatrixMode(GLMatrixFunc.GL_PROJECTION);
-        gl.glLoadIdentity();
-        GLU glu = GLU.createGLU(gl);
-        glu.gluPerspective(60.0f, aspect, 0.1f, 200.0f);
-
-        gl.glMatrixMode(GLMatrixFunc.GL_MODELVIEW);
+        gl.glViewport(0, 0, width, height);
     }
 
     @Override
@@ -80,14 +84,22 @@ public class MainRenderer implements GLEventListener {
         gl.glClear(GL.GL_COLOR_BUFFER_BIT | GL.GL_DEPTH_BUFFER_BIT);
         gl.glLoadIdentity();
 
-        double[] dir = view.directionVector();
+        double[] dir = toDirectionVector(view);
         GLU glu = GLU.createGLU(gl);
-        glu.gluLookAt(0, 0, 1.7,
-                      dir[0], dir[1], dir[2] + 1.7,
-                      0, 0, 1);
-        drawGround(gl);
-        drawStars(gl);
-        drawMoon(gl);
+        glu.gluLookAt(
+                0, 0, 1.7,
+                dir[0], dir[1], dir[2] + 1.7,
+                0, 0, 1);
+        
+        if (displayState.groundEnabled) {
+            drawGround(gl);
+        }
+        if (displayState.starsEnabled) {
+            drawStars(gl);
+        }
+        if (displayState.moonEnabled) {
+            drawMoon(gl);
+        }
 
         textRenderer.beginRendering(drawable.getSurfaceWidth(), drawable.getSurfaceHeight());
         textRenderer.setColor(1f, 1f, 1f, 1f);
@@ -95,8 +107,28 @@ public class MainRenderer implements GLEventListener {
         textRenderer.draw(String.format("Elevation: %.2f°", view.elevationDeg), 10, 30);
         textRenderer.draw(String.format("Zoom: %.2f", view.zoom), 10, 10);
         textRenderer.endRendering();
+
+        gl.glMatrixMode(GLMatrixFunc.GL_PROJECTION);
+        gl.glLoadIdentity();
+
+        double fovY = 70 / view.zoom;
+        double aspect = 1.6; // FIXME: (float) width / height;
+        double zNear = 0.1f;
+        double zFar = 1000f;
+
+        glu.gluPerspective(fovY, aspect, zNear, zFar);
+        gl.glMatrixMode(GLMatrixFunc.GL_MODELVIEW);
     }
 
+    public double[] toDirectionVector(ViewState view) {
+        double az = Math.toRadians(view.azimuthDeg);
+        double el = Math.toRadians(view.elevationDeg);
+        double x = Math.cos(el) * Math.sin(az);
+        double y = Math.cos(el) * Math.cos(az);
+        double z = Math.sin(el);
+        return new double[] {x, y, z};
+    }
+    
     private void drawGround(GL2 gl) {
         gl.glColor3f(0.0f, 0.4f, 0.0f);
         gl.glBegin(GL.GL_TRIANGLE_FAN);
@@ -105,9 +137,10 @@ public class MainRenderer implements GLEventListener {
         float radius = 100f;
         for (int i = 0; i <= segments; i++) {
             double theta = 2 * Math.PI * i / segments;
-            gl.glVertex3f((float) (radius * Math.cos(theta)),
-                          (float) (radius * Math.sin(theta)),
-                          0f);
+            gl.glVertex3f(
+                    (float) (radius * Math.cos(theta)),
+                    (float) (radius * Math.sin(theta)),
+                    0f);
         }
         gl.glEnd();
     }
@@ -117,9 +150,10 @@ public class MainRenderer implements GLEventListener {
         gl.glBegin(GL.GL_POINTS);
         for (double[] star : stars) {
             float scale = 100f;
-            gl.glVertex3f((float) (star[0] * scale),
-                          (float) (star[1] * scale),
-                          (float) (star[2] * scale));
+            gl.glVertex3f(
+                    (float) (star[0] * scale),
+                    (float) (star[1] * scale),
+                    (float) (star[2] * scale));
         }
         gl.glEnd();
     }
@@ -150,6 +184,7 @@ public class MainRenderer implements GLEventListener {
         double x = Math.cos(alt) * Math.sin(az);
         double y = Math.cos(alt) * Math.cos(az);
         double z = Math.sin(alt);
-        return new double[] {x, y, z};
+        return new double[] { x, y, z };
     }
+    
 }
