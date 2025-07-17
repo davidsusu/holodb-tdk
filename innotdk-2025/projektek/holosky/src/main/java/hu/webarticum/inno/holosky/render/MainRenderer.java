@@ -1,6 +1,8 @@
 package hu.webarticum.inno.holosky.render;
 
-import java.awt.Font;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.UncheckedIOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
@@ -12,19 +14,20 @@ import com.jogamp.opengl.GLAutoDrawable;
 import com.jogamp.opengl.GLEventListener;
 import com.jogamp.opengl.fixedfunc.GLMatrixFunc;
 import com.jogamp.opengl.glu.GLU;
-import com.jogamp.opengl.util.awt.TextRenderer;
+import com.jogamp.opengl.util.texture.Texture;
+import com.jogamp.opengl.util.texture.TextureIO;
 
 public class MainRenderer implements GLEventListener {
 
-    private final ViewState view;
+    private final ViewState viewState;
     private final DisplayState displayState;
     private final Random rand = new Random(42);
     private final List<double[]> stars = new ArrayList<>();
     
-    private TextRenderer textRenderer;
+    private Texture horizonTexture;
     
-    public MainRenderer(ViewState view, DisplayState displayState) {
-        this.view = view;
+    public MainRenderer(ViewState viewState, DisplayState displayState) {
+        this.viewState = viewState;
         this.displayState = displayState;
     }
 
@@ -36,24 +39,23 @@ public class MainRenderer implements GLEventListener {
         gl.glEnable(GL2ES1.GL_POINT_SMOOTH);
         gl.glEnable(GL.GL_BLEND);
         gl.glBlendFunc(GL.GL_SRC_ALPHA, GL.GL_ONE_MINUS_SRC_ALPHA);
-        gl.glPointSize(3.0f);
-        for (int i = 0; i < 1000; i++) {
+        for (int i = 0; i < 500000; i++) {
             double theta = rand.nextDouble() * 2 * Math.PI;
-            double phi = Math.pow(rand.nextDouble(), 2) * Math.PI / 2;
+            double phi = Math.asin(rand.nextDouble() * Math.PI / 2);
             double x = Math.cos(theta) * Math.cos(phi);
             double y = Math.sin(theta) * Math.cos(phi);
             double z = Math.sin(phi);
-            stars.add(new double[] { x, y, z });
+            double size = Math.pow(rand.nextDouble(), 15) * 3;
+            stars.add(new double[] { x, y, z, size });
         }
         
-        // XXX
         for (int i = 0; i < 60; i++) {
             double theta = (i * 0.005) * 2 * Math.PI;
             double phi = 0.3 * Math.PI / 2;
             double x = Math.cos(theta) * Math.cos(phi);
             double y = Math.sin(theta) * Math.cos(phi);
             double z = Math.sin(phi);
-            stars.add(new double[] { x, y, z });
+            stars.add(new double[] { x, y, z, 5.0 });
         }
         for (int i = 0; i < 30; i++) {
             double theta = 0;
@@ -61,10 +63,26 @@ public class MainRenderer implements GLEventListener {
             double x = Math.cos(theta) * Math.cos(phi);
             double y = Math.sin(theta) * Math.cos(phi);
             double z = Math.sin(phi);
-            stars.add(new double[] { x, y, z });
+            stars.add(new double[] { x, y, z, 5.0 });
         }
-        
-        textRenderer = new TextRenderer(new Font("SansSerif", Font.BOLD, 16));
+
+        horizonTexture = loadTextureFromResource("/hu/webarticum/inno/holosky/resources/horizon.png");
+        horizonTexture.setTexParameteri(gl, GL.GL_TEXTURE_WRAP_S, GL.GL_REPEAT);
+        horizonTexture.setTexParameteri(gl, GL.GL_TEXTURE_WRAP_T, GL.GL_CLAMP_TO_EDGE);
+        horizonTexture.setTexParameteri(gl, GL.GL_TEXTURE_MAG_FILTER, GL.GL_LINEAR);
+        horizonTexture.setTexParameteri(gl, GL.GL_TEXTURE_MIN_FILTER, GL.GL_LINEAR_MIPMAP_LINEAR);
+    }
+    
+    private Texture loadTextureFromResource(String path) {
+        try (InputStream stream = getClass().getResourceAsStream(path)) {
+            if (stream == null) {
+                throw new IOException("Texture resource not found: " + path);
+            }
+            String fileExtension = path.substring(path.lastIndexOf('.') + 1);
+            return TextureIO.newTexture(stream, true, fileExtension);
+        } catch (IOException e) {
+            throw new UncheckedIOException(e);
+        }
     }
 
     @Override
@@ -84,34 +102,27 @@ public class MainRenderer implements GLEventListener {
         gl.glClear(GL.GL_COLOR_BUFFER_BIT | GL.GL_DEPTH_BUFFER_BIT);
         gl.glLoadIdentity();
 
-        double[] dir = toDirectionVector(view);
+        double[] dir = toDirectionVector(viewState);
         GLU glu = GLU.createGLU(gl);
         glu.gluLookAt(
                 0, 0, 1.7,
                 dir[0], dir[1], dir[2] + 1.7,
                 0, 0, 1);
         
-        if (displayState.groundEnabled) {
-            drawGround(gl);
-        }
-        if (displayState.starsEnabled) {
+        if (displayState.isStarsEnabled()) {
             drawStars(gl);
         }
-        if (displayState.moonEnabled) {
+        if (displayState.isMoonEnabled()) {
             drawMoon(gl);
         }
-
-        textRenderer.beginRendering(drawable.getSurfaceWidth(), drawable.getSurfaceHeight());
-        textRenderer.setColor(1f, 1f, 1f, 1f);
-        textRenderer.draw(String.format("Viewing azimuth: %.2f°", view.azimuthDeg), 10, 50);
-        textRenderer.draw(String.format("Elevation: %.2f°", view.elevationDeg), 10, 30);
-        textRenderer.draw(String.format("Zoom: %.2f", view.zoom), 10, 10);
-        textRenderer.endRendering();
+        if (displayState.isGroundEnabled()) {
+            drawGround(gl);
+        }
 
         gl.glMatrixMode(GLMatrixFunc.GL_PROJECTION);
         gl.glLoadIdentity();
 
-        double fovY = 70 / view.zoom;
+        double fovY = 70 / viewState.getZoom();
         double aspect = 1.6; // FIXME: (float) width / height;
         double zNear = 0.1f;
         double zFar = 1000f;
@@ -120,9 +131,9 @@ public class MainRenderer implements GLEventListener {
         gl.glMatrixMode(GLMatrixFunc.GL_MODELVIEW);
     }
 
-    public double[] toDirectionVector(ViewState view) {
-        double az = Math.toRadians(view.azimuthDeg);
-        double el = Math.toRadians(view.elevationDeg);
+    private double[] toDirectionVector(ViewState viewState) {
+        double az = Math.toRadians(viewState.getAzimuthDeg() + 90);
+        double el = Math.toRadians(viewState.getElevationDeg());
         double x = Math.cos(el) * Math.sin(az);
         double y = Math.cos(el) * Math.cos(az);
         double z = Math.sin(el);
@@ -130,6 +141,11 @@ public class MainRenderer implements GLEventListener {
     }
     
     private void drawGround(GL2 gl) {
+        drawSoil(gl);
+        drawHorizon(gl);
+    }
+
+    private void drawSoil(GL2 gl) {
         gl.glColor3f(0.0f, 0.4f, 0.0f);
         gl.glBegin(GL.GL_TRIANGLE_FAN);
         gl.glVertex3f(0, 0, 0);
@@ -145,15 +161,53 @@ public class MainRenderer implements GLEventListener {
         gl.glEnd();
     }
 
-    private void drawStars(GL2 gl) {
+    private void drawHorizon(GL2 gl) {
+        float radius = 50.0f;
+        float height = 25.0f;
+        int segments = 64;
+        horizonTexture.enable(gl);
+        horizonTexture.bind(gl);
         gl.glColor3f(1f, 1f, 1f);
+        gl.glBegin(GL2.GL_QUAD_STRIP);
+        for (int i = 0; i <= segments; i++) {
+            float angle = (float) (2 * Math.PI * i / segments);
+            float cos = (float) Math.cos(angle);
+            float sin = (float) Math.sin(angle);
+            float u = (float) i / segments;
+            float x = cos * radius;
+            float y = sin * radius;
+            gl.glTexCoord2f(u, 0.0f);
+            gl.glVertex3f(x, y, 0.0f);
+            gl.glTexCoord2f(u, 1.0f);
+            gl.glVertex3f(x, y, height);
+        }
+        gl.glEnd();
+        horizonTexture.disable(gl);
+    }
+
+    private void drawStars(GL2 gl) {
+        drawStarsBetweenSizes(gl, 7.0, 15.0);
+        drawStarsBetweenSizes(gl, 5.5, 7.0);
+        drawStarsBetweenSizes(gl, 4.0, 5.5);
+        drawStarsBetweenSizes(gl, 3.0, 4.0);
+        drawStarsBetweenSizes(gl, 2.0, 3.0);
+        drawStarsBetweenSizes(gl, 1.0, 2.0);
+        drawStarsBetweenSizes(gl, 0.5, 1.0);
+    }
+    
+    private void drawStarsBetweenSizes(GL2 gl, double low, double high) {
+        float scale = 100f;
+        gl.glColor3f(1f, 1f, 1f);
+        gl.glPointSize((float) Math.min(4.0, Math.min(low + 0.5, (low + high) / 2f)));
         gl.glBegin(GL.GL_POINTS);
         for (double[] star : stars) {
-            float scale = 100f;
-            gl.glVertex3f(
-                    (float) (star[0] * scale),
-                    (float) (star[1] * scale),
-                    (float) (star[2] * scale));
+            double apparentSize = star[3] * viewState.getZoom();
+            if (apparentSize > low && apparentSize <= high) {
+                gl.glVertex3f(
+                        (float) (star[0] * scale),
+                        (float) (star[1] * scale),
+                        (float) (star[2] * scale));
+            }
         }
         gl.glEnd();
     }

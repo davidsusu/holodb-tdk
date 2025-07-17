@@ -13,6 +13,7 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 
 import hu.webarticum.inno.holosky.render.MainCanvas;
+import hu.webarticum.inno.holosky.render.StateCanvas;
 
 public class MainFrame extends JFrame {
 
@@ -48,17 +49,19 @@ public class MainFrame extends JFrame {
         rightLabel.setForeground(Color.WHITE);
         rightUpperPanel.add(rightLabel);
 
-        rightUpperPanel.add(createCheckBox("Galaxies", mainCanvas.isGalaxiesEnabled(), s -> mainCanvas.setGalaxiesEnabled(s)));
-        rightUpperPanel.add(createCheckBox("Nebulas", mainCanvas.isNebulasEnabled(), s -> mainCanvas.setNebulasEnabled(s)));
-        rightUpperPanel.add(createCheckBox("Stars", mainCanvas.isStarsEnabled(), s -> mainCanvas.setStarsEnabled(s)));
-        rightUpperPanel.add(createCheckBox("Planets", mainCanvas.isPlanetsEnabled(), s -> mainCanvas.setPlanetsEnabled(s)));
-        rightUpperPanel.add(createCheckBox("Moon", mainCanvas.isMoonEnabled(), s -> mainCanvas.setMoonEnabled(s)));
-        rightUpperPanel.add(createCheckBox("Ground", mainCanvas.isGroundEnabled(), s -> mainCanvas.setGroundEnabled(s)));
+        rightUpperPanel.add(createCheckBox("Galaxies", mainCanvas.isGalaxiesEnabled(), mainCanvas::setGalaxiesEnabled));
+        rightUpperPanel.add(createCheckBox("Nebulas", mainCanvas.isNebulasEnabled(), mainCanvas::setNebulasEnabled));
+        rightUpperPanel.add(createCheckBox("Stars", mainCanvas.isStarsEnabled(), mainCanvas::setStarsEnabled));
+        rightUpperPanel.add(createCheckBox("Planets", mainCanvas.isPlanetsEnabled(), mainCanvas::setPlanetsEnabled));
+        rightUpperPanel.add(createCheckBox("Moon", mainCanvas.isMoonEnabled(), mainCanvas::setMoonEnabled));
+        rightUpperPanel.add(createCheckBox("Ground", mainCanvas.isGroundEnabled(), mainCanvas::setGroundEnabled));
 
-        JPanel rightBottomPanel = new JPanel();
+        JPanel rightBottomPanel = new JPanel(new BorderLayout());
         rightBottomPanel.setPreferredSize(new Dimension(400, 400));
-        rightBottomPanel.setBackground(Color.DARK_GRAY);
         rightPanel.add(rightBottomPanel, BorderLayout.PAGE_END);
+        
+        StateCanvas stateCanvas = new StateCanvas(mainCanvas.getSharedViewState());
+        rightBottomPanel.add(stateCanvas, BorderLayout.CENTER);
         
         pack();
     }
